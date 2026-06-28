@@ -23,15 +23,15 @@ data: 2026-06-28
 - **Time:** Maria Eduarda (sócia) cobre CS + curadoria na Fase 1 (pró-labore); comissão atrelada ao take rate só para comercial externo futuro.
 
 ## Próximos passos
-1. **Keyword Planner (Goiânia):** validar `porcelanato Goiânia`, `porcelanato pronta entrega`, `revestimento área externa` vs alternativas. (nó [[mercado]])
-2. **Fechar o 1º fornecedor** A-Player de revestimentos. (nó [[mercado]] / [[time]])
+1. ✅ **Keyword Planner (Goiânia) — FEITO (2026-06-28):** Gate 1 validado. Demanda local real concentra em `porcelanato` (1.900) + tipos de produto; `porcelanato Goiânia` (140, CPC alto) = âncora de Ads; `pronta entrega` (10) vira USP; `área externa` (30 local, não 2.900 nacional) = nicho. Dados completos no nó [[mercado]].
+2. **Fechar o 1º fornecedor** A-Player de revestimentos (Gate 3). (nó [[mercado]] / [[time]])
 3. **Contador/advogado:** resolver a estrutura de contrato (intermediação vs revenda) — destrava todo o [[legal-fin]].
 4. **Definir o piso de take rate em R$** após ver tickets reais de revestimentos. (nó [[modelo]])
 5. (Opcional) Instalar plugin **Dataview** para o dashboard de nós `stale`.
 
 ## Pendências / em aberto
 - `legal-fin` segue `draft` (proposta não validada) — única área não congelada.
-- Validações de mercado (Keyword Planner + fornecedor) são ação de campo, não decisão de mesa.
+- Validação de mercado: Keyword Planner ✅ feito; resta o fornecedor (ação de campo).
 
 ## Gotchas
 - **Wikilinks resolvem por nome de arquivo**, não por pasta — mover nó entre pastas não quebra link.
