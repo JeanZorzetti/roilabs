@@ -36,12 +36,15 @@ dono: Jean (dev)
 - [ ] **Form REAL no browser** em `roilabs.com.br` com acento ("Goiânia") → confirmar que grava **sem mojibake**. Site tem `<meta charset=utf-8>`; o "Goi�nia" dos leads de teste veio de bytes ruins do terminal, não do app — confirmar pelo lead `UTF8 TEST`.
 - [ ] **Apagar os leads de teste** no `/admin` (`SMOKE TEST`, `UTF8 TEST`, `Teste Fluxo`) — agora há **botão "Apagar"** no card (commit `d62ebf4`). ⚠️ precisa do **redeploy do app** pro botão existir em prod.
 
-## 🚀 Fase 3 — IMPLEMENTADO (`d62ebf4`, `f603006`) · falta redeploy
+## 🚀 Fase 3 — IMPLEMENTADO · falta redeploy (`0bef049`, `d62ebf4`)
 
-> [!important] Ordem de redeploy
-> **1º o app** (`/app`) → ship do `DELETE /api/candidaturas/:id` + botão Apagar. **2º o site** (`/site`) → o build agora **busca `/api/cadeiras`** (mapa de cadeiras ao vivo). O site **só builda com o app de pé** (fail-loud proposital, sem mapa stale/vazio).
+> [!important] Ordem de redeploy: **app primeiro, depois site**
+> **1º o app** (`/app`) → ship do `DELETE /api/candidaturas/:id` + botão Apagar **e do header CORS** em `GET /api/cadeiras` (sem ele o navegador bloqueia o fetch do mapa). **2º o site** (`/site`) → ship do script runtime. Ambos rebuildam porque o código mudou (cache-busta).
 
-- [x] **Cadeiras ↔ site — RESOLVIDO.** Site faz `fetch('/api/cadeiras')` no build e **dropou o `seats[]` hard-coded** (`index.astro`). DB = fonte de verdade única; `src/lib/seats.ts` virou **seed-only**. Mudou cadeira no `/admin` → **redeploy do site** reflete no público.
+> [!warning] Por que o build-fetch falhou (corrigido em `0bef049`)
+> A 1ª tentativa (`f603006`) buscava `/api/cadeiras` **no build**. O Docker cacheia o layer `RUN npm run build` → redeploy sem commit novo servia `dist` velho e **nunca refletia o admin** (foi o que o Jean viu: "deploy e restart não resolveram"). Trocado para **fetch no navegador (runtime)** — imune a cache.
+
+- [x] **Cadeiras ↔ site — RESOLVIDO (runtime).** O site renderiza um skeleton estático (SEO/no-JS) e um `<script is:inline>` busca `/api/cadeiras` **no navegador**, sobrescrevendo status/aberta a cada load. `GET /api/cadeiras` ganhou `Access-Control-Allow-Origin`. Mudou cadeira no `/admin` → **só dar reload** em `roilabs.com.br`, **sem rebuild**. `seats.ts` + array do `index.astro` = só fallback no-JS.
 - [x] **Apagar candidatura — RESOLVIDO.** `DELETE` na rota `[id]` (auth + idempotente) + botão "Apagar" no card (`window.confirm`).
 - [ ] **Kanban sem drag** (hoje muda status por `<select>`, ponytail). Só adicionar `@dnd-kit` (padrão do CRM SplitJud) se quiser arrastar — opcional.
 - [ ] **WhatsApp do card** assume número BR local e prefixa `55`. Se vier com DDI, ajustar.
