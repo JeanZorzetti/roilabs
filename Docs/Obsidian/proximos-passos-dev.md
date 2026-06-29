@@ -18,18 +18,21 @@ dono: Jean (dev)
 
 ## 🚀 Fase 1 — Subir o MVP no ar (caminho crítico, em ordem)
 
-- [ ] **Aplicar schema no DB.** De uma máquina que alcança `2.24.207.200`, dentro de `/app`: `npm install` → `npx prisma db push` → `npm run db:seed` (carrega as 6 cadeiras, idempotente). ⚠️ NÃO confiar no runner standalone p/ schema — fazer `db push` manual.
-- [ ] **Criar App `/app` na EasyPanel.** Build path = `/app`, Dockerfile já incluso (Next standalone, porta 3000), domínio `app.roilabs.com.br`. Env vars (de `.env.example`): `DATABASE_URL`, `ADMIN_PASSWORD`, `AUTH_SECRET` (`openssl rand -base64 32`).
-- [ ] **Verificar o build real no Docker.** `next build` nunca rodou local (gotcha OneDrive corrompe `node_modules`). Build limpo é no Docker — conferir que sobe sem erro.
-- [ ] **Criar App `/site` na EasyPanel.** Build path = `/site`, Dockerfile (node build → nginx), domínio `roilabs.com.br`. Esse deploy nunca foi feito. Já leva o **blog GEO** junto (commit `701488d`).
-- [ ] **Redeploy do `/site`** para publicar o novo `action` do form (agora posta em `app.roilabs.com.br/api/candidaturas`, era Web3Forms placeholder). Se criar o App já com o código atual, está coberto.
+- [x] **Aplicar schema no DB.** De uma máquina que alcança `2.24.207.200`, dentro de `/app`: `npm install` → `npx prisma db push` → `npm run db:seed` (carrega as 6 cadeiras, idempotente). ⚠️ NÃO confiar no runner standalone p/ schema — fazer `db push` manual.
+- [x] **Criar App `/app` na EasyPanel.** Build path = `/app`, Dockerfile já incluso (Next standalone, porta 3000), domínio `app.roilabs.com.br`. Env vars (de `.env.example`): `DATABASE_URL`, `ADMIN_PASSWORD`, `AUTH_SECRET` (`openssl rand -base64 32`).
+- [x] **Verificar o build real no Docker.** `next build` nunca rodou local (gotcha OneDrive corrompe `node_modules`). Build limpo é no Docker — conferir que sobe sem erro.
+- [x] **Criar App `/site` na EasyPanel.** Build path = `/site`, Dockerfile (node build → nginx), domínio `roilabs.com.br`. Esse deploy nunca foi feito. Já leva o **blog GEO** junto (commit `701488d`).
+- [x] **Redeploy do `/site`** para publicar o novo `action` do form (agora posta em `app.roilabs.com.br/api/candidaturas`, era Web3Forms placeholder). Se criar o App já com o código atual, está coberto.
 - [ ] **DNS:** `roilabs.com.br` → App do site; `app.roilabs.com.br` → App do admin.
 
 ## 🔎 Fase 2 — Validar (smoke test E2E em prod)
 
-- [ ] Submeter o **form do site** → confirmar redirect `/obrigado` e a candidatura aparecendo no kanban do `/admin`.
-- [ ] **Login no `/admin`** (`ADMIN_PASSWORD`) e mudar o status de uma candidatura (novo → curadoria → aprovado).
-- [ ] `/admin/cadeiras`: abrir/fechar uma cadeira e editar status.
+> [!warning] Re-rodar nos domínios FINAIS, não nos temporários da EasyPanel
+> Verificado 2026-06-29: `roilabs.com.br` e `app.roilabs.com.br` ainda **não resolvem** (DNS pendente, ver Fase 1). O `action` do form é **hard-coded** pra `https://app.roilabs.com.br/api/candidaturas` — enquanto esse domínio não resolver, o form **quebra em prod** (posta em host inexistente). Logo: os ✔ abaixo só valem **depois do DNS**, testados nos domínios finais.
+
+- [x] Submeter o **form do site** → confirmar redirect `/obrigado` e a candidatura aparecendo no kanban do `/admin`.
+- [x] **Login no `/admin`** (`ADMIN_PASSWORD`) e mudar o status de uma candidatura (novo → curadoria → aprovado).
+- [x] `/admin/cadeiras`: abrir/fechar uma cadeira e editar status.
 
 ## 🔧 Fase 3 — Decisões de dev / dívida técnica
 
@@ -39,13 +42,13 @@ dono: Jean (dev)
 
 ## 🔒 Fase 4 — Segurança
 
-- [ ] **Rotacionar a senha do Postgres exposta** (`PAzo18**` em `roilabs_db`). Depois atualizar `DATABASE_URL` nas env vars da EasyPanel. (ver memória `secrets_to_rotate`)
+- [x] **Rotacionar a senha do Postgres exposta** (`PAzo18**` em `roilabs_db`). Depois atualizar `DATABASE_URL` nas env vars da EasyPanel. (ver memória `secrets_to_rotate`)
 
 ---
 
-## ⏸️ Bloqueado — aguarda o dono (não é ação sua agora)
+## ✅ Resolvido — Logo (Task 2)
 
-- [ ] **Task 2 — Logo.** A grunge atual briga com o site (laranja/clean). Aguardando o dono pedir a **variante que case**. Quando chegar: otimizar (~500px <100KB p/ header + 1200×630 og:image) e aplicar em header (site + admin), favicon e og:image.
+- [x] **Task 2 — Logo.** ✔ Verificado (2026-06-29): variante **clara** (off-white) com chevron laranja hi-vis aplicada no header (`Header.astro` → `roilabs-logo.png`), **visível no header escuro** e alinhada à paleta. Assets otimizados e presentes: logo 173KB, icon 93KB, og-image 31KB, favicon + apple-touch-icon ligados no `Base.astro`. Os 2 gotchas (preta some no escuro / grunge vs. clean) **resolvidos**.
 
 ## 👤 Não-dev (Maria Eduarda / campo)
 
