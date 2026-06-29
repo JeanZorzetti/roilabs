@@ -119,6 +119,9 @@ a { color: inherit; }
 .card__msg { font-size: 13px; margin-top: 0.5rem; white-space: pre-wrap; }
 .card__foot { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.6rem; }
 .card select { font: inherit; font-size: 12px; padding: 0.25rem 0.4rem; border-radius: 6px; border: 1px solid var(--l-line); background: var(--porcelain); }
+.card__del { font: inherit; font-size: 12px; padding: 0.25rem 0.4rem; border-radius: 6px; border: 1px solid var(--l-line); background: transparent; color: #6b7280; cursor: pointer; }
+.card__del:hover:not(:disabled) { border-color: #ef4444; color: #ef4444; }
+.card__del:disabled { opacity: 0.5; cursor: default; }
 .card a.wa { margin-left: auto; font-size: 12px; font-weight: 700; color: var(--hivis-deep); text-decoration: none; }
 
 .empty { color: var(--l-muted); font-size: 13px; padding: 0.5rem 0.35rem; }

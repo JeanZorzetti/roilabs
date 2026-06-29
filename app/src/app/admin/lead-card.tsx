@@ -31,6 +31,14 @@ export function LeadCard({ lead }: { lead: Lead }) {
     router.refresh();
   }
 
+  async function remove() {
+    if (!confirm(`Apagar a candidatura de ${lead.nome} (${lead.empresa})?`)) return;
+    setBusy(true);
+    await fetch(`/api/candidaturas/${lead.id}`, { method: 'DELETE' });
+    setBusy(false);
+    router.refresh();
+  }
+
   // ponytail: assume a local BR number, prefix 55. Add country-code parsing if leads come from elsewhere.
   const wa = '55' + lead.whatsapp.replace(/\D/g, '');
 
@@ -55,6 +63,7 @@ export function LeadCard({ lead }: { lead: Lead }) {
             <option key={s} value={s}>{LEAD_LABELS[s]}</option>
           ))}
         </select>
+        <button type="button" className="card__del" disabled={busy} onClick={remove}>Apagar</button>
         <a className="wa" href={`https://wa.me/${wa}`} target="_blank" rel="noreferrer">WhatsApp →</a>
       </div>
     </div>

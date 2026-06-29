@@ -15,3 +15,11 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   const updated = await prisma.candidatura.update({ where: { id }, data: { status: body.status } });
   return NextResponse.json(updated);
 }
+
+export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  if (!(await isAuthed())) return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
+  const { id } = await params;
+  // catch → idempotente: apagar um id já removido não vira 500.
+  await prisma.candidatura.delete({ where: { id } }).catch(() => null);
+  return NextResponse.json({ ok: true });
+}
