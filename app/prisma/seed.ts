@@ -1,6 +1,6 @@
 // Idempotent seed of the chair map (owner convention: seeds re-run safely).
 import { PrismaClient } from '@prisma/client';
-import { DEFAULT_SEATS } from '../src/lib/seats.ts';
+import { DEFAULT_SEATS } from '../src/lib/seats';
 
 const prisma = new PrismaClient();
 
