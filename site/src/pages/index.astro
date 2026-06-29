@@ -9,14 +9,19 @@ const apply = 'mailto:parceria@roilabs.com.br?subject=Candidatura%20%C3%A0%20cad
 // POST urlencoded simples (sem preflight CORS); a API redireciona pro `redirect`.
 const CANDIDATURAS_ENDPOINT = 'https://app.roilabs.com.br/api/candidaturas';
 
-// Mapa de cadeiras — fonte de verdade é o DB (admin), buscado no build.
-// O site é estático: este fetch roda no `astro build`, não no navegador.
-// Falha o build de propósito se a API estiver fora — melhor não publicar mapa vazio/stale.
-// (Acopla o redeploy do site à API do app estar de pé; cadeira muda raramente.)
-const res = await fetch('https://app.roilabs.com.br/api/cadeiras');
-if (!res.ok) throw new Error(`/api/cadeiras retornou ${res.status} — cadeiras não carregadas, abortando build`);
-const seats: { niche: string; status: string; open: boolean }[] = await res.json();
-if (seats.length === 0) throw new Error('/api/cadeiras vazio — seed não rodou? abortando build');
+// Mapa de cadeiras — skeleton ESTÁTICO (SEO + no-JS). A verdade vem do DB AO VIVO:
+// o <script is:inline> no fim desta section busca /api/cadeiras no NAVEGADOR e atualiza
+// status/aberta a cada carregamento. Build-time fetch foi removido de propósito: o Docker
+// cacheia o layer do `npm run build`, então redeploy sem commit novo servia dist velho e
+// não refletia o admin. Runtime fetch é imune a esse cache e reflete a edição na hora.
+const seats = [
+  { niche: 'Revestimentos / Porcelanato', status: 'Curadoria aberta', open: true },
+  { niche: 'Materiais de construção', status: 'Em estudo', open: false },
+  { niche: 'Esquadrias / Vidraçaria', status: 'Em estudo', open: false },
+  { niche: 'Iluminação / Elétrica', status: 'Em estudo', open: false },
+  { niche: 'Marcenaria sob medida', status: 'Em estudo', open: false },
+  { niche: 'Pisos / Deck externo', status: 'Em estudo', open: false },
+];
 ---
 
 <Base>
@@ -163,6 +168,30 @@ if (seats.length === 0) throw new Error('/api/cadeiras vazio — seed não rodou
         </p>
       </div>
     </section>
+
+    <script is:inline>
+      // Mapa de cadeiras AO VIVO: busca o DB no navegador e sobrescreve o skeleton estático.
+      // ponytail: casa por índice — 6 nichos fixos, a API ordena por `ordem`. Se um dia a
+      // contagem divergir, casar por id. Falhou o fetch? mantém o skeleton (degrada limpo).
+      fetch('https://app.roilabs.com.br/api/cadeiras')
+        .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
+        .then((seats) => {
+          document.querySelectorAll('.map__grid .seat').forEach((li, i) => {
+            const s = seats[i];
+            if (!s) return;
+            li.classList.toggle('seat--open', !!s.open);
+            const st = li.querySelector('.seat__status');
+            if (!st) return;
+            st.textContent = '';
+            const ring = document.createElement('span');
+            ring.className = 'seat__ring';
+            ring.setAttribute('aria-hidden', 'true');
+            st.appendChild(ring);
+            st.appendChild(document.createTextNode(' ' + s.status));
+          });
+        })
+        .catch(() => {});
+    </script>
 
     <!-- PROVA / MERCADO -->
     <section class="section section--dark" id="mercado" aria-labelledby="mercado-title">
