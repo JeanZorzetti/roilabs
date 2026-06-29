@@ -13,6 +13,7 @@ Este vault **é** o mapa. Não leia de cima a baixo: abra o **Graph View** (íco
 > [!info] Estado atual — Polo 1
 > **Goiânia** · nicho âncora **revestimentos/porcelanato** · subdomínio `goiania.roilabs.com.br`.
 > Pendências: validar volumes no Keyword Planner, fechar 1º fornecedor, estrutura jurídica em [[legal-fin]] (com contador). Detalhes em [[handoff]].
+> **Dev (Jean):** o que falta no código/deploy está em [[proximos-passos-dev]].
 
 ## As duas relações (o que evita você se perder)
 
