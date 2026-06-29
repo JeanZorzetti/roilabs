@@ -2,6 +2,13 @@
    grafite-arquitetura + porcelana + laranja hi-vis de obra
    display: Archivo · corpo: Hanken Grotesk · dados: Space Mono */
 
+/* The [hidden] attribute must beat author `display` rules (e.g. .cart-grid/.cart-empty
+   are display:grid). Without this, JS toggling el.hidden does nothing and hidden states
+   render anyway. One rule fixes every hidden-toggled element site-wide. */
+[hidden] {
+  display: none !important;
+}
+
 :root {
   --ink: #14171d;
   --ink-2: #1c2027;
