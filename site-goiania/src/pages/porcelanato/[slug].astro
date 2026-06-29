@@ -6,6 +6,7 @@ import Faq from '../../components/Faq.astro';
 import WhatsappCta from '../../components/WhatsappCta.astro';
 import LeadForm from '../../components/LeadForm.astro';
 import ProdutoCard from '../../components/ProdutoCard.astro';
+import ProdutoDetalhe from '../../components/ProdutoDetalhe.astro';
 import { buildJsonLdNodes } from '../../components/Jsonld.astro';
 import { pages } from '../../data/porcelanato';
 import { produtosDaCategoria } from '../../data/produtos';
@@ -58,12 +59,21 @@ const tipo = page.tipo.charAt(0).toUpperCase() + page.tipo.slice(1);
       </div>
     </section>
 
-    <!-- Produtos reais disponíveis (galeria do catálogo) — ficha técnica real vive no produto -->
-    {produtosRel.length > 0 && (
+    <!-- 1 produto: ficha completa inline (ficha técnica real vive no produto) -->
+    {produtosRel.length === 1 && (
+      <section class="section">
+        <div class="wrap">
+          <ProdutoDetalhe produto={produtosRel[0]} headingTag="h2" />
+        </div>
+      </section>
+    )}
+
+    <!-- 2+ produtos: galeria de cards do catálogo -->
+    {produtosRel.length > 1 && (
       <section class="section section--light">
         <div class="wrap">
           <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:0.6rem;">
-            {produtosRel.length} {produtosRel.length === 1 ? 'opção disponível' : 'opções disponíveis'} em Goiânia
+            {produtosRel.length} opções disponíveis em Goiânia
           </h2>
           <p style="color:var(--l-muted);margin-bottom:2rem;max-width:54ch;">
             Modelos de fornecedores do polo de Goiânia que se encaixam neste perfil.

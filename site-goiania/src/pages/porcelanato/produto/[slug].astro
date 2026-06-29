@@ -2,9 +2,9 @@
 import Base from '../../../layouts/Base.astro';
 import Header from '../../../components/Header.astro';
 import Footer from '../../../components/Footer.astro';
-import WhatsappCta from '../../../components/WhatsappCta.astro';
 import LeadForm from '../../../components/LeadForm.astro';
 import ProdutoCard from '../../../components/ProdutoCard.astro';
+import ProdutoDetalhe from '../../../components/ProdutoDetalhe.astro';
 import {
   produtos,
   nomeProduto,
@@ -24,7 +24,6 @@ const nome = nomeProduto(produto);
 const tituloProduto = `${a.marca} ${nome}`;
 
 const SITE = Astro.site?.href.replace(/\/$/, '') ?? 'https://goiania.roilabs.com.br';
-const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '556299999999';
 const appUrl = import.meta.env.PUBLIC_APP_URL ?? 'https://app.roilabs.com.br';
 const url = `${SITE}/porcelanato/produto/${produto.slug}`;
 
@@ -88,47 +87,7 @@ const jsonLdNodes = [
           <span aria-current="page">{tituloProduto}</span>
         </nav>
 
-        <div class="prod-detail">
-          <!-- Galeria -->
-          <div class="prod-detail__gallery">
-            <div class="prod-detail__main">
-              <img src={produto.imagens[0]} alt={tituloProduto} />
-            </div>
-            {produto.imagens.length > 1 && (
-              <div class="prod-detail__thumbs">
-                {produto.imagens.slice(0, 5).map((src, i) => (
-                  <img src={src} alt={`${tituloProduto} — foto ${i + 1}`} loading="lazy" />
-                ))}
-              </div>
-            )}
-          </div>
-
-          <!-- Info + ficha + CTA -->
-          <div class="prod-detail__info">
-            <span class="eyebrow" style="color:var(--hivis);display:block;margin-bottom:0.8rem;">{a.marca} · Goiânia</span>
-            <h1 style="font-size:clamp(1.8rem,4vw,3rem);">{nome}</h1>
-            <p class="prod-detail__preco">{formatPreco(a.preco)} <small>/m²</small></p>
-
-            <table class="attrs-table" style="margin:1.8rem 0;">
-              <tbody>
-                <tr><th scope="row">Marca</th><td>{a.marca}</td></tr>
-                <tr><th scope="row">Dimensão</th><td>{a.dimensao}</td></tr>
-                <tr><th scope="row">Acabamento</th><td>{a.acabamento}</td></tr>
-                <tr><th scope="row">m² por caixa</th><td>{a.m2_caixa} m²</td></tr>
-                {a.classe_ad != null && (
-                  <tr><th scope="row">Classe de Abrasão (AD)</th><td>{a.classe_ad}</td></tr>
-                )}
-                {a.retificado != null && (
-                  <tr><th scope="row">Retificado</th><td>{a.retificado ? 'Sim' : 'Não'}</td></tr>
-                )}
-              </tbody>
-            </table>
-
-            <div class="cta-block">
-              <WhatsappCta termoAlvo={tituloProduto} numero={whatsapp} />
-            </div>
-          </div>
-        </div>
+        <ProdutoDetalhe produto={produto} headingTag="h1" />
       </div>
     </section>
 
