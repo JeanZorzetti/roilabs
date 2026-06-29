@@ -11,7 +11,8 @@ const slugs    = [...src.matchAll(/slug:\s*['"]([^'"]+)['"]/g)].map((m) => m[1])
 const volumes  = [...src.matchAll(/volume:\s*(\d+)/g)].map((m) => parseInt(m[1], 10));
 const titulos  = [...src.matchAll(/titulo:\s*['"`]([^'"`\n]{4,})/g)].map((m) => m[1]);
 const intros   = [...src.matchAll(/intro:\s*\n?\s*['"`]([\s\S]{10,?}?)['"`]/g)].map((m) => m[1].trim());
-const atribAll = [...src.matchAll(/atributos:\s*\{/g)];
+// pei:\s*\d matches data entries (pei: 4) but NOT the interface (pei?: number)
+const atribAll = [...src.matchAll(/pei:\s*\d/g)];
 const faqAll   = [...src.matchAll(/faq:\s*\[/g)];
 
 let errors = 0;
