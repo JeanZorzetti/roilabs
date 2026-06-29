@@ -1,0 +1,16 @@
+{
+  "name": "site-goiania",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "prebuild": "node src/scripts/check-matrix.mjs",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check-matrix": "node src/scripts/check-matrix.mjs"
+  },
+  "dependencies": {
+    "astro": "^5.6.0"
+  }
+}

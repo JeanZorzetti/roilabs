@@ -1,0 +1,55 @@
+---
+interface Props {
+  produto: string;
+  pagina: string;
+  appUrl: string;
+}
+const { produto, pagina, appUrl } = Astro.props;
+const action = `${appUrl}/api/leads-consumidor`;
+---
+<div class="form-card">
+  <p class="eyebrow" style="color:var(--hivis);display:block;margin-bottom:1.2rem;">Solicitar informações</p>
+  <form class="form" method="POST" action={action}>
+    <!-- honeypot -->
+    <div class="form__hp" aria-hidden="true">
+      <input tabindex="-1" autocomplete="off" name="botcheck" />
+    </div>
+
+    <input type="hidden" name="produto" value={produto} />
+    <input type="hidden" name="pagina" value={pagina} />
+    <input type="hidden" name="redirect" value={new URL('/obrigado', Astro.site).href} />
+
+    <div class="form__row">
+      <div class="field field--req">
+        <label for="lc-nome">Nome</label>
+        <input id="lc-nome" type="text" name="nome" placeholder="Seu nome completo" maxlength="200" required />
+      </div>
+      <div class="field field--req">
+        <label for="lc-whatsapp">WhatsApp</label>
+        <input id="lc-whatsapp" type="tel" name="whatsapp" placeholder="(62) 9xxxx-xxxx" maxlength="40" required />
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="lc-mensagem">Mensagem (opcional)</label>
+      <textarea id="lc-mensagem" name="mensagem" placeholder={`Quero saber mais sobre ${produto} em Goiânia...`} maxlength="4000"></textarea>
+    </div>
+
+    <label class="consent-field">
+      <input type="checkbox" name="consent" value="1" required />
+      <span>
+        Autorizo o uso dos meus dados para contato conforme a{' '}
+        <a href="https://roilabs.com.br/privacidade" target="_blank" rel="noopener" style="color:var(--hivis)">
+          Política de Privacidade
+        </a>
+        . (LGPD — obrigatório)
+      </span>
+    </label>
+
+    <button type="submit" class="btn btn--primary form__submit">
+      Enviar mensagem
+    </button>
+
+    <p class="form__note">Respondemos em até 24h úteis pelo WhatsApp.</p>
+  </form>
+</div>

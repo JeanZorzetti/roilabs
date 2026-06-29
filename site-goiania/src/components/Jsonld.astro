@@ -1,0 +1,55 @@
+---
+// Emite JSON-LD inline para Product + FAQPage + BreadcrumbList.
+// Usado pelo template [slug].astro via jsonLdNodes no Base.astro.
+
+import type { PorcelanatoPage } from '../data/porcelanato';
+
+interface Props {
+  page: PorcelanatoPage;
+  site: string;
+}
+
+const { page, site } = Astro.props;
+
+export function buildJsonLdNodes(page: PorcelanatoPage, site: string): Record<string, unknown>[] {
+  const url = `${site}/porcelanato/${page.slug}`;
+
+  const product: Record<string, unknown> = {
+    '@type': 'Product',
+    name: page.termoAlvo,
+    description: page.intro,
+    brand: { '@type': 'Brand', name: 'ROI Labs — Polo Goiânia' },
+    additionalProperty: [] as Record<string, unknown>[],
+  };
+
+  const props = product.additionalProperty as Record<string, unknown>[];
+  const a = page.atributos;
+  if (a.pei !== undefined) props.push({ '@type': 'PropertyValue', name: 'PEI', value: a.pei });
+  if (a.acabamento) props.push({ '@type': 'PropertyValue', name: 'Acabamento', value: a.acabamento });
+  if (a.dimensao) props.push({ '@type': 'PropertyValue', name: 'Dimensão', value: a.dimensao });
+  if (a.m2PorCaixa) props.push({ '@type': 'PropertyValue', name: 'm² por caixa', value: a.m2PorCaixa });
+  if (a.ambiente) props.push({ '@type': 'PropertyValue', name: 'Ambiente', value: a.ambiente });
+  if (a.antiderrapante !== undefined) props.push({ '@type': 'PropertyValue', name: 'Antiderrapante', value: a.antiderrapante ? 'Sim' : 'Não' });
+
+  const faqPage: Record<string, unknown> = {
+    '@type': 'FAQPage',
+    mainEntity: page.faq.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  };
+
+  const tipo = page.tipo.charAt(0).toUpperCase() + page.tipo.slice(1);
+  const breadcrumb: Record<string, unknown> = {
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Início', item: site },
+      { '@type': 'ListItem', position: 2, name: 'Porcelanato', item: `${site}/porcelanato` },
+      { '@type': 'ListItem', position: 3, name: tipo, item: url },
+    ],
+  };
+
+  return [product, faqPage, breadcrumb];
+}
+---

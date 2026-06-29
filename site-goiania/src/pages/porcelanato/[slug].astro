@@ -1,0 +1,195 @@
+---
+import Base from '../../layouts/Base.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import Faq from '../../components/Faq.astro';
+import WhatsappCta from '../../components/WhatsappCta.astro';
+import LeadForm from '../../components/LeadForm.astro';
+import { buildJsonLdNodes } from '../../components/Jsonld.astro';
+import { pages } from '../../data/porcelanato';
+
+export function getStaticPaths() {
+  return pages.map((p) => ({ params: { slug: p.slug }, props: { page: p } }));
+}
+
+const { page } = Astro.props;
+const SITE = Astro.site?.href.replace(/\/$/, '') ?? 'https://goiania.roilabs.com.br';
+const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '556299999999';
+const appUrl = import.meta.env.PUBLIC_APP_URL ?? 'https://app.roilabs.com.br';
+
+const jsonLdNodes = buildJsonLdNodes(page, SITE);
+
+// Relacionados: slugs explícitos ou mesmos tipo/ocasião (excluindo a própria página)
+const relSlugs = page.relacionados ?? [];
+const relacionados = pages.filter((p) => relSlugs.includes(p.slug));
+
+const tipo = page.tipo.charAt(0).toUpperCase() + page.tipo.slice(1);
+---
+
+<Base
+  title={`${page.titulo} — ROI Labs`}
+  description={page.intro.slice(0, 155)}
+  jsonLdNodes={jsonLdNodes}
+>
+  <Header />
+
+  <main>
+    <!-- Hero / H1 + intro -->
+    <section class="pseo-hero">
+      <div class="wrap">
+        <nav class="breadcrumb" aria-label="Localização">
+          <a href="/">Início</a>
+          <span class="breadcrumb__sep" aria-hidden="true">›</span>
+          <a href="/porcelanato">Porcelanato</a>
+          <span class="breadcrumb__sep" aria-hidden="true">›</span>
+          <span aria-current="page">{tipo}</span>
+        </nav>
+
+        <div class="pseo-hero__eyebrow">
+          <span class="eyebrow">Goiânia · Porcelanato</span>
+        </div>
+        <h1>{page.titulo}</h1>
+        <p class="pseo-hero__intro">{page.intro}</p>
+      </div>
+    </section>
+
+    <!-- Características técnicas -->
+    {Object.values(page.atributos).some((v) => v !== undefined) && (
+      <section class="section section--light">
+        <div class="wrap">
+          <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.8rem;">Características técnicas</h2>
+          <table class="attrs-table">
+            <tbody>
+              {page.atributos.pei !== undefined && (
+                <tr>
+                  <th scope="row">PEI (resistência ao desgaste)</th>
+                  <td>{page.atributos.pei} / 5</td>
+                </tr>
+              )}
+              {page.atributos.acabamento && (
+                <tr>
+                  <th scope="row">Acabamento</th>
+                  <td>{page.atributos.acabamento}</td>
+                </tr>
+              )}
+              {page.atributos.antiderrapante !== undefined && (
+                <tr>
+                  <th scope="row">Antiderrapante</th>
+                  <td>{page.atributos.antiderrapante ? 'Sim' : 'Não'}</td>
+                </tr>
+              )}
+              {page.atributos.dimensao && (
+                <tr>
+                  <th scope="row">Dimensão (comum)</th>
+                  <td>{page.atributos.dimensao}</td>
+                </tr>
+              )}
+              {page.atributos.m2PorCaixa && (
+                <tr>
+                  <th scope="row">m² por caixa (referência)</th>
+                  <td>{page.atributos.m2PorCaixa} m²</td>
+                </tr>
+              )}
+              {page.atributos.ambiente && (
+                <tr>
+                  <th scope="row">Ambientes indicados</th>
+                  <td>{page.atributos.ambiente}</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    )}
+
+    <!-- Ambientes / ocasião -->
+    {page.ocasiao && (
+      <section class="section">
+        <div class="wrap">
+          <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1rem;">
+            Uso ideal: {page.ocasiao.charAt(0).toUpperCase() + page.ocasiao.slice(1)}
+          </h2>
+          <p style="color:var(--d-muted);max-width:62ch;">
+            {page.termoAlvo.charAt(0).toUpperCase() + page.termoAlvo.slice(1)} é especialmente
+            indicado para {page.ocasiao} em Goiânia — confira as especificações técnicas
+            acima e o guia de como escolher abaixo.
+          </p>
+        </div>
+      </section>
+    )}
+
+    <!-- Como escolher -->
+    <section class="section section--light">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.6rem;">
+          Como escolher {page.termoAlvo}
+        </h2>
+        <ul class="guide-list">
+          {page.comoEscolher.map((item) => <li>{item}</li>)}
+        </ul>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    {page.faq.length > 0 && (
+      <section class="section">
+        <div class="wrap">
+          <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.8rem;">
+            Perguntas frequentes
+          </h2>
+          <Faq items={page.faq} />
+        </div>
+      </section>
+    )}
+
+    <!-- CTAs: WhatsApp + formulário -->
+    <section class="section section--light" id="contato">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:0.8rem;">
+          Encontre {page.termoAlvo} em Goiânia
+        </h2>
+        <p style="color:var(--l-muted);margin-bottom:2rem;max-width:52ch;">
+          Conectamos você aos fornecedores exclusivos do polo de Goiânia.
+          Fale pelo WhatsApp agora ou deixe seus dados e entramos em contato.
+        </p>
+
+        <div style="display:grid;gap:2.5rem;align-items:start;">
+          <div>
+            <div class="cta-block" style="margin-bottom:1.5rem;">
+              <WhatsappCta termoAlvo={page.termoAlvo} numero={whatsapp} />
+            </div>
+            <p style="font-family:var(--font-mono);font-size:0.75rem;color:var(--l-muted);">
+              Ou preencha o formulário ao lado — resposta em até 24h úteis.
+            </p>
+          </div>
+
+          <LeadForm
+            produto={page.termoAlvo}
+            pagina={`/porcelanato/${page.slug}`}
+            appUrl={appUrl}
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- Relacionados -->
+    {relacionados.length > 0 && (
+      <section class="section">
+        <div class="wrap">
+          <h2 style="font-size:clamp(1.3rem,2.2vw,1.8rem);margin-bottom:1.4rem;">
+            Veja também
+          </h2>
+          <div class="related-grid">
+            {relacionados.map((r) => (
+              <a href={`/porcelanato/${r.slug}`} class="related-card">
+                {r.titulo.replace(/ em Goiânia.*/, '')}
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
+  </main>
+
+  <Footer />
+</Base>

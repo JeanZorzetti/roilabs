@@ -1,0 +1,61 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+const ORG_ID = 'https://roilabs.com.br/#org';
+const SITE = Astro.site?.href.replace(/\/$/, '') ?? 'https://goiania.roilabs.com.br';
+
+const localBusiness = {
+  '@type': ['LocalBusiness', 'Organization'],
+  '@id': `${SITE}/#localbusiness`,
+  name: 'ROI Labs — Polo Goiânia Porcelanato',
+  url: SITE,
+  description:
+    'Curadoria e intermediação de porcelanato em Goiânia: conectamos compradores a fornecedores exclusivos com custo zero de pesquisa.',
+  areaServed: { '@type': 'City', name: 'Goiânia', '@id': 'https://www.wikidata.org/wiki/Q160236' },
+  address: { '@type': 'PostalAddress', addressLocality: 'Goiânia', addressRegion: 'GO', addressCountry: 'BR' },
+  parentOrganization: { '@id': ORG_ID },
+};
+---
+
+<Base
+  title="Porcelanato em Goiânia — Curadoria ROI Labs"
+  description="Encontre o porcelanato ideal para sua obra em Goiânia. Guias por tipo, ambiente e ocasião, com contato direto com fornecedores exclusivos."
+  jsonLdNodes={[localBusiness]}
+>
+  <Header />
+
+  <main>
+    <section class="section">
+      <div class="wrap">
+        <div class="section__head">
+          <span class="eyebrow" style="color:var(--hivis);display:block;margin-bottom:1rem;">Polo Goiânia</span>
+          <h1>Porcelanato em Goiânia</h1>
+          <p class="section__lead" style="color:var(--d-muted);">
+            Guias completos por tipo, ambiente e acabamento — com acesso direto a
+            fornecedores exclusivos do polo de Goiânia.
+          </p>
+        </div>
+
+        <div style="display:grid;gap:1.5rem;margin-top:2.5rem;">
+          <a
+            href="/porcelanato"
+            style="display:block;border:1px solid var(--d-line-strong);border-radius:12px;padding:1.8rem 2rem;text-decoration:none;transition:border-color .18s ease;"
+            onmouseover="this.style.borderColor='var(--hivis)'"
+            onmouseout="this.style.borderColor='var(--d-line-strong)'"
+          >
+            <span class="eyebrow" style="color:var(--hivis);display:block;margin-bottom:0.8rem;">Nicho 01</span>
+            <h2 style="font-size:clamp(1.6rem,3vw,2.4rem);margin-bottom:0.7rem;">Porcelanato</h2>
+            <p style="color:var(--d-muted);max-width:52ch;">
+              30 guias por tipo, dimensão, acabamento e ambiente — acetinado, amadeirado,
+              marmorizado, antiderrapante e muito mais.
+            </p>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Base>

@@ -1,0 +1,57 @@
+---
+import Base from '../../layouts/Base.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { pages } from '../../data/porcelanato';
+
+const SITE = Astro.site?.href.replace(/\/$/, '') ?? 'https://goiania.roilabs.com.br';
+
+// Agrupar por tipo para exibição organizada
+const byTipo = pages.reduce<Record<string, typeof pages>>((acc, p) => {
+  const key = p.tipo;
+  (acc[key] = acc[key] ?? []).push(p);
+  return acc;
+}, {});
+---
+
+<Base
+  title="Porcelanato em Goiânia — Guias por Tipo e Ambiente | ROI Labs"
+  description="Explore todos os guias de porcelanato para Goiânia: amadeirado, marmorizado, acetinado, antiderrapante, por ambiente e dimensão. Curadoria ROI Labs."
+>
+  <Header />
+
+  <main>
+    <section class="section">
+      <div class="wrap">
+        <nav class="breadcrumb" aria-label="Localização">
+          <a href="/">Início</a>
+          <span class="breadcrumb__sep" aria-hidden="true">›</span>
+          <span aria-current="page">Porcelanato</span>
+        </nav>
+
+        <div class="section__head">
+          <span class="eyebrow" style="color:var(--hivis);display:block;margin-bottom:1rem;">Guias de porcelanato</span>
+          <h1>Porcelanato em Goiânia</h1>
+          <p class="section__lead" style="color:var(--d-muted);">
+            {pages.length} guias completos por tipo, ocasião, dimensão e acabamento —
+            com atributos técnicos, como escolher e FAQ para cada perfil de compra.
+          </p>
+        </div>
+
+        <div class="pseo-index-grid" style="margin-top:3rem;">
+          {pages.map((p) => (
+            <a href={`/porcelanato/${p.slug}`} class="pseo-index-card">
+              <div class="pseo-index-card__title">{p.titulo.replace(/ em Goiânia.*/, '')}</div>
+              <div class="pseo-index-card__meta">
+                {p.tipo}{p.ocasiao ? ` · ${p.ocasiao}` : ''}
+                {p.atributos.dimensao ? ` · ${p.atributos.dimensao}` : ''}
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Base>

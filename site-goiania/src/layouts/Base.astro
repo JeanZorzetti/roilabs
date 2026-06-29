@@ -1,0 +1,97 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogType?: string;
+  jsonLdNodes?: Record<string, unknown>[];
+}
+
+const {
+  title = 'Porcelanato em Goiânia — ROI Labs',
+  description = 'Encontre o porcelanato ideal para sua obra em Goiânia. Curadoria de tipos, ocasiões e atributos técnicos. Fale pelo WhatsApp ou solicite um orçamento.',
+  ogType = 'website',
+  jsonLdNodes = [],
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site);
+
+const ORG_ID = 'https://roilabs.com.br/#org';
+const graph = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': ORG_ID,
+      name: 'ROI Labs',
+      url: 'https://roilabs.com.br/',
+      email: 'parceria@roilabs.com.br',
+      description:
+        'Growth Partner para fornecedores regionais: operação de vendas online sem custo fixo, remuneração 100% variável. Polo 1: Goiânia, nicho revestimentos/porcelanato.',
+      logo: { '@type': 'ImageObject', url: 'https://roilabs.com.br/roilabs-icon.png' },
+      areaServed: { '@type': 'City', name: 'Goiânia' },
+      slogan: 'Construímos sua venda online. Você paga quando vende.',
+    },
+    {
+      '@type': 'WebSite',
+      '@id': 'https://goiania.roilabs.com.br/#website',
+      url: 'https://goiania.roilabs.com.br/',
+      name: 'ROI Labs — Porcelanato Goiânia',
+      inLanguage: 'pt-BR',
+      publisher: { '@id': ORG_ID },
+    },
+    ...jsonLdNodes,
+  ],
+};
+
+const gaId = import.meta.env.PUBLIC_GA_ID;
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/roilabs-icon.png" />
+
+    <meta property="og:type" content={ogType} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:image" content={new URL('/og-image.jpg', Astro.site)} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="theme-color" content="#14171d" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=Hanken+Grotesk:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap"
+    />
+
+    <script type="application/ld+json" set:html={JSON.stringify(graph)} />
+
+    {gaId && (
+      <>
+        <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}></script>
+        <script is:inline define:vars={{ gaId }}>
+          window.dataLayer = window.dataLayer || [];
+          function gtag() { dataLayer.push(arguments); }
+          gtag('js', new Date());
+          gtag('config', gaId);
+        </script>
+      </>
+    )}
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

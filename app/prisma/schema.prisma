@@ -26,6 +26,23 @@ model Candidatura {
   @@map("candidaturas")
 }
 
+// Lead de consumidor vindo do formulário das páginas pSEO de porcelanato.
+model LeadConsumidor {
+  id          String   @id @default(cuid())
+  nome        String
+  whatsapp    String
+  produto     String?
+  pagina      String?
+  mensagem    String?
+  consentLGPD Boolean  @default(false) @map("consent_lgpd")
+  status      String   @default("novo")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@index([status])
+  @@map("leads_consumidor")
+}
+
 // Mapa de cadeiras — espelha o seats[] hard-coded do site (niche/status/open).
 model Cadeira {
   id        String   @id @default(cuid())

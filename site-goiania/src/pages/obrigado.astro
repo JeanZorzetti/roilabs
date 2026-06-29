@@ -1,0 +1,27 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Base
+  title="Mensagem recebida — ROI Labs Goiânia"
+  description="Recebemos sua mensagem. Entraremos em contato em até 24h úteis pelo WhatsApp."
+>
+  <Header />
+  <main class="thanks">
+    <div class="wrap thanks__inner">
+      <span class="eyebrow thanks__eyebrow">Mensagem recebida</span>
+      <h1>Entraremos em contato em breve.</h1>
+      <p class="thanks__lead">
+        Recebemos suas informações sobre porcelanato em Goiânia. Nossa equipe responde
+        em até 24h úteis pelo WhatsApp que você informou.
+      </p>
+      <div style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;">
+        <a class="btn btn--ghost" href="/porcelanato">Ver mais guias</a>
+        <a class="btn btn--primary" href="/">Início</a>
+      </div>
+    </div>
+  </main>
+  <Footer />
+</Base>
