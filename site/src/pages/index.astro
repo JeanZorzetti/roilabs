@@ -9,15 +9,14 @@ const apply = 'mailto:parceria@roilabs.com.br?subject=Candidatura%20%C3%A0%20cad
 // POST urlencoded simples (sem preflight CORS); a API redireciona pro `redirect`.
 const CANDIDATURAS_ENDPOINT = 'https://app.roilabs.com.br/api/candidaturas';
 
-// Mapa de cadeiras — Polo Goiânia. Só revestimentos está em curadoria aberta.
-const seats = [
-  { niche: 'Revestimentos / Porcelanato', status: 'Curadoria aberta', open: true },
-  { niche: 'Materiais de construção', status: 'Em estudo', open: false },
-  { niche: 'Esquadrias / Vidraçaria', status: 'Em estudo', open: false },
-  { niche: 'Iluminação / Elétrica', status: 'Em estudo', open: false },
-  { niche: 'Marcenaria sob medida', status: 'Em estudo', open: false },
-  { niche: 'Pisos / Deck externo', status: 'Em estudo', open: false },
-];
+// Mapa de cadeiras — fonte de verdade é o DB (admin), buscado no build.
+// O site é estático: este fetch roda no `astro build`, não no navegador.
+// Falha o build de propósito se a API estiver fora — melhor não publicar mapa vazio/stale.
+// (Acopla o redeploy do site à API do app estar de pé; cadeira muda raramente.)
+const res = await fetch('https://app.roilabs.com.br/api/cadeiras');
+if (!res.ok) throw new Error(`/api/cadeiras retornou ${res.status} — cadeiras não carregadas, abortando build`);
+const seats: { niche: string; status: string; open: boolean }[] = await res.json();
+if (seats.length === 0) throw new Error('/api/cadeiras vazio — seed não rodou? abortando build');
 ---
 
 <Base>
