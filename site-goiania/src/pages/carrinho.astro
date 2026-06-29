@@ -132,18 +132,6 @@ const action = `${appUrl}/api/pedidos`;
   .cart-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 2rem; align-items: start; }
   @media (max-width: 760px) { .cart-grid { grid-template-columns: 1fr; } }
   .cart-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 1rem; }
-  .cart-line {
-    display: grid; grid-template-columns: 1fr auto; gap: 0.6rem 1rem;
-    padding: 1rem; border: 1px solid var(--d-line); border-radius: 10px; background: var(--ink-2);
-  }
-  .cart-line__name { font-weight: 600; color: var(--d-text); }
-  .cart-line__meta { font-size: 0.85rem; color: var(--d-muted); }
-  .cart-line__sub { font-weight: 700; white-space: nowrap; color: var(--d-text); }
-  .cart-line__edit { display: flex; gap: 0.8rem; flex-wrap: wrap; margin-top: 0.6rem; }
-  .cart-line__edit label { display: inline-flex; flex-direction: column; gap: 0.2rem; font-size: 0.78rem; color: var(--d-muted); }
-  .cart-line__edit input { width: 5rem; padding: 0.4rem 0.5rem; border: 1px solid var(--d-line-strong); border-radius: 6px; font: inherit; background: var(--ink-3); color: var(--d-text); }
-  .cart-line__rm { background: none; border: 0; color: var(--d-muted); cursor: pointer; font-size: 0.85rem; text-decoration: underline; margin-top: 0.5rem; }
-  .cart-line__rm:hover { color: var(--hivis); }
   .cart-actions { margin-top: 1.2rem; }
   .cart-share { background: none; border: 1px solid var(--d-line-strong); color: var(--d-text); border-radius: 8px; padding: 0.6rem 0.9rem; cursor: pointer; font: inherit; font-size: 0.88rem; }
   .cart-share:hover { color: var(--hivis); border-color: var(--hivis); }
@@ -167,6 +155,29 @@ const action = `${appUrl}/api/pedidos`;
   .cart-fail { display: grid; gap: 0.9rem; justify-items: start; }
   .cart-loading { color: var(--d-muted); padding: 2rem 0; }
   .cart-empty { text-align: center; padding: 3rem 1rem; display: grid; gap: 1.2rem; justify-items: center; }
+</style>
+
+<style is:global>
+  /* Cart line items are built client-side via innerHTML, so they never get Astro's
+     scoped data-astro-cid attribute — these rules must be global to reach them
+     (same reason MiniCart uses is:global). */
+  .cart-line {
+    display: grid; grid-template-columns: 1fr auto; gap: 0.45rem 1.2rem;
+    padding: 1.15rem 1.25rem; border: 1px solid var(--d-line); border-radius: 12px;
+    background: var(--ink-2); align-items: start;
+  }
+  .cart-line__name { font-weight: 700; color: var(--d-text); font-size: 1rem; line-height: 1.3; }
+  .cart-line__meta { font-size: 0.82rem; color: var(--d-muted); }
+  .cart-line__sub { text-align: right; font-weight: 800; white-space: nowrap; color: var(--d-text); font-size: 1.1rem; }
+  .cart-line__edit { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; margin: 0.8rem 0 0.55rem; max-width: 300px; }
+  .cart-line__edit label { display: grid; gap: 0.28rem; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--d-muted); font-weight: 600; }
+  .cart-line__edit input {
+    width: 100%; padding: 0.6rem 0.75rem; border: 1px solid var(--d-line-strong);
+    border-radius: 8px; font: inherit; font-size: 0.95rem; background: var(--ink-3); color: var(--d-text);
+  }
+  .cart-line__edit input:focus-visible { outline: 2px solid var(--hivis); outline-offset: 1px; border-color: var(--hivis); }
+  .cart-line__rm { justify-self: start; background: none; border: 0; color: var(--d-muted); cursor: pointer; font-size: 0.82rem; text-decoration: underline; padding: 0; margin-top: 0.15rem; }
+  .cart-line__rm:hover { color: var(--hivis); }
 </style>
 
 <script>

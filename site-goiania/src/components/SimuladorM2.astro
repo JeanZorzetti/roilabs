@@ -25,6 +25,17 @@ const { slug, m2Caixa, preco } = Astro.props;
 <style>
   .simulador { display: grid; gap: 0.8rem; }
   .simulador__rooms { display: grid; gap: 0.6rem; }
+  .simulador__add { background: none; border: 1px dashed color-mix(in srgb, currentColor 35%, transparent); color: inherit; border-radius: 8px; padding: 0.5rem; cursor: pointer; font: inherit; opacity: 0.85; }
+  .simulador__add:hover { color: var(--hivis); opacity: 1; }
+  .simulador__folga { display: grid; gap: 0.3rem; font-size: 0.85rem; opacity: 0.85; }
+  .simulador__folga-input { width: 6rem; padding: 0.5rem 0.6rem; border: 1px solid color-mix(in srgb, currentColor 28%, transparent); border-radius: 8px; background: color-mix(in srgb, currentColor 6%, transparent); color: inherit; font: inherit; }
+  .simulador__preview { margin: 0; min-height: 1.3em; font-size: 0.9rem; color: var(--hivis); font-weight: 600; }
+  .simulador__preview a { color: var(--hivis); font-weight: 700; text-decoration: underline; }
+</style>
+
+<style is:global>
+  /* Room rows are added client-side via innerHTML → no Astro scope attribute,
+     so these must be global to apply (currentColor/inherit adapt to the parent). */
   .simulador__room { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
   .simulador__room input {
     flex: 1 1 5rem; min-width: 0; padding: 0.6rem 0.7rem;
@@ -36,12 +47,6 @@ const { slug, m2Caixa, preco } = Astro.props;
   .simulador__room span { opacity: 0.6; font-size: 0.85rem; }
   .simulador__room button { background: none; border: 0; color: inherit; opacity: 0.6; cursor: pointer; font-size: 1.1rem; padding: 0 0.3rem; }
   .simulador__room button:hover { color: var(--hivis); opacity: 1; }
-  .simulador__add { background: none; border: 1px dashed color-mix(in srgb, currentColor 35%, transparent); color: inherit; border-radius: 8px; padding: 0.5rem; cursor: pointer; font: inherit; opacity: 0.85; }
-  .simulador__add:hover { color: var(--hivis); opacity: 1; }
-  .simulador__folga { display: grid; gap: 0.3rem; font-size: 0.85rem; opacity: 0.85; }
-  .simulador__folga-input { width: 6rem; padding: 0.5rem 0.6rem; border: 1px solid color-mix(in srgb, currentColor 28%, transparent); border-radius: 8px; background: color-mix(in srgb, currentColor 6%, transparent); color: inherit; font: inherit; }
-  .simulador__preview { margin: 0; min-height: 1.3em; font-size: 0.9rem; color: var(--hivis); font-weight: 600; }
-  .simulador__preview a { color: var(--hivis); font-weight: 700; text-decoration: underline; }
 </style>
 
 <script>
