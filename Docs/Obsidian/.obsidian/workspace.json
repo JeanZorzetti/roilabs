@@ -1,0 +1,209 @@
+{
+  "main": {
+    "id": "dbfc0deb79a0449f",
+    "type": "split",
+    "children": [
+      {
+        "id": "77fd68def274b1f6",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "3c183d87334b6597",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "handoff.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "handoff"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "c3aff550ca7c8294",
+    "type": "split",
+    "children": [
+      {
+        "id": "14a71e7796a69b90",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "59965b684d953507",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Explorador de arquivos"
+            }
+          },
+          {
+            "id": "1fa011b100f5692c",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Procurar"
+            }
+          },
+          {
+            "id": "91db691d3890abed",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Marcadores"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "aeca8dff713b9098",
+    "type": "split",
+    "children": [
+      {
+        "id": "add66a987cf2e5e0",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "e445f866610a4c7f",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "handoff.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Links inversos para handoff"
+            }
+          },
+          {
+            "id": "2a75fb4846af26f4",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "handoff.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Links de saída para handoff"
+            }
+          },
+          {
+            "id": "7e61cd3cb665bdfa",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Etiquetas"
+            }
+          },
+          {
+            "id": "8979cb5bbb9472d4",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "Todas as propriedades"
+            }
+          },
+          {
+            "id": "7143d1255d1fc426",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "handoff.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Sumário de handoff"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Abrir a troca rápida": false,
+      "graph:Abrir visualização em gráfico": false,
+      "canvas:Criar novo canvas": false,
+      "daily-notes:Abrir a nota de hoje": false,
+      "templates:Inserir modelo": false,
+      "command-palette:Abrir paleta de comandos": false,
+      "bases:Criar nova base": false
+    }
+  },
+  "active": "3c183d87334b6597",
+  "lastOpenFiles": [
+    "10-mercado/mercado.md",
+    "handoff.md",
+    "handoff.md.tmp.22520.f6911a6ff7ba",
+    "INDEX.md.tmp.22520.4d17c3bd1502",
+    "00-tese/tese.md",
+    "70-time/time.md",
+    "60-legal-fin/legal-fin.md",
+    "50-operacao/operacao.md",
+    "40-gtm/gtm.md",
+    "30-modelo/modelo.md",
+    "20-oferta/oferta.md",
+    "notebook/Blueprint Estratégico_ Hub de Infraestrutura Digital Roylabs.md",
+    "notebook/ROI Labs_B2B_Infrastructure_Blueprint.pdf",
+    "notebook/Pesquisa Hub E-commerce ROI Labs.md",
+    "notebook/Blueprint Estratégico_ Hub de Infraestrutura Digital ROI Labs.md",
+    "00-tese/ElfhWfRr",
+    "Sem título.canvas",
+    "Sem título.base",
+    "INDEX.md",
+    "_template.md"
+  ]
+}

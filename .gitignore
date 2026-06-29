@@ -25,3 +25,6 @@ pnpm-debug.log*
 
 # playwright artifacts
 .playwright-mcp/
+
+# cloned third-party tool (OpenSEO keyword planner) — not part of this repo
+open-seo/
