@@ -8,6 +8,13 @@
 
 **Input**: User description: "Começar o pSEO do polo Goiânia, nicho âncora porcelanato — páginas regionais de cauda longa que captam a demanda local real e convertem visitante em lead, na IA decidida (subdomínio por polo, nicho como pasta: goiania.roilabs.com.br/porcelanato/{slug})."
 
+## Clarifications
+
+### Session 2026-06-29
+
+- Q: Captura de lead na v1 (sem fornecedor fechado) → A: **Os dois** — WhatsApp click-to-chat (canal primário) + formulário que grava um registro `LeadConsumidor` no `/app` (separado de `Candidatura`); ambos chegam à ROI Labs. O formulário exige consentimento LGPD.
+- Q: Escopo de código para medir indexação/tráfego (SC-002/SC-006) → A: A feature entrega **sitemap + tag de analytics no código**; a submissão ao Google Search Console é **passo de operação** (fora do código).
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Comprador local encontra e entende um tipo de porcelanato (Priority: P1)
@@ -36,8 +43,9 @@ Depois de ler a página, o visitante manifesta intenção de compra (pede orçam
 
 **Acceptance Scenarios**:
 
-1. **Given** um visitante numa página de produto, **When** ele aciona o CTA de orçamento/contato, **Then** um lead com o contexto da página (produto/ocasião) é entregue à ROI Labs.
-2. **Given** que ainda não há fornecedor nem catálogo, **When** o visitante converte, **Then** o destino do lead é a ROI Labs (não um fornecedor inexistente).
+1. **Given** um visitante numa página de produto, **When** ele aciona o CTA de WhatsApp, **Then** abre uma conversa com mensagem pré-preenchida do contexto da página e o contato chega à ROI Labs.
+2. **Given** um visitante preenchendo o formulário, **When** ele tenta enviar sem marcar o consentimento (LGPD), **Then** o envio é bloqueado; **And** ao consentir e enviar, um registro de lead com o contexto da página é persistido e visível à operação da ROI Labs.
+3. **Given** que ainda não há fornecedor nem catálogo, **When** o visitante converte por qualquer canal, **Then** o destino do lead é a ROI Labs (não um fornecedor inexistente).
 
 ---
 
@@ -63,6 +71,7 @@ A ROI Labs (operação) adiciona uma nova página (novo tipo, ocasião ou, futur
 - **Visitante sem JavaScript / robô:** o conteúdo principal e o CTA continuam acessíveis (página estática).
 - **Páginas quase-duplicadas entre tipos:** cada página tem conteúdo distinto e específico do seu tipo/ocasião — nunca boilerplate repetido (evita conteúdo fino / doorway).
 - **Termo com intenção mas volume individual baixo (long-tail):** entra apenas se for combinação de alta intenção curada, não por produto cartesiano cego.
+- **Submissões automatizadas/spam no formulário:** bloqueadas por honeypot (padrão já usado nas candidaturas de fornecedor).
 
 ## Requirements *(mandatory)*
 
@@ -73,18 +82,21 @@ A ROI Labs (operação) adiciona uma nova página (novo tipo, ocasião ou, futur
 - **FR-003**: Cada página MUST apresentar conteúdo de guia de compra genuinamente útil e específico do tipo (o que é, ambientes/ocasiões ideais, como escolher) — nunca conteúdo fino ou repetido.
 - **FR-004**: Cada página MUST expor os atributos técnicos estruturados apropriados ao tipo de produto (para porcelanato: dimensão, PEI, acabamento, antiderrapante, m²/caixa, ambiente).
 - **FR-005**: Cada página MUST incluir uma seção de dúvidas frequentes respondendo perguntas comuns do comprador local (sustenta citação por motores de resposta / IA).
-- **FR-006**: Cada página MUST oferecer um CTA claro pelo qual o visitante manifesta intenção de compra, e o lead resultante MUST chegar à ROI Labs.
+- **FR-006**: Cada página MUST oferecer CTAs de intenção de compra por **dois canais**: (a) WhatsApp click-to-chat com mensagem pré-preenchida do contexto da página (canal primário) e (b) um formulário curto; ambos MUST resultar em lead recebido pela ROI Labs.
 - **FR-007**: As páginas MUST ser descobríveis por buscadores: cada uma indexável, interligada dentro do seu silo e listada em um sitemap.
 - **FR-008**: O conjunto de páginas MUST ser gerado a partir de uma única fonte de dados curada, de modo que adicionar/remover uma página seja uma mudança de dados, não autoria sob medida.
 - **FR-009**: Enquanto não houver catálogo de fornecedor, as páginas MUST permanecer informacionais (sem produtos, preços ou estoque fabricados) e MUST poder ganhar listagem real de produto depois nas mesmas URLs, sem quebrar links.
 - **FR-010**: O conteúdo da página MUST estar presente sem scripting no cliente (HTML estático), para que buscadores e visitantes sem JS recebam o conteúdo completo.
 - **FR-011**: A primeira entrega MUST cobrir aproximadamente 25-40 páginas curadas de porcelanato, abrangendo tipos de produto, ambientes/ocasiões e buscas de intenção local, ancoradas na demanda validada.
 - **FR-012**: Uma página-hub regional MUST listar o(s) nicho(s) disponível(is) do polo (hoje, porcelanato) como ponto de entrada.
+- **FR-013**: O lead enviado por formulário MUST ser persistido como um registro de consumidor separado das candidaturas de fornecedor e visível à operação da ROI Labs. (Leads por WhatsApp chegam como mensagem; não são persistidos na v1.)
+- **FR-014**: A captura por formulário MUST obter consentimento explícito do visitante (LGPD), exibir/linkar um aviso de privacidade e armazenar apenas os campos de contato necessários.
+- **FR-015**: A feature MUST incluir um sitemap e uma tag de analytics no código; a submissão a ferramentas de busca (ex.: Search Console) é passo de operação, fora do escopo de código.
 
 ### Key Entities *(include if feature involves data)*
 
 - **Página pSEO**: uma landing regional para um alvo de busca. Atributos: termo-alvo, tipo/ocasião, título, blocos de conteúdo, atributos técnicos, dúvidas frequentes, CTA. Pertence a um silo de nicho.
-- **Lead de consumidor**: um contato de intenção de compra vindo de um visitante. Atributos: contexto da página/produto, dado de contato, momento. Destino: ROI Labs.
+- **Lead de consumidor**: intenção de compra de um visitante. Pelo formulário, vira um **registro persistido** (contexto da página/produto, dado de contato, consentimento, momento), separado das candidaturas de fornecedor e visível à operação; pelo WhatsApp, chega como **mensagem** (não persistida na v1). Destino: ROI Labs.
 - **Entrada de catálogo (futuro)**: listagem de produto que mais tarde se acopla a uma página; fora do escopo de conteúdo da v1, mas referenciada por FR-009.
 
 ## Success Criteria *(mandatory)*
@@ -104,5 +116,6 @@ A ROI Labs (operação) adiciona uma nova página (novo tipo, ocasião ou, futur
 - Polo e nicho âncora estão fixos: Goiânia + porcelanato (decisões de `mercado`/`gtm` no vault).
 - A demanda parte do snapshot do Keyword Planner já validado (tipos/ocasiões de porcelanato); o refinamento de volume por página vem depois, quando a ferramenta for re-rodada.
 - A demanda é de nível cidade/tipo-de-produto; páginas de nível bairro estão fora do escopo da v1 (volume validado ~zero).
-- O mecanismo de conversão (ex.: mensagem direta vs. formulário) é detalhe de implementação resolvido no planejamento; o requisito é apenas que o lead chegue à ROI Labs.
+- Conversão (resolvida no clarify): dois canais — WhatsApp click-to-chat (primário) + formulário que grava um registro de lead de consumidor; ambos chegam à ROI Labs.
+- Medição (resolvida no clarify): sitemap + tag de analytics entram no código; a submissão ao Search Console é passo de operação.
 - A hospedagem/deploy da propriedade regional é passo de operação, executado fora do código desta feature.
