@@ -3,6 +3,10 @@ import Base from '../layouts/Base.astro';
 
 const apply = 'mailto:parceria@roilabs.com.br?subject=Candidatura%20%C3%A0%20cadeira%20%E2%80%94%20Goi%C3%A2nia';
 
+// Web3Forms: chave PÚBLICA (não é segredo, vai no HTML por design).
+// Pegue a sua em https://web3forms.com com o e-mail parceria@roilabs.com.br e cole aqui.
+const WEB3FORMS_KEY = 'YOUR_WEB3FORMS_ACCESS_KEY';
+
 // Mapa de cadeiras — Polo Goiânia. Só revestimentos está em curadoria aberta.
 const seats = [
   { niche: 'Revestimentos / Porcelanato', status: 'Curadoria aberta', open: true },
@@ -25,7 +29,7 @@ const seats = [
         <a class="nav__link" href="#mecanica">Mecânica</a>
         <a class="nav__link" href="#cadeiras">Cadeiras</a>
         <a class="nav__link" href="#mercado">Mercado</a>
-        <a class="btn btn--primary btn--sm nav__cta" href={apply}>Aplicar</a>
+        <a class="btn btn--primary btn--sm nav__cta" href="#candidatar">Aplicar</a>
       </nav>
     </div>
   </header>
@@ -46,7 +50,7 @@ const seats = [
             do seu.
           </p>
           <div class="hero__actions">
-            <a class="btn btn--primary" href={apply}>Aplicar para a cadeira</a>
+            <a class="btn btn--primary" href="#candidatar">Aplicar para a cadeira</a>
             <a class="btn btn--ghost" href="#mecanica">Ver como funciona</a>
           </div>
         </div>
@@ -332,20 +336,82 @@ const seats = [
       </div>
     </section>
 
-    <!-- CTA -->
-    <section class="cta" aria-labelledby="cta-title">
-      <div class="wrap cta__inner">
+    <!-- CANDIDATAR (close + form) -->
+    <section class="section close" id="candidatar" aria-labelledby="close-title">
+      <div class="wrap close__inner">
         <div>
-          <h2 id="cta-title">A cadeira de revestimentos de Goiânia está em curadoria.</h2>
-          <p>
+          <span class="eyebrow close__eyebrow">Candidate-se</span>
+          <h2 id="close-title">A cadeira de revestimentos de Goiânia está em curadoria.</h2>
+          <p class="close__copy">
             Uma empresa vai sentar nela e dominar a busca local de porcelanato.
             Sem custo fixo, sem risco de tecnologia. Candidate-se antes do seu
             concorrente.
           </p>
+          <p class="close__fine">
+            Resposta em até 48h úteis. Prefere e-mail?
+            <a href={apply}>parceria@roilabs.com.br</a>
+          </p>
         </div>
-        <div class="cta__actions">
-          <a class="btn btn--invert" href={apply}>Candidatar minha empresa</a>
-          <span class="cta__fine">resposta em até 48h úteis</span>
+
+        <div class="form-card">
+          <form class="form" action="https://api.web3forms.com/submit" method="POST">
+            <input type="hidden" name="access_key" value={WEB3FORMS_KEY} />
+            <input type="hidden" name="subject" value="Nova candidatura à cadeira — Goiânia" />
+            <input type="hidden" name="from_name" value="Site ROI Labs" />
+            <input type="hidden" name="redirect" value="https://roilabs.com.br/obrigado" />
+
+            <div class="form__hp" aria-hidden="true">
+              <label>Não preencha<input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" /></label>
+            </div>
+
+            <div class="form__row">
+              <div class="field field--req">
+                <label for="f-nome">Seu nome</label>
+                <input id="f-nome" name="nome" type="text" required autocomplete="name" />
+              </div>
+              <div class="field field--req">
+                <label for="f-empresa">Empresa</label>
+                <input id="f-empresa" name="empresa" type="text" required autocomplete="organization" />
+              </div>
+            </div>
+
+            <div class="form__row">
+              <div class="field field--req">
+                <label for="f-whats">WhatsApp</label>
+                <input id="f-whats" name="whatsapp" type="tel" required placeholder="(62) 9____-____" autocomplete="tel" />
+              </div>
+              <div class="field">
+                <label for="f-cidade">Cidade</label>
+                <input id="f-cidade" name="cidade" type="text" value="Goiânia" autocomplete="address-level2" />
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="f-cat">Categoria / nicho</label>
+              <select id="f-cat" name="categoria">
+                <option>Revestimentos / Porcelanato</option>
+                <option>Materiais de construção</option>
+                <option>Esquadrias / Vidraçaria</option>
+                <option>Iluminação / Elétrica</option>
+                <option>Marcenaria sob medida</option>
+                <option>Pisos / Deck externo</option>
+                <option>Outro</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="f-site">Site atual (opcional)</label>
+              <input id="f-site" name="site" type="url" placeholder="https://" />
+            </div>
+
+            <div class="field">
+              <label for="f-msg">Sobre sua operação (opcional)</label>
+              <textarea id="f-msg" name="mensagem" placeholder="Catálogo, capacidade de estoque/despacho, o que já vende online…"></textarea>
+            </div>
+
+            <button class="btn btn--primary form__submit" type="submit">Enviar candidatura</button>
+            <p class="form__note">Sem custo, sem compromisso. Leva 1 minuto.</p>
+          </form>
         </div>
       </div>
     </section>

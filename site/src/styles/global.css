@@ -687,61 +687,6 @@ a {
   color: var(--d-muted);
 }
 
-/* ---------- cta final ---------- */
-.cta {
-  background: var(--hivis);
-  color: #1a0c05;
-}
-
-.cta__inner {
-  display: grid;
-  gap: 1.8rem;
-  padding-block: clamp(3.5rem, 7vw, 6rem);
-}
-
-@media (min-width: 860px) {
-  .cta__inner {
-    grid-template-columns: 1.3fr 0.7fr;
-    align-items: center;
-  }
-}
-
-.cta h2 {
-  font-size: clamp(2rem, 4.4vw, 3.4rem);
-  color: #1a0c05;
-  text-wrap: balance;
-}
-
-.cta p {
-  margin-top: 1rem;
-  color: #3d1c0c;
-  max-width: 42ch;
-}
-
-.cta__actions {
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
-}
-
-.btn--invert {
-  background: var(--ink);
-  color: var(--porcelain);
-  justify-content: center;
-}
-
-.btn--invert:hover {
-  background: #0c0e12;
-}
-
-.cta__fine {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.05em;
-  color: #5a2e16;
-  text-align: center;
-}
-
 /* ---------- footer ---------- */
 .site-footer {
   border-top: 1px solid var(--d-line);
@@ -961,6 +906,174 @@ a {
   margin: 0;
   max-width: 66ch;
   color: var(--d-muted);
+}
+
+/* ---------- close + form ---------- */
+.close {
+  border-top: 1px solid var(--d-line);
+}
+
+.close__inner {
+  display: grid;
+  gap: clamp(2.2rem, 4vw, 3.5rem);
+  align-items: start;
+}
+
+@media (min-width: 900px) {
+  .close__inner {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.close__eyebrow {
+  color: var(--hivis);
+  display: block;
+  margin-bottom: 1.2rem;
+}
+
+.close h2 {
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  text-wrap: balance;
+}
+
+.close__copy {
+  margin-top: 1.2rem;
+  color: var(--d-muted);
+  max-width: 42ch;
+}
+
+.close__fine {
+  margin-top: 1.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--d-muted);
+}
+
+.close__fine a {
+  color: var(--hivis);
+}
+
+.form-card {
+  background: linear-gradient(160deg, var(--ink-2), var(--ink));
+  border: 1px solid var(--d-line-strong);
+  border-radius: 14px;
+  padding: clamp(1.5rem, 3vw, 2rem);
+  box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.7);
+}
+
+.form {
+  display: grid;
+  gap: 1rem;
+}
+
+.form__row {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 560px) {
+  .form__row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.field {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.field label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--d-muted);
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  background: var(--ink-3);
+  border: 1px solid var(--d-line-strong);
+  border-radius: 8px;
+  color: var(--d-text);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  padding: 0.78rem 0.9rem;
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+  color: #6b7280;
+}
+
+.field textarea {
+  resize: vertical;
+  min-height: 92px;
+}
+
+.field--req label::after {
+  content: ' *';
+  color: var(--hivis);
+}
+
+/* honeypot — escondido de humanos */
+.form__hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.form__submit {
+  width: 100%;
+  justify-content: center;
+  margin-top: 0.3rem;
+}
+
+.form__note {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--d-muted);
+  text-align: center;
+}
+
+.form__note a {
+  color: var(--hivis);
+}
+
+/* ---------- thank-you page ---------- */
+.thanks {
+  display: grid;
+  place-items: center;
+  min-height: 80vh;
+  text-align: center;
+}
+
+.thanks__inner {
+  max-width: 46ch;
+  padding-block: clamp(4rem, 10vw, 7rem);
+}
+
+.thanks__eyebrow {
+  color: var(--hivis);
+  display: inline-block;
+  margin-bottom: 1.4rem;
+}
+
+.thanks h1 {
+  font-size: clamp(2.2rem, 5vw, 3.6rem);
+  line-height: 1;
+  text-wrap: balance;
+}
+
+.thanks__lead {
+  margin: 1.4rem 0 2.4rem;
+  color: var(--d-muted);
+  font-size: 1.1rem;
 }
 
 @media (prefers-reduced-motion: reduce) {
