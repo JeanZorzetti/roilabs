@@ -17,6 +17,8 @@ FROM node:22-alpine AS run
 WORKDIR /app
 ENV NODE_ENV=production
 ENV PORT=3000
+# Next standalone bind em 0.0.0.0 (senão escuta em localhost e o proxy não alcança).
+ENV HOSTNAME=0.0.0.0
 COPY --from=build /app/public ./public
 COPY --from=build /app/.next/standalone ./
 COPY --from=build /app/.next/static ./.next/static
