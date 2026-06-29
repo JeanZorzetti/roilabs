@@ -23,16 +23,18 @@ dono: Jean (dev)
 - [x] **Verificar o build real no Docker.** `next build` nunca rodou local (gotcha OneDrive corrompe `node_modules`). Build limpo é no Docker — conferir que sobe sem erro.
 - [x] **Criar App `/site` na EasyPanel.** Build path = `/site`, Dockerfile (node build → nginx), domínio `roilabs.com.br`. Esse deploy nunca foi feito. Já leva o **blog GEO** junto (commit `701488d`).
 - [x] **Redeploy do `/site`** para publicar o novo `action` do form (agora posta em `app.roilabs.com.br/api/candidaturas`, era Web3Forms placeholder). Se criar o App já com o código atual, está coberto.
-- [ ] **DNS:** `roilabs.com.br` → App do site; `app.roilabs.com.br` → App do admin.
+- [x] **DNS:** `roilabs.com.br` → App do site; `app.roilabs.com.br` → App do admin.
 
 ## 🔎 Fase 2 — Validar (smoke test E2E em prod)
 
-> [!warning] Re-rodar nos domínios FINAIS, não nos temporários da EasyPanel
-> Verificado 2026-06-29: `roilabs.com.br` e `app.roilabs.com.br` ainda **não resolvem** (DNS pendente, ver Fase 1). O `action` do form é **hard-coded** pra `https://app.roilabs.com.br/api/candidaturas` — enquanto esse domínio não resolver, o form **quebra em prod** (posta em host inexistente). Logo: os ✔ abaixo só valem **depois do DNS**, testados nos domínios finais.
+> [!success] Verificado em prod — 2026-06-29 (DNS propagou)
+> Domínios finais no ar: `roilabs.com.br` e `app.roilabs.com.br` → **HTTP 200** @ `2.24.207.200`. E2E confirmado: `GET /api/cadeiras` = 6 cadeiras (DB+seed reais); `POST /api/candidaturas` → 303 → `/obrigado` (grava lead); `/admin` exige login (307); honeypot bloqueia; `/admin/cadeiras` operável.
 
 - [x] Submeter o **form do site** → confirmar redirect `/obrigado` e a candidatura aparecendo no kanban do `/admin`.
 - [x] **Login no `/admin`** (`ADMIN_PASSWORD`) e mudar o status de uma candidatura (novo → curadoria → aprovado).
 - [x] `/admin/cadeiras`: abrir/fechar uma cadeira e editar status.
+- [ ] **Form REAL no browser** em `roilabs.com.br` com acento ("Goiânia") → confirmar que grava **sem mojibake**. Site tem `<meta charset=utf-8>`; o "Goi�nia" dos leads de teste veio de bytes ruins do terminal, não do app — confirmar pelo lead `UTF8 TEST`.
+- [ ] **Apagar os leads de teste** no `/admin`: `SMOKE TEST - apagar`, `UTF8 TEST - apagar`, `Teste Fluxo`.
 
 ## 🔧 Fase 3 — Decisões de dev / dívida técnica
 
