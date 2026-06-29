@@ -3,21 +3,16 @@ import Base from '../layouts/Base.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 
-// Static shell; the cart list, freight and totals are rendered client-side from localStorage.
-// Checkout is a native urlencoded form POST to the /app (303 → Mercado Pago) — no CORS, no fetch.
+// Static shell; the cart list, freight, coupon and totals are rendered client-side from
+// localStorage. Checkout is a native urlencoded form POST to the /app (303 → Mercado Pago).
+// Coupon validation is the one fetch (cross-origin JSON) — the server is the money authority.
 const appUrl = import.meta.env.PUBLIC_APP_URL ?? 'https://app.roilabs.com.br';
 const action = `${appUrl}/api/pedidos`;
-
-const ERROS: Record<string, string> = {
-  vazio: 'Seu carrinho está vazio ou os itens não estão mais disponíveis.',
-  validacao: 'Confira nome, WhatsApp e o aceite da Política de Privacidade.',
-  pagamento: 'Não foi possível abrir o pagamento. Tente novamente em instantes.',
-};
 ---
 
 <Base
   title="Carrinho — Porcelanato Goiânia | ROI Labs"
-  description="Revise seus itens, escolha retirada ou entrega na Grande Goiânia e finalize o pagamento online (Pix ou cartão)."
+  description="Revise seus itens, ajuste a metragem, aplique cupom, escolha retirada ou entrega na Grande Goiânia e finalize o pagamento online (Pix ou cartão)."
 >
   <Header />
 
@@ -27,6 +22,15 @@ const ERROS: Record<string, string> = {
       <p style="color:var(--d-muted);margin-bottom:2rem;">Porcelanato em Goiânia · pagamento online seguro.</p>
 
       <div class="cart-err" role="alert" hidden></div>
+
+      <!-- Loading state (cleared after the first client render) -->
+      <div class="cart-loading">Carregando seu carrinho…</div>
+
+      <!-- Failure state (render threw) -->
+      <div class="cart-fail" role="alert" hidden>
+        <p>Não conseguimos montar seu carrinho.</p>
+        <button type="button" class="btn btn--primary cart-fail__retry">Tentar de novo</button>
+      </div>
 
       <!-- Empty state -->
       <div class="cart-empty" hidden>
@@ -38,6 +42,10 @@ const ERROS: Record<string, string> = {
         <!-- Items -->
         <section class="cart-items" aria-label="Itens do carrinho">
           <ul class="cart-list"></ul>
+          <div class="cart-actions">
+            <button type="button" class="cart-share">🔗 Salvar / compartilhar carrinho</button>
+            <p class="cart-share__msg" aria-live="polite"></p>
+          </div>
         </section>
 
         <!-- Checkout form -->
@@ -48,6 +56,7 @@ const ERROS: Record<string, string> = {
             </div>
             <input type="hidden" name="itens" />
             <input type="hidden" name="origin" />
+            <input type="hidden" name="cupom" />
 
             <h2 style="font-size:1.2rem;margin:0 0 1rem;">Seus dados</h2>
             <div class="field field--req">
@@ -78,9 +87,20 @@ const ERROS: Record<string, string> = {
               <p class="cart-cep__note" style="font-size:0.82rem;color:var(--d-muted);margin:0.4rem 0 0;"></p>
             </div>
 
+            <h2 style="font-size:1.2rem;margin:1.6rem 0 1rem;">Cupom</h2>
+            <div class="cart-coupon">
+              <div class="cart-coupon__row">
+                <input id="ck-cupom" type="text" maxlength="40" placeholder="Ex: OBRA10" autocapitalize="characters" />
+                <button type="button" class="btn btn--ghost cart-coupon__apply">Aplicar</button>
+              </div>
+              <p class="cart-coupon__msg" aria-live="polite"></p>
+            </div>
+
             <div class="cart-summary">
               <div class="cart-summary__row"><span>Produtos</span><span class="cart-sum-produto">—</span></div>
+              <div class="cart-summary__row cart-sum-desconto-row" hidden><span>Desconto</span><span class="cart-sum-desconto">—</span></div>
               <div class="cart-summary__row"><span>Frete</span><span class="cart-sum-frete">Grátis</span></div>
+              <div class="cart-summary__row cart-sum-prazo-row" hidden><span>Prazo</span><span class="cart-sum-prazo">—</span></div>
               <div class="cart-summary__row cart-summary__total"><span>Total</span><span class="cart-sum-total">—</span></div>
             </div>
 
@@ -92,7 +112,7 @@ const ERROS: Record<string, string> = {
               </span>
             </label>
 
-            <button type="submit" class="btn btn--primary" style="width:100%;margin-top:1rem;">
+            <button type="submit" class="btn btn--primary cart-checkout__cta">
               Finalizar e pagar
             </button>
             <p style="font-size:0.8rem;color:var(--d-muted);text-align:center;margin-top:0.8rem;">
@@ -119,55 +139,94 @@ const ERROS: Record<string, string> = {
   .cart-line__name { font-weight: 600; color: var(--d-text); }
   .cart-line__meta { font-size: 0.85rem; color: var(--d-muted); }
   .cart-line__sub { font-weight: 700; white-space: nowrap; color: var(--d-text); }
-  .cart-line__qty { display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 0.5rem; }
-  .cart-line__qty input { width: 4.5rem; padding: 0.4rem 0.5rem; border: 1px solid var(--d-line-strong); border-radius: 6px; font: inherit; background: var(--ink-3); color: var(--d-text); }
-  .cart-line__rm { background: none; border: 0; color: var(--d-muted); cursor: pointer; font-size: 0.85rem; text-decoration: underline; }
+  .cart-line__edit { display: flex; gap: 0.8rem; flex-wrap: wrap; margin-top: 0.6rem; }
+  .cart-line__edit label { display: inline-flex; flex-direction: column; gap: 0.2rem; font-size: 0.78rem; color: var(--d-muted); }
+  .cart-line__edit input { width: 5rem; padding: 0.4rem 0.5rem; border: 1px solid var(--d-line-strong); border-radius: 6px; font: inherit; background: var(--ink-3); color: var(--d-text); }
+  .cart-line__rm { background: none; border: 0; color: var(--d-muted); cursor: pointer; font-size: 0.85rem; text-decoration: underline; margin-top: 0.5rem; }
   .cart-line__rm:hover { color: var(--hivis); }
+  .cart-actions { margin-top: 1.2rem; }
+  .cart-share { background: none; border: 1px solid var(--d-line-strong); color: var(--d-text); border-radius: 8px; padding: 0.6rem 0.9rem; cursor: pointer; font: inherit; font-size: 0.88rem; }
+  .cart-share:hover { color: var(--hivis); border-color: var(--hivis); }
+  .cart-share__msg { font-size: 0.82rem; color: var(--hivis); margin: 0.5rem 0 0; min-height: 1.1em; word-break: break-all; }
   .cart-checkout { border: 1px solid var(--d-line); border-radius: 12px; padding: 1.4rem; background: var(--ink-2); }
   .cart-checkout h2 { color: var(--d-text); }
   .radio-row { display: flex; align-items: center; gap: 0.6rem; padding: 0.4rem 0; cursor: pointer; color: var(--d-text); }
+  .cart-coupon__row { display: flex; gap: 0.5rem; }
+  .cart-coupon__row input { flex: 1; min-width: 0; padding: 0.6rem 0.7rem; border: 1px solid var(--d-line-strong); border-radius: 6px; font: inherit; background: var(--ink-3); color: var(--d-text); text-transform: uppercase; }
+  .cart-coupon__apply { white-space: nowrap; }
+  .cart-coupon__msg { font-size: 0.84rem; margin: 0.5rem 0 0; min-height: 1.1em; }
+  .cart-coupon__msg[data-ok] { color: #86efac; }
+  .cart-coupon__msg[data-err] { color: var(--hivis); }
   .cart-summary { margin: 1.4rem 0; padding-top: 1rem; border-top: 1px solid var(--d-line); display: grid; gap: 0.5rem; }
   .cart-summary__row { display: flex; justify-content: space-between; font-size: 0.95rem; color: var(--d-text); }
+  .cart-sum-desconto { color: #86efac; }
+  .cart-sum-prazo-row { font-size: 0.85rem; color: var(--d-muted); }
   .cart-summary__total { font-size: 1.15rem; font-weight: 800; padding-top: 0.5rem; border-top: 1px dashed var(--d-line-strong); }
-  .cart-err { background: color-mix(in srgb, var(--hivis) 16%, var(--ink-2)); color: var(--d-text); border: 1px solid var(--hivis); padding: 0.9rem 1.1rem; border-radius: 8px; margin-bottom: 1.5rem; }
+  .cart-checkout__cta { width: 100%; margin-top: 1rem; font-size: 1.05rem; padding-block: 0.85rem; }
+  .cart-err, .cart-fail { background: color-mix(in srgb, var(--hivis) 16%, var(--ink-2)); color: var(--d-text); border: 1px solid var(--hivis); padding: 0.9rem 1.1rem; border-radius: 8px; margin-bottom: 1.5rem; }
+  .cart-fail { display: grid; gap: 0.9rem; justify-items: start; }
+  .cart-loading { color: var(--d-muted); padding: 2rem 0; }
   .cart-empty { text-align: center; padding: 3rem 1rem; display: grid; gap: 1.2rem; justify-items: center; }
 </style>
 
 <script>
-  import { lines, setCaixas, removeItem, getCart } from '../lib/cart';
+  import { lines, setCaixas, setM2, removeItem, getCart, encodeCart, decodeCart, restoreCart } from '../lib/cart';
 
   // ponytail: front-side mirror of app/src/lib/frete.ts (display only). Server recomputes
-  // and is the authority. Keep the two tables in sync; tiny enough to duplicate.
+  // and is the authority (FR-017). Keep the two tables (valor + prazo) in sync.
   const FAIXAS = [
-    { min: 74000, max: 74894, valor: 150, regiao: 'Goiânia' },
-    { min: 74900, max: 74999, valor: 180, regiao: 'Aparecida de Goiânia' },
-    { min: 75250, max: 75269, valor: 200, regiao: 'Senador Canedo' },
-    { min: 75370, max: 75379, valor: 220, regiao: 'Goianira' },
-    { min: 75380, max: 75399, valor: 220, regiao: 'Trindade' },
+    { min: 74000, max: 74894, valor: 150, prazo: '2–4 dias úteis', regiao: 'Goiânia' },
+    { min: 74900, max: 74999, valor: 180, prazo: '3–5 dias úteis', regiao: 'Aparecida de Goiânia' },
+    { min: 75250, max: 75269, valor: 200, prazo: '3–6 dias úteis', regiao: 'Senador Canedo' },
+    { min: 75370, max: 75379, valor: 220, prazo: '4–7 dias úteis', regiao: 'Goianira' },
+    { min: 75380, max: 75399, valor: 220, prazo: '4–7 dias úteis', regiao: 'Trindade' },
   ];
-  function calcFrete(entrega: string, cep: string): { valor: number | null; regiao?: string } {
+  function calcFrete(entrega: string, cep: string): { valor: number | null; prazo?: string; regiao?: string } {
     if (entrega === 'retirada') return { valor: 0 };
     const d = cep.replace(/\D/g, '');
     if (d.length !== 8) return { valor: null };
     const prefix = parseInt(d.slice(0, 5), 10);
     const f = FAIXAS.find((x) => prefix >= x.min && prefix <= x.max);
-    return f ? { valor: f.valor, regiao: f.regiao } : { valor: null };
+    return f ? { valor: f.valor, prazo: f.prazo, regiao: f.regiao } : { valor: null };
   }
 
   const brl = (n: number) => n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-
   const $ = <T extends Element>(s: string) => document.querySelector<T>(s)!;
+
+  const main = $('main') as HTMLElement;
+  const appUrl = main.dataset.appUrl || 'https://app.roilabs.com.br';
   const grid = $('.cart-grid') as HTMLElement;
   const empty = $('.cart-empty') as HTMLElement;
+  const loading = $('.cart-loading') as HTMLElement;
+  const fail = $('.cart-fail') as HTMLElement;
   const list = $('.cart-list') as HTMLUListElement;
   const cepWrap = $('.cart-cep') as HTMLElement;
   const cepInput = $('#ck-cep') as HTMLInputElement;
   const cepNote = $('.cart-cep__note') as HTMLElement;
   const sumProduto = $('.cart-sum-produto') as HTMLElement;
+  const descRow = $('.cart-sum-desconto-row') as HTMLElement;
+  const sumDesconto = $('.cart-sum-desconto') as HTMLElement;
   const sumFrete = $('.cart-sum-frete') as HTMLElement;
+  const prazoRow = $('.cart-sum-prazo-row') as HTMLElement;
+  const sumPrazo = $('.cart-sum-prazo') as HTMLElement;
   const sumTotal = $('.cart-sum-total') as HTMLElement;
   const form = $('#checkout-form') as HTMLFormElement;
   const errBox = $('.cart-err') as HTMLElement;
+  const cupomField = form.elements.namedItem('cupom') as HTMLInputElement;
+
+  // ── Share-link restore: ?c=<payload> → restore cart or show "expired" (FR / D4).
+  const cParam = new URLSearchParams(location.search).get('c');
+  if (cParam) {
+    const r = decodeCart(cParam);
+    if (r === 'expired') {
+      errBox.textContent = 'Este link de carrinho expirou (válido por 30 dias). Monte um novo carrinho.';
+      errBox.hidden = false;
+    } else {
+      restoreCart(r);
+    }
+    // Drop ?c= so a refresh / new edits don't keep re-restoring the snapshot.
+    history.replaceState(null, '', location.pathname);
+  }
 
   // Show ?erro= from a bounced checkout.
   const erro = new URLSearchParams(location.search).get('erro');
@@ -178,73 +237,169 @@ const ERROS: Record<string, string> = {
   };
   if (erro && ERROS[erro]) { errBox.textContent = ERROS[erro]; errBox.hidden = false; }
 
+  // ── Coupon state (1 per cart). Display only; the checkout re-validates (FR-014).
+  let cupom: { codigo: string; desconto: number } | null = null;
+  const cupomInput = $('#ck-cupom') as HTMLInputElement;
+  const cupomMsg = $('.cart-coupon__msg') as HTMLElement;
+  const MOTIVOS: Record<string, string> = {
+    invalido: 'Cupom inválido.',
+    inativo: 'Cupom indisponível.',
+    expirado: 'Cupom expirado.',
+    minimo: 'Seu carrinho não atinge o mínimo para este cupom.',
+    vazio: 'Adicione itens antes de aplicar um cupom.',
+  };
+
   function selectedEntrega() {
-    return (document.querySelector<HTMLInputElement>('input[name="entrega"]:checked')?.value) || 'retirada';
+    return document.querySelector<HTMLInputElement>('input[name="entrega"]:checked')?.value || 'retirada';
   }
 
   function renderTotals() {
-    const ls = lines();
-    const produto = ls.reduce((s, l) => s + l.subtotal, 0);
+    const produto = lines().reduce((s, l) => s + l.subtotal, 0);
     sumProduto.textContent = brl(produto);
 
+    const desc = cupom ? Math.min(cupom.desconto, produto) : 0;
+    descRow.hidden = !cupom;
+    if (cupom) sumDesconto.textContent = '−' + brl(desc);
+    const base = Math.max(0, produto - desc);
+
     const entrega = selectedEntrega();
-    const { valor, regiao } = calcFrete(entrega, cepInput.value);
+    const { valor, prazo, regiao } = calcFrete(entrega, cepInput.value);
     if (entrega === 'retirada') {
       sumFrete.textContent = 'Grátis';
-      sumTotal.textContent = brl(produto);
+      prazoRow.hidden = true;
+      sumTotal.textContent = brl(base);
     } else if (valor === null) {
       sumFrete.textContent = 'A combinar';
-      sumTotal.textContent = `${brl(produto)} + frete`;
+      prazoRow.hidden = true;
+      sumTotal.textContent = `${brl(base)} + frete`;
       cepNote.textContent = cepInput.value ? 'CEP fora da tabela — frete a combinar com o fornecedor.' : '';
     } else {
       sumFrete.textContent = brl(valor);
-      sumTotal.textContent = brl(produto + valor);
+      sumPrazo.textContent = prazo || '—';
+      prazoRow.hidden = false;
+      sumTotal.textContent = brl(base + valor);
       cepNote.textContent = regiao ? `Região: ${regiao}` : '';
     }
   }
 
   function render() {
-    const ls = lines();
-    const hasItems = ls.length > 0;
-    grid.hidden = !hasItems;
-    empty.hidden = hasItems;
-    if (!hasItems) return;
+    try {
+      const ls = lines();
+      loading.hidden = true;
+      fail.hidden = true;
+      const hasItems = ls.length > 0;
+      grid.hidden = !hasItems;
+      empty.hidden = hasItems;
+      if (!hasItems) { renderTotals(); return; }
 
-    list.innerHTML = '';
-    for (const l of ls) {
-      const li = document.createElement('li');
-      li.className = 'cart-line';
-      li.innerHTML = `
-        <div>
-          <div class="cart-line__name">${l.nome}</div>
-          <div class="cart-line__meta">${l.precoFmt}/m² · ${l.m2_caixa} m²/caixa</div>
-          <div class="cart-line__qty">
-            <label>Caixas
-              <input type="number" min="1" step="1" value="${l.caixas}" data-slug="${l.slug}" />
-            </label>
-            <span class="cart-line__meta">${l.m2.toFixed(2).replace('.', ',')} m²</span>
+      list.innerHTML = '';
+      for (const l of ls) {
+        const li = document.createElement('li');
+        li.className = 'cart-line';
+        li.innerHTML = `
+          <div>
+            <div class="cart-line__name">${l.nome}</div>
+            <div class="cart-line__meta">${l.precoFmt}/m² · ${l.m2_caixa} m²/caixa</div>
+            <div class="cart-line__edit">
+              <label>Caixas
+                <input class="qty-cx" type="number" min="1" step="1" value="${l.caixas}" data-slug="${l.slug}" />
+              </label>
+              <label>Metragem (m²)
+                <input class="qty-m2" type="number" min="0.1" step="0.1" value="${l.m2.toFixed(2)}" data-slug="${l.slug}" />
+              </label>
+            </div>
+            <div class="cart-line__meta">${l.caixas} caixa(s) cobrem ${l.m2.toFixed(2).replace('.', ',')} m²</div>
+            <button type="button" class="cart-line__rm" data-rm="${l.slug}">Remover</button>
           </div>
-          <button type="button" class="cart-line__rm" data-rm="${l.slug}">Remover</button>
-        </div>
-        <div class="cart-line__sub">${l.subtotalFmt}</div>`;
-      list.appendChild(li);
+          <div class="cart-line__sub">${l.subtotalFmt}</div>`;
+        list.appendChild(li);
+      }
+      renderTotals();
+    } catch (e) {
+      console.error('cart render failed', e);
+      loading.hidden = true;
+      grid.hidden = true;
+      empty.hidden = true;
+      fail.hidden = false;
+    }
+  }
+
+  // When the cart changes and a coupon is applied, the discount may go stale → re-validate.
+  async function refreshCupom() {
+    if (!cupom) return;
+    await applyCupom(cupom.codigo, true);
+  }
+
+  async function applyCupom(codigo: string, silent = false) {
+    const cart = getCart();
+    if (cart.length === 0) { cupom = null; cupomField.value = ''; setCupomMsg(MOTIVOS.vazio, false); renderTotals(); return; }
+    if (!silent) setCupomMsg('Validando…', null);
+    try {
+      const res = await fetch(`${appUrl}/api/cupom/validar`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({ codigo, itens: JSON.stringify(cart) }),
+      });
+      const data = await res.json();
+      if (data.ok) {
+        cupom = { codigo: data.codigo, desconto: data.desconto };
+        cupomField.value = data.codigo;
+        setCupomMsg(`Cupom ${data.codigo} aplicado: −${data.descontoFmt}`, true);
+      } else {
+        cupom = null;
+        cupomField.value = '';
+        setCupomMsg(MOTIVOS[data.motivo] || MOTIVOS.invalido, false);
+      }
+    } catch {
+      if (!silent) setCupomMsg('Não foi possível validar agora. Tente de novo.', false);
     }
     renderTotals();
   }
 
-  // Events (delegated).
+  function setCupomMsg(text: string, ok: boolean | null) {
+    cupomMsg.textContent = text;
+    cupomMsg.removeAttribute('data-ok');
+    cupomMsg.removeAttribute('data-err');
+    if (ok === true) cupomMsg.setAttribute('data-ok', '');
+    else if (ok === false) cupomMsg.setAttribute('data-err', '');
+  }
+
+  // ── Events (delegated).
   list.addEventListener('change', (e) => {
     const t = e.target as HTMLInputElement;
-    if (t.dataset.slug) { setCaixas(t.dataset.slug, parseInt(t.value, 10) || 1); render(); }
+    if (!t.dataset.slug) return;
+    if (t.classList.contains('qty-cx')) setCaixas(t.dataset.slug, parseInt(t.value, 10) || 1);
+    else if (t.classList.contains('qty-m2')) setM2(t.dataset.slug, parseFloat(t.value.replace(',', '.')) || 0);
+    render();
+    refreshCupom();
   });
   list.addEventListener('click', (e) => {
     const t = e.target as HTMLElement;
-    if (t.dataset.rm) { removeItem(t.dataset.rm); render(); }
+    if (t.dataset.rm) { removeItem(t.dataset.rm); render(); refreshCupom(); }
   });
   form.querySelectorAll('input[name="entrega"]').forEach((r) =>
     r.addEventListener('change', () => { cepWrap.hidden = selectedEntrega() !== 'entrega'; renderTotals(); }),
   );
   cepInput.addEventListener('input', renderTotals);
+
+  $('.cart-coupon__apply').addEventListener('click', () => {
+    const codigo = cupomInput.value.trim();
+    if (codigo) applyCupom(codigo);
+  });
+
+  $('.cart-share').addEventListener('click', async () => {
+    const msg = $('.cart-share__msg') as HTMLElement;
+    if (getCart().length === 0) { msg.textContent = 'Adicione itens antes de gerar o link.'; return; }
+    const url = `${location.origin}/carrinho?c=${encodeCart()}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      msg.textContent = 'Link copiado! Cole onde quiser — válido por 30 dias.';
+    } catch {
+      msg.textContent = url; // clipboard blocked → show it so the user can copy manually
+    }
+  });
+
+  (fail.querySelector('.cart-fail__retry') as HTMLButtonElement).addEventListener('click', render);
 
   form.addEventListener('submit', (e) => {
     const cart = getCart();
@@ -253,7 +408,11 @@ const ERROS: Record<string, string> = {
     // Populate hidden fields the server reads; native POST then follows the 303 to Mercado Pago.
     (form.elements.namedItem('itens') as HTMLInputElement).value = JSON.stringify(cart);
     (form.elements.namedItem('origin') as HTMLInputElement).value = location.origin;
+    // cupom hidden field is already kept in sync by applyCupom; server re-validates it.
   });
+
+  // Keep in sync if another tab / the mini-cart changes the cart.
+  window.addEventListener('roi-cart-change', () => { render(); });
 
   render();
 </script>

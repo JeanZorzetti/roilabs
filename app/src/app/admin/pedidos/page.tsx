@@ -38,7 +38,7 @@ export default async function PedidosPage() {
       <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: 'monospace', fontSize: '0.85rem' }}>
         <thead>
           <tr style={{ borderBottom: '1px solid #333' }}>
-            {['Nome', 'WhatsApp', 'Itens', 'Frete', 'Total', 'Pagamento', 'Fulfillment', 'Data', 'Ações'].map((h) => (
+            {['Nome', 'WhatsApp', 'Itens', 'Frete', 'Cupom', 'Total', 'Pagamento', 'Fulfillment', 'Data', 'Ações'].map((h) => (
               <th key={h} style={{ textAlign: 'left', padding: '0.6rem 0.8rem', whiteSpace: 'nowrap' }}>{h}</th>
             ))}
           </tr>
@@ -68,6 +68,13 @@ export default async function PedidosPage() {
               <td style={{ padding: '0.6rem 0.8rem', whiteSpace: 'nowrap' }}>
                 {p.frete == null ? <span style={{ color: '#888' }}>a combinar</span> : brl(p.frete)}
               </td>
+              <td style={{ padding: '0.6rem 0.8rem', whiteSpace: 'nowrap' }}>
+                {p.cupomCodigo ? (
+                  <span style={{ color: '#86efac' }}>{p.cupomCodigo} −{brl(p.desconto)}</span>
+                ) : (
+                  <span style={{ color: '#666' }}>—</span>
+                )}
+              </td>
               <td style={{ padding: '0.6rem 0.8rem', whiteSpace: 'nowrap', fontWeight: 700 }}>{brl(p.total)}</td>
               <td style={{ padding: '0.6rem 0.8rem' }}>{pagBadge(p.statusPagamento)}</td>
               <td style={{ padding: '0.6rem 0.8rem' }}>{fulBadge(p.statusFulfillment)}</td>
@@ -83,7 +90,7 @@ export default async function PedidosPage() {
           ))}
           {pedidos.length === 0 && (
             <tr>
-              <td colSpan={9} style={{ padding: '2rem', textAlign: 'center', color: '#666' }}>
+              <td colSpan={10} style={{ padding: '2rem', textAlign: 'center', color: '#666' }}>
                 Nenhum pedido ainda.
               </td>
             </tr>

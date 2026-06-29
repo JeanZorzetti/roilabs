@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { isAuthed } from '@/lib/auth';
 import { getProduto } from '@/lib/precos';
 import { calcFrete, type Entrega } from '@/lib/frete';
+import { validarCupom } from '@/lib/cupons';
 import { createPreference } from '@/lib/mercadopago';
 
 export const dynamic = 'force-dynamic';
@@ -61,7 +62,16 @@ export async function POST(req: NextRequest) {
   const entrega = entregaInput === 'retirada' ? 'retirada' : frete === null ? 'a_combinar' : 'entrega';
 
   const totalProduto = money(itens.reduce((s, i) => s + i.subtotal, 0));
-  const total = money(totalProduto + (frete ?? 0));
+
+  // Coupon: re-validate on the server (authoritative, FR-014). A coupon that expired
+  // between cart and checkout is charged WITHOUT discount; the customer is warned.
+  const cupomInput = cap(form.get('cupom'), 40);
+  const r = cupomInput ? validarCupom(cupomInput, totalProduto) : null;
+  const desconto = r && r.ok ? r.desconto : 0;
+  const cupomCodigo = r && r.ok ? r.codigo : null;
+  const avisoCupom = !!cupomInput && !(r && r.ok); // sent but rejected at checkout
+
+  const total = money(Math.max(0, totalProduto - desconto) + (frete ?? 0));
 
   // Persist pending order + items.
   const pedido = await prisma.pedido.create({
@@ -72,6 +82,8 @@ export async function POST(req: NextRequest) {
       entrega,
       cep: entrega === 'retirada' ? null : cep,
       frete,
+      cupomCodigo,
+      desconto: cupomCodigo ? desconto : null,
       total,
       consent: true,
       itens: { create: itens },
@@ -82,11 +94,23 @@ export async function POST(req: NextRequest) {
   // Create the Mercado Pago preference, then redirect the browser straight to it.
   try {
     const appOrigin = req.nextUrl.origin; // app.roilabs.com.br
+    // Scale item unitPrice so the MP total (Σ items + frete) == server total (D7): MP has no
+    // negative line. ponytail: assumes desconto < subtotal (current knob); a 100% coupon would
+    // make 0-price items — add a guard if such a coupon is ever added.
+    const alvoProduto = money(Math.max(0, totalProduto - desconto));
+    let acc = 0;
+    const mpItems = itens.map((i, idx) => {
+      const isLast = idx === itens.length - 1;
+      const unitPrice = isLast ? money(alvoProduto - acc) : money((i.subtotal * alvoProduto) / totalProduto);
+      acc = money(acc + unitPrice);
+      return { title: `${i.caixas} cx — ${i.slug}`, unitPrice };
+    });
+    const backBase = origin.startsWith('http') ? origin : 'https://goiania.roilabs.com.br';
     const pref = await createPreference({
       externalReference: pedido.id,
-      items: itens.map((i) => ({ title: `${i.caixas} cx — ${i.slug}`, unitPrice: i.subtotal })),
+      items: mpItems,
       frete,
-      backUrl: `${origin.startsWith('http') ? origin : 'https://goiania.roilabs.com.br'}/obrigado?pedido=${pedido.id}`,
+      backUrl: `${backBase}/obrigado?pedido=${pedido.id}${avisoCupom ? '&aviso=cupom' : ''}`,
       notificationUrl: `${appOrigin}/api/pagamentos/webhook`,
     });
     await prisma.pedido.update({ where: { id: pedido.id }, data: { mpPreferenceId: pref.id } });

@@ -1,6 +1,8 @@
 ---
 // Client island: enter the job's m² → see whole closed boxes → add to the cart.
-// Sits next to the WhatsApp CTA on the product page (FR-001).
+// Sits next to the WhatsApp CTA on the product page (FR-001). Two coexisting modes:
+// direct metragem, or the room-by-room simulator (SimuladorM2) — toggled, never replaced.
+import SimuladorM2 from './SimuladorM2.astro';
 interface Props {
   slug: string;
   m2Caixa: number;
@@ -9,20 +11,31 @@ interface Props {
 const { slug, m2Caixa, preco } = Astro.props;
 ---
 <div class="add-cart" data-slug={slug} data-m2caixa={m2Caixa} data-preco={preco}>
-  <label class="add-cart__label" for={`m2-${slug}`}>Metragem da obra (m²)</label>
-  <div class="add-cart__row">
-    <input
-      id={`m2-${slug}`}
-      class="add-cart__input"
-      type="number"
-      inputmode="decimal"
-      min="0.1"
-      step="0.1"
-      placeholder="ex: 25"
-    />
-    <button type="button" class="btn btn--primary add-cart__btn">Adicionar ao carrinho</button>
+  <div class="add-cart__modes" role="tablist">
+    <button type="button" class="add-cart__mode is-active" data-mode="direto" aria-selected="true">Tenho a metragem</button>
+    <button type="button" class="add-cart__mode" data-mode="ambiente" aria-selected="false">Calcular por ambiente</button>
   </div>
-  <p class="add-cart__preview" aria-live="polite"></p>
+
+  <div class="add-cart__pane" data-pane="direto">
+    <label class="add-cart__label" for={`m2-${slug}`}>Metragem da obra (m²)</label>
+    <div class="add-cart__row">
+      <input
+        id={`m2-${slug}`}
+        class="add-cart__input"
+        type="number"
+        inputmode="decimal"
+        min="0.1"
+        step="0.1"
+        placeholder="ex: 25"
+      />
+      <button type="button" class="btn btn--primary add-cart__btn">Adicionar ao carrinho</button>
+    </div>
+    <p class="add-cart__preview" aria-live="polite"></p>
+  </div>
+
+  <div class="add-cart__pane" data-pane="ambiente" hidden>
+    <SimuladorM2 slug={slug} m2Caixa={m2Caixa} preco={preco} />
+  </div>
 </div>
 
 <style>
@@ -52,6 +65,9 @@ const { slug, m2Caixa, preco } = Astro.props;
   .add-cart__btn { flex: 0 0 auto; white-space: nowrap; }
   .add-cart__preview { margin: 0.7rem 0 0; min-height: 1.3em; font-size: 0.9rem; color: var(--hivis); font-weight: 600; }
   .add-cart__preview a { color: var(--hivis); font-weight: 700; text-decoration: underline; }
+  .add-cart__modes { display: inline-flex; gap: 0.3rem; margin-bottom: 0.9rem; border: 1px solid color-mix(in srgb, currentColor 22%, transparent); border-radius: 999px; padding: 0.2rem; }
+  .add-cart__mode { background: none; border: 0; color: inherit; opacity: 0.7; cursor: pointer; font: inherit; font-size: 0.85rem; padding: 0.35rem 0.85rem; border-radius: 999px; }
+  .add-cart__mode.is-active { background: var(--hivis); color: #fff; opacity: 1; font-weight: 600; }
 </style>
 
 <script>
@@ -91,5 +107,22 @@ const { slug, m2Caixa, preco } = Astro.props;
       preview.innerHTML = `Adicionado! <a href="/carrinho">Ver carrinho (${total})</a>`;
       input.value = '';
     });
+  });
+
+  // Mode toggle: direct m² ⇄ room simulator (both panes coexist).
+  document.querySelectorAll<HTMLElement>('.add-cart').forEach((root) => {
+    const modes = root.querySelectorAll<HTMLButtonElement>('.add-cart__mode');
+    modes.forEach((mode) =>
+      mode.addEventListener('click', () => {
+        modes.forEach((m) => {
+          const on = m === mode;
+          m.classList.toggle('is-active', on);
+          m.setAttribute('aria-selected', String(on));
+        });
+        root.querySelectorAll<HTMLElement>('.add-cart__pane').forEach((pane) => {
+          pane.hidden = pane.dataset.pane !== mode.dataset.mode;
+        });
+      }),
+    );
   });
 </script>

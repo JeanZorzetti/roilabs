@@ -11,6 +11,11 @@ import Footer from '../components/Footer.astro';
   <Header />
   <main class="thanks">
     <div class="wrap thanks__inner">
+      <!-- Coupon invalidated between cart and checkout (FR-014): charged without discount. -->
+      <div class="thanks-aviso" role="alert" hidden style="background:color-mix(in srgb, var(--hivis) 16%, var(--ink-2));color:var(--d-text);border:1px solid var(--hivis);padding:0.9rem 1.1rem;border-radius:8px;margin-bottom:1.5rem;">
+        O cupom não estava mais válido no momento do pagamento, então o pedido foi cobrado sem o desconto.
+      </div>
+
       <!-- Default: lead message (no ?pedido) -->
       <div class="thanks-lead">
         <span class="eyebrow thanks__eyebrow">Mensagem recebida</span>
@@ -44,6 +49,10 @@ import Footer from '../components/Footer.astro';
   // Mercado Pago appends collection_status / status to the back_url. Display only —
   // the authoritative status comes from the webhook (this page grants nothing).
   const status = params.get('collection_status') || params.get('status') || '';
+
+  if (params.get('aviso') === 'cupom') {
+    document.querySelector<HTMLElement>('.thanks-aviso')!.hidden = false;
+  }
 
   if (pedido) {
     document.querySelector<HTMLElement>('.thanks-lead')!.hidden = true;

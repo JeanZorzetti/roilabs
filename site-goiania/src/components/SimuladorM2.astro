@@ -1,0 +1,123 @@
+---
+// Client island (D5): sum area per room (largura×comprimento), apply an adjustable waste
+// clamped to 5–20% (default 10%), convert to whole closed boxes via m2ParaCaixas, add to cart.
+// Coexists with the direct-m² entry in AddToCart — never replaces it.
+interface Props {
+  slug: string;
+  m2Caixa: number;
+  preco: number;
+}
+const { slug, m2Caixa, preco } = Astro.props;
+---
+<div class="simulador" data-slug={slug} data-m2caixa={m2Caixa} data-preco={preco}>
+  <div class="simulador__rooms"></div>
+  <button type="button" class="simulador__add">+ Adicionar ambiente</button>
+
+  <label class="simulador__folga">
+    Folga de corte/quebra (%)
+    <input class="simulador__folga-input" type="number" min="5" max="20" step="1" value="10" inputmode="numeric" />
+  </label>
+
+  <p class="simulador__preview" aria-live="polite"></p>
+  <button type="button" class="btn btn--primary simulador__btn">Adicionar ao carrinho</button>
+</div>
+
+<style>
+  .simulador { display: grid; gap: 0.8rem; }
+  .simulador__rooms { display: grid; gap: 0.6rem; }
+  .simulador__room { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+  .simulador__room input {
+    flex: 1 1 5rem; min-width: 0; padding: 0.6rem 0.7rem;
+    border: 1px solid color-mix(in srgb, currentColor 28%, transparent);
+    border-radius: 8px; background: color-mix(in srgb, currentColor 6%, transparent);
+    color: inherit; font: inherit;
+  }
+  .simulador__room input:focus-visible { outline: 2px solid var(--hivis); outline-offset: 1px; }
+  .simulador__room span { opacity: 0.6; font-size: 0.85rem; }
+  .simulador__room button { background: none; border: 0; color: inherit; opacity: 0.6; cursor: pointer; font-size: 1.1rem; padding: 0 0.3rem; }
+  .simulador__room button:hover { color: var(--hivis); opacity: 1; }
+  .simulador__add { background: none; border: 1px dashed color-mix(in srgb, currentColor 35%, transparent); color: inherit; border-radius: 8px; padding: 0.5rem; cursor: pointer; font: inherit; opacity: 0.85; }
+  .simulador__add:hover { color: var(--hivis); opacity: 1; }
+  .simulador__folga { display: grid; gap: 0.3rem; font-size: 0.85rem; opacity: 0.85; }
+  .simulador__folga-input { width: 6rem; padding: 0.5rem 0.6rem; border: 1px solid color-mix(in srgb, currentColor 28%, transparent); border-radius: 8px; background: color-mix(in srgb, currentColor 6%, transparent); color: inherit; font: inherit; }
+  .simulador__preview { margin: 0; min-height: 1.3em; font-size: 0.9rem; color: var(--hivis); font-weight: 600; }
+  .simulador__preview a { color: var(--hivis); font-weight: 700; text-decoration: underline; }
+</style>
+
+<script>
+  import { m2ParaCaixas, addFromSimulador, clampPerda, PERDA_MIN, PERDA_MAX, lines } from '../lib/cart';
+
+  const brl = (n: number) => n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  const num = (el: HTMLInputElement) => parseFloat(el.value.replace(',', '.'));
+
+  document.querySelectorAll<HTMLElement>('.simulador').forEach((root) => {
+    const slug = root.dataset.slug!;
+    const m2Caixa = Number(root.dataset.m2caixa);
+    const preco = Number(root.dataset.preco);
+    const rooms = root.querySelector<HTMLElement>('.simulador__rooms')!;
+    const addBtn = root.querySelector<HTMLButtonElement>('.simulador__add')!;
+    const folgaInput = root.querySelector<HTMLInputElement>('.simulador__folga-input')!;
+    const preview = root.querySelector<HTMLElement>('.simulador__preview')!;
+    const btn = root.querySelector<HTMLButtonElement>('.simulador__btn')!;
+
+    function addRoom(largura = '', comprimento = '') {
+      const row = document.createElement('div');
+      row.className = 'simulador__room';
+      row.innerHTML = `
+        <input class="r-l" type="number" inputmode="decimal" min="0.1" step="0.1" placeholder="largura" value="${largura}" />
+        <span>×</span>
+        <input class="r-c" type="number" inputmode="decimal" min="0.1" step="0.1" placeholder="compr." value="${comprimento}" />
+        <span>m</span>
+        <button type="button" class="r-rm" aria-label="Remover ambiente">&times;</button>`;
+      rooms.appendChild(row);
+      refresh();
+    }
+
+    function getAmbientes() {
+      return [...rooms.querySelectorAll<HTMLElement>('.simulador__room')]
+        .map((r) => ({
+          largura: num(r.querySelector<HTMLInputElement>('.r-l')!),
+          comprimento: num(r.querySelector<HTMLInputElement>('.r-c')!),
+        }))
+        .filter((a) => a.largura > 0 && a.comprimento > 0);
+    }
+
+    function folgaFrac() {
+      return clampPerda((parseFloat(folgaInput.value) || 0) / 100);
+    }
+
+    function refresh() {
+      const ambientes = getAmbientes();
+      const area = ambientes.reduce((s, a) => s + a.largura * a.comprimento, 0);
+      if (area <= 0) { preview.textContent = ''; return; }
+      const folga = folgaFrac();
+      const caixas = m2ParaCaixas(area, m2Caixa, folga);
+      const cobertos = (caixas * m2Caixa).toFixed(2).replace('.', ',');
+      preview.textContent =
+        `${area.toFixed(2).replace('.', ',')} m² + ${Math.round(folga * 100)}% folga ` +
+        `≈ ${caixas} caixa(s) · ${cobertos} m² cobertos · ${brl(caixas * m2Caixa * preco)}`;
+    }
+
+    addBtn.addEventListener('click', () => addRoom());
+    rooms.addEventListener('input', refresh);
+    rooms.addEventListener('click', (e) => {
+      const t = e.target as HTMLElement;
+      if (t.classList.contains('r-rm')) {
+        if (rooms.querySelectorAll('.simulador__room').length > 1) t.closest('.simulador__room')!.remove();
+        refresh();
+      }
+    });
+    // Clamp the waste field to 5–20% on change, then re-preview.
+    folgaInput.addEventListener('change', () => { folgaInput.value = String(Math.round(folgaFrac() * 100)); refresh(); });
+    folgaInput.addEventListener('input', refresh);
+
+    btn.addEventListener('click', () => {
+      const ambientes = getAmbientes();
+      if (ambientes.length === 0) { preview.textContent = 'Informe ao menos um ambiente (largura × comprimento).'; return; }
+      addFromSimulador(slug, ambientes, folgaFrac());
+      preview.innerHTML = `Adicionado! <a href="/carrinho">Ver carrinho (${lines().length})</a>`;
+    });
+
+    addRoom(); // start with one empty room
+  });
+</script>

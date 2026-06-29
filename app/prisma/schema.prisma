@@ -52,7 +52,9 @@ model Pedido {
   entrega           String // retirada | entrega | a_combinar
   cep               String?
   frete             Decimal? @db.Decimal(10, 2) // null = a combinar (FR-016)
-  total             Decimal  @db.Decimal(10, 2) // produto + frete (recalculado no servidor)
+  cupomCodigo       String?  @map("cupom_codigo") // snapshot do cupom aplicado; null se sem cupom
+  desconto          Decimal? @db.Decimal(10, 2) // desconto recalculado no servidor (só sobre produto)
+  total             Decimal  @db.Decimal(10, 2) // produto − desconto + frete (recalculado no servidor)
   statusPagamento   String   @default("pendente") @map("status_pagamento") // pendente | pago | reembolsado
   statusFulfillment String   @default("aguardando") @map("status_fulfillment") // aguardando | confirmado | reembolsado
   mpPreferenceId    String?  @map("mp_preference_id")

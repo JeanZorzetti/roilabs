@@ -1,5 +1,5 @@
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan:
-`specs/001-pseo-goiania-porcelanato/plan.md`
+`specs/003-carrinho-melhorias/plan.md`
 <!-- SPECKIT END -->
