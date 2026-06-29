@@ -1,0 +1,101 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Base from './Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/article.css';
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+}
+
+const { post } = Astro.props;
+const { title, description, eyebrow, pubDate, updatedDate, author, faq } = post.data;
+
+const ORG_ID = 'https://roilabs.com.br/#org';
+const canonical = new URL(`/blog/${post.id}/`, Astro.site).toString();
+const modified = updatedDate ?? pubDate;
+
+const authorNode =
+  author === 'Equipe ROI Labs'
+    ? { '@id': ORG_ID }
+    : { '@type': 'Person', name: author, worksFor: { '@id': ORG_ID } };
+
+const nodes: Record<string, unknown>[] = [
+  {
+    '@type': 'Article',
+    '@id': `${canonical}#article`,
+    headline: title,
+    description,
+    inLanguage: 'pt-BR',
+    datePublished: pubDate.toISOString(),
+    dateModified: modified.toISOString(),
+    author: authorNode,
+    publisher: { '@id': ORG_ID },
+    mainEntityOfPage: canonical,
+  },
+];
+
+if (faq.length > 0) {
+  nodes.push({
+    '@type': 'FAQPage',
+    '@id': `${canonical}#faq`,
+    mainEntity: faq.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  });
+}
+
+const fmtDate = (d: Date) =>
+  new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' }).format(d);
+---
+
+<Base title={`${title} — ROI Labs`} description={description} ogType="article" jsonLdNodes={nodes}>
+  <Header />
+  <article class="article">
+    <div class="article__wrap">
+      <header class="article__head">
+        {eyebrow && <span class="article__eyebrow">{eyebrow}</span>}
+        <h1 class="article__title">{title}</h1>
+        <p class="article__lead">{description}</p>
+        <div class="article__meta">
+          <span>Por {author}</span>
+          <span>Publicado em {fmtDate(pubDate)}</span>
+          {updatedDate && <span>Atualizado em {fmtDate(updatedDate)}</span>}
+        </div>
+      </header>
+
+      <div class="prose">
+        <slot />
+      </div>
+
+      <div class="article__cta">
+        <h2>A cadeira de revestimentos de Goiânia está em curadoria</h2>
+        <p>
+          Uma empresa por nicho vai dominar a busca local de porcelanato — sem custo fixo, sem
+          risco de tecnologia. Você paga só quando vende.
+        </p>
+        <a class="btn btn--primary" href="/#candidatar">Candidatar minha empresa</a>
+      </div>
+
+      {
+        faq.length > 0 && (
+          <section class="article__faq" aria-label="Perguntas frequentes">
+            <h2>Perguntas frequentes</h2>
+            {faq.map((f) => (
+              <details>
+                <summary>{f.q}</summary>
+                <p>{f.a}</p>
+              </details>
+            ))}
+          </section>
+        )
+      }
+
+      <a class="article__back" href="/blog">← Todos os artigos</a>
+    </div>
+  </article>
+  <Footer />
+</Base>

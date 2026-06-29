@@ -1,0 +1,42 @@
+---
+import Base from '../../layouts/Base.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { getCollection } from 'astro:content';
+import '../../styles/article.css';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime(),
+);
+---
+
+<Base
+  title="Blog — ROI Labs"
+  description="Como lojas de revestimentos e materiais de construção em Goiânia transformam a busca local em venda — sem custo fixo, pagando só quando vendem."
+>
+  <Header />
+  <main class="blog-index">
+    <div class="blog-index__wrap">
+      <h1>Blog ROI Labs</h1>
+      <p class="blog-index__lead">
+        Como lojas de revestimentos e materiais de construção em Goiânia transformam a busca local
+        de alta intenção em venda — sem custo fixo.
+      </p>
+
+      <div class="post-list">
+        {
+          posts.map((post) => (
+            <a class="post-card" href={`/blog/${post.id}`}>
+              {post.data.eyebrow && <span class="post-card__eyebrow">{post.data.eyebrow}</span>}
+              <h2 class="post-card__title">{post.data.title}</h2>
+              <p class="post-card__desc">{post.data.description}</p>
+            </a>
+          ))
+        }
+      </div>
+
+      <a class="blog-index__back" href="/">← Voltar para a home</a>
+    </div>
+  </main>
+  <Footer />
+</Base>

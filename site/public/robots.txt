@@ -1,4 +1,31 @@
+# ROI Labs — acesso liberado, inclusive para motores de IA (GEO/AEO).
 User-agent: *
 Allow: /
 
-Sitemap: https://roilabs.com.br/sitemap-index.xml
+# Crawlers de IA explicitamente liberados (citação em tempo real + treino).
+# Bloquear estes mata a chance de ser citado por ChatGPT/Perplexity/Gemini.
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: GoogleOther
+Allow: /
+
+Sitemap: https://roilabs.com.br/sitemap.xml

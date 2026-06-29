@@ -4,14 +4,48 @@ import '../styles/global.css';
 interface Props {
   title?: string;
   description?: string;
+  ogType?: string;
+  jsonLdNodes?: Record<string, unknown>[];
 }
 
 const {
   title = 'ROI Labs — Growth Partner para fornecedores regionais',
   description = 'Construímos sua operação de vendas online sem custo fixo. Você paga só quando vende. Uma cadeira exclusiva por nicho, por polo. Polo 1: Goiânia.',
+  ogType = 'website',
+  jsonLdNodes = [],
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site);
+
+// Schema Stacking: um único @graph por página (Organization + WebSite + nós da
+// página), ligados por @id — em vez de scripts JSON-LD dispersos.
+const ORG_ID = 'https://roilabs.com.br/#org';
+const graph = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': ORG_ID,
+      name: 'ROI Labs',
+      url: 'https://roilabs.com.br/',
+      email: 'parceria@roilabs.com.br',
+      description:
+        'Growth Partner para fornecedores regionais: operação de vendas online sem custo fixo, remuneração 100% variável. Polo 1: Goiânia, nicho revestimentos/porcelanato.',
+      logo: { '@type': 'ImageObject', url: 'https://roilabs.com.br/roilabs-icon.png' },
+      areaServed: { '@type': 'City', name: 'Goiânia' },
+      slogan: 'Construímos sua venda online. Você paga quando vende.',
+    },
+    {
+      '@type': 'WebSite',
+      '@id': 'https://roilabs.com.br/#website',
+      url: 'https://roilabs.com.br/',
+      name: 'ROI Labs',
+      inLanguage: 'pt-BR',
+      publisher: { '@id': ORG_ID },
+    },
+    ...jsonLdNodes,
+  ],
+};
 ---
 
 <!doctype html>
@@ -25,7 +59,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="apple-touch-icon" href="/roilabs-icon.png" />
 
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
@@ -42,6 +76,8 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=Hanken+Grotesk:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap"
     />
+
+    <script type="application/ld+json" set:html={JSON.stringify(graph)} />
   </head>
   <body>
     <slot />

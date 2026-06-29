@@ -1,5 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
 
 const apply = 'mailto:parceria@roilabs.com.br?subject=Candidatura%20%C3%A0%20cadeira%20%E2%80%94%20Goi%C3%A2nia';
 
@@ -19,19 +21,7 @@ const seats = [
 ---
 
 <Base>
-  <header class="site-header">
-    <div class="wrap site-header__inner">
-      <a class="brand" href="/" aria-label="ROI Labs, página inicial">
-        <img class="brand__logo" src="/roilabs-logo.png" alt="ROI Labs" width="253" height="48" />
-      </a>
-      <nav class="nav" aria-label="Principal">
-        <a class="nav__link" href="#mecanica">Mecânica</a>
-        <a class="nav__link" href="#cadeiras">Cadeiras</a>
-        <a class="nav__link" href="#mercado">Mercado</a>
-        <a class="btn btn--primary btn--sm nav__cta" href="#candidatar">Aplicar</a>
-      </nav>
-    </div>
-  </header>
+  <Header />
 
   <main>
     <!-- HERO -->
@@ -413,14 +403,5 @@ const seats = [
     </section>
   </main>
 
-  <footer class="site-footer">
-    <div class="wrap site-footer__inner">
-      <p class="site-footer__tag">
-        ROI Labs — Growth Partner para fornecedores regionais de alto padrão.
-      </p>
-      <p class="site-footer__meta">
-        Goiânia · BR &nbsp;·&nbsp; parceria@roilabs.com.br
-      </p>
-    </div>
-  </footer>
+  <Footer />
 </Base>
