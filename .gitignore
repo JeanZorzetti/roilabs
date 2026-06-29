@@ -21,3 +21,6 @@ dist/
 
 # cloned third-party tool (OpenSEO keyword planner) — not part of this repo
 open-seo/
+
+# brand source files (raw Gemini exports / large originals) — kept locally, not deployed
+brand-assets/

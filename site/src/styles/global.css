@@ -122,15 +122,10 @@ a {
   font-size: 0.95rem;
 }
 
-.brand__mark {
-  display: grid;
-  place-items: center;
-  width: 26px;
-  height: 26px;
-  border-radius: 6px;
-  background: var(--ink-3);
-  color: var(--hivis);
-  font-weight: 700;
+.brand__logo {
+  display: block;
+  height: 34px;
+  width: auto;
 }
 
 .nav {
