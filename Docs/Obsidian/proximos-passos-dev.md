@@ -34,11 +34,15 @@ dono: Jean (dev)
 - [x] **Login no `/admin`** (`ADMIN_PASSWORD`) e mudar o status de uma candidatura (novo → curadoria → aprovado).
 - [x] `/admin/cadeiras`: abrir/fechar uma cadeira e editar status.
 - [ ] **Form REAL no browser** em `roilabs.com.br` com acento ("Goiânia") → confirmar que grava **sem mojibake**. Site tem `<meta charset=utf-8>`; o "Goi�nia" dos leads de teste veio de bytes ruins do terminal, não do app — confirmar pelo lead `UTF8 TEST`.
-- [ ] **Apagar os leads de teste** no `/admin`: `SMOKE TEST - apagar`, `UTF8 TEST - apagar`, `Teste Fluxo`.
+- [ ] **Apagar os leads de teste** no `/admin` (`SMOKE TEST`, `UTF8 TEST`, `Teste Fluxo`) — agora há **botão "Apagar"** no card (commit `d62ebf4`). ⚠️ precisa do **redeploy do app** pro botão existir em prod.
 
-## 🔧 Fase 3 — Decisões de dev / dívida técnica
+## 🚀 Fase 3 — IMPLEMENTADO (`d62ebf4`, `f603006`) · falta redeploy
 
-- [ ] **Cadeiras ↔ site (decisão de arquitetura).** O admin grava cadeiras no DB, mas o site Astro lê `seats[]` hard-coded. Decidir: rebuild a cada mudança **ou** site faz `fetch('/api/cadeiras')` no build/ISR (acopla site↔app). Implementar a escolhida. Fonte do seed espelha o array: `src/lib/seats.ts`.
+> [!important] Ordem de redeploy
+> **1º o app** (`/app`) → ship do `DELETE /api/candidaturas/:id` + botão Apagar. **2º o site** (`/site`) → o build agora **busca `/api/cadeiras`** (mapa de cadeiras ao vivo). O site **só builda com o app de pé** (fail-loud proposital, sem mapa stale/vazio).
+
+- [x] **Cadeiras ↔ site — RESOLVIDO.** Site faz `fetch('/api/cadeiras')` no build e **dropou o `seats[]` hard-coded** (`index.astro`). DB = fonte de verdade única; `src/lib/seats.ts` virou **seed-only**. Mudou cadeira no `/admin` → **redeploy do site** reflete no público.
+- [x] **Apagar candidatura — RESOLVIDO.** `DELETE` na rota `[id]` (auth + idempotente) + botão "Apagar" no card (`window.confirm`).
 - [ ] **Kanban sem drag** (hoje muda status por `<select>`, ponytail). Só adicionar `@dnd-kit` (padrão do CRM SplitJud) se quiser arrastar — opcional.
 - [ ] **WhatsApp do card** assume número BR local e prefixa `55`. Se vier com DDI, ajustar.
 
