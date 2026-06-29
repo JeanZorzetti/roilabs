@@ -58,51 +58,21 @@ const tipo = page.tipo.charAt(0).toUpperCase() + page.tipo.slice(1);
       </div>
     </section>
 
-    <!-- Características técnicas -->
-    {Object.values(page.atributos).some((v) => v !== undefined) && (
+    <!-- Produtos reais disponíveis (galeria do catálogo) — ficha técnica real vive no produto -->
+    {produtosRel.length > 0 && (
       <section class="section section--light">
         <div class="wrap">
-          <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.8rem;">Características técnicas</h2>
-          <table class="attrs-table">
-            <tbody>
-              {page.atributos.classeAd !== undefined && (
-                <tr>
-                  <th scope="row">Classe de Abrasão (AD)</th>
-                  <td>{page.atributos.classeAd}</td>
-                </tr>
-              )}
-              {page.atributos.acabamento && (
-                <tr>
-                  <th scope="row">Acabamento</th>
-                  <td>{page.atributos.acabamento}</td>
-                </tr>
-              )}
-              {page.atributos.antiderrapante !== undefined && (
-                <tr>
-                  <th scope="row">Antiderrapante</th>
-                  <td>{page.atributos.antiderrapante ? 'Sim' : 'Não'}</td>
-                </tr>
-              )}
-              {page.atributos.dimensao && (
-                <tr>
-                  <th scope="row">Dimensão (comum)</th>
-                  <td>{page.atributos.dimensao}</td>
-                </tr>
-              )}
-              {page.atributos.m2PorCaixa && (
-                <tr>
-                  <th scope="row">m² por caixa (referência)</th>
-                  <td>{page.atributos.m2PorCaixa} m²</td>
-                </tr>
-              )}
-              {page.atributos.ambiente && (
-                <tr>
-                  <th scope="row">Ambientes indicados</th>
-                  <td>{page.atributos.ambiente}</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+          <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:0.6rem;">
+            {produtosRel.length} {produtosRel.length === 1 ? 'opção disponível' : 'opções disponíveis'} em Goiânia
+          </h2>
+          <p style="color:var(--l-muted);margin-bottom:2rem;max-width:54ch;">
+            Modelos de fornecedores do polo de Goiânia que se encaixam neste perfil.
+            Clique para ver a ficha técnica completa (dimensão, acabamento, classe de
+            abrasão, preço) e solicitar orçamento.
+          </p>
+          <div class="prod-grid">
+            {produtosRel.slice(0, 8).map((prod) => <ProdutoCard produto={prod} />)}
+          </div>
         </div>
       </section>
     )}
@@ -116,8 +86,8 @@ const tipo = page.tipo.charAt(0).toUpperCase() + page.tipo.slice(1);
           </h2>
           <p style="color:var(--d-muted);max-width:62ch;">
             {page.termoAlvo.charAt(0).toUpperCase() + page.termoAlvo.slice(1)} é especialmente
-            indicado para {page.ocasiao} em Goiânia — confira as especificações técnicas
-            acima e o guia de como escolher abaixo.
+            indicado para {page.ocasiao} em Goiânia — veja as opções disponíveis acima e o
+            guia de como escolher abaixo.
           </p>
         </div>
       </section>
@@ -143,24 +113,6 @@ const tipo = page.tipo.charAt(0).toUpperCase() + page.tipo.slice(1);
             Perguntas frequentes
           </h2>
           <Faq items={page.faq} />
-        </div>
-      </section>
-    )}
-
-    <!-- Produtos reais disponíveis (galeria do catálogo) -->
-    {produtosRel.length > 0 && (
-      <section class="section">
-        <div class="wrap">
-          <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:0.6rem;">
-            {produtosRel.length} {produtosRel.length === 1 ? 'opção disponível' : 'opções disponíveis'} em Goiânia
-          </h2>
-          <p style="color:var(--d-muted);margin-bottom:2rem;max-width:54ch;">
-            Modelos de fornecedores do polo de Goiânia que se encaixam neste perfil.
-            Clique para ver a ficha completa e solicitar orçamento.
-          </p>
-          <div class="prod-grid">
-            {produtosRel.slice(0, 8).map((prod) => <ProdutoCard produto={prod} />)}
-          </div>
         </div>
       </section>
     )}
