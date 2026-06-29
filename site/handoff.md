@@ -4,7 +4,7 @@
 - Site raiz da ROI Labs em **Astro 5** (estático), 1 página rica + premium.
 - Posicionamento: **holding + recrutamento de fornecedor** (não vitrine de consumidor).
 - Design próprio (não-template): base grafite-arquitetura, seções porcelana, acento laranja hi-vis de obra. Fontes Archivo / Hanken Grotesk / Space Mono via Google Fonts.
-- Seções: hero (card "cadeira" como instrumento) → manifesto → mecânica 01/02/03 → **Mapa de Cadeiras de Goiânia** (elemento-assinatura, FOMO da tese BNI) → leitura de mercado (dados reais: 1.900 buscas/mês "porcelanato" Goiânia) → CTA de candidatura → footer.
+- Seções: hero (card "cadeira" como instrumento) → manifesto → mecânica 01/02/03 → **Mapa de Cadeiras de Goiânia** (elemento-assinatura, FOMO da tese BNI) → leitura de mercado (dados reais: 1.900 buscas/mês "porcelanato" Goiânia) → ICP (3 gates: 2/3 validados + fit "pra você / não pra você") → FAQ de objeções (accordion nativo `<details>`, zero JS) → CTA de candidatura → footer.
 - Build limpo (`npm run build` ✓). Responsivo (desktop + mobile verificados via Playwright). A11y básica: landmarks, focus-visible, prefers-reduced-motion.
 
 ## Decisões
