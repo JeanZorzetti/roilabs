@@ -24,7 +24,7 @@ const ERROS: Record<string, string> = {
   <main class="section" data-app-url={appUrl}>
     <div class="wrap cart-wrap">
       <h1 style="font-size:clamp(1.8rem,4vw,2.6rem);margin-bottom:0.4rem;">Seu carrinho</h1>
-      <p style="color:var(--l-muted);margin-bottom:2rem;">Porcelanato em Goiânia · pagamento online seguro.</p>
+      <p style="color:var(--d-muted);margin-bottom:2rem;">Porcelanato em Goiânia · pagamento online seguro.</p>
 
       <div class="cart-err" role="alert" hidden></div>
 
@@ -75,7 +75,7 @@ const ERROS: Record<string, string> = {
             <div class="field cart-cep" hidden style="margin-top:0.8rem;">
               <label for="ck-cep">CEP de entrega</label>
               <input id="ck-cep" type="text" name="cep" maxlength="12" inputmode="numeric" placeholder="74000-000" />
-              <p class="cart-cep__note" style="font-size:0.82rem;color:var(--l-muted);margin:0.4rem 0 0;"></p>
+              <p class="cart-cep__note" style="font-size:0.82rem;color:var(--d-muted);margin:0.4rem 0 0;"></p>
             </div>
 
             <div class="cart-summary">
@@ -95,7 +95,7 @@ const ERROS: Record<string, string> = {
             <button type="submit" class="btn btn--primary" style="width:100%;margin-top:1rem;">
               Finalizar e pagar
             </button>
-            <p style="font-size:0.8rem;color:var(--l-muted);text-align:center;margin-top:0.8rem;">
+            <p style="font-size:0.8rem;color:var(--d-muted);text-align:center;margin-top:0.8rem;">
               Pagamento via Mercado Pago (Pix ou cartão). Pedido pago entra como reserva, confirmado pelo fornecedor em até 24h.
             </p>
           </form>
@@ -114,21 +114,22 @@ const ERROS: Record<string, string> = {
   .cart-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 1rem; }
   .cart-line {
     display: grid; grid-template-columns: 1fr auto; gap: 0.6rem 1rem;
-    padding: 1rem; border: 1px solid var(--line, #e3e6ec); border-radius: 10px;
+    padding: 1rem; border: 1px solid var(--d-line); border-radius: 10px; background: var(--ink-2);
   }
-  .cart-line__name { font-weight: 600; }
-  .cart-line__meta { font-size: 0.85rem; color: var(--l-muted, #5b6472); }
-  .cart-line__sub { font-weight: 700; white-space: nowrap; }
+  .cart-line__name { font-weight: 600; color: var(--d-text); }
+  .cart-line__meta { font-size: 0.85rem; color: var(--d-muted); }
+  .cart-line__sub { font-weight: 700; white-space: nowrap; color: var(--d-text); }
   .cart-line__qty { display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 0.5rem; }
-  .cart-line__qty input { width: 4.5rem; padding: 0.4rem 0.5rem; border: 1px solid var(--line, #d7dbe2); border-radius: 6px; font: inherit; }
-  .cart-line__rm { background: none; border: 0; color: var(--l-muted, #7a828f); cursor: pointer; font-size: 0.85rem; text-decoration: underline; }
-  .cart-line__rm:hover { color: var(--hivis-deep); }
-  .cart-checkout { border: 1px solid var(--line, #e3e6ec); border-radius: 12px; padding: 1.4rem; background: var(--l-card, #fff); }
-  .radio-row { display: flex; align-items: center; gap: 0.6rem; padding: 0.4rem 0; cursor: pointer; }
-  .cart-summary { margin: 1.4rem 0; padding-top: 1rem; border-top: 1px solid var(--line, #e3e6ec); display: grid; gap: 0.5rem; }
-  .cart-summary__row { display: flex; justify-content: space-between; font-size: 0.95rem; }
-  .cart-summary__total { font-size: 1.15rem; font-weight: 800; padding-top: 0.5rem; border-top: 1px dashed var(--line, #d7dbe2); }
-  .cart-err { background: #fde8e2; color: var(--hivis-deep); padding: 0.9rem 1.1rem; border-radius: 8px; margin-bottom: 1.5rem; }
+  .cart-line__qty input { width: 4.5rem; padding: 0.4rem 0.5rem; border: 1px solid var(--d-line-strong); border-radius: 6px; font: inherit; background: var(--ink-3); color: var(--d-text); }
+  .cart-line__rm { background: none; border: 0; color: var(--d-muted); cursor: pointer; font-size: 0.85rem; text-decoration: underline; }
+  .cart-line__rm:hover { color: var(--hivis); }
+  .cart-checkout { border: 1px solid var(--d-line); border-radius: 12px; padding: 1.4rem; background: var(--ink-2); }
+  .cart-checkout h2 { color: var(--d-text); }
+  .radio-row { display: flex; align-items: center; gap: 0.6rem; padding: 0.4rem 0; cursor: pointer; color: var(--d-text); }
+  .cart-summary { margin: 1.4rem 0; padding-top: 1rem; border-top: 1px solid var(--d-line); display: grid; gap: 0.5rem; }
+  .cart-summary__row { display: flex; justify-content: space-between; font-size: 0.95rem; color: var(--d-text); }
+  .cart-summary__total { font-size: 1.15rem; font-weight: 800; padding-top: 0.5rem; border-top: 1px dashed var(--d-line-strong); }
+  .cart-err { background: color-mix(in srgb, var(--hivis) 16%, var(--ink-2)); color: var(--d-text); border: 1px solid var(--hivis); padding: 0.9rem 1.1rem; border-radius: 8px; margin-bottom: 1.5rem; }
   .cart-empty { text-align: center; padding: 3rem 1rem; display: grid; gap: 1.2rem; justify-items: center; }
 </style>
 

@@ -27,10 +27,13 @@ const { slug, m2Caixa, preco } = Astro.props;
 
 <style>
   .add-cart { margin-bottom: 1.2rem; }
+  /* Adaptive: AddToCart renders on a dark product page and inside a light category
+     section. currentColor + color-mix keep contrast correct on both. */
   .add-cart__label {
     display: block;
     font-size: 0.85rem;
-    color: var(--l-muted, #5b6472);
+    color: inherit;
+    opacity: 0.7;
     margin-bottom: 0.5rem;
   }
   .add-cart__row { display: flex; gap: 0.6rem; flex-wrap: wrap; }
@@ -38,14 +41,17 @@ const { slug, m2Caixa, preco } = Astro.props;
     flex: 1 1 8rem;
     min-width: 0;
     padding: 0.7rem 0.9rem;
-    border: 1px solid var(--line, #d7dbe2);
+    border: 1px solid color-mix(in srgb, currentColor 28%, transparent);
     border-radius: 8px;
+    background: color-mix(in srgb, currentColor 6%, transparent);
+    color: inherit;
     font: inherit;
   }
+  .add-cart__input::placeholder { color: inherit; opacity: 0.45; }
   .add-cart__input:focus-visible { outline: 2px solid var(--hivis); outline-offset: 1px; }
   .add-cart__btn { flex: 0 0 auto; white-space: nowrap; }
-  .add-cart__preview { margin: 0.7rem 0 0; min-height: 1.3em; font-size: 0.9rem; color: var(--hivis-deep); }
-  .add-cart__preview a { color: var(--hivis); font-weight: 600; }
+  .add-cart__preview { margin: 0.7rem 0 0; min-height: 1.3em; font-size: 0.9rem; color: var(--hivis); font-weight: 600; }
+  .add-cart__preview a { color: var(--hivis); font-weight: 700; text-decoration: underline; }
 </style>
 
 <script>
