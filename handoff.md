@@ -1,77 +1,58 @@
-# Handoff — /admin (Next.js) + logo ROI Labs
+# Handoff — ROI Labs (roilabs.com.br)
 
-> **STATUS 2026-06-29 — executado.** Tarefa 1: app `/app` Next 16 com Candidaturas
-> (kanban) + Mapa de Cadeiras, auth de login único, DB `roilabs_db`. CÓDIGO PRONTO,
-> **falta ops** (db push+seed, App EasyPanel, DNS, build Docker). Tarefa 2: logo
-> renomeada; aplicação **aguarda variante que case** (decisão do dono). Detalhes,
-> deploy e pendências agora em **[`app/handoff.md`](app/handoff.md)**.
+> **STATUS 2026-06-29 — MVP NO AR e verificado em prod.**
+> Site `https://roilabs.com.br` (marketing + recrutamento + blog GEO) e admin
+> `https://app.roilabs.com.br` (candidaturas + mapa de cadeiras) — ambos HTTP 200
+> @ `2.24.207.200` (EasyPanel). E2E confirmado no navegador real.
 >
-> _Contexto original abaixo (mantido)._ Duas tarefas: **(1)** criar um `/admin` em
-> Next.js e **(2)** colocar a logo da marca no projeto.
+> **Checklist de dev vivo:** [`Docs/Obsidian/proximos-passos-dev.md`](Docs/Obsidian/proximos-passos-dev.md)
+> (espelhado no Notion: "✅ Próximos passos — DEV (Jean)" sob o Hub).
+> **Estratégia:** vault em [`Docs/Obsidian/INDEX.md`](Docs/Obsidian/INDEX.md) (8 nós, todos `decided`).
 
----
+## Negócio (1 parágrafo)
+ROI Labs = **Growth Partner** (não agência). Modelo BNI: 1 cadeira exclusiva por
+nicho/polo, fornecedor paga 100% variável (pago pelo sucesso). **Polo 1 = Goiânia**,
+nicho âncora = **revestimentos/porcelanato**.
 
-## Contexto (estado atual do repo)
+## Arquitetura (monorepo, raiz = `ROI Labs/ROI Labs/`)
+- **`/site`** — Astro 5 estático → nginx. Marketing + form de candidatura + blog GEO.
+  Deploy EasyPanel: build path `/site`, `site/Dockerfile` (node build → nginx), domínio `roilabs.com.br`.
+- **`/app`** — Next 16 App Router → standalone. Admin (login único cookie HMAC), APIs, kanban.
+  Deploy EasyPanel: build path `/app`, `app/Dockerfile` (porta 3000), domínio `app.roilabs.com.br`.
+- **DB:** Postgres `roilabs_db @ 2.24.207.200:5443`. 2 tabelas (`Candidatura`, `Cadeira`), `db push` (sem migrations).
+- **Fluxo:** site (estático) → `POST app.roilabs.com.br/api/candidaturas` (urlencoded, sem preflight) → DB → kanban `/admin`.
 
-- Repo **`JeanZorzetti/roilabs` (PRIVADO)**, monorepo rooteado em `ROI Labs/ROI Labs/`:
-  - `/site` — **site Astro 5 estático** (marketing + recrutamento de fornecedor). **PRONTO e shipado.** Hero → manifesto → mecânica → Mapa de Cadeiras → mercado → ICP (3 gates) → FAQ → form de candidatura → footer. Form via **Web3Forms** (→ e-mail `parceria@roilabs.com.br`, redirect `/obrigado`). Deploy via `site/Dockerfile` (node build → nginx) na EasyPanel, **build path = `/site`**. Detalhes em [`site/handoff.md`](site/handoff.md).
-  - `/Docs/Obsidian` — **vault de estratégia** (8 nós DAG, `decided`). Comece por [`Docs/Obsidian/INDEX.md`](Docs/Obsidian/INDEX.md).
-- **Negócio:** ROI Labs = Growth Partner (não agência). Modelo BNI: 1 cadeira exclusiva por nicho/polo, fornecedor paga 100% variável (pago pelo sucesso). Polo 1 = Goiânia, nicho = revestimentos/porcelanato.
-- **Design system** (`site/src/styles/global.css`): base grafite (`--ink #14171d`), seções porcelana, acento **laranja hi-vis `--hivis #ff5a1f`**. Fontes Archivo / Hanken Grotesk / Space Mono. Header é **escuro**.
-- Stack padrão do dono (ver memória): **Next 16 App Router + Prisma + Postgres (EasyPanel) + auth**. Convenções recorrentes: params `Promise` + `await params`; `getAuthFromRequest()→auth.id`; prisma singleton `@/lib/prisma`; `prisma generate` antes do `next build`; tabelas snake_case `@@map`.
+## Feito
+- **Fase 1:** schema+seed (6 cadeiras), os 2 Apps na EasyPanel, DNS dos 2 domínios, form ligado à API.
+- **Fase 2 (E2E em prod):** form→303→`/obrigado`→kanban; login+troca de status; `/admin/cadeiras`; UTF-8 limpo; leads de teste apagados.
+- **Fase 3 (admin controla o site):**
+  - **Mapa de cadeiras AO VIVO (runtime fetch).** `index.astro` renderiza skeleton estático (SEO/no-JS) + `<script is:inline>` que busca `/api/cadeiras` **no navegador** e sobrescreve status/aberta. `GET /api/cadeiras` tem `Access-Control-Allow-Origin: *`. **Editar cadeira no `/admin` → F5 no site reflete, SEM rebuild.** (commit `0bef049`)
+  - **Apagar candidatura.** `DELETE /api/candidaturas/:id` (auth, idempotente) + botão "Apagar" no card (`window.confirm`). (commit `d62ebf4`)
+- **Fase 4:** senha do Postgres rotacionada.
+- **Logo:** variante clara (off-white + chevron laranja) aplicada no header, favicon, og:image — visível no header escuro.
 
----
+## Decisões (confirmadas com o dono)
+- Admin = **leads + cadeiras** (sem gestão de conteúdo por ora).
+- Auth = **login único** interno (cookie HMAC, sem NextAuth).
+- DB = Postgres existente, `db push` (MVP, 2 tabelas).
+- Mapa de cadeiras = **runtime fetch** (não build-time — ver gotcha abaixo).
 
-## Tarefa 1 — `/admin` em Next.js
+## Próximos passos (dev — opcionais, sob demanda)
+- [ ] **Drag no kanban** (`@dnd-kit`, padrão do CRM SplitJud) — hoje muda status por `<select>`.
+- [ ] **DDI no WhatsApp** — o card prefixa `55` assumindo número BR local; parsear se vierem leads de fora.
+- [ ] **pSEO `goiania.roilabs.com.br`** — quando entrar gestão de conteúdo programático.
+- _Não-dev (Maria Eduarda/campo): fechar 1º fornecedor, piso de take rate em R$, resíduo legal com contador/advogado._
 
-### Arquitetura recomendada
-- **App Next separado** no monorepo como `/app` (irmão de `/site`), deploy em **`app.roilabs.com.br`**. Espelha o padrão SplitJud (site=Astro / app=Next) que o dono já usa. **Não tocar no site Astro.**
-- Stack: Next 16 App Router + Prisma + Postgres + auth. Deploy EasyPanel = novo App, **build path = `/app`**, domínio `app.roilabs.com.br`.
+## Pendências / gotchas (LEIA antes de mexer)
+- **★ Build-time fetch NÃO reflete o DB.** O Docker cacheia o layer `RUN npm run build`; redeploy sem commit novo serve `dist` velho. Por isso o mapa de cadeiras é **runtime fetch (navegador)**, não build. Não voltar pra build-time. (foi o bug que custou uma rodada)
+- **Deploy do mapa = 2 Apps:** o app precisa do **CORS** (`/api/cadeiras`) e o site do **script runtime**. Redeploy: **app primeiro, site depois.**
+- **`npm install` em pasta OneDrive corrompe `node_modules`** (errno -4094). Build/`tsc` local é **não-confiável** (resolve módulos errado). **Verificação real = Docker (EasyPanel) ou navegador.**
+- **Schema:** fazer `db push` MANUAL de uma máquina que alcança `2.24.207.200`. NÃO confiar no runner standalone.
+- **Cadeiras:** `seats.ts` (em `/app`) + array do `index.astro` (em `/site`) = **só fallback no-JS**; a verdade é o DB (a UI ao vivo sobrescreve).
+- **Patterns Next16 do dono:** params `Promise`+`await params`; `getAuthFromRequest()→auth.id`; prisma singleton `@/lib/prisma`; `prisma generate` antes do `next build`; tabelas snake_case `@@map`.
 
-### O que o `/admin` gerencia — **CONFIRMAR COM O DONO antes de codar** (tarefa ambígua)
-Recomendação de MVP e fases, a validar:
-1. **MVP — Candidaturas (leads do form).** Hoje as candidaturas só vão por e-mail (Web3Forms), não há onde listá-las. Para o admin gerenciar, capturar em DB. Duas formas:
-   - (a) Trocar o `action` do form (em `site/src/pages/index.astro`) para uma API route do app (`app.roilabs.com.br/api/candidaturas`) que grava no DB. ⚠️ vira POST cross-origin do site estático → **tratar CORS**.
-   - (b) Manter Web3Forms e usar **webhook** dele → API route que grava. Menos mexida no site.
-   - Recomendo (a) depois do app existir (dono dos dados). Kanban de status (novo → em curadoria → aprovado/recusado) no estilo do CRM do SplitJud (@dnd-kit).
-2. **Fase 2 — Mapa de Cadeiras.** Hoje o array `seats[]` é **hard-coded** em `site/src/pages/index.astro`. Mover pra DB pra o admin abrir/fechar cadeiras. ⚠️ o site é estático → ou rebuild a cada mudança, ou o site passa a fazer fetch no build/ISR (acopla site↔app). Decisão de arquitetura.
-3. Possível fase 3: gestão de conteúdo pSEO (quando entrar `goiania.roilabs.com.br`).
-
-### Perguntas a confirmar com o dono
-- `/admin` gerencia **só leads**, ou leads + cadeiras + conteúdo?
-- App novo em `app.roilabs.com.br` (recomendado) — confirma?
-- **DB:** subir um Postgres novo na EasyPanel ou reusar um existente?
-- **Auth:** login único interno basta (recomendado), ou multiusuário/roles?
-- Pipar leads pro **Sirius CRM** em vez de DB próprio? (o dono tem esse padrão; faltava `SIRIUS_API_KEY`.)
-
----
-
-## Tarefa 2 — Logo da marca
-
-**Arquivo:** `site/public/Design sem nome (18).png` — **2000×2000**, **PNG transparente** (alpha, fundo transparente), **2.4 MB**. Wordmark grunge: "ROI LABS" em letras pretas desgastadas, o "O" é um círculo de **arame farpado** com **seta verde de crescimento** dentro + caveirinha pixel no "I".
-
-### Passos
-1. **Renomear** (nome tem espaços e parênteses = ruim em URL): `Design sem nome (18).png` → `roilabs-logo.png` (ou `.webp`).
-2. **Otimizar:** 2.4 MB é absurdo pra header. Exportar versão web (~400–600px de largura, < 100 KB) pro header; e uma 1200×630 pra `og:image`.
-3. **Usar em:**
-   - Header do site — hoje é texto `R ROI LABS` (`.brand` + `.brand__mark` em `index.astro`/`global.css`). Trocar pela `<img>`.
-   - Favicon (`site/public/favicon.svg` + `<link rel="icon">` no `Base.astro`).
-   - `og:image` no `Base.astro` (hoje não tem).
-   - Header do novo `/admin`.
-
-### ⚠️ GOTCHAS — leia antes (senão a logo some ou quebra a marca)
-1. **Logo é PRETA sobre transparente → some no header ESCURO (grafite) do site.** Preto em fundo escuro = invisível. Decidir: **(a)** gerar uma versão **branca/invertida** pra superfícies escuras, **(b)** pôr a logo num chip claro, ou **(c)** mudar o header pra barra clara. Sem isso, a logo não aparece.
-2. **Conflito de paleta/vibe — decisão de marca do DONO.** A logo é **verde + grunge + arame farpado + caveira** (agressiva). O site inteiro que está no ar é **laranja hi-vis + limpo/premium/arquitetural**. Eles **brigam** (cor e tom). Opções: **(a)** adotar o verde+grunge no site (mexer em `--hivis` e na linguagem visual), **(b)** manter o laranja/clean e conviver com a dissonância, ou **(c)** pedir uma variante de logo que case com o site. **Não decidir isso sozinho — perguntar ao dono.**
-3. Lockup é quadrado/empilhado. Pra header horizontal, talvez usar só o "O" de arame farpado como ícone compacto, ou pedir um lockup horizontal.
-
----
-
-## Como começar
-- Repo já está local em `c:\Users\jeanz\OneDrive\Desktop\ROI Labs\ROI Labs`. `gh` autenticado como `JeanZorzetti`. Repo é PRIVADO.
-- Site: `cd site` (Astro). Novo app: criar `/app` (Next).
-- **Gotcha de ambiente:** `npm install` em pasta OneDrive corrompe `node_modules` (errno -4094) — se build quebrar do nada, deletar `node_modules` + reinstalar. Lighthouse local não é confiável (só prod).
-- Antes de codar a Tarefa 1, **rodar as perguntas de confirmação** com o dono (escopo do admin, DB, auth). Antes da Tarefa 2, **confirmar a direção de marca** (gotcha 2).
-
-## Pendências herdadas (do site, não bloqueiam estas tarefas)
-- `WEB3FORMS_KEY` ainda é placeholder em `site/src/pages/index.astro` — form não envia até colar a chave real.
-- Deploy do site na EasyPanel + DNS de `roilabs.com.br` ainda são manuais (não feitos).
+## Como rodar / verificar
+- Repo local: `c:\Users\jeanz\OneDrive\Desktop\ROI Labs\ROI Labs`. `gh` autenticado (`JeanZorzetti`, repo PRIVADO).
+- Site Astro: `cd site && npm run dev`. App Next: `cd app && npm run dev`.
+- Verificar prod sem browser: `curl -I https://roilabs.com.br` / `curl https://app.roilabs.com.br/api/cadeiras`.
+- Verificar o mapa ao vivo: abrir `roilabs.com.br`, conferir request `GET app.roilabs.com.br/api/cadeiras` = 200 sem erro de CORS no console.
