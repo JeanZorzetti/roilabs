@@ -31,6 +31,7 @@ depends_on:
 
 - ✅ **Páginas pSEO: não é alvo fixo — é catálogo × combinações com volume > 0.** Para revestimentos: produto × característica (PEI, antiderrapante, 60x60/90x90) × ocasião (área externa, piscina, cozinha, fachada) × localização (bairros de Goiânia). Gere todas as combinações válidas; meça **páginas indexadas**, não criadas. Ordem de grandeza: centenas a poucos milhares no polo 1.
 - ✅ **Saída do deserto = mesmo gatilho do SaaS:** ROI Labs = 30-40% do faturamento do parceiro **+** tráfego orgânico subindo 3 meses seguidos. Um gatilho só dispara a Fase 2 aqui e a mensalidade em [[modelo]].
+- ✅ **IA dos subdomínios = polo, nicho = pasta** (brainstorm 2026-06-29): `goiania.roilabs.com.br/porcelanato/...`, **não** `porcelanato-goiania...`. Autoridade consolida por host (o tráfego é ativo da ROI Labs); nicho novo = nova pasta no mesmo subdomínio. Execução em [[pseo-execucao]].
 
 ## Notas
 

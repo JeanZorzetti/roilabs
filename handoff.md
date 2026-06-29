@@ -37,12 +37,6 @@ nicho âncora = **revestimentos/porcelanato**.
 - DB = Postgres existente, `db push` (MVP, 2 tabelas).
 - Mapa de cadeiras = **runtime fetch** (não build-time — ver gotcha abaixo).
 
-## Próximos passos (dev — opcionais, sob demanda)
-- [ ] **Drag no kanban** (`@dnd-kit`, padrão do CRM SplitJud) — hoje muda status por `<select>`.
-- [ ] **DDI no WhatsApp** — o card prefixa `55` assumindo número BR local; parsear se vierem leads de fora.
-- [ ] **pSEO `goiania.roilabs.com.br`** — quando entrar gestão de conteúdo programático.
-- _Não-dev (Maria Eduarda/campo): fechar 1º fornecedor, piso de take rate em R$, resíduo legal com contador/advogado._
-
 ## Pendências / gotchas (LEIA antes de mexer)
 - **★ Build-time fetch NÃO reflete o DB.** O Docker cacheia o layer `RUN npm run build`; redeploy sem commit novo serve `dist` velho. Por isso o mapa de cadeiras é **runtime fetch (navegador)**, não build. Não voltar pra build-time. (foi o bug que custou uma rodada)
 - **Deploy do mapa = 2 Apps:** o app precisa do **CORS** (`/api/cadeiras`) e o site do **script runtime**. Redeploy: **app primeiro, site depois.**
