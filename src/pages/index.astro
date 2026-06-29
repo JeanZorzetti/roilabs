@@ -1,0 +1,243 @@
+---
+import Base from '../layouts/Base.astro';
+
+const apply = 'mailto:parceria@roilabs.com.br?subject=Candidatura%20%C3%A0%20cadeira%20%E2%80%94%20Goi%C3%A2nia';
+
+// Mapa de cadeiras — Polo Goiânia. Só revestimentos está em curadoria aberta.
+const seats = [
+  { niche: 'Revestimentos / Porcelanato', status: 'Curadoria aberta', open: true },
+  { niche: 'Materiais de construção', status: 'Em estudo', open: false },
+  { niche: 'Esquadrias / Vidraçaria', status: 'Em estudo', open: false },
+  { niche: 'Iluminação / Elétrica', status: 'Em estudo', open: false },
+  { niche: 'Marcenaria sob medida', status: 'Em estudo', open: false },
+  { niche: 'Pisos / Deck externo', status: 'Em estudo', open: false },
+];
+---
+
+<Base>
+  <header class="site-header">
+    <div class="wrap site-header__inner">
+      <a class="brand" href="/" aria-label="ROI Labs, página inicial">
+        <span class="brand__mark">R</span>
+        ROI&nbsp;LABS
+      </a>
+      <nav class="nav" aria-label="Principal">
+        <a class="nav__link" href="#mecanica">Mecânica</a>
+        <a class="nav__link" href="#cadeiras">Cadeiras</a>
+        <a class="nav__link" href="#mercado">Mercado</a>
+        <a class="btn btn--primary btn--sm nav__cta" href={apply}>Aplicar</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="wrap hero__inner">
+        <div>
+          <span class="eyebrow hero__eyebrow">Growth Partner · Polo Goiânia</span>
+          <h1 id="hero-title">
+            Construímos sua venda&nbsp;online.<br />
+            Você paga <span class="accent">quando vende.</span>
+          </h1>
+          <p class="hero__sub">
+            A ROI Labs banca a tecnologia e o tráfego. Você entra com o produto.
+            A conta só chega depois da venda — porque o nosso lucro é uma fração
+            do seu.
+          </p>
+          <div class="hero__actions">
+            <a class="btn btn--primary" href={apply}>Aplicar para a cadeira</a>
+            <a class="btn btn--ghost" href="#mecanica">Ver como funciona</a>
+          </div>
+        </div>
+
+        <aside class="chair" aria-label="Status da cadeira de Goiânia">
+          <div class="chair__top">
+            <span class="chair__label">Cadeira</span>
+            <span class="chair__num">Nº 01</span>
+          </div>
+          <div class="chair__row">
+            <span class="chair__k">Polo</span>
+            <span class="chair__v">Goiânia</span>
+          </div>
+          <div class="chair__row">
+            <span class="chair__k">Nicho</span>
+            <span class="chair__v">Revestimentos&nbsp;/&nbsp;Porcelanato</span>
+          </div>
+          <div class="chair__row">
+            <span class="chair__k">Status</span>
+            <span class="chair__v chair__v--hi">
+              <span class="status-dot" aria-hidden="true"></span>Curadoria aberta
+            </span>
+          </div>
+          <div class="chair__row">
+            <span class="chair__k">Custo fixo</span>
+            <span class="chair__v">R$ 0</span>
+          </div>
+          <div class="chair__row">
+            <span class="chair__k">Exclusividade</span>
+            <span class="chair__v">1 por nicho / polo</span>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- MANIFESTO -->
+    <section class="section section--dark manifesto" aria-labelledby="manifesto-title">
+      <div class="wrap manifesto__grid">
+        <p class="manifesto__big" id="manifesto-title">
+          Não somos agência.<br />
+          Somos <em>sócios de performance</em> da sua operação digital.
+        </p>
+        <p class="manifesto__note">
+          A ROI Labs é uma fábrica de infraestrutura de vendas. Construímos o
+          ecossistema — site, SEO de alta intenção, captação — que coloca
+          fornecedores regionais de alto padrão na frente de quem já está pronto
+          pra comprar. Sem fee mensal, sem projeto fechado, sem risco pra você.
+        </p>
+      </div>
+    </section>
+
+    <!-- MECÂNICA -->
+    <section class="section section--light" id="mecanica" aria-labelledby="mecanica-title">
+      <div class="wrap">
+        <div class="section__head">
+          <span class="eyebrow">A mecânica · três fases</span>
+          <h2 id="mecanica-title">Risco nosso na largada. Lucro dividido na chegada.</h2>
+        </div>
+
+        <div class="steps">
+          <article class="step">
+            <span class="step__num">01 — Curadoria</span>
+            <h3>Uma empresa por nicho</h3>
+            <p>
+              Selecionamos um único fornecedor A-Player por setor: produto
+              excelente, presença online fraca. Você passa nos três gates de
+              validação — ou a cadeira não abre.
+            </p>
+            <span class="step__tag">Gate de entrada</span>
+          </article>
+
+          <article class="step">
+            <span class="step__num">02 — Construção</span>
+            <h3>Máquina de tráfego orgânico</h3>
+            <p>
+              Montamos centenas de páginas de alta intenção — uma para cada
+              combinação de produto, característica e bairro com busca real.
+              Custo de tecnologia e tráfego é nosso.
+            </p>
+            <span class="step__tag">Custo da ROI Labs</span>
+          </article>
+
+          <article class="step">
+            <span class="step__num">03 — Performance</span>
+            <h3>Só ganhamos se você ganha</h3>
+            <p>
+              Quando as vendas chegam, dividimos. Nossa parte é variável e
+              atrelada a SLA de estoque e despacho. Sua cadeira é exclusiva por
+              um ano, renovável por entrega.
+            </p>
+            <span class="step__tag">100% variável</span>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- MAPA DE CADEIRAS (signature) -->
+    <section class="section section--light" id="cadeiras" aria-labelledby="cadeiras-title">
+      <div class="wrap">
+        <div class="section__head">
+          <span class="eyebrow">Escassez programada</span>
+          <h2 id="cadeiras-title">Mapa de cadeiras — Goiânia</h2>
+          <p class="section__lead">
+            Uma cadeira por nicho, por polo, renovável por desempenho. Quando uma
+            fecha, ela sai do mapa — e o seu concorrente não senta nela.
+          </p>
+        </div>
+
+        <ul class="map__grid" role="list">
+          {seats.map((s) => (
+            <li class={`seat ${s.open ? 'seat--open' : ''}`}>
+              <span class="seat__niche">{s.niche}</span>
+              <span class="seat__status">
+                <span class={`seat__ring`} aria-hidden="true"></span>
+                {s.status}
+              </span>
+            </li>
+          ))}
+        </ul>
+        <p class="map__caption">
+          // polo 01 de N · novos nichos abrem após a primeira cadeira faturar
+        </p>
+      </div>
+    </section>
+
+    <!-- PROVA / MERCADO -->
+    <section class="section section--dark" id="mercado" aria-labelledby="mercado-title">
+      <div class="wrap">
+        <div class="section__head">
+          <span class="eyebrow">Leitura de mercado · Goiânia</span>
+          <h2 id="mercado-title">A demanda já existe. Falta quem a capture.</h2>
+          <p class="section__lead">
+            Não é aposta. O volume de busca local foi medido antes de abrir a
+            cadeira — e a concorrência orgânica é fraca.
+          </p>
+        </div>
+
+        <div class="readout" role="group" aria-label="Indicadores de demanda em Goiânia">
+          <div class="readout__bar">
+            <span class="readout__dotrow" aria-hidden="true"><span></span><span></span><span></span></span>
+            keyword_planner — goiânia — 2026
+          </div>
+          <div class="readout__body">
+            <div class="metric">
+              <div class="metric__val">1.900<span class="unit">/mês</span></div>
+              <div class="metric__key">buscas por "porcelanato" só em Goiânia</div>
+            </div>
+            <div class="metric">
+              <div class="metric__val">R$ 0<span class="unit">mídia</span></div>
+              <div class="metric__key">captação 100% orgânica, não compramos clique</div>
+            </div>
+            <div class="metric">
+              <div class="metric__val">01<span class="unit">cadeira</span></div>
+              <div class="metric__key">por nicho, por polo — o resto fica de fora</div>
+            </div>
+          </div>
+        </div>
+        <p class="prova__foot">
+          Fonte: Google Ads Keyword Planner, cidade de Goiânia, 2026. Demanda
+          validada antes do investimento.
+        </p>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta" aria-labelledby="cta-title">
+      <div class="wrap cta__inner">
+        <div>
+          <h2 id="cta-title">A cadeira de revestimentos de Goiânia está em curadoria.</h2>
+          <p>
+            Uma empresa vai sentar nela e dominar a busca local de porcelanato.
+            Sem custo fixo, sem risco de tecnologia. Candidate-se antes do seu
+            concorrente.
+          </p>
+        </div>
+        <div class="cta__actions">
+          <a class="btn btn--invert" href={apply}>Candidatar minha empresa</a>
+          <span class="cta__fine">resposta em até 48h úteis</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap site-footer__inner">
+      <p class="site-footer__tag">
+        ROI Labs — Growth Partner para fornecedores regionais de alto padrão.
+      </p>
+      <p class="site-footer__meta">
+        Goiânia · BR &nbsp;·&nbsp; parceria@roilabs.com.br
+      </p>
+    </div>
+  </footer>
+</Base>
