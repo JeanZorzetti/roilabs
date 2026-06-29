@@ -1,0 +1,51 @@
+---
+// Header cart link with a live item-count badge (updates on the cart-change event).
+---
+<a class="cart-link" href="/carrinho" aria-label="Carrinho">
+  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+    <circle cx="9" cy="21" r="1" /><circle cx="20" cy="21" r="1" />
+    <path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6" />
+  </svg>
+  <span class="cart-link__badge" hidden>0</span>
+</a>
+
+<style>
+  .cart-link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    color: inherit;
+    padding: 0.25rem;
+  }
+  .cart-link:hover { color: var(--hivis); }
+  .cart-link__badge {
+    position: absolute;
+    top: -6px;
+    right: -8px;
+    min-width: 1.1rem;
+    height: 1.1rem;
+    padding: 0 0.25rem;
+    background: var(--hivis);
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    line-height: 1.1rem;
+    text-align: center;
+    border-radius: 999px;
+  }
+</style>
+
+<script>
+  import { count, CART_EVENT } from '../lib/cart';
+
+  const badge = document.querySelector<HTMLElement>('.cart-link__badge');
+  function update() {
+    if (!badge) return;
+    const n = count();
+    badge.textContent = String(n);
+    badge.hidden = n === 0;
+  }
+  update();
+  window.addEventListener(CART_EVENT, update);
+  window.addEventListener('storage', update); // sync across tabs
+</script>

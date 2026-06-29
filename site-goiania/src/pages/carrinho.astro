@@ -1,0 +1,258 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+// Static shell; the cart list, freight and totals are rendered client-side from localStorage.
+// Checkout is a native urlencoded form POST to the /app (303 → Mercado Pago) — no CORS, no fetch.
+const appUrl = import.meta.env.PUBLIC_APP_URL ?? 'https://app.roilabs.com.br';
+const action = `${appUrl}/api/pedidos`;
+
+const ERROS: Record<string, string> = {
+  vazio: 'Seu carrinho está vazio ou os itens não estão mais disponíveis.',
+  validacao: 'Confira nome, WhatsApp e o aceite da Política de Privacidade.',
+  pagamento: 'Não foi possível abrir o pagamento. Tente novamente em instantes.',
+};
+---
+
+<Base
+  title="Carrinho — Porcelanato Goiânia | ROI Labs"
+  description="Revise seus itens, escolha retirada ou entrega na Grande Goiânia e finalize o pagamento online (Pix ou cartão)."
+>
+  <Header />
+
+  <main class="section" data-app-url={appUrl}>
+    <div class="wrap cart-wrap">
+      <h1 style="font-size:clamp(1.8rem,4vw,2.6rem);margin-bottom:0.4rem;">Seu carrinho</h1>
+      <p style="color:var(--l-muted);margin-bottom:2rem;">Porcelanato em Goiânia · pagamento online seguro.</p>
+
+      <div class="cart-err" role="alert" hidden></div>
+
+      <!-- Empty state -->
+      <div class="cart-empty" hidden>
+        <p>Seu carrinho está vazio.</p>
+        <a class="btn btn--primary" href="/porcelanato">Ver porcelanatos</a>
+      </div>
+
+      <div class="cart-grid" hidden>
+        <!-- Items -->
+        <section class="cart-items" aria-label="Itens do carrinho">
+          <ul class="cart-list"></ul>
+        </section>
+
+        <!-- Checkout form -->
+        <aside class="cart-checkout">
+          <form id="checkout-form" method="POST" action={action} novalidate>
+            <div class="form__hp" aria-hidden="true" style="position:absolute;left:-9999px;">
+              <input tabindex="-1" autocomplete="off" name="botcheck" />
+            </div>
+            <input type="hidden" name="itens" />
+            <input type="hidden" name="origin" />
+
+            <h2 style="font-size:1.2rem;margin:0 0 1rem;">Seus dados</h2>
+            <div class="field field--req">
+              <label for="ck-nome">Nome</label>
+              <input id="ck-nome" type="text" name="nome" maxlength="200" placeholder="Seu nome completo" required />
+            </div>
+            <div class="field field--req">
+              <label for="ck-whatsapp">WhatsApp</label>
+              <input id="ck-whatsapp" type="tel" name="whatsapp" maxlength="40" placeholder="(62) 9xxxx-xxxx" required />
+            </div>
+            <div class="field">
+              <label for="ck-email">E-mail (opcional)</label>
+              <input id="ck-email" type="email" name="email" maxlength="200" placeholder="voce@email.com" />
+            </div>
+
+            <h2 style="font-size:1.2rem;margin:1.6rem 0 1rem;">Entrega</h2>
+            <label class="radio-row">
+              <input type="radio" name="entrega" value="retirada" checked />
+              <span>Retirar no fornecedor <strong>(grátis)</strong></span>
+            </label>
+            <label class="radio-row">
+              <input type="radio" name="entrega" value="entrega" />
+              <span>Entrega na Grande Goiânia</span>
+            </label>
+            <div class="field cart-cep" hidden style="margin-top:0.8rem;">
+              <label for="ck-cep">CEP de entrega</label>
+              <input id="ck-cep" type="text" name="cep" maxlength="12" inputmode="numeric" placeholder="74000-000" />
+              <p class="cart-cep__note" style="font-size:0.82rem;color:var(--l-muted);margin:0.4rem 0 0;"></p>
+            </div>
+
+            <div class="cart-summary">
+              <div class="cart-summary__row"><span>Produtos</span><span class="cart-sum-produto">—</span></div>
+              <div class="cart-summary__row"><span>Frete</span><span class="cart-sum-frete">Grátis</span></div>
+              <div class="cart-summary__row cart-summary__total"><span>Total</span><span class="cart-sum-total">—</span></div>
+            </div>
+
+            <label class="consent-field">
+              <input type="checkbox" name="consent" value="1" required />
+              <span>
+                Autorizo o uso dos meus dados conforme a
+                <a href="https://roilabs.com.br/privacidade" target="_blank" rel="noopener" style="color:var(--hivis)">Política de Privacidade</a>. (LGPD)
+              </span>
+            </label>
+
+            <button type="submit" class="btn btn--primary" style="width:100%;margin-top:1rem;">
+              Finalizar e pagar
+            </button>
+            <p style="font-size:0.8rem;color:var(--l-muted);text-align:center;margin-top:0.8rem;">
+              Pagamento via Mercado Pago (Pix ou cartão). Pedido pago entra como reserva, confirmado pelo fornecedor em até 24h.
+            </p>
+          </form>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .cart-wrap { max-width: 1000px; }
+  .cart-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 2rem; align-items: start; }
+  @media (max-width: 760px) { .cart-grid { grid-template-columns: 1fr; } }
+  .cart-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 1rem; }
+  .cart-line {
+    display: grid; grid-template-columns: 1fr auto; gap: 0.6rem 1rem;
+    padding: 1rem; border: 1px solid var(--line, #e3e6ec); border-radius: 10px;
+  }
+  .cart-line__name { font-weight: 600; }
+  .cart-line__meta { font-size: 0.85rem; color: var(--l-muted, #5b6472); }
+  .cart-line__sub { font-weight: 700; white-space: nowrap; }
+  .cart-line__qty { display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 0.5rem; }
+  .cart-line__qty input { width: 4.5rem; padding: 0.4rem 0.5rem; border: 1px solid var(--line, #d7dbe2); border-radius: 6px; font: inherit; }
+  .cart-line__rm { background: none; border: 0; color: var(--l-muted, #7a828f); cursor: pointer; font-size: 0.85rem; text-decoration: underline; }
+  .cart-line__rm:hover { color: var(--hivis-deep); }
+  .cart-checkout { border: 1px solid var(--line, #e3e6ec); border-radius: 12px; padding: 1.4rem; background: var(--l-card, #fff); }
+  .radio-row { display: flex; align-items: center; gap: 0.6rem; padding: 0.4rem 0; cursor: pointer; }
+  .cart-summary { margin: 1.4rem 0; padding-top: 1rem; border-top: 1px solid var(--line, #e3e6ec); display: grid; gap: 0.5rem; }
+  .cart-summary__row { display: flex; justify-content: space-between; font-size: 0.95rem; }
+  .cart-summary__total { font-size: 1.15rem; font-weight: 800; padding-top: 0.5rem; border-top: 1px dashed var(--line, #d7dbe2); }
+  .cart-err { background: #fde8e2; color: var(--hivis-deep); padding: 0.9rem 1.1rem; border-radius: 8px; margin-bottom: 1.5rem; }
+  .cart-empty { text-align: center; padding: 3rem 1rem; display: grid; gap: 1.2rem; justify-items: center; }
+</style>
+
+<script>
+  import { lines, setCaixas, removeItem, getCart } from '../lib/cart';
+
+  // ponytail: front-side mirror of app/src/lib/frete.ts (display only). Server recomputes
+  // and is the authority. Keep the two tables in sync; tiny enough to duplicate.
+  const FAIXAS = [
+    { min: 74000, max: 74894, valor: 150, regiao: 'Goiânia' },
+    { min: 74900, max: 74999, valor: 180, regiao: 'Aparecida de Goiânia' },
+    { min: 75250, max: 75269, valor: 200, regiao: 'Senador Canedo' },
+    { min: 75370, max: 75379, valor: 220, regiao: 'Goianira' },
+    { min: 75380, max: 75399, valor: 220, regiao: 'Trindade' },
+  ];
+  function calcFrete(entrega: string, cep: string): { valor: number | null; regiao?: string } {
+    if (entrega === 'retirada') return { valor: 0 };
+    const d = cep.replace(/\D/g, '');
+    if (d.length !== 8) return { valor: null };
+    const prefix = parseInt(d.slice(0, 5), 10);
+    const f = FAIXAS.find((x) => prefix >= x.min && prefix <= x.max);
+    return f ? { valor: f.valor, regiao: f.regiao } : { valor: null };
+  }
+
+  const brl = (n: number) => n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+  const $ = <T extends Element>(s: string) => document.querySelector<T>(s)!;
+  const grid = $('.cart-grid') as HTMLElement;
+  const empty = $('.cart-empty') as HTMLElement;
+  const list = $('.cart-list') as HTMLUListElement;
+  const cepWrap = $('.cart-cep') as HTMLElement;
+  const cepInput = $('#ck-cep') as HTMLInputElement;
+  const cepNote = $('.cart-cep__note') as HTMLElement;
+  const sumProduto = $('.cart-sum-produto') as HTMLElement;
+  const sumFrete = $('.cart-sum-frete') as HTMLElement;
+  const sumTotal = $('.cart-sum-total') as HTMLElement;
+  const form = $('#checkout-form') as HTMLFormElement;
+  const errBox = $('.cart-err') as HTMLElement;
+
+  // Show ?erro= from a bounced checkout.
+  const erro = new URLSearchParams(location.search).get('erro');
+  const ERROS: Record<string, string> = {
+    vazio: 'Seu carrinho está vazio ou os itens não estão mais disponíveis.',
+    validacao: 'Confira nome, WhatsApp e o aceite da Política de Privacidade.',
+    pagamento: 'Não foi possível abrir o pagamento. Tente novamente em instantes.',
+  };
+  if (erro && ERROS[erro]) { errBox.textContent = ERROS[erro]; errBox.hidden = false; }
+
+  function selectedEntrega() {
+    return (document.querySelector<HTMLInputElement>('input[name="entrega"]:checked')?.value) || 'retirada';
+  }
+
+  function renderTotals() {
+    const ls = lines();
+    const produto = ls.reduce((s, l) => s + l.subtotal, 0);
+    sumProduto.textContent = brl(produto);
+
+    const entrega = selectedEntrega();
+    const { valor, regiao } = calcFrete(entrega, cepInput.value);
+    if (entrega === 'retirada') {
+      sumFrete.textContent = 'Grátis';
+      sumTotal.textContent = brl(produto);
+    } else if (valor === null) {
+      sumFrete.textContent = 'A combinar';
+      sumTotal.textContent = `${brl(produto)} + frete`;
+      cepNote.textContent = cepInput.value ? 'CEP fora da tabela — frete a combinar com o fornecedor.' : '';
+    } else {
+      sumFrete.textContent = brl(valor);
+      sumTotal.textContent = brl(produto + valor);
+      cepNote.textContent = regiao ? `Região: ${regiao}` : '';
+    }
+  }
+
+  function render() {
+    const ls = lines();
+    const hasItems = ls.length > 0;
+    grid.hidden = !hasItems;
+    empty.hidden = hasItems;
+    if (!hasItems) return;
+
+    list.innerHTML = '';
+    for (const l of ls) {
+      const li = document.createElement('li');
+      li.className = 'cart-line';
+      li.innerHTML = `
+        <div>
+          <div class="cart-line__name">${l.nome}</div>
+          <div class="cart-line__meta">${l.precoFmt}/m² · ${l.m2_caixa} m²/caixa</div>
+          <div class="cart-line__qty">
+            <label>Caixas
+              <input type="number" min="1" step="1" value="${l.caixas}" data-slug="${l.slug}" />
+            </label>
+            <span class="cart-line__meta">${l.m2.toFixed(2).replace('.', ',')} m²</span>
+          </div>
+          <button type="button" class="cart-line__rm" data-rm="${l.slug}">Remover</button>
+        </div>
+        <div class="cart-line__sub">${l.subtotalFmt}</div>`;
+      list.appendChild(li);
+    }
+    renderTotals();
+  }
+
+  // Events (delegated).
+  list.addEventListener('change', (e) => {
+    const t = e.target as HTMLInputElement;
+    if (t.dataset.slug) { setCaixas(t.dataset.slug, parseInt(t.value, 10) || 1); render(); }
+  });
+  list.addEventListener('click', (e) => {
+    const t = e.target as HTMLElement;
+    if (t.dataset.rm) { removeItem(t.dataset.rm); render(); }
+  });
+  form.querySelectorAll('input[name="entrega"]').forEach((r) =>
+    r.addEventListener('change', () => { cepWrap.hidden = selectedEntrega() !== 'entrega'; renderTotals(); }),
+  );
+  cepInput.addEventListener('input', renderTotals);
+
+  form.addEventListener('submit', (e) => {
+    const cart = getCart();
+    if (cart.length === 0) { e.preventDefault(); render(); return; }
+    if (!form.checkValidity()) { e.preventDefault(); form.reportValidity(); return; }
+    // Populate hidden fields the server reads; native POST then follows the 303 to Mercado Pago.
+    (form.elements.namedItem('itens') as HTMLInputElement).value = JSON.stringify(cart);
+    (form.elements.namedItem('origin') as HTMLInputElement).value = location.origin;
+  });
+
+  render();
+</script>

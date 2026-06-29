@@ -6,6 +6,7 @@ const LINKS: [string, string][] = [
   ['/admin', 'Candidaturas'],
   ['/admin/cadeiras', 'Cadeiras'],
   ['/admin/leads', 'Leads Goiânia'],
+  ['/admin/pedidos', 'Pedidos'],
 ];
 
 export function Nav() {

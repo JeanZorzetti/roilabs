@@ -1,5 +1,6 @@
 ---
 import WhatsappCta from './WhatsappCta.astro';
+import AddToCart from './AddToCart.astro';
 import { nomeProduto, formatPreco, type Produto } from '../data/produtos';
 
 interface Props {
@@ -51,6 +52,7 @@ const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '556299999999';
     </table>
 
     <div class="cta-block">
+      <AddToCart slug={produto.slug} m2Caixa={a.m2_caixa} preco={a.preco} />
       <WhatsappCta termoAlvo={tituloProduto} numero={whatsapp} />
     </div>
   </div>

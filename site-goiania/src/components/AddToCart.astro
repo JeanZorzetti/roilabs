@@ -1,0 +1,89 @@
+---
+// Client island: enter the job's m² → see whole closed boxes → add to the cart.
+// Sits next to the WhatsApp CTA on the product page (FR-001).
+interface Props {
+  slug: string;
+  m2Caixa: number;
+  preco: number;
+}
+const { slug, m2Caixa, preco } = Astro.props;
+---
+<div class="add-cart" data-slug={slug} data-m2caixa={m2Caixa} data-preco={preco}>
+  <label class="add-cart__label" for={`m2-${slug}`}>Metragem da obra (m²)</label>
+  <div class="add-cart__row">
+    <input
+      id={`m2-${slug}`}
+      class="add-cart__input"
+      type="number"
+      inputmode="decimal"
+      min="0.1"
+      step="0.1"
+      placeholder="ex: 25"
+    />
+    <button type="button" class="btn btn--primary add-cart__btn">Adicionar ao carrinho</button>
+  </div>
+  <p class="add-cart__preview" aria-live="polite"></p>
+</div>
+
+<style>
+  .add-cart { margin-bottom: 1.2rem; }
+  .add-cart__label {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--l-muted, #5b6472);
+    margin-bottom: 0.5rem;
+  }
+  .add-cart__row { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+  .add-cart__input {
+    flex: 1 1 8rem;
+    min-width: 0;
+    padding: 0.7rem 0.9rem;
+    border: 1px solid var(--line, #d7dbe2);
+    border-radius: 8px;
+    font: inherit;
+  }
+  .add-cart__input:focus-visible { outline: 2px solid var(--hivis); outline-offset: 1px; }
+  .add-cart__btn { flex: 0 0 auto; white-space: nowrap; }
+  .add-cart__preview { margin: 0.7rem 0 0; min-height: 1.3em; font-size: 0.9rem; color: var(--hivis-deep); }
+  .add-cart__preview a { color: var(--hivis); font-weight: 600; }
+</style>
+
+<script>
+  import { m2ParaCaixas, addItem, lines } from '../lib/cart';
+
+  function brl(n: number) {
+    return n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  }
+
+  document.querySelectorAll<HTMLElement>('.add-cart').forEach((root) => {
+    const slug = root.dataset.slug!;
+    const m2Caixa = Number(root.dataset.m2caixa);
+    const preco = Number(root.dataset.preco);
+    const input = root.querySelector<HTMLInputElement>('.add-cart__input')!;
+    const btn = root.querySelector<HTMLButtonElement>('.add-cart__btn')!;
+    const preview = root.querySelector<HTMLElement>('.add-cart__preview')!;
+
+    function caixasFromInput() {
+      const m2 = parseFloat(input.value.replace(',', '.'));
+      if (!(m2 > 0)) return 0;
+      return m2ParaCaixas(m2, m2Caixa);
+    }
+
+    function refresh() {
+      const caixas = caixasFromInput();
+      if (caixas === 0) { preview.textContent = ''; return; }
+      const cobertos = (caixas * m2Caixa).toFixed(2).replace('.', ',');
+      preview.textContent = `≈ ${caixas} caixa(s) · ${cobertos} m² cobertos · ${brl(caixas * m2Caixa * preco)}`;
+    }
+
+    input.addEventListener('input', refresh);
+    btn.addEventListener('click', () => {
+      const caixas = caixasFromInput();
+      if (caixas === 0) { input.focus(); return; }
+      addItem(slug, caixas);
+      const total = lines().length;
+      preview.innerHTML = `Adicionado! <a href="/carrinho">Ver carrinho (${total})</a>`;
+      input.value = '';
+    });
+  });
+</script>

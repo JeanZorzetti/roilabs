@@ -43,6 +43,45 @@ model LeadConsumidor {
   @@map("leads_consumidor")
 }
 
+// Pedido de e-commerce de porcelanato (site Goiânia). pago = reserva até o fornecedor confirmar.
+model Pedido {
+  id                String   @id @default(cuid())
+  nome              String
+  whatsapp          String
+  email             String?
+  entrega           String // retirada | entrega | a_combinar
+  cep               String?
+  frete             Decimal? @db.Decimal(10, 2) // null = a combinar (FR-016)
+  total             Decimal  @db.Decimal(10, 2) // produto + frete (recalculado no servidor)
+  statusPagamento   String   @default("pendente") @map("status_pagamento") // pendente | pago | reembolsado
+  statusFulfillment String   @default("aguardando") @map("status_fulfillment") // aguardando | confirmado | reembolsado
+  mpPreferenceId    String?  @map("mp_preference_id")
+  mpPaymentId       String?  @unique @map("mp_payment_id") // chave de idempotência do webhook (D4)
+  consent           Boolean  @default(false)
+
+  itens     ItemPedido[]
+  createdAt DateTime     @default(now()) @map("created_at")
+  updatedAt DateTime     @updatedAt @map("updated_at")
+
+  @@index([statusPagamento])
+  @@map("pedidos")
+}
+
+model ItemPedido {
+  id       String  @id @default(cuid())
+  pedidoId String  @map("pedido_id")
+  slug     String
+  caixas   Int
+  m2       Decimal @db.Decimal(10, 2)
+  precoM2  Decimal @db.Decimal(10, 2) @map("preco_m2") // snapshot do preço/m² na compra
+  subtotal Decimal @db.Decimal(10, 2)
+
+  pedido Pedido @relation(fields: [pedidoId], references: [id], onDelete: Cascade)
+
+  @@index([pedidoId])
+  @@map("itens_pedido")
+}
+
 // Mapa de cadeiras — espelha o seats[] hard-coded do site (niche/status/open).
 model Cadeira {
   id        String   @id @default(cuid())
