@@ -14,6 +14,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt-BR" className={`${archivo.variable} ${hanken.variable} ${mono.variable}`}>
+      <head>
+        <script defer src="https://cdn.himetrica.com/tracker.js" data-api-key="hm_ff2a6a72cb6b63d54c8799d1dad7b24e4263b1e5882f872f"></script>
+      </head>
       <body>{children}</body>
     </html>
   );
