@@ -2,7 +2,9 @@
 import Base from '../../layouts/Base.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
+import ProdutoCard from '../../components/ProdutoCard.astro';
 import { pages } from '../../data/porcelanato';
+import { produtos } from '../../data/produtos';
 
 const SITE = Astro.site?.href.replace(/\/$/, '') ?? 'https://goiania.roilabs.com.br';
 
@@ -51,6 +53,23 @@ const byTipo = pages.reduce<Record<string, typeof pages>>((acc, p) => {
         </div>
       </div>
     </section>
+
+    {produtos.length > 0 && (
+      <section class="section section--light">
+        <div class="wrap">
+          <div class="section__head">
+            <span class="eyebrow" style="display:block;margin-bottom:1rem;">Catálogo</span>
+            <h2>{produtos.length} produtos disponíveis em Goiânia</h2>
+            <p class="section__lead">
+              Modelos reais de fornecedores do polo — com dimensão, acabamento e preço de referência.
+            </p>
+          </div>
+          <div class="prod-grid">
+            {produtos.map((prod) => <ProdutoCard produto={prod} />)}
+          </div>
+        </div>
+      </section>
+    )}
   </main>
 
   <Footer />

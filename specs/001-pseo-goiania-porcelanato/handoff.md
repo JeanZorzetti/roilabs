@@ -76,6 +76,19 @@
 
 ---
 
+## Catálogo de produtos reais (update pós-mineração)
+
+Silo agora tem **2 tipos de página**, cruzadas:
+- **Categorias** (`/porcelanato/{slug}`) — 30 páginas SEO por keyword. Cada uma exibe galeria dos produtos reais que casam (match heurístico por tipo/acabamento/dimensão em `produtos.ts` → `tagsDoProduto`).
+- **Produtos** (`/porcelanato/produto/{slug}`) — 30 SKUs reais minerados (`porcelanatos.json`), com imagem, marca, preço/m², dimensão, acabamento, `classe_ad` real, retificado, m²/caixa. JSON-LD `Product` + `Offer` (preço BRL).
+
+**Dado honesto:** `pei` (que era inventado nas categorias) foi removido. A classe de abrasão (`classe_ad`) só aparece onde é real — nas páginas de produto, vinda do catálogo. Campo da interface renomeado `pei` → `classeAd`. Menções a "PEI" na prosa educativa foram mantidas (termo conhecido pelo consumidor, valor SEO).
+
+**Gotchas catálogo:**
+- `porcelanatos.json` fica na raiz do `site-goiania/` e é importado por `produtos.ts`. Re-minerar = sobrescrever o arquivo (slug único, ≥1 imagem, `preco > 0`).
+- Imagens são **hotlink** do CDN da Jurunense (`jurunense.vteximg.com.br`). Se bloquearem referer, baixar para `public/` e trocar as URLs. <!-- ponytail: hotlink + preço estático; refresh por re-mineração -->
+- Match categoria↔produto é heurístico — refinar `tagsDoProduto` se o casamento errar.
+
 ## Escala futura
 
 - **Nova página**: adicionar 1 entrada em `src/data/porcelanato.ts` → build gera automaticamente a página, o sitemap e os links de relacionados.

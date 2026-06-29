@@ -1,0 +1,486 @@
+[
+  {
+    "slug": "porcelanato-20x120-carvalho-natural",
+    "imagens": [
+      "https://jurunense.vteximg.com.br/arquivos/ids/2315389/54572.jpg"
+    ],
+    "video": null,
+    "atributos": {
+      "marca": "BIANCOGRES",
+      "preco": 98.99,
+      "dimensao": "20x120cm",
+      "acabamento": "Natural",
+      "m2_caixa": 1.7,
+      "retificado": true,
+      "classe_ad": 2
+    }
+  },
+  {
+    "slug": "porcelanato-marmo-perla-biancogres",
+    "imagens": [
+      "https://jurunense.vteximg.com.br/arquivos/ids/2315451/66446.jpg"
+    ],
+    "video": null,
+    "atributos": {
+      "marca": "BIANCOGRES",
+      "preco": 128.99,
+      "dimensao": "60x120cm",
+      "acabamento": "Acetinado",
+      "m2_caixa": 2.2,
+      "retificado": true,
+      "classe_ad": 2
+    }
+  },
+  {
+    "slug": "porcelanato-cristallo-quartz-biancogres",
+    "imagens": [
+      "https://jurunense.vteximg.com.br/arquivos/ids/2315450/66445.jpg"
+    ],
+    "video": null,
+    "atributos": {
+      "marca": "BIANCOGRES",
+      "preco": 128.99,
+      "dimensao": "60x120cm",
+      "acabamento": "Velvet",
+      "m2_caixa": 2.2,
+      "retificado": null,
+      "classe_ad": 2
+    }
+  },
+  {
+    "slug": "porcelanato-legado-grigio-ac-biancogres",
+    "imagens": [
+      "https://jurunense.vteximg.com.br/arquivos/ids/2315415/66449.jpg"
+    ],
+    "video": null,
+    "atributos": {
+      "marca": "BIANCOGRES",
+      "preco": 101.99,
+      "dimensao": "20x120cm",
+      "acabamento": "Acetinado",
+      "m2_caixa": 1.7,
+      "retificado": true,
+      "classe_ad": 2
+    }
+  },
+  {
+    "slug": "porcelanato-bianco-luz-polido-biancogres",
+    "imagens": [
+      "https://jurunense.vteximg.com.br/arquivos/ids/2315377/66447.jpg"
+    ],
+    "video": null,
+    "atributos": {
+      "marca": "BIANCOGRES",
+      "preco": 137.99,
+      "dimensao": "60x120cm",
+      "acabamento": "Polido",
+      "m2_caixa": 2.2,
+      "retificado": null,
+      "classe_ad": 1
+    }
+  },
+  {
+    "slug": "porcelanato-120x120-tivoli-biancogres",
+    "imagens": [
+      "https://jurunense.vteximg.com.br/arquivos/ids/2315358/66425.jpg"
+    ],
+    "video": null,
+    "atributos": {
+      "marca": "BIANCOGRES",
+      "preco": 139.99,
+      "dimensao": "120x120cm",
+      "acabamento": "Strutturato",
+      "m2_caixa": 2.88,
+      "retificado": true,
+      "classe_ad": 2
+    }
+  },
+  {
+    "slug": "porcelanato-arezzo-grigrio-biancogres",
+    "imagens": [
+      "https://jurunense.vteximg.com.br/arquivos/ids/2315357/66423.jpg"
+    ],
+    "video": null,
+    "atributos": {
+      "marca": "BIANCOGRES",
+      "preco": 137.99,
+      "dimensao": "120x120cm",
+      "acabamento": "Acetinado",
+      "m2_caixa": 2.88,
+      "retificado": true,
+      "classe_ad": 2
+    }
+  },
+  {
+    "slug": "porcelanato-grigio-externo-biancogres",
+    "imagens": [
+      "https://jurunense.vteximg.com.br/arquivos/ids/2315319/66429.jpg"
+    ],
+    "video": null,
+    "atributos": {
+      "marca": "BIANCOGRES",
+      "preco": 120.99,
+      "dimensao": "100x100cm",
+      "acabamento": "Externo",
+      "m2_caixa": 3,
+      "retificado": true,
+      "classe_ad": 4
+    }
+  },
+  {
+    "slug": "porcelanato-pulpis-grigio-ac-100x100cm-biancogres",
+    "imagens": [
+      "https://jurunense.vteximg.com.br/arquivos/ids/2315307/66434.jpg"
+    ],
+    "video": null,
+    "atributos": {
+      "marca": "BIANCOGRES",
+      "preco": 120.99,
+      "dimensao": "100x100cm",
+      "acabamento": "Mate",
+      "m2_caixa": 3,
+      "retificado": true,
+      "classe_ad": 2
+    }
+  },
+  {
+    "slug": "porcelanato-persia-beige-biancogres",
+    "imagens": [
+      "https://jurunense.vteximg.com.br/arquivos/ids/2315306/66432.jpg"
+    ],
+    "video": null,
+    "atributos": {
+      "marca": "BIANCOGRES",
+      "preco": 120.99,
+      "dimensao": "100x100cm",
+      "acabamento": "Acetinado",
+      "m2_caixa": 3,
+      "retificado": true,
+      "classe_ad": 2
+    }
+  },
+  {
+    "slug": "porcelanato-chicago-nebbia-biancogres",
+    "imagens": [
+      "https://jurunense.vteximg.com.br/arquivos/ids/2315305/66430.jpg"
+    ],
+    "video": null,
+    "atributos": {
+      "marca": "BIANCOGRES",
+      "preco": 128.99,
+      "dimensao": "100x100cm",
+      "acabamento": "Acetinado",
+      "m2_caixa": 3,
+      "retificado": true,
+      "classe_ad": 2
+    }
+  },
+  {
+    "slug": "porcelanato-chigaco-grigio-biancogres",
+    "imagens": [
+      "https://jurunense.vteximg.com.br/arquivos/ids/2315304/66428.jpg"
+    ],
+    "video": null,
+    "atributos": {
+      "marca": "BIANCOGRES",
+      "preco": 120.99,
+      "dimensao": "100x100cm",
+      "acabamento": "Acetinado",
+      "m2_caixa": 3,
+      "retificado": true,
+      "classe_ad": 2
+    }
+  },
+  {
+    "slug": "porcelanato-100x100-lux-biancogres",
+    "imagens": [
+      "https://jurunense.vteximg.com.br/arquivos/ids/2315283/66437.jpg"
+    ],
+    "video": null,
+    "atributos": {
+      "marca": "BIANCOGRES",
+      "preco": 122.99,
+      "dimensao": "100x100cm",
+      "acabamento": "Polido",
+      "m2_caixa": 3,
+      "retificado": true,
+      "classe_ad": 1
+    }
+  },
+  {
+    "slug": "porcelanato-grigio-externo-90x90",
+    "imagens": [
+      "https://jurunense.vteximg.com.br/arquivos/ids/2315277/66440.jpg"
+    ],
+    "video": null,
+    "atributos": {
+      "marca": "BIANCOGRES",
+      "preco": 111.99,
+      "dimensao": "90x90cm",
+      "acabamento": "Rústico",
+      "m2_caixa": 2.4,
+      "retificado": true,
+      "classe_ad": 4
+    }
+  },
+  {
+    "slug": "porcelanato-arezzo-externo-beige",
+    "imagens": [
+      "https://jurunense.vteximg.com.br/arquivos/ids/2315276/66439.jpg"
+    ],
+    "video": null,
+    "atributos": {
+      "marca": "BIANCOGRES",
+      "preco": 106.99,
+      "dimensao": "90x90cm",
+      "acabamento": "Externo",
+      "m2_caixa": 2.4,
+      "retificado": true,
+      "classe_ad": 4
+    }
+  },
+  {
+    "slug": "porcelanato-arezzo-beige-biancogres",
+    "imagens": [
+      "https://jurunense.vteximg.com.br/arquivos/ids/2315265/66438.jpg"
+    ],
+    "video": null,
+    "atributos": {
+      "marca": "BIANCOGRES",
+      "preco": 103.99,
+      "dimensao": "90x90cm",
+      "acabamento": "Acetinado",
+      "m2_caixa": 2.4,
+      "retificado": true,
+      "classe_ad": 2
+    }
+  },
+  {
+    "slug": "porcelanato-castilla-noce-biancogres",
+    "imagens": [
+      "https://jurunense.vteximg.com.br/arquivos/ids/2315209/66444.jpg"
+    ],
+    "video": null,
+    "atributos": {
+      "marca": "BIANCOGRES",
+      "preco": 94.99,
+      "dimensao": "80x80cm",
+      "acabamento": "Externo",
+      "m2_caixa": 2.6,
+      "retificado": true,
+      "classe_ad": null
+    }
+  },
+  {
+    "slug": "porcelanato-chicago-80x80-grafite-biancogres",
+    "imagens": [
+      "https://jurunense.vteximg.com.br/arquivos/ids/2315193/58241.jpg",
+      "https://jurunense.vteximg.com.br/arquivos/ids/2315194/58241.jpg",
+      "https://jurunense.vteximg.com.br/arquivos/ids/2315195/58241.jpg",
+      "https://jurunense.vteximg.com.br/arquivos/ids/2315196/58241.jpg",
+      "https://jurunense.vteximg.com.br/arquivos/ids/2315197/58241.jpg"
+    ],
+    "video": null,
+    "atributos": {
+      "marca": "BIANCOGRES",
+      "preco": 90.99,
+      "dimensao": "80x80cm",
+      "acabamento": "Externo",
+      "m2_caixa": 2.6,
+      "retificado": true,
+      "classe_ad": 4
+    }
+  },
+  {
+    "slug": "porcelanato-madrid-bloc-polido-delta",
+    "imagens": [
+      "https://jurunense.vteximg.com.br/arquivos/ids/2314703/66722.jpg"
+    ],
+    "video": null,
+    "atributos": {
+      "marca": "DELTA",
+      "preco": 73.99,
+      "dimensao": "72x72cm",
+      "acabamento": "Polido",
+      "m2_caixa": 2.61,
+      "retificado": true,
+      "classe_ad": null
+    }
+  },
+  {
+    "slug": "porcelanato-56x113cm-strato-marmo-bege",
+    "imagens": [
+      "https://jurunense.vteximg.com.br/arquivos/ids/2314671/66654.jpg"
+    ],
+    "video": null,
+    "atributos": {
+      "marca": "SAVANE",
+      "preco": 101.99,
+      "dimensao": "56x113cm",
+      "acabamento": "Natural",
+      "m2_caixa": 2.5,
+      "retificado": null,
+      "classe_ad": null
+    }
+  },
+  {
+    "slug": "porcelanato-56x113cm-strato-marmo-grigio",
+    "imagens": [
+      "https://jurunense.vteximg.com.br/arquivos/ids/2314670/66655.jpg"
+    ],
+    "video": null,
+    "atributos": {
+      "marca": "SAVANE",
+      "preco": 101.99,
+      "dimensao": "56x113cm",
+      "acabamento": "Natural",
+      "m2_caixa": 2.5,
+      "retificado": true,
+      "classe_ad": null
+    }
+  },
+  {
+    "slug": "porcelanato-90x90cm-urban-branco-polido",
+    "imagens": [
+      "https://jurunense.vteximg.com.br/arquivos/ids/2314669/66663.jpg"
+    ],
+    "video": null,
+    "atributos": {
+      "marca": "SAVANE",
+      "preco": 90.99,
+      "dimensao": "90x90cm",
+      "acabamento": "Polido",
+      "m2_caixa": 2.43,
+      "retificado": true,
+      "classe_ad": null
+    }
+  },
+  {
+    "slug": "porcelanato-91x91cm-perla-acetinado",
+    "imagens": [
+      "https://jurunense.vteximg.com.br/arquivos/ids/2314668/66660.png"
+    ],
+    "video": null,
+    "atributos": {
+      "marca": "SAVANE",
+      "preco": 65.99,
+      "dimensao": "91x91cm",
+      "acabamento": "Acetinado",
+      "m2_caixa": 2.48,
+      "retificado": true,
+      "classe_ad": null
+    }
+  },
+  {
+    "slug": "porcelanato-56x113cm-pietra-di-matera-natural",
+    "imagens": [
+      "https://jurunense.vteximg.com.br/arquivos/ids/2314667/66656.png"
+    ],
+    "video": null,
+    "atributos": {
+      "marca": "SAVANE",
+      "preco": 96.99,
+      "dimensao": "56x113cm",
+      "acabamento": "Mate",
+      "m2_caixa": 2.5,
+      "retificado": null,
+      "classe_ad": null
+    }
+  },
+  {
+    "slug": "porcelanato-56x113cm-pietra-di-trulli-natural",
+    "imagens": [
+      "https://jurunense.vteximg.com.br/arquivos/ids/2314663/66658.jpg"
+    ],
+    "video": null,
+    "atributos": {
+      "marca": "SAVANE",
+      "preco": 117.9,
+      "dimensao": "56x113cm",
+      "acabamento": "Natural",
+      "m2_caixa": 2.5,
+      "retificado": true,
+      "classe_ad": null
+    }
+  },
+  {
+    "slug": "porcelanato-terrazine-91x91cm-savane",
+    "imagens": [
+      "https://jurunense.vteximg.com.br/arquivos/ids/2314665/66665.png"
+    ],
+    "video": null,
+    "atributos": {
+      "marca": "SAVANE",
+      "preco": 68.99,
+      "dimensao": "91x91cm",
+      "acabamento": "Acetinado",
+      "m2_caixa": 2.48,
+      "retificado": true,
+      "classe_ad": null
+    }
+  },
+  {
+    "slug": "porcelanato-rock-face-matera-savane",
+    "imagens": [
+      "https://jurunense.vteximg.com.br/arquivos/ids/2314664/66659.jpg"
+    ],
+    "video": null,
+    "atributos": {
+      "marca": "SAVANE",
+      "preco": 101.99,
+      "dimensao": "56x113cm",
+      "acabamento": "Mate",
+      "m2_caixa": 2.5,
+      "retificado": true,
+      "classe_ad": null
+    }
+  },
+  {
+    "slug": "porcelanato-nero-polido-delta",
+    "imagens": [
+      "https://jurunense.vteximg.com.br/arquivos/ids/2314701/66747.jpg"
+    ],
+    "video": null,
+    "atributos": {
+      "marca": "DELTA",
+      "preco": 144.99,
+      "dimensao": "60x120cm",
+      "acabamento": "Polido",
+      "m2_caixa": 2.88,
+      "retificado": true,
+      "classe_ad": null
+    }
+  },
+  {
+    "slug": "porcelanato-avorio-polido-delta",
+    "imagens": [
+      "https://jurunense.vteximg.com.br/arquivos/ids/2314709/66746.jpg"
+    ],
+    "video": null,
+    "atributos": {
+      "marca": "DELTA",
+      "preco": 67.99,
+      "dimensao": "62x62cm",
+      "acabamento": "Polido",
+      "m2_caixa": 2.66,
+      "retificado": true,
+      "classe_ad": null
+    }
+  },
+  {
+    "slug": "porcelanato-72x72cm-nero-polido",
+    "imagens": [
+      "https://jurunense.vteximg.com.br/arquivos/ids/2314707/66745.png"
+    ],
+    "video": null,
+    "atributos": {
+      "marca": "DELTA",
+      "preco": 120.99,
+      "dimensao": "72x72cm",
+      "acabamento": "Polido",
+      "m2_caixa": 2.61,
+      "retificado": true,
+      "classe_ad": null
+    }
+  }
+]

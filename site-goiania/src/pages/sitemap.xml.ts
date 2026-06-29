@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { pages } from '../data/porcelanato';
+import { produtos } from '../data/produtos';
 
 const SITE = 'https://goiania.roilabs.com.br';
 
@@ -9,6 +10,7 @@ export const GET: APIRoute = () => {
     { loc: `${SITE}/porcelanato` },
     { loc: `${SITE}/obrigado` },
     ...pages.map((p) => ({ loc: `${SITE}/porcelanato/${p.slug}` })),
+    ...produtos.map((p) => ({ loc: `${SITE}/porcelanato/produto/${p.slug}` })),
   ];
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>

@@ -1,0 +1,23 @@
+---
+import type { Produto } from '../data/produtos';
+import { nomeProduto, formatPreco } from '../data/produtos';
+
+interface Props {
+  produto: Produto;
+}
+const { produto } = Astro.props;
+const nome = nomeProduto(produto);
+const a = produto.atributos;
+---
+<a class="prod-card" href={`/porcelanato/produto/${produto.slug}`}>
+  <div class="prod-card__img">
+    <img src={produto.imagens[0]} alt={`${a.marca} ${nome}`} loading="lazy" />
+    {a.retificado && <span class="prod-card__badge">Retificado</span>}
+  </div>
+  <div class="prod-card__body">
+    <span class="prod-card__marca">{a.marca}</span>
+    <span class="prod-card__nome">{nome}</span>
+    <span class="prod-card__meta">{a.dimensao} · {a.acabamento}</span>
+    <span class="prod-card__preco">{formatPreco(a.preco)} <small>/m²</small></span>
+  </div>
+</a>

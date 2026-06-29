@@ -1,0 +1,183 @@
+---
+import Base from '../../../layouts/Base.astro';
+import Header from '../../../components/Header.astro';
+import Footer from '../../../components/Footer.astro';
+import WhatsappCta from '../../../components/WhatsappCta.astro';
+import LeadForm from '../../../components/LeadForm.astro';
+import ProdutoCard from '../../../components/ProdutoCard.astro';
+import {
+  produtos,
+  nomeProduto,
+  formatPreco,
+  categoriasDoProduto,
+  produtosRelacionados,
+} from '../../../data/produtos';
+import { pages } from '../../../data/porcelanato';
+
+export function getStaticPaths() {
+  return produtos.map((p) => ({ params: { slug: p.slug }, props: { produto: p } }));
+}
+
+const { produto } = Astro.props;
+const a = produto.atributos;
+const nome = nomeProduto(produto);
+const tituloProduto = `${a.marca} ${nome}`;
+
+const SITE = Astro.site?.href.replace(/\/$/, '') ?? 'https://goiania.roilabs.com.br';
+const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '556299999999';
+const appUrl = import.meta.env.PUBLIC_APP_URL ?? 'https://app.roilabs.com.br';
+const url = `${SITE}/porcelanato/produto/${produto.slug}`;
+
+const categorias = categoriasDoProduto(produto, pages);
+const relacionados = produtosRelacionados(produto, 4);
+
+// JSON-LD: Product com oferta real + BreadcrumbList.
+const additionalProperty = [
+  { '@type': 'PropertyValue', name: 'Marca', value: a.marca },
+  { '@type': 'PropertyValue', name: 'Dimensão', value: a.dimensao },
+  { '@type': 'PropertyValue', name: 'Acabamento', value: a.acabamento },
+  { '@type': 'PropertyValue', name: 'm² por caixa', value: a.m2_caixa },
+  ...(a.classe_ad != null ? [{ '@type': 'PropertyValue', name: 'Classe de Abrasão (AD)', value: a.classe_ad }] : []),
+  ...(a.retificado != null ? [{ '@type': 'PropertyValue', name: 'Retificado', value: a.retificado ? 'Sim' : 'Não' }] : []),
+];
+
+const jsonLdNodes = [
+  {
+    '@type': 'Product',
+    name: tituloProduto,
+    image: produto.imagens,
+    brand: { '@type': 'Brand', name: a.marca },
+    category: 'Porcelanato',
+    additionalProperty,
+    offers: {
+      '@type': 'Offer',
+      price: a.preco,
+      priceCurrency: 'BRL',
+      availability: 'https://schema.org/InStock',
+      url,
+      areaServed: { '@type': 'City', name: 'Goiânia' },
+    },
+  },
+  {
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Início', item: SITE },
+      { '@type': 'ListItem', position: 2, name: 'Porcelanato', item: `${SITE}/porcelanato` },
+      { '@type': 'ListItem', position: 3, name: tituloProduto, item: url },
+    ],
+  },
+];
+---
+
+<Base
+  title={`${tituloProduto} — ${a.dimensao} | Porcelanato Goiânia`}
+  description={`${tituloProduto} ${a.dimensao} ${a.acabamento}. ${formatPreco(a.preco)}/m² em Goiânia. Fale pelo WhatsApp ou solicite orçamento.`}
+  ogType="product"
+  jsonLdNodes={jsonLdNodes}
+>
+  <Header />
+
+  <main>
+    <section class="section">
+      <div class="wrap">
+        <nav class="breadcrumb" aria-label="Localização">
+          <a href="/">Início</a>
+          <span class="breadcrumb__sep" aria-hidden="true">›</span>
+          <a href="/porcelanato">Porcelanato</a>
+          <span class="breadcrumb__sep" aria-hidden="true">›</span>
+          <span aria-current="page">{tituloProduto}</span>
+        </nav>
+
+        <div class="prod-detail">
+          <!-- Galeria -->
+          <div class="prod-detail__gallery">
+            <div class="prod-detail__main">
+              <img src={produto.imagens[0]} alt={tituloProduto} />
+            </div>
+            {produto.imagens.length > 1 && (
+              <div class="prod-detail__thumbs">
+                {produto.imagens.slice(0, 5).map((src, i) => (
+                  <img src={src} alt={`${tituloProduto} — foto ${i + 1}`} loading="lazy" />
+                ))}
+              </div>
+            )}
+          </div>
+
+          <!-- Info + ficha + CTA -->
+          <div class="prod-detail__info">
+            <span class="eyebrow" style="color:var(--hivis);display:block;margin-bottom:0.8rem;">{a.marca} · Goiânia</span>
+            <h1 style="font-size:clamp(1.8rem,4vw,3rem);">{nome}</h1>
+            <p class="prod-detail__preco">{formatPreco(a.preco)} <small>/m²</small></p>
+
+            <table class="attrs-table" style="margin:1.8rem 0;">
+              <tbody>
+                <tr><th scope="row">Marca</th><td>{a.marca}</td></tr>
+                <tr><th scope="row">Dimensão</th><td>{a.dimensao}</td></tr>
+                <tr><th scope="row">Acabamento</th><td>{a.acabamento}</td></tr>
+                <tr><th scope="row">m² por caixa</th><td>{a.m2_caixa} m²</td></tr>
+                {a.classe_ad != null && (
+                  <tr><th scope="row">Classe de Abrasão (AD)</th><td>{a.classe_ad}</td></tr>
+                )}
+                {a.retificado != null && (
+                  <tr><th scope="row">Retificado</th><td>{a.retificado ? 'Sim' : 'Não'}</td></tr>
+                )}
+              </tbody>
+            </table>
+
+            <div class="cta-block">
+              <WhatsappCta termoAlvo={tituloProduto} numero={whatsapp} />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Formulário de orçamento -->
+    <section class="section section--light" id="contato">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:0.8rem;">
+          Solicitar orçamento de {tituloProduto}
+        </h2>
+        <p style="color:var(--l-muted);margin-bottom:2rem;max-width:52ch;">
+          Informe seus dados e a metragem da sua obra — retornamos com disponibilidade e
+          condições do fornecedor em Goiânia.
+        </p>
+        <LeadForm
+          produto={tituloProduto}
+          pagina={`/porcelanato/produto/${produto.slug}`}
+          appUrl={appUrl}
+        />
+      </div>
+    </section>
+
+    <!-- Categorias relacionadas (silo) -->
+    {categorias.length > 0 && (
+      <section class="section">
+        <div class="wrap">
+          <h2 style="font-size:clamp(1.3rem,2.2vw,1.8rem);margin-bottom:1.4rem;">Categorias</h2>
+          <div class="related-grid">
+            {categorias.slice(0, 6).map((c) => (
+              <a href={`/porcelanato/${c.slug}`} class="related-card">
+                {c.titulo.replace(/ em Goiânia.*/, '')}
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
+
+    <!-- Produtos relacionados -->
+    {relacionados.length > 0 && (
+      <section class="section section--light">
+        <div class="wrap">
+          <h2 style="font-size:clamp(1.3rem,2.2vw,1.8rem);margin-bottom:1.4rem;">Produtos semelhantes</h2>
+          <div class="prod-grid">
+            {relacionados.map((r) => <ProdutoCard produto={r} />)}
+          </div>
+        </div>
+      </section>
+    )}
+  </main>
+
+  <Footer />
+</Base>

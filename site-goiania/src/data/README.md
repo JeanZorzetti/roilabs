@@ -26,6 +26,17 @@ O template, o sitemap e os links de relacionados são gerados automaticamente.
 - `ocasiao`: ambiente/uso (ex: "cozinha", "área externa")
 - `relacionados`: array de slugs para links internos do silo
 
+## Produtos reais (catálogo)
+
+`porcelanatos.json` (raiz do `site-goiania/`) é o catálogo minerado de fornecedores.
+Cada categoria casa automaticamente com os produtos compatíveis (por tipo/acabamento/
+dimensão — ver `tagsDoProduto` em `produtos.ts`) e exibe a galeria + cria 1 página por
+produto em `/porcelanato/produto/{slug}`.
+
+**Para adicionar produtos:** acrescente entradas ao `porcelanatos.json` (slug único,
+≥1 imagem, `preco > 0`). `classe_ad` vem da ficha real do produto — **nunca invente**;
+deixe `null` se a fonte não informar.
+
 ## De onde vêm os volumes
 
 Fonte: snapshot do Keyword Planner em `Docs/Obsidian/10-mercado/mercado.md`.  
@@ -50,11 +61,12 @@ Verde = matriz ok para build. Vermelho = corrigir antes do deploy.
   titulo: 'Porcelanato para Escritório em Goiânia',
   intro: 'O porcelanato para escritório em Goiânia precisa equilibrar estética corporativa...',
   comoEscolher: [
-    'Prefira PEI 4 para tráfego comercial moderado.',
+    'Prefira classe de abrasão 4 para tráfego comercial moderado.',
     'Acabamento natural disfarça riscos de cadeiras de escritório.',
   ],
   atributos: {
-    pei: 4,
+    // classeAd NÃO é inventada: fica vazia na categoria. A classe de abrasão real
+    // aparece nas páginas de produto (produtos.ts), vinda do catálogo minerado.
     acabamento: 'Natural',
     dimensao: '60×60 cm',
     ambiente: 'Escritório, recepção',

@@ -24,7 +24,7 @@ export function buildJsonLdNodes(page: PorcelanatoPage, site: string): Record<st
 
   const props = product.additionalProperty as Record<string, unknown>[];
   const a = page.atributos;
-  if (a.pei !== undefined) props.push({ '@type': 'PropertyValue', name: 'PEI', value: a.pei });
+  if (a.classeAd !== undefined) props.push({ '@type': 'PropertyValue', name: 'Classe de Abrasão (AD)', value: a.classeAd });
   if (a.acabamento) props.push({ '@type': 'PropertyValue', name: 'Acabamento', value: a.acabamento });
   if (a.dimensao) props.push({ '@type': 'PropertyValue', name: 'Dimensão', value: a.dimensao });
   if (a.m2PorCaixa) props.push({ '@type': 'PropertyValue', name: 'm² por caixa', value: a.m2PorCaixa });

@@ -8,7 +8,7 @@ export interface PorcelanatoPage {
   intro: string;
   comoEscolher: string[];
   atributos: {
-    pei?: number;
+    classeAd?: number; // classe de abrasão (AD) — vem do produto real, não inventada
     acabamento?: string;
     antiderrapante?: boolean;
     dimensao?: string;
@@ -37,7 +37,6 @@ export const pages: PorcelanatoPage[] = [
       'Calcule com 10% de margem de corte sobre a área do ambiente.',
     ],
     atributos: {
-      pei: 4,
       acabamento: 'Acetinado / Natural',
       antiderrapante: false,
       dimensao: '20×120 cm / 30×150 cm',
@@ -85,7 +84,6 @@ export const pages: PorcelanatoPage[] = [
       'Combine com rodapé do mesmo material para acabamento sofisticado.',
     ],
     atributos: {
-      pei: 4,
       acabamento: 'Polido',
       antiderrapante: false,
       dimensao: '90×90 cm / 120×120 cm',
@@ -128,7 +126,6 @@ export const pages: PorcelanatoPage[] = [
       'Manutenção fácil: pano úmido retira a maioria das marcas sem deixar rastros.',
     ],
     atributos: {
-      pei: 4,
       acabamento: 'Acetinado',
       antiderrapante: false,
       dimensao: '60×60 cm / 80×80 cm',
@@ -168,7 +165,6 @@ export const pages: PorcelanatoPage[] = [
       'Limpe com pano de microfibra — marcas de sola desaparecem sem deixar riscos.',
     ],
     atributos: {
-      pei: 3,
       acabamento: 'Polido',
       antiderrapante: false,
       dimensao: '90×90 cm / 120×60 cm',
@@ -203,7 +199,6 @@ export const pages: PorcelanatoPage[] = [
       'Verifique a absorbência: tipo BIa (< 0,5%) é o mais resistente à umidade.',
     ],
     atributos: {
-      pei: 4,
       acabamento: 'Variado',
       antiderrapante: false,
       dimensao: '60×60 a 120×120 cm',
@@ -250,7 +245,6 @@ export const pages: PorcelanatoPage[] = [
       'Aplique rejunte flexível resistente a UV — o convencional racha com dilatação solar.',
     ],
     atributos: {
-      pei: 5,
       acabamento: 'Natural / Stone',
       antiderrapante: true,
       dimensao: '30×60 cm / 45×45 cm',
@@ -291,7 +285,6 @@ export const pages: PorcelanatoPage[] = [
       'Tons neutros (off-white, cinza claro) disfarçam melhor a farinha e a poeira diária.',
     ],
     atributos: {
-      pei: 4,
       acabamento: 'Natural / Acetinado',
       antiderrapante: false,
       dimensao: '60×60 cm / 30×60 cm',
@@ -332,7 +325,6 @@ export const pages: PorcelanatoPage[] = [
       'Evite rejunte branco no piso — escurece rapidamente. Prefira cinza ou bege.',
     ],
     atributos: {
-      pei: 4,
       acabamento: 'Natural (piso) / Polido (parede)',
       antiderrapante: true,
       dimensao: '60×120 cm (parede) / 30×60 cm (piso)',
@@ -373,7 +365,6 @@ export const pages: PorcelanatoPage[] = [
       'Verifique se o produto tem BIa (absorção < 0,5%) — essencial para o clima de Goiânia.',
     ],
     atributos: {
-      pei: 5,
       acabamento: 'Natural / Stone',
       antiderrapante: false,
       dimensao: '30×60 cm / 60×120 cm',
@@ -413,7 +404,6 @@ export const pages: PorcelanatoPage[] = [
       'Use rejunte bicomponente (epóxi) para resistir ao cloro e à pressão hidrostática.',
     ],
     atributos: {
-      pei: 5,
       acabamento: 'Antiderrapante Stone R11',
       antiderrapante: true,
       dimensao: '20×20 cm / 15×60 cm',
@@ -455,7 +445,6 @@ export const pages: PorcelanatoPage[] = [
       'Use rejunte flexível e impermeável — a variação térmica exige elasticidade nas juntas.',
     ],
     atributos: {
-      pei: 5,
       acabamento: 'Natural Antiderrapante R10',
       antiderrapante: true,
       dimensao: '20×120 cm / 25×150 cm',
@@ -496,7 +485,6 @@ export const pages: PorcelanatoPage[] = [
       'Solicite certificado de PEI 4 e absorção BIa para uso em área de cozinha.',
     ],
     atributos: {
-      pei: 4,
       acabamento: 'Natural',
       antiderrapante: false,
       dimensao: '20×120 cm',
@@ -536,7 +524,6 @@ export const pages: PorcelanatoPage[] = [
       'Use ralo oculto nas varandas descobertas — facilita a limpeza e mantém o visual limpo.',
     ],
     atributos: {
-      pei: 4,
       acabamento: 'Acetinado / Natural R10',
       antiderrapante: true,
       dimensao: '25×150 cm / 20×120 cm',
@@ -572,7 +559,6 @@ export const pages: PorcelanatoPage[] = [
       'Combine com tapetes de fibra natural (juta, sisal) para equilibrar o visual.',
     ],
     atributos: {
-      pei: 4,
       acabamento: 'Acetinado / Natural',
       antiderrapante: false,
       dimensao: '20×120 cm / 30×150 cm',
@@ -608,7 +594,6 @@ export const pages: PorcelanatoPage[] = [
       'Mantenha o piso limpo de marcas — o polido evidencia tudo.',
     ],
     atributos: {
-      pei: 4,
       acabamento: 'Polido / Acetinado',
       antiderrapante: false,
       dimensao: '90×90 cm / 120×120 cm',
@@ -644,7 +629,6 @@ export const pages: PorcelanatoPage[] = [
       'Combine com louça branca e metais dourados para o acabamento mais pedido em Goiânia.',
     ],
     atributos: {
-      pei: 4,
       acabamento: 'Polido (parede) / Natural (piso)',
       antiderrapante: true,
       dimensao: '60×120 cm',
@@ -679,7 +663,6 @@ export const pages: PorcelanatoPage[] = [
       'Tons neutros acetinados (branco, greige, areia) são os mais vendidos em Goiânia.',
     ],
     atributos: {
-      pei: 4,
       acabamento: 'Acetinado',
       antiderrapante: false,
       dimensao: '30×90 cm / 60×120 cm',
@@ -714,7 +697,6 @@ export const pages: PorcelanatoPage[] = [
       'Tapetes de área protegem o piso e criam zonas visuais na sala integrada.',
     ],
     atributos: {
-      pei: 3,
       acabamento: 'Polido',
       antiderrapante: false,
       dimensao: '90×90 cm / 120×60 cm',
@@ -749,7 +731,6 @@ export const pages: PorcelanatoPage[] = [
       'Tons claros (Calacatta, Bianco) envelhecem melhor ao sol que tons escuros sem pigmentação UV estabilizada.',
     ],
     atributos: {
-      pei: 5,
       acabamento: 'Acetinado / Natural',
       antiderrapante: false,
       dimensao: '30×60 cm / 60×120 cm',
@@ -785,7 +766,6 @@ export const pages: PorcelanatoPage[] = [
       'Compare especificações técnicas: dois produtos "60×60" podem ter PEI e absorção muito diferentes.',
     ],
     atributos: {
-      pei: 4,
       acabamento: 'Variado',
       antiderrapante: false,
       dimensao: '60×60 cm',
@@ -819,7 +799,6 @@ export const pages: PorcelanatoPage[] = [
       'Formatos 90×90 cm em acabamento polido são o luxo acessível mais popular em Goiânia.',
     ],
     atributos: {
-      pei: 4,
       acabamento: 'Polido / Natural',
       antiderrapante: false,
       dimensao: '90×90 cm',
@@ -849,7 +828,6 @@ export const pages: PorcelanatoPage[] = [
       'Combine com rodapé do mesmo material no formato 10×120 cm para acabamento limpo.',
     ],
     atributos: {
-      pei: 4,
       acabamento: 'Acetinado / Natural',
       antiderrapante: false,
       dimensao: '120×60 cm',
@@ -881,7 +859,6 @@ export const pages: PorcelanatoPage[] = [
       'O retificado é levemente mais caro que o não retificado — o diferencial está na mão de obra, não no produto.',
     ],
     atributos: {
-      pei: 4,
       acabamento: 'Polido / Natural / Acetinado',
       antiderrapante: false,
       dimensao: 'Múltiplos formatos',
@@ -912,7 +889,6 @@ export const pages: PorcelanatoPage[] = [
       'Verifique também a resistência ao desgaste (PEI 4 ou 5) para áreas de tráfego intenso.',
     ],
     atributos: {
-      pei: 5,
       acabamento: 'Natural / Stone Antiderrapante',
       antiderrapante: true,
       dimensao: 'Variado (20×20 a 60×60 cm)',
@@ -954,7 +930,6 @@ export const pages: PorcelanatoPage[] = [
       'Compre 10% a mais que a metragem da obra — é impossível garantir o mesmo lote depois.',
     ],
     atributos: {
-      pei: 4,
       acabamento: 'Variado',
       antiderrapante: false,
       dimensao: 'Variado',
@@ -998,7 +973,6 @@ export const pages: PorcelanatoPage[] = [
       'Compare pelo menos 3 fornecedores antes de decidir.',
     ],
     atributos: {
-      pei: 4,
       acabamento: 'Variado',
       antiderrapante: false,
       dimensao: 'Variado',
@@ -1039,7 +1013,6 @@ export const pages: PorcelanatoPage[] = [
       'Verifique o índice de brancura (ΔE): quanto menor, mais consistente a cor entre peças e lotes.',
     ],
     atributos: {
-      pei: 4,
       acabamento: 'Polido / Acetinado / Natural',
       antiderrapante: false,
       dimensao: '60×60 a 120×120 cm',
@@ -1069,7 +1042,6 @@ export const pages: PorcelanatoPage[] = [
       'Combine com madeira clara, metais pretos ou cobre para paleta contemporânea.',
     ],
     atributos: {
-      pei: 4,
       acabamento: 'Natural / Acetinado',
       antiderrapante: false,
       dimensao: '60×60 a 90×90 cm',
@@ -1099,7 +1071,6 @@ export const pages: PorcelanatoPage[] = [
       'Acenda bem o ambiente — o preto absorve luz e pode escurecer demais se mal iluminado.',
     ],
     atributos: {
-      pei: 4,
       acabamento: 'Polido / Acetinado',
       antiderrapante: false,
       dimensao: '60×120 cm / 90×90 cm',
@@ -1132,7 +1103,6 @@ export const pages: PorcelanatoPage[] = [
       'Peça laudos de certificação — não confie em "é antiderrapante" sem a classificação R documentada.',
     ],
     atributos: {
-      pei: 5,
       acabamento: 'Stone Antiderrapante R10-R12',
       antiderrapante: true,
       dimensao: '30×60 cm / 45×45 cm',
