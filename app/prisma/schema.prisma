@@ -1,0 +1,40 @@
+// ROI Labs admin — Postgres (EasyPanel). snake_case tables via @@map (owner convention).
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Candidaturas = leads do form do site. status: novo | curadoria | aprovado | recusado
+model Candidatura {
+  id        String   @id @default(cuid())
+  nome      String
+  empresa   String
+  whatsapp  String
+  cidade    String?
+  categoria String?
+  site      String?
+  mensagem  String?
+  status    String   @default("novo")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([status])
+  @@map("candidaturas")
+}
+
+// Mapa de cadeiras — espelha o seats[] hard-coded do site (niche/status/open).
+model Cadeira {
+  id        String   @id @default(cuid())
+  niche     String
+  status    String
+  open      Boolean  @default(false)
+  ordem     Int      @default(0)
+  polo      String   @default("Goiânia")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("cadeiras")
+}

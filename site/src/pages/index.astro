@@ -3,9 +3,9 @@ import Base from '../layouts/Base.astro';
 
 const apply = 'mailto:parceria@roilabs.com.br?subject=Candidatura%20%C3%A0%20cadeira%20%E2%80%94%20Goi%C3%A2nia';
 
-// Web3Forms: chave PÚBLICA (não é segredo, vai no HTML por design).
-// Pegue a sua em https://web3forms.com com o e-mail parceria@roilabs.com.br e cole aqui.
-const WEB3FORMS_KEY = 'YOUR_WEB3FORMS_ACCESS_KEY';
+// Candidaturas vão para o app admin (app.roilabs.com.br), que grava no DB.
+// POST urlencoded simples (sem preflight CORS); a API redireciona pro `redirect`.
+const CANDIDATURAS_ENDPOINT = 'https://app.roilabs.com.br/api/candidaturas';
 
 // Mapa de cadeiras — Polo Goiânia. Só revestimentos está em curadoria aberta.
 const seats = [
@@ -354,10 +354,7 @@ const seats = [
         </div>
 
         <div class="form-card">
-          <form class="form" action="https://api.web3forms.com/submit" method="POST">
-            <input type="hidden" name="access_key" value={WEB3FORMS_KEY} />
-            <input type="hidden" name="subject" value="Nova candidatura à cadeira — Goiânia" />
-            <input type="hidden" name="from_name" value="Site ROI Labs" />
+          <form class="form" action={CANDIDATURAS_ENDPOINT} method="POST">
             <input type="hidden" name="redirect" value="https://roilabs.com.br/obrigado" />
 
             <div class="form__hp" aria-hidden="true">
