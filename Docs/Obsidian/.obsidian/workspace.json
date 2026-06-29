@@ -13,12 +13,26 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "handoff.md",
+                "file": "dashboard.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "handoff"
+              "title": "dashboard"
+            }
+          },
+          {
+            "id": "1e16358b2b8771ac",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "40-gtm/gtm.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "gtm"
             }
           }
         ]
@@ -94,7 +108,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "handoff.md",
+                "file": "dashboard.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -104,7 +118,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Links inversos para handoff"
+              "title": "Links inversos para dashboard"
             }
           },
           {
@@ -113,12 +127,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "handoff.md",
+                "file": "dashboard.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Links de saída para handoff"
+              "title": "Links de saída para dashboard"
             }
           },
           {
@@ -156,13 +170,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "handoff.md",
+                "file": "dashboard.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Sumário de handoff"
+              "title": "Sumário de dashboard"
             }
           }
         ]
@@ -185,24 +199,37 @@
   },
   "active": "3c183d87334b6597",
   "lastOpenFiles": [
-    "10-mercado/mercado.md",
-    "handoff.md",
-    "handoff.md.tmp.22520.f6911a6ff7ba",
-    "INDEX.md.tmp.22520.4d17c3bd1502",
-    "00-tese/tese.md",
-    "70-time/time.md",
+    "60-legal-fin/projecao-financeira.md",
+    "dashboard.md",
+    "60-legal-fin/anexo-B-white-label.md",
+    "60-legal-fin/auditoria.md.tmp.51264.3cf21911986d",
+    "60-legal-fin/anexo-B-white-label.md.tmp.51264.10b31a68900b",
+    "60-legal-fin/anexo-B-white-label.md.tmp.51264.ecfa4cf8816a",
+    "60-legal-fin/anexo-A-intermediacao.md.tmp.51264.f0a745d9aa32",
+    "60-legal-fin/contrato-quadro.md.tmp.51264.dd88f1a5833e",
+    "60-legal-fin/contrato-quadro.md.tmp.51264.f4cfb3e52ff7",
+    "60-legal-fin/legal-fin.md.tmp.51264.5c0376376edd",
+    "60-legal-fin/projecao-financeira.md.tmp.51264.6460ebe9c78a",
+    "60-legal-fin/projecao-financeira.md.tmp.51264.0ed0dac3905e",
+    "60-legal-fin/auditoria.md.tmp.51264.71270eb9ff96",
+    "60-legal-fin/auditoria.md",
+    "60-legal-fin/handoff.md",
+    "60-legal-fin/anexo-A-intermediacao.md",
+    "60-legal-fin/contrato-quadro.md",
     "60-legal-fin/legal-fin.md",
-    "50-operacao/operacao.md",
+    "60-legal-fin/minuta-contrato-intermediacao.md",
     "40-gtm/gtm.md",
     "30-modelo/modelo.md",
     "20-oferta/oferta.md",
+    "10-mercado/mercado.md",
+    "00-tese/tese.md",
+    "handoff.md",
+    "70-time/time.md",
+    "50-operacao/operacao.md",
     "notebook/Blueprint Estratégico_ Hub de Infraestrutura Digital Roylabs.md",
-    "notebook/ROI Labs_B2B_Infrastructure_Blueprint.pdf",
     "notebook/Pesquisa Hub E-commerce ROI Labs.md",
     "notebook/Blueprint Estratégico_ Hub de Infraestrutura Digital ROI Labs.md",
-    "00-tese/ElfhWfRr",
     "Sem título.canvas",
-    "Sem título.base",
     "INDEX.md",
     "_template.md"
   ]

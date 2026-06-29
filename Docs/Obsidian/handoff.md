@@ -25,13 +25,14 @@ data: 2026-06-28
 ## Próximos passos
 1. ✅ **Keyword Planner (Goiânia) — FEITO (2026-06-28):** Gate 1 validado. Demanda local real concentra em `porcelanato` (1.900) + tipos de produto; `porcelanato Goiânia` (140, CPC alto) = âncora de Ads; `pronta entrega` (10) vira USP; `área externa` (30 local, não 2.900 nacional) = nicho. Dados completos no nó [[mercado]].
 2. **Fechar o 1º fornecedor** A-Player de revestimentos (Gate 3). (nó [[mercado]] / [[time]])
-3. **Contador/advogado:** resolver a estrutura de contrato (intermediação vs revenda) — destrava todo o [[legal-fin]].
+3. ✅ **Estrutura de contrato + mecânica fiscal + minuta — FECHADAS (2026-06-28):** veículo = contrato atípico de intermediação/marketplace (NÃO representação comercial — evita indenização 1/12 + del credere vedado; ISS LC 116 item 10.05); padrão sem posse, revenda à ordem só no WL premium. Spread = comissão + excedente (uma só receita de serviço). Mecânica de NF fechada p/ os 2 cenários. Minuta em [[contrato-quadro]] + 2 anexos ([[anexo-A-intermediacao]], [[anexo-B-white-label]]); pagamento via Asaas (split automático). Projeção dos 2 regimes (intermediação + WL) em [[projecao-financeira]]. **Regime decidido: Simples Nacional** (deserto SEO + WL como moat de margem; mirar Anexo III via fator-r; watch-point teto R$4,8M se WL crescer). [[legal-fin]] `decided`. Resíduo só de execução: contador formalizar enquadramento + gerir fator-r, IVA-ST GO na 1ª compra WL, advogado adaptar minuta ao CNPJ.
 4. **Definir o piso de take rate em R$** após ver tickets reais de revestimentos. (nó [[modelo]])
-5. (Opcional) Instalar plugin **Dataview** para o dashboard de nós `stale`.
+5. ✅ **Dataview instalado + dashboard criado (2026-06-28):** plugin baixado em `.obsidian/plugins/dataview` e habilitado; nó [[dashboard]] com tabela de `stale` (alarme) + overview de status. Hoje vazio (todos `decided`) — é o estado esperado.
 
 ## Pendências / em aberto
-- `legal-fin` segue `draft` (proposta não validada) — única área não congelada.
+- `legal-fin` agora `decided` (estrutura + mecânica fiscal + minuta fechadas por pesquisa); resta só **execução do profissional** (opção formal de regime, IVA-ST GO no momento da compra WL, advogado adaptar a minuta ao CNPJ/foro) — não é decisão estratégica em aberto.
 - Validação de mercado: Keyword Planner ✅ feito; resta o fornecedor (ação de campo).
+- Todos os 8 nós agora `decided`; nenhuma área estratégica em `draft`.
 
 ## Gotchas
 - **Wikilinks resolvem por nome de arquivo**, não por pasta — mover nó entre pastas não quebra link.

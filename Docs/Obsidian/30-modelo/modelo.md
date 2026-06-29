@@ -13,7 +13,7 @@ depends_on:
 
 **Margem Dupla** (blinda contra oscilação e financia a maturação orgânica):
 
-1. **Spread atacado/varejo** — ROI Labs compra no atacado, define o varejo; o markup absorve a infraestrutura.
+1. **Spread atacado/varejo** — ROI Labs compra no atacado, define o varejo; o markup absorve a infraestrutura. *(Fiscalmente realizado como comissão mercantil — preço mínimo do fornecedor + excedente retido como comissão —, não como compra-e-revenda. Ver [[legal-fin]].)*
 2. **Comissão de 10%** sobre o bruto da transação (equivale a um representante comercial).
 
 **Meta: Take Rate médio de 30%** — combustível para atravessar a janela de ~6 meses sem queimar caixa em Ads.
