@@ -29,77 +29,62 @@ const pct100 = (v: number | null) => (v !== null ? String(Math.round(v * 10000) 
 const fromPct = (s: string) => parseFloat(s.replace(',', '.')) / 100;
 
 function ParamFields({
-  prefix,
   data,
   onChange,
   showCenario,
 }: {
-  prefix: string;
   data: Params;
   onChange: (patch: Partial<Params>) => void;
   showCenario: boolean;
 }) {
-  const inp: React.CSSProperties = {
-    background: '#111',
-    color: '#eee',
-    border: '1px solid #444',
-    borderRadius: 4,
-    padding: '0.3rem 0.5rem',
-    width: 80,
-    fontFamily: 'monospace',
-    fontSize: '0.85rem',
-  };
+  const fields = [
+    { key: 'markup', label: 'Markup %' },
+    { key: 'comissao', label: 'Comissão %' },
+    { key: 'aliqIntermediacao', label: 'Alíq. Interm. %' },
+    { key: 'aliqWL', label: 'Alíq. WL %' },
+  ] as const;
+
   return (
-    <div style={{ display: 'flex', gap: '0.8rem', flexWrap: 'wrap', alignItems: 'center' }}>
+    <div className="cc-fields">
       {showCenario && (
-        <div style={{ display: 'flex', gap: '0.4rem', marginRight: '0.4rem' }}>
+        <div className="cc-presets">
           {Object.entries(CENARIOS).map(([k, v]) => (
             <button
               key={k}
+              className={`cc-preset ${data.cenario === k ? 'is-active' : ''}`}
               onClick={() => onChange({ aliqIntermediacao: v.aliqIntermediacao, aliqWL: v.aliqWL, cenario: k })}
-              style={{
-                background: data.cenario === k ? '#444' : '#1a1a1a',
-                color: data.cenario === k ? '#eee' : '#888',
-                border: '1px solid #333',
-                borderRadius: 4,
-                padding: '0.25rem 0.5rem',
-                fontSize: '0.75rem',
-                cursor: 'pointer',
-                textTransform: 'capitalize',
-              }}
             >
               {k}
             </button>
           ))}
-          {data.cenario === 'ajustado' && (
-            <span style={{ color: '#f59e0b', fontSize: '0.75rem', alignSelf: 'center' }}>ajustado</span>
-          )}
+          {data.cenario === 'ajustado' && <span className="cc-preset__flag">ajustado</span>}
         </div>
       )}
-      {[
-        { key: 'markup', label: 'Markup %', allowNull: !showCenario },
-        { key: 'comissao', label: 'Comissão %', allowNull: !showCenario },
-        { key: 'aliqIntermediacao', label: 'Alíq. Interm. %', allowNull: !showCenario },
-        { key: 'aliqWL', label: 'Alíq. WL %', allowNull: !showCenario },
-      ].map(({ key, label, allowNull }) => (
-        <label key={key} style={{ display: 'flex', flexDirection: 'column', gap: 2, fontSize: '0.75rem', color: '#999' }}>
-          {label}
-          <input
-            style={inp}
-            value={pct100(data[key as keyof Params] as number | null)}
-            placeholder={allowNull ? '(herda)' : ''}
-            onChange={(e) => {
-              const raw = e.target.value;
-              if (raw === '' && allowNull) {
-                onChange({ [key]: null });
-              } else {
-                const v = fromPct(raw);
-                onChange({ [key]: isNaN(v) ? (data[key as keyof Params] as number | null) : v, ...(key === 'aliqIntermediacao' || key === 'aliqWL' ? { cenario: 'ajustado' } : {}) });
-              }
-            }}
-          />
-        </label>
-      ))}
+      {fields.map(({ key, label }) => {
+        const allowNull = !showCenario; // linhas herdam (placeholder), global mantém
+        return (
+          <label key={key} className="cc-field">
+            {label}
+            <input
+              value={pct100(data[key])}
+              placeholder={allowNull ? 'herda' : ''}
+              onChange={(e) => {
+                const raw = e.target.value;
+                if (raw === '' && allowNull) {
+                  onChange({ [key]: null });
+                } else {
+                  const v = fromPct(raw);
+                  const isAliq = key === 'aliqIntermediacao' || key === 'aliqWL';
+                  onChange({
+                    [key]: isNaN(v) ? data[key] : v,
+                    ...(isAliq && showCenario ? { cenario: 'ajustado' } : {}),
+                  });
+                }
+              }}
+            />
+          </label>
+        );
+      })}
     </div>
   );
 }
@@ -134,60 +119,47 @@ export default function ParametrosForm({ global: init, linhas: initLinhas }: Pro
     setNovaLinha('');
   }
 
-  const label: React.CSSProperties = { color: '#888', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: 0.5 };
-  const section: React.CSSProperties = { border: '1px solid #333', borderRadius: 6, padding: '1rem', marginBottom: '1rem' };
-
   return (
     <div>
-      {msg && (
-        <div style={{ color: msg.startsWith('✓') ? '#86efac' : '#f87171', marginBottom: '0.75rem', fontFamily: 'monospace', fontSize: '0.85rem' }}>
-          {msg}
-        </div>
-      )}
+      {msg && <div className={`cc-msg ${msg.startsWith('✓') ? 'cc-msg--ok' : 'cc-msg--err'}`} style={{ marginBottom: '0.75rem' }}>{msg}</div>}
 
       {/* Global */}
-      <div style={section}>
-        <div style={{ ...label, marginBottom: '0.5rem' }}>Parâmetros globais</div>
-        <ParamFields prefix="global" data={global} onChange={(p) => setGlobal((g) => ({ ...g, ...p }))} showCenario />
-        <button
-          disabled={saving === 'global'}
-          onClick={() => save('global', null, global)}
-          style={{ marginTop: '0.75rem', padding: '0.35rem 0.9rem', background: '#1d4ed8', color: '#fff', border: 'none', borderRadius: 4, cursor: 'pointer', fontSize: '0.85rem', opacity: saving === 'global' ? 0.5 : 1 }}
-        >
-          {saving === 'global' ? 'Salvando…' : 'Salvar global'}
-        </button>
+      <div className="cc-section">
+        <div className="cc-section__title">Parâmetros globais</div>
+        <ParamFields data={global} onChange={(p) => setGlobal((g) => ({ ...g, ...p }))} showCenario />
+        <div className="cc-row-actions">
+          <button className="btn btn--sm" disabled={saving === 'global'} onClick={() => save('global', null, global)}>
+            {saving === 'global' ? 'Salvando…' : 'Salvar global'}
+          </button>
+        </div>
       </div>
 
       {/* Linhas */}
       {linhas.map((l) => (
-        <div key={l.chave} style={section}>
-          <div style={{ ...label, marginBottom: '0.5rem' }}>Linha: <strong style={{ color: '#e2e8f0' }}>{l.chave}</strong></div>
+        <div key={l.chave} className="cc-section">
+          <div className="cc-section__title">Linha: <strong>{l.chave}</strong></div>
           <ParamFields
-            prefix={`linha-${l.chave}`}
             data={l}
-            onChange={(p) => setLinhas((prev) => prev.map((x) => x.chave === l.chave ? { ...x, ...p } : x))}
+            onChange={(p) => setLinhas((prev) => prev.map((x) => (x.chave === l.chave ? { ...x, ...p } : x)))}
             showCenario={false}
           />
-          <button
-            disabled={saving === `linha:${l.chave}`}
-            onClick={() => save('linha', l.chave, l)}
-            style={{ marginTop: '0.75rem', padding: '0.35rem 0.9rem', background: '#1d4ed8', color: '#fff', border: 'none', borderRadius: 4, cursor: 'pointer', fontSize: '0.85rem', opacity: saving === `linha:${l.chave}` ? 0.5 : 1 }}
-          >
-            {saving === `linha:${l.chave}` ? 'Salvando…' : `Salvar linha ${l.chave}`}
-          </button>
+          <div className="cc-row-actions">
+            <button className="btn btn--sm" disabled={saving === `linha:${l.chave}`} onClick={() => save('linha', l.chave, l)}>
+              {saving === `linha:${l.chave}` ? 'Salvando…' : `Salvar linha ${l.chave}`}
+            </button>
+          </div>
         </div>
       ))}
 
       {/* Nova linha */}
-      <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginTop: '0.5rem' }}>
+      <div className="cc-newline">
         <input
           value={novaLinha}
           onChange={(e) => setNovaLinha(e.target.value)}
           placeholder="Nome da nova linha (ex: premium)"
-          style={{ background: '#111', color: '#eee', border: '1px solid #444', borderRadius: 4, padding: '0.3rem 0.5rem', fontFamily: 'monospace', fontSize: '0.85rem', width: 220 }}
           onKeyDown={(e) => e.key === 'Enter' && addLinha()}
         />
-        <button onClick={addLinha} style={{ padding: '0.35rem 0.8rem', background: '#333', color: '#eee', border: 'none', borderRadius: 4, cursor: 'pointer', fontSize: '0.85rem' }}>
+        <button className="btn btn--sm btn--ghost" onClick={addLinha} style={{ color: 'var(--l-text)', borderColor: 'var(--l-line)' }}>
           + Linha
         </button>
       </div>

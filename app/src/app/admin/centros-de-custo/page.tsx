@@ -39,7 +39,6 @@ export default async function CentrosDeCustoPage() {
   const globalRow = paramRows.find((r) => r.escopo === 'global') ?? null;
   const linhaRows = paramRows.filter((r) => r.escopo === 'linha');
 
-  // Helper: convert Prisma Decimal|null to number|null
   const toNum = (v: unknown): number | null => (v !== null && v !== undefined ? Number(v) : null);
 
   const globalParams = globalRow
@@ -110,7 +109,6 @@ export default async function CentrosDeCustoPage() {
   });
 
   // ── Agregado de pedidos pagos: duas leituras (US4 + US6) ──────────────────
-  // Parâmetros vigentes globais para itens sem snapshot
   const vigentes = resolverParametros({ sku: null, linha: null, global: globalParams });
 
   const agr = itensPagos.reduce(
@@ -121,10 +119,9 @@ export default async function CentrosDeCustoPage() {
         it.aliqIntermediacaoSnapshot !== null ||
         it.aliqWLSnapshot !== null;
 
-      // Resolve effective params: snapshot > vigentes
       const p = hasSnapshot
         ? {
-            markup: PARAMS.markup, // markup not snapshotted (piso already resolved)
+            markup: PARAMS.markup,
             comissao: it.comissaoSnapshot !== null ? Number(it.comissaoSnapshot) : vigentes.comissao,
             aliqIntermediacao: it.aliqIntermediacaoSnapshot !== null ? Number(it.aliqIntermediacaoSnapshot) : vigentes.aliqIntermediacao,
             aliqWL: it.aliqWLSnapshot !== null ? Number(it.aliqWLSnapshot) : vigentes.aliqWL,
@@ -136,12 +133,9 @@ export default async function CentrosDeCustoPage() {
       const wlCalc = calcWL(varejo, piso, p);
 
       acc.gmv += varejo;
-
-      // Leitura hipotética: todos em cada centro
       acc.hipInterTotal += inter.liquido;
       acc.hipWLTotal += wlCalc.liquido;
 
-      // Leitura real: cada item no seu centro oficial
       const modalidadeEfetiva =
         it.modalidadeSnapshot ?? (skuMap.get(it.slug)?.modalidadeAlvo) ?? 'intermediacao';
       if (modalidadeEfetiva === 'wl') {
@@ -153,17 +147,13 @@ export default async function CentrosDeCustoPage() {
       }
 
       if (!hasSnapshot) acc.semSnapshot++;
-
       return acc;
     },
     { gmv: 0, hipInterTotal: 0, hipWLTotal: 0, realInter: 0, realWL: 0, realInterItems: 0, realWLItems: 0, semSnapshot: 0 },
   );
 
-  // ── Display params summary ─────────────────────────────────────────────────
   const p = resolverParametros({ sku: null, linha: null, global: globalParams });
-
-  const th: React.CSSProperties = { textAlign: 'right', padding: '0.6rem 0.8rem', whiteSpace: 'nowrap', color: '#888', fontSize: '0.8rem' };
-  const card: React.CSSProperties = { border: '1px solid #333', borderRadius: 6, padding: '0.9rem 1.1rem', minWidth: 200 };
+  const hipInterWins = agr.hipInterTotal >= agr.hipWLTotal;
 
   return (
     <div className="page">
@@ -177,11 +167,9 @@ export default async function CentrosDeCustoPage() {
       </div>
 
       {/* Parâmetros editáveis */}
-      <details open style={{ marginBottom: '1.5rem', border: '1px solid #2d4a6e', borderRadius: 6, padding: '0.75rem 1rem' }}>
-        <summary style={{ cursor: 'pointer', color: '#93c5fd', fontWeight: 600, fontSize: '0.9rem' }}>
-          ⚙️ Parâmetros editáveis
-        </summary>
-        <div style={{ marginTop: '1rem' }}>
+      <details className="cc-params" open>
+        <summary>Parâmetros editáveis</summary>
+        <div className="cc-params__body">
           <ParametrosForm
             global={globalParams}
             linhas={linhaRows.map((r) => ({
@@ -196,69 +184,64 @@ export default async function CentrosDeCustoPage() {
         </div>
       </details>
 
-      {/* Agregado: leitura hipotética (referência) */}
-      <div style={{ marginBottom: '0.5rem', color: '#666', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: 0.5 }}>
-        Referência hipotética — todos os pedidos pagos em cada modalidade
-      </div>
-      <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginBottom: '1rem' }}>
-        {[
-          ['GMV pago', brl(agr.gmv), '#888'],
-          ['Tudo Intermediação (líq.)', brl(agr.hipInterTotal), '#86efac'],
-          ['Tudo White Label (líq.)', brl(agr.hipWLTotal), '#93c5fd'],
-        ].map(([label, value, color]) => (
-          <div key={label as string} style={card}>
-            <div style={{ color: '#888', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: 0.5 }}>{label}</div>
-            <div style={{ color: color as string, fontSize: '1.4rem', fontWeight: 700, fontFamily: 'monospace' }}>{value}</div>
-          </div>
-        ))}
-        <div style={{ alignSelf: 'center', color: '#666', fontSize: '0.8rem' }}>
+      {/* Agregado: referência hipotética */}
+      <div className="cc-readout">Referência hipotética — todos os pedidos pagos em cada modalidade</div>
+      <div className="cc-cards">
+        <div className="cc-card">
+          <div className="cc-card__label">GMV pago</div>
+          <div className="cc-card__value">{brl(agr.gmv)}</div>
+        </div>
+        <div className="cc-card">
+          <div className="cc-card__label">Tudo Intermediação (líq.)</div>
+          <div className="cc-card__value is-inter">{brl(agr.hipInterTotal)}</div>
+        </div>
+        <div className="cc-card">
+          <div className="cc-card__label">Tudo White Label (líq.)</div>
+          <div className="cc-card__value is-wl">{brl(agr.hipWLTotal)}</div>
+        </div>
+        <div className="cc-note">
           {itensPagos.length} item(ns) · vantagem{' '}
-          <strong style={{ color: agr.hipInterTotal >= agr.hipWLTotal ? '#86efac' : '#93c5fd' }}>
-            {brl(Math.abs(agr.hipInterTotal - agr.hipWLTotal))}
-          </strong>{' '}
-          a favor de {agr.hipInterTotal >= agr.hipWLTotal ? 'Intermediação' : 'White Label'}
+          <strong className={hipInterWins ? 'is-inter' : 'is-wl'}>{brl(Math.abs(agr.hipInterTotal - agr.hipWLTotal))}</strong>{' '}
+          a favor de {hipInterWins ? 'Intermediação' : 'White Label'}
         </div>
       </div>
 
-      {/* Agregado: leitura real por modalidade oficial */}
-      <div style={{ marginBottom: '0.5rem', color: '#666', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: 0.5 }}>
-        Real por modalidade oficial — cada item no seu centro
-      </div>
-      <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
-        {[
-          [`Centro Intermediação (${agr.realInterItems} itens)`, brl(agr.realInter), '#86efac'],
-          [`Centro White Label (${agr.realWLItems} itens)`, brl(agr.realWL), '#93c5fd'],
-        ].map(([label, value, color]) => (
-          <div key={label as string} style={card}>
-            <div style={{ color: '#888', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: 0.5 }}>{label}</div>
-            <div style={{ color: color as string, fontSize: '1.4rem', fontWeight: 700, fontFamily: 'monospace' }}>{value}</div>
-          </div>
-        ))}
+      {/* Agregado: real por modalidade oficial */}
+      <div className="cc-readout">Real por modalidade oficial — cada item no seu centro</div>
+      <div className="cc-cards">
+        <div className="cc-card">
+          <div className="cc-card__label">Centro Intermediação ({agr.realInterItems} itens)</div>
+          <div className="cc-card__value is-inter">{brl(agr.realInter)}</div>
+        </div>
+        <div className="cc-card">
+          <div className="cc-card__label">Centro White Label ({agr.realWLItems} itens)</div>
+          <div className="cc-card__value is-wl">{brl(agr.realWL)}</div>
+        </div>
         {agr.semSnapshot > 0 && (
-          <div style={{ alignSelf: 'center', color: '#f59e0b', fontSize: '0.8rem' }}>
+          <div className="cc-note cc-note--warn">
             ⚠ {agr.semSnapshot} item(ns) sem snapshot — apurado com parâmetros vigentes
           </div>
         )}
       </div>
 
       {/* Catálogo: tabela editável por SKU */}
-      <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: 'monospace', fontSize: '0.85rem' }}>
+      <table className="cc-table">
         <thead>
-          <tr style={{ borderBottom: '1px solid #333' }}>
-            <th style={{ ...th, textAlign: 'left' }}>Produto</th>
-            <th style={th}>Varejo/m²</th>
-            <th style={th}>Piso /m²</th>
-            <th style={th}>Origem</th>
-            <th style={th}>Linha</th>
-            <th style={th}>Modalidade</th>
-            <th style={th}>Interm. líq./m²</th>
-            <th style={th}>WL líq./m²</th>
-            <th style={th}>Vence</th>
+          <tr>
+            <th>Produto</th>
+            <th>Varejo/m²</th>
+            <th>Piso /m²</th>
+            <th>Origem</th>
+            <th>Linha</th>
+            <th>Modalidade</th>
+            <th>Interm. líq./m²</th>
+            <th>WL líq./m²</th>
+            <th>Vence</th>
           </tr>
         </thead>
         <tbody>
-          {produtos.map((p) => (
-            <SkuRow key={p.slug} data={p} />
+          {produtos.map((prod) => (
+            <SkuRow key={prod.slug} data={prod} />
           ))}
         </tbody>
       </table>

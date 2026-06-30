@@ -19,7 +19,6 @@ function brl(v: number) {
 }
 
 export default function SkuRow({ data }: { data: SkuRowData }) {
-  const [piso, setPiso] = useState(data.piso);
   const [real, setReal] = useState(data.real);
   const [prejuizo, setPrejuizo] = useState(data.prejuizo);
   const [modalidade, setModalidade] = useState(data.modalidade);
@@ -39,7 +38,7 @@ export default function SkuRow({ data }: { data: SkuRowData }) {
     const json = await res.json();
     setSaving(false);
     if (json.ok) {
-      setMsg('✓');
+      setMsg('✓ salvo');
       if (json.prejuizo !== undefined) setPrejuizo(json.prejuizo);
     } else {
       setMsg(`✗ ${json.motivo}`);
@@ -50,87 +49,70 @@ export default function SkuRow({ data }: { data: SkuRowData }) {
   function savePiso() {
     const raw = pisoInput.replace(',', '.').trim();
     if (raw === '') {
-      // clear piso → back to estimado
-      setPiso(data.piso);
       setReal(false);
       patch({ piso: null });
     } else {
       const v = parseFloat(raw);
-      if (isNaN(v) || v < 0) { setMsg('✗ valor inválido'); return; }
-      setPiso(v);
+      if (isNaN(v) || v < 0) { setMsg('✗ inválido'); return; }
       setReal(true);
       patch({ piso: v });
     }
   }
 
-  const td: React.CSSProperties = { padding: '0.5rem 0.8rem', fontFamily: 'monospace', fontSize: '0.8rem', whiteSpace: 'nowrap' };
-  const inp: React.CSSProperties = { background: '#111', color: '#eee', border: '1px solid #444', borderRadius: 3, padding: '0.2rem 0.4rem', width: 72, fontFamily: 'monospace', fontSize: '0.8rem' };
+  const interWins = data.interLiquido >= data.wlLiquido;
 
   return (
-    <tr style={{ borderBottom: '1px solid #222' }}>
-      <td style={{ ...td, color: '#ccc' }}>{data.slug.replace('porcelanato-', '')}</td>
-      <td style={{ ...td, textAlign: 'right' }}>{brl(data.varejo)}</td>
+    <tr>
+      <td className="slug">{data.slug.replace('porcelanato-', '')}</td>
+      <td className="num">{brl(data.varejo)}</td>
 
       {/* Piso */}
-      <td style={{ ...td, textAlign: 'right' }}>
-        <div style={{ display: 'flex', gap: '0.3rem', alignItems: 'center', justifyContent: 'flex-end' }}>
+      <td className="num">
+        <span className="cc-piso">
           <input
-            style={inp}
             value={pisoInput}
-            placeholder="(markup)"
+            placeholder="markup"
             onChange={(e) => setPisoInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && savePiso()}
           />
-          <button onClick={savePiso} disabled={saving} style={{ padding: '0.15rem 0.4rem', fontSize: '0.7rem', background: '#333', color: '#eee', border: 'none', borderRadius: 3, cursor: 'pointer' }}>
-            {saving ? '…' : '✓'}
-          </button>
-        </div>
-        {msg && <div style={{ fontSize: '0.7rem', color: msg.startsWith('✓') ? '#86efac' : '#f87171', marginTop: 2 }}>{msg}</div>}
+          <button className="btn btn--sm" onClick={savePiso} disabled={saving}>{saving ? '…' : '✓'}</button>
+        </span>
+        {msg && <div className={`cc-cell-msg ${msg.startsWith('✓') ? 'cc-msg--ok' : 'cc-msg--err'}`}>{msg}</div>}
       </td>
 
-      {/* Real/estimado + prejuízo */}
-      <td style={{ ...td, color: real ? '#86efac' : '#888' }}>
-        {real ? 'real' : 'estimado'}
-        {prejuizo && <span style={{ color: '#f87171', marginLeft: 4 }}>⚠ prejuízo</span>}
+      {/* Origem (real/estimado + prejuízo) */}
+      <td>
+        <span className={real ? 'cc-tag cc-tag--real' : 'cc-tag cc-tag--est'}>{real ? 'real' : 'estimado'}</span>
+        {prejuizo && <span className="cc-tag cc-tag--prejuizo">⚠ prejuízo</span>}
       </td>
 
       {/* Linha */}
-      <td style={{ ...td }}>
+      <td>
         <select
+          className="cc-select"
           value={linha}
-          onChange={(e) => {
-            const v = e.target.value;
-            setLinha(v);
-            patch({ linha: v === '' ? null : v });
-          }}
-          style={{ background: '#111', color: '#eee', border: '1px solid #444', borderRadius: 3, padding: '0.2rem 0.3rem', fontSize: '0.8rem' }}
+          onChange={(e) => { const v = e.target.value; setLinha(v); patch({ linha: v === '' ? null : v }); }}
         >
-          <option value="">(global)</option>
+          <option value="">global</option>
           {data.linhasDisponiveis.map((l) => <option key={l} value={l}>{l}</option>)}
         </select>
       </td>
 
       {/* Modalidade-alvo */}
-      <td style={{ ...td }}>
+      <td>
         <select
+          className="cc-select"
           value={modalidade}
-          onChange={(e) => {
-            const v = e.target.value as 'intermediacao' | 'wl';
-            setModalidade(v);
-            patch({ modalidadeAlvo: v });
-          }}
-          style={{ background: '#111', color: '#eee', border: '1px solid #444', borderRadius: 3, padding: '0.2rem 0.3rem', fontSize: '0.8rem' }}
+          onChange={(e) => { const v = e.target.value as 'intermediacao' | 'wl'; setModalidade(v); patch({ modalidadeAlvo: v }); }}
         >
           <option value="intermediacao">Intermediação</option>
           <option value="wl">White Label</option>
         </select>
       </td>
 
-      <td style={{ ...td, textAlign: 'right', color: data.interLiquido >= data.wlLiquido ? '#86efac' : '#ccc' }}>{brl(data.interLiquido)}</td>
-      <td style={{ ...td, textAlign: 'right', color: data.wlLiquido > data.interLiquido ? '#93c5fd' : '#ccc' }}>{brl(data.wlLiquido)}</td>
-      <td style={{ ...td, color: data.interLiquido >= data.wlLiquido ? '#86efac' : '#93c5fd' }}>
-        {data.interLiquido >= data.wlLiquido ? 'Interm.' : 'WL'}
-      </td>
+      <td className={`num ${interWins ? 'cc-win-inter' : ''}`}>{brl(data.interLiquido)}</td>
+      <td className={`num ${!interWins ? 'cc-win-wl' : ''}`}>{brl(data.wlLiquido)}</td>
+      <td className={interWins ? 'cc-win-inter' : 'cc-win-wl'}>{interWins ? 'Interm.' : 'WL'}</td>
     </tr>
   );
 }
