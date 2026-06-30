@@ -96,3 +96,13 @@ export async function PATCH(req: NextRequest) {
 
   return NextResponse.json({ ok: true });
 }
+
+// DELETE — remove uma linha (?chave=...). Global não é deletável. deleteMany p/ idempotência.
+// SKUs que apontavam p/ a linha herdam do global automaticamente (resolveField trata camada ausente).
+export async function DELETE(req: NextRequest) {
+  if (!(await isAuthed())) return NextResponse.json({ ok: false }, { status: 401 });
+  const chave = req.nextUrl.searchParams.get('chave')?.trim();
+  if (!chave) return NextResponse.json({ ok: false, motivo: 'chave é obrigatória' }, { status: 400 });
+  await prisma.parametroCentroCusto.deleteMany({ where: { escopo: 'linha', chave } });
+  return NextResponse.json({ ok: true });
+}

@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 interface Params {
   markup: number | null;
@@ -90,6 +91,7 @@ function ParamFields({
 }
 
 export default function ParametrosForm({ global: init, linhas: initLinhas }: Props) {
+  const router = useRouter();
   const [global, setGlobal] = useState<Params>(init ?? { markup: 0.3, comissao: 0.1, aliqIntermediacao: 0.102, aliqWL: 0.062, cenario: 'base' });
   const [linhas, setLinhas] = useState<Linha[]>(initLinhas);
   const [saving, setSaving] = useState<string | null>(null);
@@ -110,6 +112,7 @@ export default function ParametrosForm({ global: init, linhas: initLinhas }: Pro
     setSaving(null);
     setMsg(json.ok ? '✓ Salvo' : `✗ ${json.motivo}`);
     setTimeout(() => setMsg(null), 3000);
+    if (json.ok) router.refresh(); // recalcula a tabela na hora (server component)
   }
 
   function addLinha() {
@@ -117,6 +120,20 @@ export default function ParametrosForm({ global: init, linhas: initLinhas }: Pro
     if (!nome || linhas.some((l) => l.chave === nome)) return;
     setLinhas((prev) => [...prev, { chave: nome, markup: null, comissao: null, aliqIntermediacao: null, aliqWL: null }]);
     setNovaLinha('');
+  }
+
+  async function delLinha(chave: string | null) {
+    if (!chave) return;
+    if (!confirm(`Apagar a linha "${chave}"? Os SKUs nela voltam a herdar do global.`)) return;
+    setSaving(`del:${chave}`);
+    setMsg(null);
+    // deleteMany no servidor → idempotente mesmo p/ linha adicionada na UI e nunca salva.
+    await fetch(`/api/centros-custo/parametros?chave=${encodeURIComponent(chave)}`, { method: 'DELETE' });
+    setLinhas((prev) => prev.filter((l) => l.chave !== chave));
+    setSaving(null);
+    setMsg('✓ Linha apagada');
+    setTimeout(() => setMsg(null), 3000);
+    router.refresh();
   }
 
   return (
@@ -146,6 +163,9 @@ export default function ParametrosForm({ global: init, linhas: initLinhas }: Pro
           <div className="cc-row-actions">
             <button className="btn btn--sm" disabled={saving === `linha:${l.chave}`} onClick={() => save('linha', l.chave, l)}>
               {saving === `linha:${l.chave}` ? 'Salvando…' : `Salvar linha ${l.chave}`}
+            </button>
+            <button className="btn btn--sm btn--ghost" disabled={saving === `del:${l.chave}`} onClick={() => delLinha(l.chave)} style={{ color: 'var(--red)', borderColor: 'var(--red)' }}>
+              {saving === `del:${l.chave}` ? 'Apagando…' : 'Apagar linha'}
             </button>
           </div>
         </div>

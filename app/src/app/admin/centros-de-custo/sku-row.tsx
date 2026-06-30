@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export interface SkuRowData {
   slug: string;
@@ -19,6 +20,7 @@ function brl(v: number) {
 }
 
 export default function SkuRow({ data }: { data: SkuRowData }) {
+  const router = useRouter();
   const [real, setReal] = useState(data.real);
   const [prejuizo, setPrejuizo] = useState(data.prejuizo);
   const [modalidade, setModalidade] = useState(data.modalidade);
@@ -40,6 +42,7 @@ export default function SkuRow({ data }: { data: SkuRowData }) {
     if (json.ok) {
       setMsg('✓ salvo');
       if (json.prejuizo !== undefined) setPrejuizo(json.prejuizo);
+      router.refresh(); // recalcula líquidos/origem da tabela na hora
     } else {
       setMsg(`✗ ${json.motivo}`);
     }
