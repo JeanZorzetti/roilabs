@@ -127,7 +127,8 @@ a { color: inherit; }
 .empty { color: var(--l-muted); font-size: 13px; padding: 0.5rem 0.35rem; }
 
 /* ---- cost centers ---- */
-:root { --blue: #1d4ed8; --blue-deep: #1e3a5f; }
+/* emphasis colors chosen to pass WCAG AA (>=4.5:1) on the light porcelain bg */
+:root { --blue: #1d4ed8; --blue-deep: #1e3a5f; --green-strong: #166534; }
 
 /* params editor (collapsible) */
 .cc-params { border: 1px solid var(--l-line); border-radius: 12px; background: #fff; margin-bottom: 1.75rem; overflow: hidden; }
@@ -177,11 +178,11 @@ a { color: inherit; }
 .cc-card { background: #fff; border: 1px solid var(--l-line); border-radius: 12px; padding: 1rem 1.2rem; min-width: 210px; }
 .cc-card__label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--l-muted); font-weight: 700; }
 .cc-card__value { font-family: var(--font-mono), monospace; font-size: 1.5rem; font-weight: 800; margin-top: 0.2rem; color: var(--l-text); }
-.cc-card__value.is-inter { color: var(--green); }
+.cc-card__value.is-inter { color: var(--green-strong); }
 .cc-card__value.is-wl { color: var(--blue); }
 .cc-note { align-self: center; color: var(--l-muted); font-size: 13px; }
 .cc-note--warn { color: var(--hivis-deep); }
-.cc-note strong.is-inter { color: var(--green); }
+.cc-note strong.is-inter { color: var(--green-strong); }
 .cc-note strong.is-wl { color: var(--blue); }
 
 /* catalog table */
@@ -199,8 +200,11 @@ a { color: inherit; }
 .cc-table tbody tr:hover { background: var(--porcelain-2); }
 .cc-table .num { font-family: var(--font-mono), monospace; text-align: right; color: var(--l-text); }
 .cc-table .slug { font-weight: 700; color: var(--l-text); }
-.cc-win-inter { color: var(--green); font-weight: 800; }
+.cc-win-inter { color: var(--green-strong); font-weight: 800; }
 .cc-win-wl { color: var(--blue); font-weight: 800; }
+/* beat `.cc-table .num` (same 0,2,0 specificity needs the extra td qualifier) */
+.cc-table td.cc-win-inter { color: var(--green-strong); }
+.cc-table td.cc-win-wl { color: var(--blue); }
 
 .cc-piso { display: inline-flex; gap: 0.3rem; align-items: center; justify-content: flex-end; }
 .cc-piso input {
