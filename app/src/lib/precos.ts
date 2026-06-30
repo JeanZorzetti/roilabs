@@ -47,3 +47,7 @@ export function getProduto(slug: string): ProdutoPreco | null {
   const row = PRECOS[slug];
   return row ? { m2_caixa: row[0], preco: row[1] } : null;
 }
+
+export function listarProdutos(): Array<{ slug: string } & ProdutoPreco> {
+  return Object.entries(PRECOS).map(([slug, [m2_caixa, preco]]) => ({ slug, m2_caixa, preco }));
+}
