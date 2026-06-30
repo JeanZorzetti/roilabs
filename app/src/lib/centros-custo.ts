@@ -32,11 +32,13 @@ export const CENARIOS: Record<string, Pick<Parametros, 'aliqIntermediacao' | 'al
 };
 
 // Camadas carregadas do DB para resolver parâmetros de um SKU (D5).
-// Todas as propriedades de parâmetro são Decimal do Prisma (convertidas para number externamente).
+// Campos nullable (number | null) porque vêm de colunas Prisma opcionais; resolveField
+// trata null e undefined igual (herda a camada acima).
+type ParamsNullable = { [K in keyof Parametros]?: number | null };
 export interface CamadasConfig {
-  sku?: Partial<Parametros> & { piso?: number | null; modalidadeAlvo?: string | null } | null;
-  linha?: Partial<Parametros> | null;
-  global?: Partial<Parametros> | null;
+  sku?: (ParamsNullable & { piso?: number | null; modalidadeAlvo?: string | null }) | null;
+  linha?: ParamsNullable | null;
+  global?: ParamsNullable | null;
 }
 
 function resolveField<K extends keyof Parametros>(camadas: CamadasConfig, key: K): number {
