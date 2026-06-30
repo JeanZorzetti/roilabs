@@ -4,10 +4,9 @@
 //   - White Label    → Docs/Obsidian/60-legal-fin/anexo-B-white-label.md
 //   - números/alíquotas → Docs/Obsidian/60-legal-fin/projecao-financeira.md (cenário Base)
 //
-// Só temos o varejo (preço do concorrente). O atacado (piso) é derivado por markup
-// até o 1º fornecedor fechar (Gate 3) e dar o piso real por SKU.
-// ponytail: parâmetros fiscais hard-coded no cenário Base do Simples; viram config/DB
-// só quando o contador fechar o regime e o volume real definir a faixa (fator-r / Anexo I).
+// Feature 004: parâmetros agora persistidos em DB com camadas SKU > linha > global.
+// PARAMS é o fallback quando o DB não tem global (FR-004). Fórmulas calcIntermediacao/calcWL
+// são intactas (FR-016); apenas a origem dos parâmetros mudou.
 
 export interface Parametros {
   markup: number; // atacado = varejo / (1 + markup). Âncora R$9.100/R$7.000 = 0,30 (modelo.md)
@@ -16,12 +15,64 @@ export interface Parametros {
   aliqWL: number; // imposto sobre o GMV CHEIO (Simples Anexo I após ICMS-ST, Base ~6,2%)
 }
 
+// Defaults dos docs — fallback quando o DB não tem global (FR-004).
 export const PARAMS: Parametros = {
   markup: 0.3,
   comissao: 0.1,
   aliqIntermediacao: 0.102,
   aliqWL: 0.062,
 };
+
+// Presets tributários (D4 / projecao-financeira.md). Aplicar um preset preenche as alíquotas;
+// ajuste manual posterior usa cenario='ajustado' e prevalece (FR-013).
+export const CENARIOS: Record<string, Pick<Parametros, 'aliqIntermediacao' | 'aliqWL'>> = {
+  conservador: { aliqIntermediacao: 0.06, aliqWL: 0.046 },
+  base: { aliqIntermediacao: 0.102, aliqWL: 0.062 },
+  otimista: { aliqIntermediacao: 0.127, aliqWL: 0.078 },
+};
+
+// Camadas carregadas do DB para resolver parâmetros de um SKU (D5).
+// Todas as propriedades de parâmetro são Decimal do Prisma (convertidas para number externamente).
+export interface CamadasConfig {
+  sku?: Partial<Parametros> & { piso?: number | null; modalidadeAlvo?: string | null } | null;
+  linha?: Partial<Parametros> | null;
+  global?: Partial<Parametros> | null;
+}
+
+function resolveField<K extends keyof Parametros>(camadas: CamadasConfig, key: K): number {
+  const fromSku = camadas.sku?.[key];
+  if (fromSku != null) return Number(fromSku);
+  const fromLinha = camadas.linha?.[key];
+  if (fromLinha != null) return Number(fromLinha);
+  const fromGlobal = camadas.global?.[key];
+  if (fromGlobal != null) return Number(fromGlobal);
+  return PARAMS[key];
+}
+
+// Resolve parâmetros efetivos de um SKU com precedência SKU > linha > global > PARAMS campo a campo.
+export function resolverParametros(camadas: CamadasConfig): Parametros {
+  return {
+    markup: resolveField(camadas, 'markup'),
+    comissao: resolveField(camadas, 'comissao'),
+    aliqIntermediacao: resolveField(camadas, 'aliqIntermediacao'),
+    aliqWL: resolveField(camadas, 'aliqWL'),
+  };
+}
+
+// Resolve o piso (atacado) real vs estimado para um SKU.
+export function resolverPiso(
+  varejo: number,
+  camadas: CamadasConfig,
+): { piso: number; real: boolean } {
+  const skuPiso = camadas.sku?.piso;
+  if (skuPiso != null) return { piso: Number(skuPiso), real: true };
+  return { piso: atacadoDe(varejo, resolveField(camadas, 'markup')), real: false };
+}
+
+// Resolve a modalidade-alvo de um SKU. Ausente = Intermediação (padrão dos docs, FR-014).
+export function resolverModalidade(camadas: CamadasConfig): 'intermediacao' | 'wl' {
+  return camadas.sku?.modalidadeAlvo === 'wl' ? 'wl' : 'intermediacao';
+}
 
 export interface Resultado {
   centro: 'intermediacao' | 'wl';

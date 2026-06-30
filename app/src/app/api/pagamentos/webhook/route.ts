@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getPayment, verifyWebhookSignature } from '@/lib/mercadopago';
+import { resolverParametros, resolverPiso, resolverModalidade, type CamadasConfig } from '@/lib/centros-custo';
 
 export const dynamic = 'force-dynamic';
 
@@ -50,10 +51,48 @@ export async function POST(req: NextRequest) {
   if (payment.status === 'approved') {
     // Advance only (never pago → pendente). Reserva: fulfillment stays "aguardando" (FR-012).
     if (pedido.statusPagamento === 'pendente') {
-      await prisma.pedido.update({
-        where: { id: pedido.id },
-        data: { statusPagamento: 'pago', mpPaymentId: paymentId },
-      });
+      // Freeze per-item snapshot of cost-center params at payment time (US4 / FR-010).
+      // Load all DB layers once for the whole order, then resolve per slug.
+      const [paramRows, skuRows] = await Promise.all([
+        prisma.parametroCentroCusto.findMany(),
+        prisma.itemPedido.findMany({ where: { pedidoId: pedido.id }, select: { id: true, slug: true, subtotal: true } }),
+      ]);
+      const globalRow = paramRows.find((r) => r.escopo === 'global') ?? null;
+      const linhaRows = paramRows.filter((r) => r.escopo === 'linha');
+      const skuConfigs = await prisma.skuConfig.findMany({ where: { slug: { in: skuRows.map((i) => i.slug) } } });
+
+      const toNum = (v: unknown): number | null => (v != null ? Number(v) : null);
+      const globalParams = globalRow
+        ? { markup: toNum(globalRow.markup), comissao: toNum(globalRow.comissao), aliqIntermediacao: toNum(globalRow.aliqIntermediacao), aliqWL: toNum(globalRow.aliqWL) }
+        : null;
+      const linhasMap = new Map(linhaRows.map((r) => [r.chave, { markup: toNum(r.markup), comissao: toNum(r.comissao), aliqIntermediacao: toNum(r.aliqIntermediacao), aliqWL: toNum(r.aliqWL) }]));
+      const skuMap = new Map(skuConfigs.map((r) => [r.slug, { piso: toNum(r.piso), modalidadeAlvo: r.modalidadeAlvo ?? null, linha: r.linha ?? null, markup: toNum(r.markup), comissao: toNum(r.comissao), aliqIntermediacao: toNum(r.aliqIntermediacao), aliqWL: toNum(r.aliqWL) }]));
+
+      await prisma.$transaction([
+        prisma.pedido.update({
+          where: { id: pedido.id },
+          data: { statusPagamento: 'pago', mpPaymentId: paymentId },
+        }),
+        ...skuRows.map((item) => {
+          const skuCfg = skuMap.get(item.slug) ?? null;
+          const linhaNome = skuCfg?.linha ?? null;
+          const linhaCfg = linhaNome ? (linhasMap.get(linhaNome) ?? null) : null;
+          const camadas: CamadasConfig = { sku: skuCfg, linha: linhaCfg, global: globalParams };
+          const p = resolverParametros(camadas);
+          const { piso } = resolverPiso(Number(item.subtotal), camadas);
+          const modalidade = resolverModalidade(camadas);
+          return prisma.itemPedido.update({
+            where: { id: item.id },
+            data: {
+              pisoSnapshot: piso,
+              modalidadeSnapshot: modalidade,
+              comissaoSnapshot: p.comissao,
+              aliqIntermediacaoSnapshot: p.aliqIntermediacao,
+              aliqWLSnapshot: p.aliqWL,
+            },
+          });
+        }),
+      ]);
     }
   } else if (payment.status === 'refunded' || payment.status === 'charged_back') {
     await prisma.pedido.update({

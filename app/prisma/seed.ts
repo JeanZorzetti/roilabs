@@ -15,6 +15,30 @@ async function main() {
     }
   }
   console.log(`seeded ${DEFAULT_SEATS.length} cadeiras`);
+
+  // Idempotent seed of the global cost-center params (doc defaults: markup 30%, comissao 10%,
+  // aliqIntermediacao 10.2%, aliqWL 6.2%). Stored as fractions [0,1].
+  // ponytail: findFirst+create (not upsert) because Prisma compound unique with null chave
+  // doesn't support the generated *CompoundUniqueInput where clause safely across versions.
+  const existingGlobal = await prisma.parametroCentroCusto.findFirst({
+    where: { escopo: 'global', chave: null },
+  });
+  if (!existingGlobal) {
+    await prisma.parametroCentroCusto.create({
+      data: {
+        escopo: 'global',
+        chave: null,
+        markup: 0.3,
+        comissao: 0.1,
+        aliqIntermediacao: 0.102,
+        aliqWL: 0.062,
+        cenario: 'base',
+      },
+    });
+    console.log('seeded global cost-center params');
+  } else {
+    console.log('global cost-center params already seeded — skipped');
+  }
 }
 
 main()

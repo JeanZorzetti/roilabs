@@ -78,10 +78,49 @@ model ItemPedido {
   precoM2  Decimal @db.Decimal(10, 2) @map("preco_m2") // snapshot do preço/m² na compra
   subtotal Decimal @db.Decimal(10, 2)
 
+  // Snapshot congelado quando o pedido vira 'pago' (US4). NULL = pedido anterior à feature.
+  pisoSnapshot              Decimal? @db.Decimal(10, 2) @map("piso_snapshot")
+  modalidadeSnapshot        String?  @map("modalidade_snapshot") // 'wl'|'intermediacao'
+  comissaoSnapshot          Decimal? @db.Decimal(6, 4) @map("comissao_snapshot")
+  aliqIntermediacaoSnapshot Decimal? @db.Decimal(6, 4) @map("aliq_intermediacao_snapshot")
+  aliqWLSnapshot            Decimal? @db.Decimal(6, 4) @map("aliq_wl_snapshot")
+
   pedido Pedido @relation(fields: [pedidoId], references: [id], onDelete: Cascade)
 
   @@index([pedidoId])
   @@map("itens_pedido")
+}
+
+// Parâmetros dos centros de custo (global + linha). Campos nullable = herda a camada acima.
+model ParametroCentroCusto {
+  id                String   @id @default(cuid())
+  escopo            String // 'global' | 'linha'
+  chave             String? // null no global; nome da linha quando escopo='linha'
+  markup            Decimal? @db.Decimal(6, 4)
+  comissao          Decimal? @db.Decimal(6, 4)
+  aliqIntermediacao Decimal? @db.Decimal(6, 4) @map("aliq_intermediacao")
+  aliqWL            Decimal? @db.Decimal(6, 4) @map("aliq_wl")
+  cenario           String? // só no global: 'conservador'|'base'|'otimista'|'ajustado'
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  @@unique([escopo, chave])
+  @@map("parametro_centro_custo")
+}
+
+// Config por SKU: piso real, modalidade-alvo, overrides de parâmetro. Tudo opcional.
+model SkuConfig {
+  id                String   @id @default(cuid())
+  slug              String   @unique
+  linha             String? // nome de uma ParametroCentroCusto escopo=linha
+  piso              Decimal? @db.Decimal(10, 2) // atacado real /m²; ausente = estimado por markup
+  modalidadeAlvo    String?  @map("modalidade_alvo") // 'wl'|'intermediacao'; ausente = Intermediação
+  markup            Decimal? @db.Decimal(6, 4)
+  comissao          Decimal? @db.Decimal(6, 4)
+  aliqIntermediacao Decimal? @db.Decimal(6, 4) @map("aliq_intermediacao")
+  aliqWL            Decimal? @db.Decimal(6, 4) @map("aliq_wl")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  @@map("sku_config")
 }
 
 // Mapa de cadeiras — espelha o seats[] hard-coded do site (niche/status/open).
