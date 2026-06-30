@@ -232,6 +232,48 @@ a { color: inherit; }
 .toggle { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 13px; font-weight: 700; }
 .saved { color: var(--green); font-size: 12px; }
 
+/* ---- painel cockpit ---- */
+.painel-section { margin-bottom: 1.75rem; }
+.painel-section__title {
+  font-family: var(--font-mono), monospace; font-size: 12px; text-transform: uppercase;
+  letter-spacing: 0.06em; color: var(--l-muted); margin-bottom: 0.75rem;
+}
+.painel-card-link { text-decoration: none; display: block; transition: box-shadow 0.12s; }
+.painel-card-link:hover { box-shadow: 0 0 0 2px var(--hivis); }
+.painel-card--alert { border-color: var(--hivis-deep) !important; }
+.painel-alert { color: var(--hivis-deep) !important; }
+.painel-win {
+  font-size: 0.65em; font-weight: 700; color: var(--l-muted);
+  font-family: var(--font-mono), monospace; vertical-align: middle;
+}
+.painel-abertas { color: var(--hivis); font-weight: 800; }
+.painel-estudo { color: var(--l-muted); font-weight: 800; }
+
+/* ---- financeiro table ---- */
+.fin-table { width: 100%; border-collapse: collapse; font-size: 14px; margin-top: 1rem; }
+.fin-table thead th {
+  font-family: var(--font-mono), monospace; font-size: 11px; text-transform: uppercase;
+  letter-spacing: 0.05em; color: var(--l-muted); font-weight: 700;
+  padding: 0.6rem 0.8rem; border-bottom: 2px solid var(--l-line); text-align: right; white-space: nowrap;
+}
+.fin-table thead th:first-child { text-align: left; }
+.fin-table tbody td {
+  padding: 0.55rem 0.8rem; border-bottom: 1px solid var(--l-line);
+  font-family: var(--font-mono), monospace; text-align: right; font-size: 13px; white-space: nowrap;
+}
+.fin-table tbody td:first-child {
+  text-align: left; font-weight: 700; font-family: inherit; font-size: 14px;
+}
+.fin-table tbody tr:hover { background: var(--porcelain-2); }
+.fin-table tfoot td {
+  padding: 0.65rem 0.8rem; border-top: 2px solid var(--l-line); font-weight: 800;
+  font-family: var(--font-mono), monospace; text-align: right; font-size: 13px;
+}
+.fin-table tfoot td:first-child { text-align: left; font-family: inherit; font-size: 14px; }
+.fin-warn { color: var(--hivis-deep); font-size: 11px; font-weight: 700; }
+.fin-inter { color: var(--green-strong); }
+.fin-wl { color: var(--blue); }
+
 @media (max-width: 900px) {
   .board { grid-template-columns: 1fr; }
 }

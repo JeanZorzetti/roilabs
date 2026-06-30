@@ -3,11 +3,13 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 const LINKS: [string, string][] = [
-  ['/admin', 'Candidaturas'],
+  ['/admin', 'Painel'],
+  ['/admin/candidaturas', 'Candidaturas'],
   ['/admin/cadeiras', 'Cadeiras'],
   ['/admin/leads', 'Leads Goiânia'],
   ['/admin/pedidos', 'Pedidos'],
   ['/admin/centros-de-custo', 'Centros de custo'],
+  ['/admin/financeiro', 'Financeiro'],
 ];
 
 export function Nav() {
