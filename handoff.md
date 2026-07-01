@@ -38,7 +38,7 @@ nicho âncora = **revestimentos/porcelanato**.
 
 ## Pendências — Camada Parceiro (007), MANUAL
 
-- **`prisma db push` no host** (3 tabelas novas: `parceiros`, `negocios_originados`, `faturas_success_fee`) — o runner standalone não aplica schema; rodar de uma máquina que alcança `2.24.207.200:5443`.
+- ~~`prisma db push` no host~~ — **feito 2026-07-01**: 3 tabelas novas (`parceiros`, `negocios_originados`, `faturas_success_fee`) aplicadas em `roilabs_db@2.24.207.200:5443`, verificadas via `prisma.count()` (0 registros, prontas para uso).
 - **Envs Asaas na EasyPanel:** `ASAAS_API_KEY`, `ASAAS_API_URL` (sandbox primeiro), `ASAAS_WEBHOOK_TOKEN` — apontar o webhook do Asaas para `/api/parceiros/webhook`. Sem essas envs, US3 (fatura/cobrança) não funciona; US1+US2 não dependem delas.
 - **Verificação em ambiente real (Const. II, não feita ainda por falta de DB local):** seguir `specs/007-camada-parceiro/quickstart.md` (US1→US4) em prod/Docker, com Asaas em **sandbox** antes de produção; anexar evidência (screenshots + output do `tsx`).
 - **Commit/push deste incremento:** pendente de confirmação do dono antes de subir pra `main` (repo tem outras mudanças não commitadas de sessões anteriores — ver `git status`).
