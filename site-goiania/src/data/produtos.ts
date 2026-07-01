@@ -51,6 +51,7 @@ export function tagsDoProduto(p: Produto): Set<string> {
 
   // cores
   if (/branco|bianco|urban-branco|lux|avorio|bege|beige|persia/.test(s)) t.add('porcelanato-branco');
+  if (/bege|beige|avorio/.test(s)) t.add('porcelanato-bege');
   if (/grigio|grafite|cinza|nebbia|chicago|chigaco|legado/.test(s)) t.add('porcelanato-cinza');
   if (/\bnero\b|preto/.test(s)) t.add('porcelanato-preto');
 
@@ -69,11 +70,22 @@ export function tagsDoProduto(p: Produto): Set<string> {
     t.add('porcelanato-externo-antiderrapante');
   }
 
+  // ocasião: cozinha = acabamento apto a piso de cozinha (acetinado/natural, não escorrega c/ óleo)
+  if (['acetinado', 'natural'].includes(ac)) {
+    t.add('porcelanato-cozinha');
+    t.add('revestimento-cozinha');
+    t.add('piso-cozinha');
+  }
+
+  // banheiro: piso antiderrapante ou parede marmorizada (conteúdo da página)
+  if (t.has('tipo:antiderrapante') || t.has('tipo:marmorizado')) t.add('revestimento-banheiro');
+
   return t;
 }
 
 // Páginas amplas que listam todos os produtos.
-const BROAD = new Set(['piso-porcelanato', 'porcelanato-goiania', 'loja-porcelanato-goiania']);
+// porcelanato-preco: página de preço — todo o catálogo tem preço real, lista tudo.
+const BROAD = new Set(['piso-porcelanato', 'porcelanato-goiania', 'loja-porcelanato-goiania', 'porcelanato-preco']);
 
 export function produtosDaCategoria(slug: string, tipo: string): Produto[] {
   if (BROAD.has(slug)) return produtos;
