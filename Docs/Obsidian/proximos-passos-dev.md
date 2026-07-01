@@ -9,7 +9,7 @@ dono: Jean (dev)
 
 > [!info] Onde estamos (2026-07-01)
 > **MVP no ar e muito além dele.** `roilabs.com.br` (site + blog GEO) e `app.roilabs.com.br` (admin Next 16) em produção desde 2026-06-29. Além da intermediação (candidaturas kanban + mapa de cadeiras), o admin já roda o **e-commerce de porcelanato** (carrinho + checkout Mercado Pago), **centros de custo** editáveis, **painel financeiro** mensal + CSV, **cupons** geríveis sem deploy e a **camada parceiro** (success fee via Asaas) — features 002→007, todas shippadas na `main`.
-> **Nada de código bloqueia.** O que resta é **verificação em prod** de algumas telas + **configurar as chaves do Asaas**. O estratégico do vault segue `decided` — ver [[INDEX]].
+> **Nada de código bloqueia.** O único pendente do MVP é **configurar as chaves do Asaas** (integração externa do success fee) — as verificações em prod das telas 005/006 já foram feitas. Backlog de dev novo (pós-MVP) na [[#🆕 Backlog de dev (novo — pós-MVP)|seção abaixo]]. O estratégico do vault segue `decided` — ver [[INDEX]].
 
 > [!warning] O que NÃO é seu
 > Fechar 1º fornecedor (Gate 3), piso de take rate em R$, prospecção de players = **Maria Eduarda / campo**. Não entram aqui.
@@ -68,13 +68,24 @@ dono: Jean (dev)
 
 ### 🔎 Pendências desta fase (verificação/ops em prod — não é código)
 
-- [ ] **005 — verificar no browser** `/admin` e `/admin/financeiro` em prod/Docker; conferir métricas vs. banco e baixar o CSV no Excel (T012).
-- [ ] **006 — verificar CRUD no browser**: criar `OBRA15` em `/admin/cupons`, editar/desativar/apagar, e um **checkout real com cupom** gravando `Pedido.cupomCodigo/desconto` (T015; a rota já foi confirmada por curl, falta a via navegador/checkout).
+- [x] **005 — verificar no browser** `/admin` e `/admin/financeiro` em prod/Docker; conferir métricas vs. banco e baixar o CSV no Excel (T012).
+- [x] **006 — verificar CRUD no browser**: criar `OBRA15` em `/admin/cupons`, editar/desativar/apagar, e um **checkout real com cupom** gravando `Pedido.cupomCodigo/desconto` (T015; a rota já foi confirmada por curl, falta a via navegador/checkout).
 - [ ] **007 — configurar o Asaas**: chaves + webhook (integração externa, separada do Mercado Pago do checkout) para a cobrança do success fee valer em prod.
 
 ## ✅ Resolvido — Logo (Task 2)
 
 - [x] **Task 2 — Logo.** ✔ Verificado (2026-06-29): variante **clara** (off-white) com chevron laranja hi-vis aplicada no header (`Header.astro` → `roilabs-logo.png`), **visível no header escuro** e alinhada à paleta. Assets otimizados e presentes: logo 173KB, icon 93KB, og-image 31KB, favicon + apple-touch-icon ligados no `Base.astro`. Os 2 gotchas (preta some no escuro / grunge vs. clean) **resolvidos**.
+
+## 🆕 Backlog de dev (novo — pós-MVP)
+
+> [!note] Ranqueado por alavanca de negócio. Nada aqui bloqueia o que está no ar; é o que faz o modelo escalar. Verificado contra o código em 2026-07-01 (não são tarefas já feitas).
+
+- [x] **⭐ Motor de páginas de alta intenção (pSEO) — FEITO (spec 008, no site-goiania).** A malha vive em `goiania.roilabs.com.br/porcelanato/{slug}` (é onde ela pertence — site do produto): 31+8 páginas validadas por volume (DataForSEO, piso ≥ 200), gate `check-matrix`, `llms.txt.ts` e `sitemap.xml.ts` automáticos. **Deploy + verificação em prod confirmados 2026-07-01** (T017). O institucional segue só `/`, `/blog`, `/obrigado` — por design.
+- [x] **Medição de conversão — FEITO 2026-07-01.** Eventos himetrica (`window.himetrica.track`) nos dois sites: `whatsapp_click` (listener delegado em qualquer `wa.me`, no `Base.astro` do site-goiania — que **não tinha nem o tracker**, adicionado), `checkout_iniciado` (submit do carrinho; pode perder por navegação — o evento autoritativo é o do /obrigado), `pedido_convertido` (com status MP) / `lead_convertido` no `/obrigado` do site-goiania e `candidatura_convertida` no `/obrigado` do institucional (dedupe por sessionStorage). ⚠️ falta **redeploy dos 2 sites** pra valer em prod + conferir os eventos no painel himetrica.
+- [ ] **Auto-gerar `llms.txt` da content collection — só no `/site` institucional.** (O site-goiania já tem `llms.txt.ts` desde a 008.) O institucional é manual e **já dessincronizou** (corrigido na mão em 2026-07-01, commit `31b23ba`). Gerar como o `sitemap.xml.ts` faz: uma rota que lê a coleção `blog`. Elimina o toil pra sempre.
+- [ ] **`sameAs` + perfis no Organization schema.** O `@graph` do `Base.astro` não tem `sameAs` (LinkedIn/Instagram da ROI Labs) — sinal de entidade que reforça citação de IA e E-E-A-T. Mesma pendência que o SplitJud carrega. Precisa das URLs reais dos perfis.
+- [ ] **Schema da home + breadcrumbs.** `Base.astro` entrega `Organization` + `WebSite`; a home (`index.astro`) não injeta nós próprios. Adicionar `Service`/`Offer` (o modelo Growth Partner) na home e `BreadcrumbList` no blog. Polimento de GEO, baixo esforço.
+- [ ] **OG image por artigo.** Todos os posts compartilham um único `og-image.jpg`. Gerar OG dinâmico por título (`@vercel/og` ou Satori no build) melhora o CTR em compartilhamento. Nice-to-have.
 
 ## 👤 Não-dev (Maria Eduarda / campo)
 

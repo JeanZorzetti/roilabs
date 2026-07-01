@@ -416,6 +416,8 @@ const action = `${appUrl}/api/pedidos`;
     const cart = getCart();
     if (cart.length === 0) { e.preventDefault(); render(); return; }
     if (!form.checkValidity()) { e.preventDefault(); form.reportValidity(); return; }
+    // ponytail: fired during navigation, may occasionally drop; /obrigado events are the authoritative count.
+    (window as any).himetrica?.track('checkout_iniciado', { itens: cart.length });
     // Populate hidden fields the server reads; native POST then follows the 303 to Mercado Pago.
     (form.elements.namedItem('itens') as HTMLInputElement).value = JSON.stringify(cart);
     (form.elements.namedItem('origin') as HTMLInputElement).value = location.origin;

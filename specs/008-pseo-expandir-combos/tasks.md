@@ -88,7 +88,7 @@ description: "Task list — Expandir a malha pSEO de porcelanato (combos validad
 ## Phase 6: Polish & Cross-Cutting Concerns
 
 - [x] T016 [P] Atualizar `site-goiania/src/data/README.md` (guia de autoria) com o piso ≥ 200 e a regra de honestidade de atributos.
-- [ ] T017 Deploy no EasyPanel (`site-goiania`) + **verificação REAL no navegador em prod** (quickstart §5): páginas novas sem JS, JSON-LD válido no Rich Results Test, sitemap, llms.txt, CTA WhatsApp e form 303 → lead. (Const. II — é a verificação que conta)
+- [x] T017 Deploy no EasyPanel (`site-goiania`) + **verificação REAL no navegador em prod** (quickstart §5): páginas novas sem JS, JSON-LD válido no Rich Results Test, sitemap, llms.txt, CTA WhatsApp e form 303 → lead. (Const. II — é a verificação que conta) ✅ Confirmado pelo Jean 2026-07-01.
 - [x] T018 `handoff.md` co-localizado (feito / decisões / próximos / pendências / gotchas) + commit + push (Const. V).
 
 ---

@@ -92,4 +92,16 @@ import Footer from '../components/Footer.astro';
       localStorage.removeItem('roi_cart_v1');
     }
   }
+
+  // Conversion event, deduped so a refresh doesn't double-count. 'load' guarantees tracker.js ran.
+  const convKey = `hm_conv_${pedido || 'lead'}`;
+  if (!sessionStorage.getItem(convKey)) {
+    sessionStorage.setItem(convKey, '1');
+    window.addEventListener('load', () => {
+      (window as any).himetrica?.track(
+        pedido ? 'pedido_convertido' : 'lead_convertido',
+        pedido ? { status: status || 'pending' } : { page: '/obrigado' },
+      );
+    });
+  }
 </script>

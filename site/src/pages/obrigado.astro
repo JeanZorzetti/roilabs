@@ -18,3 +18,13 @@ import Base from '../layouts/Base.astro';
     </div>
   </main>
 </Base>
+
+<script is:inline>
+  // Conversion: reaching /obrigado only happens after the form 303 — race-free vs. tracking the submit.
+  if (!sessionStorage.getItem('hm_conv_candidatura')) {
+    sessionStorage.setItem('hm_conv_candidatura', '1');
+    window.addEventListener('load', function () {
+      if (window.himetrica) window.himetrica.track('candidatura_convertida', { page: '/obrigado' });
+    });
+  }
+</script>
