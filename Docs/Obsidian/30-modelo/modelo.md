@@ -35,6 +35,7 @@ depends_on:
 
 - ✅ **Mensalidade SaaS (Fase 2): fórmula, não número fixo.** Entra só no gatilho dos 30-40% do faturamento do parceiro, ancorada em ~1 venda média/mês (precificar pela dor). O número real sai dos dados do polo 1.
 - ✅ **Piso de take rate = receita absoluta por venda, não %.** Aceita ticket de margem % menor se R$/venda ≥ piso (porcelanato de alto valor a 20% ainda gera receita absoluta que financia a infra). Definir o piso em R$ após ver os tickets reais de revestimentos.
+- ✅ **Success fee: mecânica decidida e implementada (2026-07-01, feature 007 — no ar).** Cada `Parceiro` tem um **% negociado** (guardado no cadastro); a comissão incide sobre o **valor de produto do pedido pago** (total − frete, **nunca sobre o frete** — espelha a regra do cupom), agregada em **fatura mensal por parceiro** e cobrada automaticamente via **Asaas** (boleto/PIX, separado do Mercado Pago do checkout). **Tática de aquisição — "moeda de troca":** a ROI repassa reservas pagas do e-commerce a lojas candidatas para provar valor; antes do repasse faz uma **sondagem** (a loja topa pagar a comissão + firmar?) — quem recusa é *riscado*; só o *primeiro* repasse a quem firmará mas ainda não é parceiro formal pode ser marcado isento. Camada **aditiva**: coexiste com os centros de custo (operação própria da ROI), não os substitui. Detalhe e pendências de config em [[proximos-passos-dev]].
 
 ## Notas
 

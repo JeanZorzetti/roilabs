@@ -1,15 +1,15 @@
 ---
 tipo: checklist
 status: vivo
-data: 2026-06-29
+data: 2026-07-01
 dono: Jean (dev)
 ---
 
 # ✅ Próximos passos — DEV (Jean)
 
-> [!info] Onde estamos
-> O **código está pronto e na `main`**: `/site` (Astro), `/app` (admin Next 16 — candidaturas kanban + mapa de cadeiras) e o blog GEO. Working tree limpo, tudo pushado.
-> **Nada de código novo bloqueia.** O que falta é colocar no ar (ops) + 2 decisões de arquitetura. O estratégico do vault está todo `decided` — ver [[INDEX]].
+> [!info] Onde estamos (2026-07-01)
+> **MVP no ar e muito além dele.** `roilabs.com.br` (site + blog GEO) e `app.roilabs.com.br` (admin Next 16) em produção desde 2026-06-29. Além da intermediação (candidaturas kanban + mapa de cadeiras), o admin já roda o **e-commerce de porcelanato** (carrinho + checkout Mercado Pago), **centros de custo** editáveis, **painel financeiro** mensal + CSV, **cupons** geríveis sem deploy e a **camada parceiro** (success fee via Asaas) — features 002→007, todas shippadas na `main`.
+> **Nada de código bloqueia.** O que resta é **verificação em prod** de algumas telas + **configurar as chaves do Asaas**. O estratégico do vault segue `decided` — ver [[INDEX]].
 
 > [!warning] O que NÃO é seu
 > Fechar 1º fornecedor (Gate 3), piso de take rate em R$, prospecção de players = **Maria Eduarda / campo**. Não entram aqui.
@@ -54,6 +54,23 @@ dono: Jean (dev)
 - [x] **Rotacionar a senha do Postgres exposta** (`PAzo18**` em `roilabs_db`). Depois atualizar `DATABASE_URL` nas env vars da EasyPanel. (ver memória `secrets_to_rotate`)
 
 ---
+
+## 🏗️ Fase 5 — Admin pós-MVP (SHIPPED, `main`)
+
+> [!success] Tudo abaixo já está na `main` e no ar
+> O admin cresceu muito além do MVP de intermediação. Ordem cronológica dos commits; todos deployados. As caixas marcam **código shippado**; as pendências abaixo são de **verificação/config em prod**, não de código.
+
+- [x] **002/003 — E-commerce de porcelanato.** Carrinho (edição inline, simulador m², frete + prazo, cupom, link de compartilhar) + checkout Mercado Pago + admin de pedidos. Site `goiania.roilabs.com.br`.
+- [x] **004 — Centros de custo editáveis.** Dois centros (Intermediação × White Label), parâmetros editáveis e auditáveis, apagar linha + recálculo na hora. Design system LIGHT (WCAG AA). `lib/centros-custo.ts` é a autoridade.
+- [x] **005 — Painel + Financeiro.** `/admin` virou cockpit (candidaturas/leads 24h+7d, GMV do mês, fila de fulfillment, cadeiras por polo, conversão lead→pedido). `/admin/financeiro`: agregação mensal por modalidade com snapshot congelado + export CSV (`/api/financeiro/csv`). Candidaturas moveram para `/admin/candidaturas`.
+- [x] **006 — Cupons no admin.** `CUPONS` hard-coded → tabela `cupons` + CRUD em `/admin/cupons` (criar/editar/expirar sem deploy). `validarCupom` async lendo do DB, servidor segue autoridade única (código nunca vai pro front). Guard 100% no checkout. **Migração aplicada em prod** (`OBRA10` semeado; rota `/api/cupom/validar` confirmada via curl).
+- [x] **007 — Camada Parceiro (success fee).** `Parceiro` (sondagem|ativa|riscada|pausada + % negociado) ↔ `NegócioOriginado` (pedido pago repassado, total − frete) ↔ `Fatura` mensal cobrada via **Asaas**. Tática "moeda de troca" + sondagem antes do repasse. Schema **aplicado no Postgres real** (T019). Reflete a mecânica agora registrada em [[modelo]].
+
+### 🔎 Pendências desta fase (verificação/ops em prod — não é código)
+
+- [ ] **005 — verificar no browser** `/admin` e `/admin/financeiro` em prod/Docker; conferir métricas vs. banco e baixar o CSV no Excel (T012).
+- [ ] **006 — verificar CRUD no browser**: criar `OBRA15` em `/admin/cupons`, editar/desativar/apagar, e um **checkout real com cupom** gravando `Pedido.cupomCodigo/desconto` (T015; a rota já foi confirmada por curl, falta a via navegador/checkout).
+- [ ] **007 — configurar o Asaas**: chaves + webhook (integração externa, separada do Mercado Pago do checkout) para a cobrança do success fee valer em prod.
 
 ## ✅ Resolvido — Logo (Task 2)
 
