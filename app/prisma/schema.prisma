@@ -123,6 +123,24 @@ model SkuConfig {
   @@map("sku_config")
 }
 
+// Cupons de desconto — migra o knob CUPONS de lib/cupons.ts. Desconto SEMPRE sobre o
+// subtotal do produto (nunca frete); servidor é a autoridade única (validado no display
+// E re-validado no checkout).
+model Cupom {
+  id             String    @id @default(cuid())
+  codigo         String    @unique // armazenado em MAIÚSCULAS
+  tipo           String // 'percentual' | 'fixo'
+  valor          Decimal   @db.Decimal(10, 2) // percentual 0–100 · fixo BRL
+  validadeInicio DateTime? @map("validade_inicio") @db.Date
+  validadeFim    DateTime? @map("validade_fim") @db.Date
+  minimo         Decimal?  @db.Decimal(10, 2)
+  ativo          Boolean   @default(true)
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+
+  @@map("cupons")
+}
+
 // Mapa de cadeiras — espelha o seats[] hard-coded do site (niche/status/open).
 model Cadeira {
   id        String   @id @default(cuid())

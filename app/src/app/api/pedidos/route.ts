@@ -66,7 +66,12 @@ export async function POST(req: NextRequest) {
   // Coupon: re-validate on the server (authoritative, FR-014). A coupon that expired
   // between cart and checkout is charged WITHOUT discount; the customer is warned.
   const cupomInput = cap(form.get('cupom'), 40);
-  const r = cupomInput ? validarCupom(cupomInput, totalProduto) : null;
+  const rRaw = cupomInput ? await validarCupom(cupomInput, totalProduto) : null;
+  // Guard (D3): um cupom que zeraria o produto (desconto >= subtotal) é tratado como
+  // inválido no checkout — reusa o caminho de "cupom rejeitado" (cobra sem desconto +
+  // aviso) em vez de gerar uma linha de preço 0 no Mercado Pago.
+  // ponytail: sem suporte a pedido 100% grátis via MP; upgrade = fluxo dedicado se precisar.
+  const r = rRaw && rRaw.ok && rRaw.desconto >= totalProduto ? null : rRaw;
   const desconto = r && r.ok ? r.desconto : 0;
   const cupomCodigo = r && r.ok ? r.codigo : null;
   const avisoCupom = !!cupomInput && !(r && r.ok); // sent but rejected at checkout
@@ -95,8 +100,8 @@ export async function POST(req: NextRequest) {
   try {
     const appOrigin = req.nextUrl.origin; // app.roilabs.com.br
     // Scale item unitPrice so the MP total (Σ items + frete) == server total (D7): MP has no
-    // negative line. ponytail: assumes desconto < subtotal (current knob); a 100% coupon would
-    // make 0-price items — add a guard if such a coupon is ever added.
+    // negative line. desconto < totalProduto sempre aqui — o guard acima já rejeita cupons
+    // que zerariam o produto, então alvoProduto nunca é 0.
     const alvoProduto = money(Math.max(0, totalProduto - desconto));
     let acc = 0;
     const mpItems = itens.map((i, idx) => {

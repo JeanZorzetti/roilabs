@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
   }
   if (subtotal <= 0) return NextResponse.json({ ok: false, motivo: 'vazio' }, { headers: CORS });
 
-  const r = validarCupom(codigo, subtotal);
+  const r = await validarCupom(codigo, subtotal);
   if (!r.ok) return NextResponse.json({ ok: false, motivo: r.motivo }, { headers: CORS });
 
   return NextResponse.json(

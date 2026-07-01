@@ -39,6 +39,18 @@ async function main() {
   } else {
     console.log('global cost-center params already seeded — skipped');
   }
+
+  // Seed idempotente do OBRA10 (continuidade — FR-010): mesmos parâmetros do knob hard-coded
+  // que este cupom substitui (percentual 10, mínimo 500, ativo).
+  const existingCupom = await prisma.cupom.findFirst({ where: { codigo: 'OBRA10' } });
+  if (!existingCupom) {
+    await prisma.cupom.create({
+      data: { codigo: 'OBRA10', tipo: 'percentual', valor: 10, minimo: 500, ativo: true },
+    });
+    console.log('seeded OBRA10 coupon');
+  } else {
+    console.log('OBRA10 coupon already seeded — skipped');
+  }
 }
 
 main()

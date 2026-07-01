@@ -147,11 +147,14 @@ a { color: inherit; }
 
 .cc-fields { display: flex; gap: 0.85rem; flex-wrap: wrap; align-items: flex-end; }
 .cc-field { display: flex; flex-direction: column; gap: 0.25rem; font-size: 12px; font-weight: 700; color: var(--l-muted); }
-.cc-field input {
+.cc-field input, .cc-field select {
   font: inherit; font-family: var(--font-mono), monospace; font-weight: 600; width: 92px;
   padding: 0.4rem 0.55rem; border-radius: 7px; border: 1px solid var(--l-line); background: #fff; color: var(--l-text);
 }
-.cc-field input:focus { border-color: var(--hivis); }
+.cc-field input:focus, .cc-field select:focus { border-color: var(--hivis); }
+.cc-field input[type="date"] { width: 130px; }
+.cc-field--check { flex-direction: row; align-items: center; gap: 0.4rem; }
+.cc-field--check input { width: auto; }
 
 .cc-presets { display: flex; gap: 0.4rem; align-items: center; flex-wrap: wrap; }
 .cc-preset {
