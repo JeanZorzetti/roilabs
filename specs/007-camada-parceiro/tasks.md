@@ -84,7 +84,7 @@ _(sem setup dedicado — roda sobre a app Next/Prisma existente)_
 - [ ] T019 **MANUAL no host**: `prisma db push` (3 tabelas). Runner standalone não aplica schema.
 - [ ] T020 **Env prod (Const. I)**: setar `ASAAS_*` na EasyPanel + apontar webhook Asaas → `/api/parceiros/webhook`; validar em **sandbox** antes de prod.
 - [ ] T021 Verificação em ambiente real por [quickstart.md](./quickstart.md) (US1–US4) com evidência.
-- [ ] T022 `handoff.md` co-localizado + commit + push por incremento (Const. V).
+- [X] T022 `handoff.md` co-localizado + commit + push por incremento (Const. V).
 
 ---
 
