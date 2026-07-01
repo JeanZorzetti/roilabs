@@ -6,7 +6,7 @@
 - Sem mensalidade e sem risco de tecnologia: a ROI Labs banca a infraestrutura e o tráfego.
 - Remuneração 100% variável, atrelada à venda (pago pelo sucesso).
 - Exclusividade: uma cadeira por nicho, por polo, renovável por desempenho (SLA de estoque e despacho).
-- Canal primário: centenas de páginas de alta intenção (produto × característica × ocasião × bairro), não mídia paga.
+- Canal primário: páginas de alta intenção (produto × característica × ocasião × intenção local), validadas por volume real de busca, não mídia paga.
 
 ## Páginas principais
 - [Home e candidatura](https://roilabs.com.br/): o modelo, o mapa de cadeiras de Goiânia e o formulário de candidatura do fornecedor.

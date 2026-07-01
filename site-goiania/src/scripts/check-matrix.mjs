@@ -27,11 +27,19 @@ for (const s of slugs) {
   if (seen.has(s)) { console.error(`[ERRO] slug de categoria duplicado: "${s}"`); errors++; }
   seen.add(s);
 }
+const FLOOR = 200; // piso de seleção de combos novos (spec 008); < FLOOR só avisa, não quebra
+const lowVol = [];
 for (let i = 0; i < Math.min(n, volumes.length); i++) {
   if (!volumes[i] || volumes[i] <= 0) {
     console.error(`[ERRO] volume <= 0 em slug[${i}]="${slugs[i]}" (volume=${volumes[i]})`);
     errors++;
+  } else if (volumes[i] < FLOOR) {
+    lowVol.push(`${slugs[i]} (${volumes[i]})`);
   }
+}
+if (lowVol.length) {
+  console.warn(`[AVISO] ${lowVol.length} página(s) com volume < ${FLOOR}/mês (grandfathered; combos NOVOS devem nascer >= ${FLOOR}):`);
+  console.warn('  ' + lowVol.join(', '));
 }
 if (titulos.length !== n) { console.error(`[ERRO] titulos(${titulos.length}) !== slugs(${n})`); errors++; }
 if (dimAll.length !== n)  { console.error(`[ERRO] atributos/dimensao(${dimAll.length}) !== slugs(${n})`); errors++; }

@@ -11,7 +11,7 @@ O template, o sitemap e os links de relacionados são gerados automaticamente.
 {
   slug: string,        // URL: /porcelanato/{slug}. Único. Kebab-case.
   termoAlvo: string,   // Keyword principal (ex: "porcelanato amadeirado")
-  volume: number,      // Buscas/mês local estimadas. DEVE ser > 0.
+  volume: number,      // Buscas/mês REAIS (Goiás, DataForSEO). Gate: > 0. Combos NOVOS: >= 200.
   tipo: string,        // ex: amadeirado, marmorizado, antiderrapante, genérico
   titulo: string,      // H1 e <title>
   intro: string,       // Parágrafo de abertura local (mencione Goiânia)
@@ -39,8 +39,16 @@ deixe `null` se a fonte não informar.
 
 ## De onde vêm os volumes
 
-Fonte: snapshot do Keyword Planner em `Docs/Obsidian/10-mercado/mercado.md`.  
-Nunca adicione uma entrada com `volume: 0` — o build irá falhar.
+**Fonte única: OpenSEO (self-hosted `open-seo/`, dados DataForSEO), base geográfica = Goiás estado.**
+Minere o volume real do `termoAlvo` antes de criar a página — nunca estime à mão (spec 008).
+
+- **Gate (build):** `volume > 0`, senão o build quebra. Nunca adicione `volume: 0`.
+- **Regra de seleção (combos NOVOS):** só crie a página se `volume >= 200`. Abaixo disso o
+  `check-matrix` emite um **warning** (não quebra) — são páginas grandfathered de baixa demanda,
+  candidatas a poda futura.
+
+Como minerar (OpenSEO precisa estar no ar em `localhost:3001`): consulte o volume do termo na
+base "Goiás estado" (DataForSEO). Se o OpenSEO estiver fora, **não estime** — suba-o antes.
 
 ## Self-check
 

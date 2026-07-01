@@ -24,7 +24,7 @@ export const pages: PorcelanatoPage[] = [
   {
     slug: 'porcelanato-amadeirado',
     termoAlvo: 'porcelanato amadeirado',
-    volume: 1900,
+    volume: 720,  // real Goiás (DataForSEO 2026-07-01)
     tipo: 'amadeirado',
     titulo: 'Porcelanato Amadeirado em Goiânia',
     intro:
@@ -71,7 +71,7 @@ export const pages: PorcelanatoPage[] = [
   {
     slug: 'porcelanato-marmorizado',
     termoAlvo: 'porcelanato marmorizado',
-    volume: 1600,
+    volume: 590,  // real Goiás (DataForSEO 2026-07-01)
     tipo: 'marmorizado',
     titulo: 'Porcelanato Marmorizado em Goiânia',
     intro:
@@ -114,7 +114,7 @@ export const pages: PorcelanatoPage[] = [
   {
     slug: 'porcelanato-acetinado',
     termoAlvo: 'porcelanato acetinado',
-    volume: 1200,
+    volume: 1600,  // real Goiás (DataForSEO 2026-07-01)
     tipo: 'acetinado',
     titulo: 'Porcelanato Acetinado em Goiânia',
     intro:
@@ -152,7 +152,7 @@ export const pages: PorcelanatoPage[] = [
   {
     slug: 'porcelanato-polido',
     termoAlvo: 'porcelanato polido',
-    volume: 1100,
+    volume: 590,  // real Goiás (DataForSEO 2026-07-01)
     tipo: 'polido',
     titulo: 'Porcelanato Polido em Goiânia',
     intro:
@@ -186,7 +186,7 @@ export const pages: PorcelanatoPage[] = [
   {
     slug: 'piso-porcelanato',
     termoAlvo: 'piso porcelanato',
-    volume: 2400,
+    volume: 880,  // real Goiás (DataForSEO 2026-07-01)
     tipo: 'genérico',
     titulo: 'Piso de Porcelanato em Goiânia — Como Escolher',
     intro:
@@ -231,7 +231,7 @@ export const pages: PorcelanatoPage[] = [
   {
     slug: 'porcelanato-area-externa',
     termoAlvo: 'porcelanato para área externa',
-    volume: 880,
+    volume: 140,  // real Goiás (DataForSEO 2026-07-01)
     tipo: 'antiderrapante',
     ocasiao: 'área externa',
     titulo: 'Porcelanato para Área Externa em Goiânia',
@@ -271,7 +271,7 @@ export const pages: PorcelanatoPage[] = [
   {
     slug: 'porcelanato-cozinha',
     termoAlvo: 'porcelanato para cozinha',
-    volume: 720,
+    volume: 210,  // real Goiás (DataForSEO 2026-07-01)
     tipo: 'genérico',
     ocasiao: 'cozinha',
     titulo: 'Porcelanato para Cozinha em Goiânia',
@@ -311,7 +311,7 @@ export const pages: PorcelanatoPage[] = [
   {
     slug: 'porcelanato-banheiro',
     termoAlvo: 'porcelanato para banheiro',
-    volume: 660,
+    volume: 390,  // real Goiás (DataForSEO 2026-07-01)
     tipo: 'antiderrapante',
     ocasiao: 'banheiro',
     titulo: 'Porcelanato para Banheiro em Goiânia',
@@ -351,7 +351,7 @@ export const pages: PorcelanatoPage[] = [
   {
     slug: 'porcelanato-fachada',
     termoAlvo: 'porcelanato para fachada',
-    volume: 540,
+    volume: 10,  // real Goiás (DataForSEO 2026-07-01)
     tipo: 'fachada',
     ocasiao: 'fachada',
     titulo: 'Porcelanato para Fachada em Goiânia',
@@ -390,7 +390,7 @@ export const pages: PorcelanatoPage[] = [
   {
     slug: 'porcelanato-piscina',
     termoAlvo: 'porcelanato para piscina',
-    volume: 390,
+    volume: 110,  // real Goiás (DataForSEO 2026-07-01)
     tipo: 'antiderrapante',
     ocasiao: 'piscina',
     titulo: 'Porcelanato para Piscina em Goiânia',
@@ -431,7 +431,7 @@ export const pages: PorcelanatoPage[] = [
   {
     slug: 'porcelanato-amadeirado-area-externa',
     termoAlvo: 'porcelanato amadeirado para área externa',
-    volume: 480,
+    volume: 10,  // real Goiás (DataForSEO 2026-07-01)
     tipo: 'amadeirado',
     ocasiao: 'área externa',
     titulo: 'Porcelanato Amadeirado para Área Externa em Goiânia',
@@ -471,7 +471,7 @@ export const pages: PorcelanatoPage[] = [
   {
     slug: 'porcelanato-amadeirado-cozinha',
     termoAlvo: 'porcelanato amadeirado para cozinha',
-    volume: 320,
+    volume: 10,  // real Goiás (DataForSEO 2026-07-01)
     tipo: 'amadeirado',
     ocasiao: 'cozinha',
     titulo: 'Porcelanato Amadeirado para Cozinha em Goiânia',
@@ -510,7 +510,7 @@ export const pages: PorcelanatoPage[] = [
   {
     slug: 'porcelanato-amadeirado-varanda',
     termoAlvo: 'porcelanato amadeirado varanda',
-    volume: 290,
+    volume: 10,  // real Goiás (DataForSEO 2026-07-01)
     tipo: 'amadeirado',
     ocasiao: 'varanda',
     titulo: 'Porcelanato Amadeirado para Varanda em Goiânia',
@@ -545,7 +545,7 @@ export const pages: PorcelanatoPage[] = [
   {
     slug: 'porcelanato-amadeirado-sala',
     termoAlvo: 'porcelanato amadeirado sala',
-    volume: 260,
+    volume: 10,  // real Goiás (DataForSEO 2026-07-01)
     tipo: 'amadeirado',
     ocasiao: 'sala',
     titulo: 'Porcelanato Amadeirado para Sala em Goiânia',
@@ -580,7 +580,7 @@ export const pages: PorcelanatoPage[] = [
   {
     slug: 'porcelanato-marmorizado-sala',
     termoAlvo: 'porcelanato marmorizado para sala',
-    volume: 310,
+    volume: 10,  // real Goiás (DataForSEO 2026-07-01)
     tipo: 'marmorizado',
     ocasiao: 'sala',
     titulo: 'Porcelanato Marmorizado para Sala em Goiânia',
@@ -615,7 +615,7 @@ export const pages: PorcelanatoPage[] = [
   {
     slug: 'porcelanato-marmorizado-banheiro',
     termoAlvo: 'porcelanato marmorizado banheiro',
-    volume: 280,
+    volume: 10,  // real Goiás (DataForSEO 2026-07-01)
     tipo: 'marmorizado',
     ocasiao: 'banheiro',
     titulo: 'Porcelanato Marmorizado para Banheiro em Goiânia',
@@ -650,7 +650,7 @@ export const pages: PorcelanatoPage[] = [
   {
     slug: 'porcelanato-acetinado-banheiro',
     termoAlvo: 'porcelanato acetinado banheiro',
-    volume: 240,
+    volume: 40,  // real Goiás (DataForSEO 2026-07-01)
     tipo: 'acetinado',
     ocasiao: 'banheiro',
     titulo: 'Porcelanato Acetinado para Banheiro em Goiânia',
@@ -684,7 +684,7 @@ export const pages: PorcelanatoPage[] = [
   {
     slug: 'porcelanato-polido-sala',
     termoAlvo: 'porcelanato polido sala',
-    volume: 220,
+    volume: 10,  // real Goiás (DataForSEO 2026-07-01)
     tipo: 'polido',
     ocasiao: 'sala',
     titulo: 'Porcelanato Polido para Sala em Goiânia',
@@ -718,7 +718,7 @@ export const pages: PorcelanatoPage[] = [
   {
     slug: 'porcelanato-marmorizado-fachada',
     termoAlvo: 'porcelanato marmorizado fachada',
-    volume: 190,
+    volume: 10,  // real Goiás (DataForSEO 2026-07-01)
     tipo: 'marmorizado',
     ocasiao: 'fachada',
     titulo: 'Porcelanato Marmorizado para Fachada em Goiânia',
@@ -754,7 +754,7 @@ export const pages: PorcelanatoPage[] = [
   {
     slug: 'porcelanato-60x60',
     termoAlvo: 'porcelanato 60x60',
-    volume: 1800,
+    volume: 140,  // real Goiás (DataForSEO 2026-07-01)
     tipo: 'genérico',
     titulo: 'Porcelanato 60x60 em Goiânia',
     intro:
@@ -787,7 +787,7 @@ export const pages: PorcelanatoPage[] = [
   {
     slug: 'porcelanato-90x90',
     termoAlvo: 'porcelanato 90x90',
-    volume: 1300,
+    volume: 90,  // real Goiás (DataForSEO 2026-07-01)
     tipo: 'genérico',
     titulo: 'Porcelanato 90x90 em Goiânia',
     intro:
@@ -816,7 +816,7 @@ export const pages: PorcelanatoPage[] = [
   {
     slug: 'porcelanato-120x60',
     termoAlvo: 'porcelanato 120x60',
-    volume: 980,
+    volume: 40,  // real Goiás (DataForSEO 2026-07-01)
     tipo: 'genérico',
     titulo: 'Porcelanato 120x60 em Goiânia',
     intro:
@@ -847,7 +847,7 @@ export const pages: PorcelanatoPage[] = [
   {
     slug: 'porcelanato-retificado',
     termoAlvo: 'porcelanato retificado',
-    volume: 870,
+    volume: 260,  // real Goiás (DataForSEO 2026-07-01)
     tipo: 'genérico',
     titulo: 'Porcelanato Retificado em Goiânia',
     intro:
@@ -876,7 +876,7 @@ export const pages: PorcelanatoPage[] = [
   {
     slug: 'porcelanato-antiderrapante',
     termoAlvo: 'porcelanato antiderrapante',
-    volume: 740,
+    volume: 110,  // real Goiás (DataForSEO 2026-07-01)
     tipo: 'antiderrapante',
     titulo: 'Porcelanato Antiderrapante em Goiânia',
     intro:
@@ -917,7 +917,7 @@ export const pages: PorcelanatoPage[] = [
   {
     slug: 'porcelanato-goiania',
     termoAlvo: 'porcelanato goiânia',
-    volume: 1400,
+    volume: 30,  // real Goiás (DataForSEO 2026-07-01)
     tipo: 'genérico',
     titulo: 'Comprar Porcelanato em Goiânia — Guia Completo',
     intro:
@@ -960,7 +960,7 @@ export const pages: PorcelanatoPage[] = [
   {
     slug: 'loja-porcelanato-goiania',
     termoAlvo: 'loja de porcelanato goiânia',
-    volume: 1100,
+    volume: 10,  // ponytail: DataForSEO retorna null (abaixo do piso de medição) em cidade/estado/nacional; 10 = bucket mínimo real, proxy do termo-pai "porcelanato goiânia"  // real Goiás (DataForSEO 2026-07-01)
     tipo: 'genérico',
     titulo: 'Loja de Porcelanato em Goiânia — Encontre o Fornecedor Certo',
     intro:
@@ -1001,7 +1001,7 @@ export const pages: PorcelanatoPage[] = [
   {
     slug: 'porcelanato-branco',
     termoAlvo: 'porcelanato branco',
-    volume: 890,
+    volume: 260,  // real Goiás (DataForSEO 2026-07-01)
     tipo: 'genérico',
     titulo: 'Porcelanato Branco em Goiânia',
     intro:
@@ -1030,7 +1030,7 @@ export const pages: PorcelanatoPage[] = [
   {
     slug: 'porcelanato-cinza',
     termoAlvo: 'porcelanato cinza',
-    volume: 760,
+    volume: 590,  // real Goiás (DataForSEO 2026-07-01)
     tipo: 'genérico',
     titulo: 'Porcelanato Cinza em Goiânia',
     intro:
@@ -1059,7 +1059,7 @@ export const pages: PorcelanatoPage[] = [
   {
     slug: 'porcelanato-preto',
     termoAlvo: 'porcelanato preto',
-    volume: 580,
+    volume: 480,  // real Goiás (DataForSEO 2026-07-01)
     tipo: 'genérico',
     titulo: 'Porcelanato Preto em Goiânia',
     intro:
@@ -1090,7 +1090,7 @@ export const pages: PorcelanatoPage[] = [
   {
     slug: 'porcelanato-externo-antiderrapante',
     termoAlvo: 'porcelanato externo antiderrapante',
-    volume: 430,
+    volume: 30,  // real Goiás (DataForSEO 2026-07-01)
     tipo: 'antiderrapante',
     ocasiao: 'área externa',
     titulo: 'Porcelanato Externo Antiderrapante em Goiânia',
@@ -1120,6 +1120,285 @@ export const pages: PorcelanatoPage[] = [
       'porcelanato-antiderrapante',
       'porcelanato-amadeirado-area-externa',
     ],
+  },
+
+  // ──────── Expansão 008: combos validados por volume real (Goiás, DataForSEO, ≥200/mês) ────────
+  {
+    slug: 'revestimento-cozinha',
+    termoAlvo: 'revestimento cozinha',
+    volume: 720,  // real Goiás (DataForSEO 2026-07-01)
+    tipo: 'genérico',
+    ocasiao: 'cozinha',
+    titulo: 'Revestimento de Cozinha em Goiânia: Porcelanato para Piso e Parede',
+    intro:
+      'O melhor revestimento de cozinha em Goiânia combina porcelanato de baixa absorção no piso — que não mancha com gordura nem molho — e uma parede fácil de limpar atrás do fogão e da pia. Porcelanato retificado 60×60 ou 80×80 no chão e um acabamento acetinado nas paredes entregam higiene, durabilidade e um visual moderno.',
+    comoEscolher: [
+      'No piso, priorize porcelanato retificado com absorção baixa (≤0,5%): não mancha com molho, café ou gordura.',
+      'Acabamento acetinado ou natural no piso evita escorregões perto da pia e do fogão.',
+      'Na parede e no backsplash, um acabamento mais liso facilita remover a gordura respingada.',
+      'Formatos grandes (80×80) reduzem o rejunte — menos linhas para acumular sujeira.',
+      'Tons claros (branco, cinza, bege) ampliam cozinhas compactas.',
+    ],
+    atributos: {
+      acabamento: 'Acetinado / Polido / Natural',
+      dimensao: '60×60 cm / 80×80 cm / 20×120 cm',
+      ambiente: 'Cozinha (piso e parede)',
+    },
+    faq: [
+      {
+        q: 'Qual o melhor revestimento para piso de cozinha?',
+        a: 'Porcelanato retificado de baixa absorção (≤0,5%) com acabamento acetinado ou natural: resiste a manchas de gordura e molho, aguenta o tráfego e não escorrega com respingos de água.',
+      },
+      {
+        q: 'Posso usar o mesmo porcelanato no piso e na parede da cozinha?',
+        a: 'Sim. Usar a mesma peça cria continuidade visual; na parede é possível optar por um acabamento mais brilhante, já que ela não sofre com pisada nem escorregão.',
+      },
+      {
+        q: 'Revestimento de cozinha mancha com gordura?',
+        a: 'Porcelanato esmaltado ou retificado de baixa absorção não mancha se os respingos de óleo e vinho forem limpos no mesmo dia. Evite pedras naturais porosas em cozinhas.',
+      },
+    ],
+    relacionados: ['porcelanato-cozinha', 'piso-cozinha', 'porcelanato-branco'],
+  },
+  {
+    slug: 'revestimento-banheiro',
+    termoAlvo: 'revestimento banheiro',
+    volume: 720,  // real Goiás (DataForSEO 2026-07-01)
+    tipo: 'genérico',
+    ocasiao: 'banheiro',
+    titulo: 'Revestimento de Banheiro em Goiânia: Piso Antiderrapante e Parede Marmorizada',
+    intro:
+      'Em Goiânia, o revestimento de banheiro ideal une piso antiderrapante — para o pé molhado — e paredes em porcelanato marmorizado ou acetinado, fáceis de limpar e resistentes à umidade constante do box. A combinação certa evita escorregões, mofo no rejunte e dá ao banheiro um acabamento de alto padrão.',
+    comoEscolher: [
+      'No piso, escolha porcelanato antiderrapante (classe R10 ou superior) para segurança com o pé molhado.',
+      'Nas paredes, marmorizado ou acetinado transmitem sofisticação e limpam fácil.',
+      'Prefira baixa absorção de água para resistir à umidade constante do box.',
+      'Rejunte epóxi ou de boa qualidade evita mofo e mancha nas juntas.',
+      'Peças grandes na parede reduzem o rejunte e ampliam banheiros pequenos.',
+    ],
+    atributos: {
+      acabamento: 'Acetinado / Marmorizado',
+      antiderrapante: true,
+      dimensao: '60×60 cm / 30×90 cm',
+      ambiente: 'Banheiro (piso antiderrapante + parede)',
+    },
+    faq: [
+      {
+        q: 'Qual revestimento usar no piso do banheiro?',
+        a: 'Porcelanato antiderrapante (R10 ou superior) de baixa absorção. O acabamento natural ou acetinado é mais seguro que o polido em áreas molhadas.',
+      },
+      {
+        q: 'Porcelanato marmorizado pode ir na parede do banheiro?',
+        a: 'Sim, é uma das escolhas mais pedidas: o marmorizado dá aparência de alto padrão, resiste à umidade e limpa com facilidade. Deixe o antiderrapante para o piso.',
+      },
+      {
+        q: 'Como evitar mofo no rejunte do banheiro?',
+        a: 'Use rejunte epóxi ou de boa qualidade, com peças grandes para reduzir juntas, e garanta ventilação. Porcelanato de baixa absorção não retém água como materiais porosos.',
+      },
+    ],
+    relacionados: ['porcelanato-banheiro', 'piso-banheiro', 'porcelanato-antiderrapante'],
+  },
+  {
+    slug: 'piso-banheiro',
+    termoAlvo: 'piso para banheiro',
+    volume: 590,  // real Goiás (DataForSEO 2026-07-01)
+    tipo: 'antiderrapante',
+    ocasiao: 'banheiro',
+    titulo: 'Piso para Banheiro em Goiânia: Porcelanato Antiderrapante que Não Escorrega',
+    intro:
+      'O piso ideal para banheiro em Goiânia é o porcelanato antiderrapante de baixa absorção: seguro com o pé molhado, impermeável à umidade e fácil de higienizar. A classificação de resistência ao escorregamento R10 ou superior é o critério que separa um piso seguro de um perigoso no box e ao redor da pia.',
+    comoEscolher: [
+      'Exija classificação antiderrapante R10+ (ou coeficiente de atrito adequado) para a área molhada.',
+      'Absorção de água ≤0,5% impede infiltração e mancha por umidade.',
+      'Acabamento natural ou acetinado é mais seguro que o polido no piso do banheiro.',
+      'No box, peças com mais recorte e rejunte aumentam a aderência do pé.',
+      'O caimento correto para o ralo é tão importante quanto a peça — planeje o assentamento.',
+    ],
+    atributos: {
+      acabamento: 'Natural / Acetinado',
+      antiderrapante: true,
+      dimensao: '60×60 cm / 80×80 cm',
+      ambiente: 'Banheiro (piso)',
+    },
+    faq: [
+      {
+        q: 'Qual a classe antiderrapante para piso de banheiro?',
+        a: 'R10 é o mínimo recomendado para banheiros residenciais; no box ou em banheiros de idosos, R11 aumenta a segurança. O índice deve estar declarado na ficha técnica do fabricante.',
+      },
+      {
+        q: 'Porcelanato polido pode ir no piso do banheiro?',
+        a: 'Não é recomendado: o polido fica escorregadio quando molhado. Reserve o polido para paredes ou ambientes secos e use natural ou acetinado antiderrapante no piso.',
+      },
+    ],
+    relacionados: ['porcelanato-banheiro', 'revestimento-banheiro', 'porcelanato-antiderrapante'],
+  },
+  {
+    slug: 'piso-antiderrapante',
+    termoAlvo: 'piso antiderrapante',
+    volume: 390,  // real Goiás (DataForSEO 2026-07-01)
+    tipo: 'antiderrapante',
+    titulo: 'Piso Antiderrapante em Goiânia: Porcelanato para Áreas Molhadas',
+    intro:
+      'Piso antiderrapante em Goiânia é indicado para áreas molhadas — banheiro, cozinha, área de serviço, piscina e área externa. O porcelanato antiderrapante tem textura ou tratamento superficial que aumenta a aderência do pé molhado, classificado pelo índice R (de R9 a R13): quanto maior o R, maior a segurança em locais com água.',
+    comoEscolher: [
+      'Escolha o índice R conforme o local: R10 para banheiro e cozinha, R11+ para bordas de piscina e rampas.',
+      'Antiderrapante não significa áspero demais — há acabamentos confortáveis ao pé descalço.',
+      'Baixa absorção evita que a água penetre e favoreça o mofo.',
+      'Para área externa, some antiderrapante com resistência a UV e à variação térmica.',
+      'Confirme na ficha técnica: o índice R deve ser declarado pelo fabricante.',
+    ],
+    atributos: {
+      acabamento: 'Natural / Texturizado',
+      antiderrapante: true,
+      dimensao: '60×60 cm / 90×90 cm',
+      ambiente: 'Áreas molhadas (banheiro, cozinha, piscina, externa)',
+    },
+    faq: [
+      {
+        q: 'O que significa a classe R do piso antiderrapante?',
+        a: 'É o índice de resistência ao escorregamento medido em rampa inclinada. R9 é o mais baixo; R11, R12 e R13 servem para áreas cada vez mais molhadas e escorregadias, como bordas de piscina e cozinhas industriais.',
+      },
+      {
+        q: 'Piso antiderrapante é difícil de limpar?',
+        a: 'A textura acumula um pouco mais de sujeira que o liso, mas o porcelanato antiderrapante moderno limpa normalmente com pano e detergente neutro — o ganho de segurança compensa nas áreas molhadas.',
+      },
+    ],
+    relacionados: ['porcelanato-antiderrapante', 'piso-area-externa', 'porcelanato-piscina'],
+  },
+  {
+    slug: 'porcelanato-preco',
+    termoAlvo: 'porcelanato preço',
+    volume: 260,  // real Goiás (DataForSEO 2026-07-01)
+    tipo: 'genérico',
+    titulo: 'Preço de Porcelanato em Goiânia: O que Define Quanto Custa o m²',
+    intro:
+      'O preço do porcelanato em Goiânia varia conforme tipo, formato, acabamento, resistência técnica e marca — de linhas de entrada a produtos premium como marmorizados e grandes formatos. O custo da obra também inclui argamassa, rejunte, recorte e mão de obra. Para o valor fechado, peça um orçamento com a metragem real e aproveite pontas de estoque com pronta-entrega no polo de Goiânia.',
+    comoEscolher: [
+      'Formato: peças grandes (80×80, 90×90) e retificadas custam mais que o 60×60 comum.',
+      'Acabamento: marmorizado e polido tendem a ser mais caros que natural e acetinado.',
+      'Classe técnica: maior resistência à abrasão (uso pesado) eleva o preço.',
+      'Marca e lote: promoções e pontas de estoque reduzem bastante o m².',
+      'Some 10% de sobra para recortes e compare o custo total, não só o m².',
+    ],
+    atributos: {
+      acabamento: 'Todos os acabamentos',
+      dimensao: '60×60 cm / 80×80 cm',
+      ambiente: 'Referência de investimento',
+    },
+    faq: [
+      {
+        q: 'Quanto custa o m² de porcelanato em Goiânia?',
+        a: 'Depende do tipo, formato, acabamento e marca — a faixa vai de linhas econômicas a premium. Peça um orçamento com a metragem da sua obra para o valor exato; pontas de estoque e promoções reduzem bastante o m².',
+      },
+      {
+        q: 'O que encarece o porcelanato?',
+        a: 'Formato grande, peça retificada, acabamento marmorizado ou polido, alta resistência à abrasão e marca importada são os fatores que mais elevam o preço.',
+      },
+      {
+        q: 'Vale a pena comprar o porcelanato mais barato?',
+        a: 'Para ambientes de baixo tráfego, sim. Para áreas de uso intenso (cozinha, corredor, comércio), priorize a resistência à abrasão — economizar na classe técnica sai caro na durabilidade.',
+      },
+    ],
+    relacionados: ['piso-porcelanato', 'porcelanato-amadeirado', 'loja-porcelanato-goiania'],
+  },
+  {
+    slug: 'porcelanato-bege',
+    termoAlvo: 'porcelanato bege',
+    volume: 210,  // real Goiás (DataForSEO 2026-07-01)
+    tipo: 'genérico',
+    titulo: 'Porcelanato Bege em Goiânia: Tons Neutros que Ampliam o Ambiente',
+    intro:
+      'O porcelanato bege é a escolha de quem quer um ambiente claro, quente e atemporal em Goiânia. Tons areia, cru e off-white ampliam visualmente salas e quartos, combinam com qualquer paleta de móveis e disfarçam poeira melhor que o branco puro — disponíveis em acabamentos acetinado, marmorizado e amadeirado.',
+    comoEscolher: [
+      'Para salas e quartos, o bege acetinado ou marmorizado traz aconchego sem escurecer.',
+      'Formatos grandes (80×80, 90×90) valorizam o tom neutro e reduzem o rejunte.',
+      'Escolha o rejunte na mesma tonalidade para um piso de aparência contínua.',
+      'Em áreas de passagem, prefira acabamento que disfarce marcas de pisada.',
+      'O bege casa com madeira, preto e verde — versátil para uma reforma futura.',
+    ],
+    atributos: {
+      acabamento: 'Acetinado / Marmorizado',
+      dimensao: '60×60 cm / 80×80 cm / 90×90 cm',
+      ambiente: 'Sala, quarto, ambientes integrados',
+    },
+    faq: [
+      {
+        q: 'Porcelanato bege amarela ou desbota com o tempo?',
+        a: 'Porcelanato de qualidade não desbota: a cor é vitrificada na peça. O bege apenas parece "amarelar" quando mal iluminado — escolha o tom sob a luz real do ambiente antes de fechar.',
+      },
+      {
+        q: 'Bege ou branco: qual escolher para a sala?',
+        a: 'O branco amplia mais e é mais clean, mas mostra toda poeira e pisada. O bege mantém a sensação de amplitude com mais aconchego e disfarça melhor o dia a dia.',
+      },
+    ],
+    relacionados: ['porcelanato-branco', 'porcelanato-marmorizado', 'porcelanato-acetinado'],
+  },
+  {
+    slug: 'piso-cozinha',
+    termoAlvo: 'piso para cozinha',
+    volume: 210,  // real Goiás (DataForSEO 2026-07-01)
+    tipo: 'genérico',
+    ocasiao: 'cozinha',
+    titulo: 'Piso para Cozinha em Goiânia: Porcelanato Resistente e Fácil de Limpar',
+    intro:
+      'O melhor piso para cozinha em Goiânia é o porcelanato retificado de baixa absorção: não mancha com gordura, café ou molho, resiste ao tráfego e limpa com pano úmido. O acabamento acetinado ou natural evita escorregões perto da pia, e formatos grandes deixam menos rejunte para acumular sujeira.',
+    comoEscolher: [
+      'Baixa absorção (≤0,5%) é o critério nº 1 contra as manchas típicas da cozinha.',
+      'Acetinado ou natural para não escorregar com respingos de água e óleo.',
+      'Resistência à abrasão média ou alta aguenta o tráfego da cozinha.',
+      'Peças 80×80 ou 60×60 retificadas reduzem o rejunte e facilitam a limpeza.',
+      'Tons claros ampliam; tons médios disfarçam o uso do dia a dia.',
+    ],
+    atributos: {
+      acabamento: 'Acetinado / Natural',
+      dimensao: '60×60 cm / 80×80 cm',
+      ambiente: 'Cozinha (piso)',
+    },
+    faq: [
+      {
+        q: 'Qual porcelanato não mancha na cozinha?',
+        a: 'O porcelanato retificado de baixa absorção (≤0,5%) não mancha se os respingos forem limpos no dia. Evite pedras naturais porosas e acabamentos muito claros sem tratamento.',
+      },
+      {
+        q: 'Pode usar porcelanato polido no piso da cozinha?',
+        a: 'Não é o ideal: o polido fica escorregadio com água e óleo. Prefira acetinado ou natural no piso e deixe o polido, se quiser, para a parede.',
+      },
+    ],
+    relacionados: ['porcelanato-cozinha', 'revestimento-cozinha', 'porcelanato-retificado'],
+  },
+  {
+    slug: 'piso-area-externa',
+    termoAlvo: 'piso área externa',
+    volume: 210,  // real Goiás (DataForSEO 2026-07-01)
+    tipo: 'antiderrapante',
+    ocasiao: 'área externa',
+    titulo: 'Piso para Área Externa em Goiânia: Antiderrapante e Resistente ao Sol',
+    intro:
+      'O piso para área externa em Goiânia precisa ser antiderrapante, resistente à variação de temperatura e ao sol forte do Centro-Oeste. Porcelanato para exterior com classe R11 ou superior garante segurança em áreas molhadas — piscina, quintal, garagem — enquanto a baixa absorção evita infiltração e o desbotamento após anos de exposição.',
+    comoEscolher: [
+      'Índice antiderrapante R11 ou superior em bordas de piscina, rampas e áreas molhadas.',
+      'Resistência a UV para não desbotar sob o sol forte de Goiânia.',
+      'Baixa absorção evita infiltração e mancha por chuva e umidade.',
+      'Porcelanato amadeirado externo dá clima aconchegante a varandas e áreas gourmet.',
+      'Se houver churrasqueira, confira também a resistência a manchas de gordura.',
+    ],
+    atributos: {
+      acabamento: 'Natural / Texturizado',
+      antiderrapante: true,
+      dimensao: '60×60 cm / 90×90 cm',
+      ambiente: 'Área externa, quintal, garagem, piscina',
+    },
+    faq: [
+      {
+        q: 'Qual porcelanato usar em área externa exposta ao sol?',
+        a: 'Um porcelanato para exterior com resistência a UV (não desbota), baixa absorção (não infiltra) e antiderrapante R11+. Confirme os três atributos na ficha técnica antes de comprar.',
+      },
+      {
+        q: 'Porcelanato de área externa esquenta muito ao sol?',
+        a: 'Tons claros esquentam menos que os escuros. Em áreas de piscina para uso descalço, prefira cores claras e acabamento texturizado, que reflete mais calor e aumenta a aderência.',
+      },
+    ],
+    relacionados: ['porcelanato-area-externa', 'porcelanato-piscina', 'piso-antiderrapante'],
   },
 ];
 
