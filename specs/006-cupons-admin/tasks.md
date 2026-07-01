@@ -84,7 +84,7 @@ _(sem tarefas)_
 
 ## Phase 6: Polish & verificação
 
-- [ ] T014 Aplicar a migração no host: `prisma db push` MANUAL de máquina que alcança o Postgres (o runner standalone NÃO aplica schema) + rodar `db:seed` para criar `cupons` e semear `OBRA10` (Const. II — ambiente real).
+- [X] T014 Aplicar a migração no host: `prisma db push` MANUAL de máquina que alcança o Postgres (o runner standalone NÃO aplica schema) + rodar `db:seed` para criar `cupons` e semear `OBRA10` (Const. II — ambiente real).
 - [ ] T015 Verificação em ambiente real por [quickstart.md](./quickstart.md) (navegador prod / Docker EasyPanel): criar cupom no admin **sem deploy** → validar no site (CORS) e no checkout; `OBRA10` sem interrupção; apagar cupom usado num pedido → pedido mantém `cupomCodigo/desconto`; inputs inválidos recusados. Anexar evidência.
 - [ ] T016 Escrever `specs/006-cupons-admin/handoff.md` (feito/decisões/próximos/pendências/gotchas) + commit & push (Const. V).
 

@@ -1,20 +1,25 @@
 # Handoff — Cupons no admin (006-cupons-admin)
 
-## ⚠️ Ação obrigatória antes/no deploy — leia primeiro
+## ✅ Migração aplicada em produção (2026-07-01)
 
-O EasyPanel observa a `main` e faz deploy automático no push. Este código assume que a
-tabela `cupons` **já existe** no Postgres — os dois call sites de `validarCupom`
-(`api/cupom/validar` e `api/pedidos`) chamam `prisma.cupom.findUnique` incondicionalmente.
-**Se o deploy subir antes da migração, qualquer requisição com um código de cupom
-(inclusive o `OBRA10` real em produção) vai falhar** até a migração ser aplicada.
+`prisma db push` + `db:seed` rodados contra `roilabs_db @ 2.24.207.200:5443` a partir desta
+sessão. Tabela `cupons` criada; `OBRA10` semeado (percentual 10, mínimo 500, ativo) —
+confirmado por query direta ao banco.
 
-**Rodar isto no host (ou numa máquina que alcance `2.24.207.200:5443`) o quanto antes,
-idealmente antes do deploy terminar:**
-```bash
-cd "ROI Labs/app"
-npx prisma db push   # cria a tabela cupons
-npm run db:seed      # semeia OBRA10 (idempotente; não mexe nas cadeiras/params já seedados)
-```
+**Verificação em produção (parcial, via curl):**
+- `POST https://app.roilabs.com.br/api/cupom/validar` com `codigo=OBRA10` e 4 caixas de
+  `porcelanato-20x120-carvalho-natural` (subtotal R$ 673,13) → `{"ok":true,"codigo":"OBRA10","tipo":"percentual","desconto":67.31,...}`. Confere: 10% de 673,13.
+- Mesmo endpoint com `codigo=NAOEXISTE` → `{"ok":false,"motivo":"invalido"}`, CORS
+  (`Access-Control-Allow-Origin: https://goiania.roilabs.com.br`) intacto.
+
+**Ainda não verificado (requer navegador/login, não executado nesta sessão):**
+- Login no admin e CRUD via `/admin/cupons` (criar `OBRA15`, editar, desativar, apagar).
+- Checkout real com cupom (grava `cupomCodigo`/`desconto` no `Pedido`) — evitei gerar um
+  pedido/preferência real no Mercado Pago sem pedido explícito.
+- Guard do cupom 100% no checkout.
+- Apagar cupom usado num pedido e confirmar que o snapshot permanece.
+
+Ver roteiro completo em [quickstart.md](./quickstart.md).
 
 ## Feito
 
