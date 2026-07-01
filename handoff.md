@@ -29,7 +29,19 @@ nicho âncora = **revestimentos/porcelanato**.
   - **Mapa de cadeiras AO VIVO (runtime fetch).** `index.astro` renderiza skeleton estático (SEO/no-JS) + `<script is:inline>` que busca `/api/cadeiras` **no navegador** e sobrescreve status/aberta. `GET /api/cadeiras` tem `Access-Control-Allow-Origin: *`. **Editar cadeira no `/admin` → F5 no site reflete, SEM rebuild.** (commit `0bef049`)
   - **Apagar candidatura.** `DELETE /api/candidaturas/:id` (auth, idempotente) + botão "Apagar" no card (`window.confirm`). (commit `d62ebf4`)
 - **Fase 4:** senha do Postgres rotacionada.
-- **Logo:** variante clara (off-white + chevron laranja) aplicada no header, favicon, og:image — visível no header escuro.
+- **Fase 5 — Camada Parceiro (spec `007-camada-parceiro`, 2026-07-01):** liga cadeira → parceiro → negócio originado (pedido pago repassado) → success fee → cobrança Asaas, sobre a app de porcelanato existente (`/app`). 3 modelos novos (`Parceiro`, `NegocioOriginado`, `FaturaSuccessFee`) + back-relations. Implementado **US1+US2+US3+US4 completos** (todas as 4 user stories da spec):
+  - **US1** — `/admin/parceiros`: cadastrar/sondar/ativar/riscar parceiro por cadeira, gravar %/CPF-CNPJ/contrato. Conversão a partir de `Candidatura` aprovada (dropdown de cadeira, sem fuzzy match).
+  - **US2** — ação "Repassar a parceiro" em `/admin/pedidos` (pedido pago → parceiro ativo); `valor` = total−frete calculado no servidor; isenção pontual com motivo; repasse único por pedido (409 se já ativo); `/admin/parceiros/[id]` lista os negócios e avança estágio até `ganho`.
+  - **US3** — `lib/success-fee.ts` (`calcularFaturaMensal`, função pura, testada em `test/success-fee.test.mjs`) + `lib/asaas.ts` (REST via `fetch`, sem SDK, espelha `lib/mercadopago.ts`) + `api/faturas` (gera fatura do mês + emite cobrança) + `api/parceiros/webhook` (concilia pagamento, idempotente por `asaasPaymentId`).
+  - **US4** — `lib/ocupacao.ts` (`derivarOcupacao`, D6): estado da cadeira (ocupada por contratado | em prospecção | aberta) refletido no Painel (`/admin`) e em `/admin/cadeiras`, sem duplicar status em `Cadeira`.
+  - **Verificado localmente:** `tsc --noEmit` limpo, `next build` limpo, `npm test` (5 suítes, incl. `success-fee.test.mjs`) passando.
+
+## Pendências — Camada Parceiro (007), MANUAL
+
+- **`prisma db push` no host** (3 tabelas novas: `parceiros`, `negocios_originados`, `faturas_success_fee`) — o runner standalone não aplica schema; rodar de uma máquina que alcança `2.24.207.200:5443`.
+- **Envs Asaas na EasyPanel:** `ASAAS_API_KEY`, `ASAAS_API_URL` (sandbox primeiro), `ASAAS_WEBHOOK_TOKEN` — apontar o webhook do Asaas para `/api/parceiros/webhook`. Sem essas envs, US3 (fatura/cobrança) não funciona; US1+US2 não dependem delas.
+- **Verificação em ambiente real (Const. II, não feita ainda por falta de DB local):** seguir `specs/007-camada-parceiro/quickstart.md` (US1→US4) em prod/Docker, com Asaas em **sandbox** antes de produção; anexar evidência (screenshots + output do `tsx`).
+- **Commit/push deste incremento:** pendente de confirmação do dono antes de subir pra `main` (repo tem outras mudanças não commitadas de sessões anteriores — ver `git status`).
 
 ## Decisões (confirmadas com o dono)
 - Admin = **leads + cadeiras** (sem gestão de conteúdo por ora).

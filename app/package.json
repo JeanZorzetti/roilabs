@@ -10,7 +10,7 @@
     "lint": "next lint",
     "db:push": "prisma db push",
     "db:seed": "prisma db seed",
-    "test": "node test/session.test.mjs && node --import tsx test/centros-custo.test.mjs && node --import tsx test/financeiro.test.mjs && node --import tsx test/cupons.test.mjs"
+    "test": "node test/session.test.mjs && node --import tsx test/centros-custo.test.mjs && node --import tsx test/financeiro.test.mjs && node --import tsx test/cupons.test.mjs && node --import tsx test/success-fee.test.mjs"
   },
   "prisma": {
     "seed": "node --import tsx prisma/seed.ts"

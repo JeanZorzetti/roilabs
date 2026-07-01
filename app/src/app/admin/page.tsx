@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
+import { derivarOcupacao } from '@/lib/ocupacao';
 
 export const dynamic = 'force-dynamic';
 
@@ -38,7 +39,7 @@ export default async function PainelPage() {
       _count: { id: true },
     }),
     prisma.pedido.count({ where: { statusPagamento: 'pago', statusFulfillment: 'aguardando' } }),
-    prisma.cadeira.groupBy({ by: ['polo', 'open'], _count: { id: true } }),
+    prisma.cadeira.findMany({ select: { polo: true, parceiros: { select: { estagio: true, contratoEm: true } } } }),
     prisma.pedido.count({ where: { statusPagamento: 'pago', createdAt: { gte: d7 } } }),
     prisma.leadConsumidor.count({ where: { createdAt: { gte: d7 } } }),
   ]);
@@ -46,12 +47,14 @@ export default async function PainelPage() {
   const gmvPagoMes = Number(gmvMes._sum.total ?? 0);
   const pedidosPagosMes = gmvMes._count.id;
 
-  const polosMap = new Map<string, { abertas: number; emEstudo: number }>();
-  for (const g of cadeiraGroups) {
-    if (!polosMap.has(g.polo)) polosMap.set(g.polo, { abertas: 0, emEstudo: 0 });
-    const entry = polosMap.get(g.polo)!;
-    if (g.open) entry.abertas += g._count.id;
-    else entry.emEstudo += g._count.id;
+  const polosMap = new Map<string, { ocupadas: number; prospeccao: number; abertas: number }>();
+  for (const cadeira of cadeiraGroups) {
+    if (!polosMap.has(cadeira.polo)) polosMap.set(cadeira.polo, { ocupadas: 0, prospeccao: 0, abertas: 0 });
+    const entry = polosMap.get(cadeira.polo)!;
+    const estado = derivarOcupacao(cadeira.parceiros);
+    if (estado === 'ocupada') entry.ocupadas += 1;
+    else if (estado === 'prospeccao') entry.prospeccao += 1;
+    else entry.abertas += 1;
   }
   const polos = [...polosMap.entries()].map(([polo, c]) => ({ polo, ...c }));
 
@@ -149,14 +152,15 @@ export default async function PainelPage() {
               <div className="cc-note">Execute db:seed para carregar o mapa inicial</div>
             </div>
           ) : (
-            polos.map(({ polo, abertas, emEstudo }) => (
+            polos.map(({ polo, ocupadas, prospeccao, abertas }) => (
               <Link key={polo} href="/admin/cadeiras" className="cc-card painel-card-link">
-                <div className="cc-card__label">Curadoria · {polo}</div>
+                <div className="cc-card__label">Ocupação · {polo}</div>
                 <div className="cc-card__value">
-                  <span className="painel-abertas">{abertas}</span> abertas{' '}
-                  · <span className="painel-estudo">{emEstudo}</span> em estudo
+                  <span style={{ color: '#166534' }}>{ocupadas}</span> ocupadas{' '}
+                  · <span className="painel-estudo">{prospeccao}</span> em prospecção{' '}
+                  · <span className="painel-abertas">{abertas}</span> abertas
                 </div>
-                <div className="cc-note">{abertas + emEstudo} cadeiras no total</div>
+                <div className="cc-note">{ocupadas + prospeccao + abertas} cadeiras no total</div>
               </Link>
             ))
           )}

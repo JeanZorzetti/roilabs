@@ -1,10 +1,14 @@
 import { prisma } from '@/lib/prisma';
 import { SeatRow } from './seat-row';
+import { derivarOcupacao } from '@/lib/ocupacao';
 
 export const dynamic = 'force-dynamic';
 
 export default async function CadeirasPage() {
-  const seats = await prisma.cadeira.findMany({ orderBy: { ordem: 'asc' } });
+  const seats = await prisma.cadeira.findMany({
+    orderBy: { ordem: 'asc' },
+    include: { parceiros: { select: { estagio: true, contratoEm: true, nome: true } } },
+  });
 
   return (
     <div className="page">
@@ -18,9 +22,18 @@ export default async function CadeirasPage() {
       )}
 
       <div className="seats">
-        {seats.map((s) => (
-          <SeatRow key={s.id} seat={{ id: s.id, niche: s.niche, status: s.status, open: s.open }} />
-        ))}
+        {seats.map((s) => {
+          const ocupacao = derivarOcupacao(s.parceiros);
+          const contratado = s.parceiros.find((p) => p.contratoEm !== null)?.nome ?? null;
+          return (
+            <SeatRow
+              key={s.id}
+              seat={{ id: s.id, niche: s.niche, status: s.status, open: s.open }}
+              ocupacao={ocupacao}
+              contratado={contratado}
+            />
+          );
+        })}
       </div>
     </div>
   );

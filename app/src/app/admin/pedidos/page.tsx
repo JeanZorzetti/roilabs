@@ -1,13 +1,16 @@
 import { prisma } from '@/lib/prisma';
 import { PedidoRow } from './pedido-row';
+import { RepassarParceiro } from './repassar-parceiro';
 
 export const dynamic = 'force-dynamic';
 
 export default async function PedidosPage() {
-  const pedidos = await prisma.pedido.findMany({
-    orderBy: { createdAt: 'desc' },
-    include: { itens: true },
-  });
+  const [pedidos, parceirosAtivos, negociosAtivos] = await Promise.all([
+    prisma.pedido.findMany({ orderBy: { createdAt: 'desc' }, include: { itens: true } }),
+    prisma.parceiro.findMany({ where: { estagio: 'ativa' }, select: { id: true, nome: true, nicho: true } }),
+    prisma.negocioOriginado.findMany({ where: { estagio: { not: 'perdido' } }, select: { pedidoId: true } }),
+  ]);
+  const pedidosComRepasse = new Set(negociosAtivos.map((n) => n.pedidoId));
 
   const brl = (v: unknown) =>
     Number(v).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -82,9 +85,17 @@ export default async function PedidosPage() {
                 {p.createdAt.toISOString().slice(0, 10)}
               </td>
               <td style={{ padding: '0.6rem 0.8rem' }}>
-                {p.statusPagamento === 'pago' && p.statusFulfillment === 'aguardando' && (
-                  <PedidoRow id={p.id} />
-                )}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                  {p.statusPagamento === 'pago' && p.statusFulfillment === 'aguardando' && (
+                    <PedidoRow id={p.id} />
+                  )}
+                  {p.statusPagamento === 'pago' && !pedidosComRepasse.has(p.id) && (
+                    <RepassarParceiro pedidoId={p.id} parceiros={parceirosAtivos} />
+                  )}
+                  {p.statusPagamento === 'pago' && pedidosComRepasse.has(p.id) && (
+                    <span style={{ color: '#166534', fontSize: '0.78rem' }}>repassado</span>
+                  )}
+                </div>
               </td>
             </tr>
           ))}
