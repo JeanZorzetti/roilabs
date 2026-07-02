@@ -17,7 +17,7 @@ export function getStaticPaths() {
 
 const { page } = Astro.props;
 const SITE = Astro.site?.href.replace(/\/$/, '') ?? 'https://goiania.roilabs.com.br';
-const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '556299999999';
+const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
 const appUrl = import.meta.env.PUBLIC_APP_URL ?? 'https://app.roilabs.com.br';
 
 const jsonLdNodes = buildJsonLdNodes(page, SITE);
