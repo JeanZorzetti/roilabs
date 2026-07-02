@@ -26,7 +26,8 @@
 ### Próximos passos
 
 1. ~~Redeploy + verificação em prod~~ **FEITO 2026-07-02**: deploy automático por push; `feed.xml` em prod com 30 itens íntegros (T011).
-2. **Ops (Jean)**: seguir `docs/merchant-center.md` — cadastrar o feed no Merchant Center (método "Adicionar produtos com um arquivo" → busca agendada por URL), confirmar processamento sem erro estrutural e acompanhar aprovação ≥ 90% (T012 / SC-002-003).
+2. ~~Cadastro no Merchant Center~~ **FEITO 2026-07-02** (T012): conta criada, feed cadastrado com busca diária, 30/30 processados sem erro estrutural (SC-002 ✓). Entrega configurada (corte 14h BRT, separação 0–1, trânsito 2–6, frete por destino R$150–220) e política de devolução exigida pelo MC → página `/devolucoes` criada (CDC: 7d arrependimento, 90d defeito, reembolso 7d, sem taxa).
+3. ⏳ **Acompanhar a revisão do Google (~3 dias)**: Produtos → Diagnóstico, meta ≥ 90% aprovados (SC-003). Reprovações prováveis e ações na tabela de troubleshooting do `docs/merchant-center.md` (imagem em CDN de terceiro é o suspeito nº 1).
 
 ### Gotchas
 

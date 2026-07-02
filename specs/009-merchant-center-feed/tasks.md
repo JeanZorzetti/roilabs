@@ -69,7 +69,7 @@ Nenhuma task — app existente (`site-goiania/`), zero dependência nova (plan/D
 - [x] T009 Atualizar `site-goiania/handoff.md` (ou criar): feito/decisões (D1–D9)/próximos passos (deploy + cadastro ops)/gotchas (preço por m², CDN de imagem de terceiro). Constituição V.
 - [x] T010 Commit + push (mensagem em inglês) — inclui specs 009, código e docs.
 - [x] T011 **Verificação em prod — FEITA 2026-07-02** (deploy automático por push): `https://goiania.roilabs.com.br/feed.xml` → 200, 30 `<item>`, namespace `g:` presente, primeiro item íntegro (`porcelanato-20x120-carvalho-natural`, `98.99 BRL`), sem campo vazio nem mojibake.
-- [ ] T012 **Ops (Jean, manual)**: executar `docs/merchant-center.md` — cadastrar feed no Merchant Center e confirmar processamento sem erro estrutural (SC-002). Acompanhar aprovação ≥ 90% (SC-003) após a revisão do Google.
+- [x] T012 **Ops — FEITO 2026-07-02**: conta Merchant Center criada, feed cadastrado (busca diária), **30/30 itens processados sem erro estrutural** (SC-002 ✓). No caminho: config de entrega (2–6 dias, frete por destino) e política de devolução (página `/devolucoes` criada — exigência do MC). ⏳ SC-003 pendente da revisão do Google (~3 dias): conferir Produtos → Diagnóstico, meta ≥ 90% aprovados.
 
 ---
 
