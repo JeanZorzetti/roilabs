@@ -20,8 +20,8 @@ dono: Jean (dev)
 
 ### Caminho crítico (em ordem)
 
-- [ ] **1. Redeploy do `/site` e do `site-goiania` na EasyPanel.** Publica 5 entregas já na `main`: eventos himetrica (`7f3a4eb`), `llms.txt` automático da coleção (`ecb94e2`), `sameAs` LinkedIn+Instagram (`57f69c9`), `Service`+`Offer` na home + breadcrumbs nos artigos (`6deee61`) e OG image por artigo (`038a9ca`). Há commits novos → o cache de layer do Docker busta sozinho (gotcha `easypanel-docker-build-cache-stale-dist` não se aplica).
-- [ ] **2. Verificar em prod (browser, pós-deploy):**
+- [x] **1. Redeploy do `/site` e do `site-goiania` na EasyPanel.** Publica 5 entregas já na `main`: eventos himetrica (`7f3a4eb`), `llms.txt` automático da coleção (`ecb94e2`), `sameAs` LinkedIn+Instagram (`57f69c9`), `Service`+`Offer` na home + breadcrumbs nos artigos (`6deee61`) e OG image por artigo (`038a9ca`). Há commits novos → o cache de layer do Docker busta sozinho (gotcha `easypanel-docker-build-cache-stale-dist` não se aplica).
+- [x] **2. Verificar em prod (browser, pós-deploy):**
 	- `roilabs.com.br/llms.txt` lista os artigos do blog (gerado da coleção, não mais o manual);
 	- OG de 1 artigo responde PNG em `/open-graph/...` e aparece no preview (opengraph.xyz ou similar);
 	- JSON-LD da home valida com `Service`+`Offer` (validator.schema.org) e `sameAs` presente nos 2 sites;
@@ -31,8 +31,31 @@ dono: Jean (dev)
 ### Depois (dev, ranqueado por alavanca)
 
 - [ ] **GSC: medir a malha pSEO.** Conferir propriedade de `goiania.roilabs.com.br` no Search Console, submeter sitemap e acompanhar **páginas indexadas das 39** — é a métrica de decisão do GTM ("medir indexadas", [[40-gtm]]). Primeiro checkpoint ~2 semanas pós-deploy.
-- [ ] **LP/ajustes para Google Ads** quando a campanha `porcelanato goiânia` (140/mês, CPC alto — âncora validada no Keyword Planner, [[mercado]]) for ao ar. Nada a fazer antes de a Duda decidir a campanha.
+- [x] **LP/ajustes para Google Ads** quando a campanha `porcelanato goiânia` (140/mês, CPC alto — âncora validada no Keyword Planner, [[mercado]]) for ao ar. Nada a fazer antes de a Duda decidir a campanha.
 - **Bloqueado (não é dev agora):** Gatekeeper (buy, tier 2 de integração) depende de fechar o 1º fornecedor — Gate 3, campo.
+
+## 🧭 Fora da caixa — próximo ciclo (2026-07-02)
+
+> [!note] O que ninguém pediu mas o negócio precisa. Verificado contra o código: nada abaixo existe ainda (exceto onde indicado). Item grande = virar spec (009+) antes de codar.
+
+### 🛡️ Proteger o que está no ar
+
+- [ ] **Backup automático do Postgres.** `roilabs_db` tem pedidos pagos e leads reais e **zero backup**. `pg_dump` diário via cron no VPS + cópia semanal fora dele (qualquer object storage); testar 1 restore de verdade. É o item mais barato da lista contra o pior cenário.
+- [ ] **Uptime monitor + alerta.** cron-job.org (grátis, padrão já usado no Compass) em 3 URLs: `app.roilabs.com.br/api/cadeiras` (prova app+DB vivos), home do goiânia e home do institucional. Hoje, checkout quebrado = ninguém fica sabendo até alguém reclamar.
+- [ ] **Alerta de lead/pedido novo.** Hoje candidatura e pedido pago só aparecem pra quem abre o admin — em high-ticket local, velocidade de resposta É conversão. Lazy: fetch fire-and-forget pra um e-mail (Resend free tier) dentro do `POST /api/candidaturas` e do webhook de pagamento. Nada disso existe no código (verificado).
+
+### 📣 Distribuição grátis (alavanca GEO/SEO que quase ninguém local usa)
+
+- [ ] **⭐ Google Merchant Center — free listings.** As páginas de produto **já têm `Product` schema** (verificado em `produto/[slug].astro`); falta só uma rota `feed.xml.ts` lendo `porcelanatos.json` (mesmo padrão do `sitemap.xml.ts`) + cadastro no Merchant Center → catálogo inteiro na aba Shopping do Google **de graça**. Concorrente local não faz isso.
+- [ ] **IndexNow no deploy.** Ping da API IndexNow com as URLs do sitemap (1 script pós-build + chave `.txt` no `public/`). Bing indexa em horas e **alimenta o índice do ChatGPT** — acelera o playbook GEO ([[geo_aeo_playbook]]) sem esperar o Google.
+- [ ] **`LocalBusiness` + Google Business Profile.** Quando houver endereço/telefone comercial: 1 nó `LocalBusiness` no @graph do goiânia; o GBP em si é ops (Duda). É o que disputa o **local pack** de `porcelanato goiânia` — a âncora de 140/mês do Keyword Planner ([[mercado]]).
+- [ ] **Review engine → estrelas no SERP.** Pós-venda pede avaliação (link no `/obrigado` ou follow-up WhatsApp), admin grava, e as páginas de produto expõem `AggregateRating` quando ≥ 3 avaliações reais. **Ativar só com 3–5 pedidos entregues** — antes disso é schema vazio (e risco de penalidade).
+
+### 💰 Converter mais com o que já existe
+
+- [ ] **Orçamento por WhatsApp no carrinho.** O carrinho já tem link de compartilhar; adicionar botão "Receber orçamento no WhatsApp" que manda o link do carrinho pro nosso número + evento himetrica `orcamento_whatsapp`. Porcelanato é compra consultiva — captura o lead **antes** do checkout, onde a maioria desiste.
+- [ ] **Admin no celular.** Duda opera de campo; passar `/admin` (kanban, pedidos, cadeiras) no mobile e consertar o que quebrar. Custo baixo, destrava a operação do dia a dia.
+- [ ] **Demonstrativo do parceiro.** Quando a 1ª fatura Asaas rodar: página/PDF simples por parceiro (pedidos repassados no mês, total, % aplicado, valor da fatura). O modelo success-fee vive de **transparência** — o fornecedor precisa ver pelo que está pagando sem pedir print. Dados já existem na camada 007 (`NegócioOriginado` ↔ `Fatura`).
 
 ---
 
