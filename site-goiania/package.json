@@ -7,6 +7,7 @@
     "dev": "astro dev",
     "prebuild": "node src/scripts/check-matrix.mjs",
     "build": "astro build",
+    "postbuild": "node src/scripts/check-feed.mjs",
     "preview": "astro preview",
     "check-matrix": "node src/scripts/check-matrix.mjs"
   },

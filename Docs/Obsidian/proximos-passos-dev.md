@@ -46,7 +46,7 @@ dono: Jean (dev)
 
 ### 📣 Distribuição grátis (alavanca GEO/SEO que quase ninguém local usa)
 
-- [ ] **⭐ Google Merchant Center — free listings.** As páginas de produto **já têm `Product` schema** (verificado em `produto/[slug].astro`); falta só uma rota `feed.xml.ts` lendo `porcelanatos.json` (mesmo padrão do `sitemap.xml.ts`) + cadastro no Merchant Center → catálogo inteiro na aba Shopping do Google **de graça**. Concorrente local não faz isso.
+- [x] **⭐ Google Merchant Center — CÓDIGO FEITO (spec 009, 2026-07-02).** `feed.xml.ts` no ar no build (30 itens, RSS 2.0 + `g:`), paridade página↔feed por helpers compartilhados, gate `check-feed` postbuild provado (quebra o build com produto inválido). ⚠️ Restam os passos manuais: **redeploy do site-goiania** + **cadastro no Merchant Center** seguindo `site-goiania/docs/merchant-center.md` (T011/T012 da spec).
 - [ ] **IndexNow no deploy.** Ping da API IndexNow com as URLs do sitemap (1 script pós-build + chave `.txt` no `public/`). Bing indexa em horas e **alimenta o índice do ChatGPT** — acelera o playbook GEO ([[geo_aeo_playbook]]) sem esperar o Google.
 - [ ] **`LocalBusiness` + Google Business Profile.** Quando houver endereço/telefone comercial: 1 nó `LocalBusiness` no @graph do goiânia; o GBP em si é ops (Duda). É o que disputa o **local pack** de `porcelanato goiânia` — a âncora de 140/mês do Keyword Planner ([[mercado]]).
 - [ ] **Review engine → estrelas no SERP.** Pós-venda pede avaliação (link no `/obrigado` ou follow-up WhatsApp), admin grava, e as páginas de produto expõem `AggregateRating` quando ≥ 3 avaliações reais. **Ativar só com 3–5 pedidos entregues** — antes disso é schema vazio (e risco de penalidade).

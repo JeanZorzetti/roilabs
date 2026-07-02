@@ -7,8 +7,8 @@ import ProdutoCard from '../../../components/ProdutoCard.astro';
 import ProdutoDetalhe from '../../../components/ProdutoDetalhe.astro';
 import {
   produtos,
-  nomeProduto,
-  formatPreco,
+  tituloProduto,
+  descricaoProduto,
   categoriasDoProduto,
   produtosRelacionados,
 } from '../../../data/produtos';
@@ -20,8 +20,7 @@ export function getStaticPaths() {
 
 const { produto } = Astro.props;
 const a = produto.atributos;
-const nome = nomeProduto(produto);
-const tituloProduto = `${a.marca} ${nome}`;
+const titulo = tituloProduto(produto);
 
 const SITE = Astro.site?.href.replace(/\/$/, '') ?? 'https://goiania.roilabs.com.br';
 const appUrl = import.meta.env.PUBLIC_APP_URL ?? 'https://app.roilabs.com.br';
@@ -43,7 +42,7 @@ const additionalProperty = [
 const jsonLdNodes = [
   {
     '@type': 'Product',
-    name: tituloProduto,
+    name: titulo,
     image: produto.imagens,
     brand: { '@type': 'Brand', name: a.marca },
     category: 'Porcelanato',
@@ -62,15 +61,15 @@ const jsonLdNodes = [
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Início', item: SITE },
       { '@type': 'ListItem', position: 2, name: 'Porcelanato', item: `${SITE}/porcelanato` },
-      { '@type': 'ListItem', position: 3, name: tituloProduto, item: url },
+      { '@type': 'ListItem', position: 3, name: titulo, item: url },
     ],
   },
 ];
 ---
 
 <Base
-  title={`${tituloProduto} — ${a.dimensao} | Porcelanato Goiânia`}
-  description={`${tituloProduto} ${a.dimensao} ${a.acabamento}. ${formatPreco(a.preco)}/m² em Goiânia. Fale pelo WhatsApp ou solicite orçamento.`}
+  title={`${titulo} — ${a.dimensao} | Porcelanato Goiânia`}
+  description={descricaoProduto(produto)}
   ogType="product"
   jsonLdNodes={jsonLdNodes}
 >
@@ -84,7 +83,7 @@ const jsonLdNodes = [
           <span class="breadcrumb__sep" aria-hidden="true">›</span>
           <a href="/porcelanato">Porcelanato</a>
           <span class="breadcrumb__sep" aria-hidden="true">›</span>
-          <span aria-current="page">{tituloProduto}</span>
+          <span aria-current="page">{titulo}</span>
         </nav>
 
         <ProdutoDetalhe produto={produto} headingTag="h1" />
@@ -95,14 +94,14 @@ const jsonLdNodes = [
     <section class="section section--light" id="contato">
       <div class="wrap">
         <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:0.8rem;">
-          Solicitar orçamento de {tituloProduto}
+          Solicitar orçamento de {titulo}
         </h2>
         <p style="color:var(--l-muted);margin-bottom:2rem;max-width:52ch;">
           Informe seus dados e a metragem da sua obra — retornamos com disponibilidade e
           condições do fornecedor em Goiânia.
         </p>
         <LeadForm
-          produto={tituloProduto}
+          produto={titulo}
           pagina={`/porcelanato/produto/${produto.slug}`}
           appUrl={appUrl}
         />

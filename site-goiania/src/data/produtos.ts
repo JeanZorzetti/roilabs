@@ -32,6 +32,17 @@ export function nomeProduto(p: Produto): string {
 export const formatPreco = (v: number) =>
   v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
+// Título e descrição canônicos — usados pela página de produto E pelo feed do
+// Merchant Center. Paridade página↔feed é política do Google: um só lugar pro texto.
+export const tituloProduto = (p: Produto) => `${p.atributos.marca} ${nomeProduto(p)}`;
+
+export const descricaoProduto = (p: Produto) =>
+  `${tituloProduto(p)} ${p.atributos.dimensao} ${p.atributos.acabamento}. ${formatPreco(p.atributos.preco)}/m² em Goiânia. Fale pelo WhatsApp ou solicite orçamento.`;
+
+// Elegibilidade do feed: item sem imagem ou sem preço reprova individualmente no
+// Google — omitir e corrigir na fonte. check-feed.mjs reaplica esta regra no JSON.
+export const elegivelParaFeed = (p: Produto) => Boolean(p.imagens[0]) && p.atributos.preco > 0;
+
 // ponytail: taxonomia heurística por slug/acabamento/dimensão. Trocar por tags
 // curadas no JSON se a precisão do match importar.
 export function tagsDoProduto(p: Produto): Set<string> {
