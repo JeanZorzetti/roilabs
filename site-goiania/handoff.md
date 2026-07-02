@@ -25,8 +25,8 @@
 
 ### Próximos passos
 
-1. **Redeploy do site-goiania na EasyPanel** (tem commit novo → cache busta) e verificar em prod: `curl https://goiania.roilabs.com.br/feed.xml` → 200 + 30 itens (T011).
-2. **Ops (Jean)**: seguir `docs/merchant-center.md` — cadastrar o feed no Merchant Center, confirmar processamento sem erro estrutural e acompanhar aprovação ≥ 90% (T012 / SC-002-003).
+1. ~~Redeploy + verificação em prod~~ **FEITO 2026-07-02**: deploy automático por push; `feed.xml` em prod com 30 itens íntegros (T011).
+2. **Ops (Jean)**: seguir `docs/merchant-center.md` — cadastrar o feed no Merchant Center (método "Adicionar produtos com um arquivo" → busca agendada por URL), confirmar processamento sem erro estrutural e acompanhar aprovação ≥ 90% (T012 / SC-002-003).
 
 ### Gotchas
 

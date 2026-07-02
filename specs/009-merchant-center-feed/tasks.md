@@ -68,7 +68,7 @@ Nenhuma task — app existente (`site-goiania/`), zero dependência nova (plan/D
 
 - [x] T009 Atualizar `site-goiania/handoff.md` (ou criar): feito/decisões (D1–D9)/próximos passos (deploy + cadastro ops)/gotchas (preço por m², CDN de imagem de terceiro). Constituição V.
 - [x] T010 Commit + push (mensagem em inglês) — inclui specs 009, código e docs.
-- [ ] T011 **Verificação em prod (Constituição II, pós-redeploy EasyPanel do site-goiania)**: `curl https://goiania.roilabs.com.br/feed.xml` → 200, contagem de itens, paridade de 1 item com a página. Depende de redeploy manual — se o deploy não acontecer nesta sessão, registrar como pendência no handoff e no doc de próximos passos.
+- [x] T011 **Verificação em prod — FEITA 2026-07-02** (deploy automático por push): `https://goiania.roilabs.com.br/feed.xml` → 200, 30 `<item>`, namespace `g:` presente, primeiro item íntegro (`porcelanato-20x120-carvalho-natural`, `98.99 BRL`), sem campo vazio nem mojibake.
 - [ ] T012 **Ops (Jean, manual)**: executar `docs/merchant-center.md` — cadastrar feed no Merchant Center e confirmar processamento sem erro estrutural (SC-002). Acompanhar aprovação ≥ 90% (SC-003) após a revisão do Google.
 
 ---
