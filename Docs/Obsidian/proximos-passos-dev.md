@@ -1,18 +1,38 @@
 ---
 tipo: checklist
 status: vivo
-data: 2026-07-01
+data: 2026-07-02
 dono: Jean (dev)
 ---
 
 # ✅ Próximos passos — DEV (Jean)
 
-> [!info] Onde estamos (2026-07-01)
-> **MVP no ar e muito além dele.** `roilabs.com.br` (site + blog GEO) e `app.roilabs.com.br` (admin Next 16) em produção desde 2026-06-29. Além da intermediação (candidaturas kanban + mapa de cadeiras), o admin já roda o **e-commerce de porcelanato** (carrinho + checkout Mercado Pago), **centros de custo** editáveis, **painel financeiro** mensal + CSV, **cupons** geríveis sem deploy e a **camada parceiro** (success fee via Asaas) — features 002→007, todas shippadas na `main`.
-> **Nada de código bloqueia.** O único pendente do MVP é **configurar as chaves do Asaas** (integração externa do success fee) — as verificações em prod das telas 005/006 já foram feitas. Backlog de dev novo (pós-MVP) na [[#🆕 Backlog de dev (novo — pós-MVP)|seção abaixo]]. O estratégico do vault segue `decided` — ver [[INDEX]].
+> [!info] Onde estamos (2026-07-02)
+> **MVP no ar e muito além dele.** `roilabs.com.br` (site + blog GEO), `goiania.roilabs.com.br` (e-commerce + malha pSEO 39 páginas) e `app.roilabs.com.br` (admin Next 16) em produção. Features 001→008 shippadas na `main`, incluindo todo o backlog GEO/analytics de 07-01/07-02 (himetrica, llms.txt automático, sameAs, schema da home, OG por artigo).
+> **Nada de código bloqueia.** O que resta é **deploy + verificação + 1 config externa** — a seção "agora" abaixo é a lista autoritativa. O estratégico do vault segue `decided` — ver [[INDEX]].
 
 > [!warning] O que NÃO é seu
 > Fechar 1º fornecedor (Gate 3), piso de take rate em R$, prospecção de players = **Maria Eduarda / campo**. Não entram aqui.
+
+---
+
+## 🎯 Agora (2026-07-02) — lista autoritativa
+
+### Caminho crítico (em ordem)
+
+- [ ] **1. Redeploy do `/site` e do `site-goiania` na EasyPanel.** Publica 5 entregas já na `main`: eventos himetrica (`7f3a4eb`), `llms.txt` automático da coleção (`ecb94e2`), `sameAs` LinkedIn+Instagram (`57f69c9`), `Service`+`Offer` na home + breadcrumbs nos artigos (`6deee61`) e OG image por artigo (`038a9ca`). Há commits novos → o cache de layer do Docker busta sozinho (gotcha `easypanel-docker-build-cache-stale-dist` não se aplica).
+- [ ] **2. Verificar em prod (browser, pós-deploy):**
+	- `roilabs.com.br/llms.txt` lista os artigos do blog (gerado da coleção, não mais o manual);
+	- OG de 1 artigo responde PNG em `/open-graph/...` e aparece no preview (opengraph.xyz ou similar);
+	- JSON-LD da home valida com `Service`+`Offer` (validator.schema.org) e `sameAs` presente nos 2 sites;
+	- **eventos himetrica chegando no painel**: `whatsapp_click` nos 2 sites, `candidatura_convertida` (institucional), `pedido_convertido`/`lead_convertido` (goiânia). Dedupe por sessionStorage — testar reload do `/obrigado` não duplica.
+- [ ] **3. Configurar o Asaas (chaves + webhook)** — última pendência do MVP (feature 007). Sem isso a cobrança do success fee não roda. Integração externa, separada do Mercado Pago do checkout.
+
+### Depois (dev, ranqueado por alavanca)
+
+- [ ] **GSC: medir a malha pSEO.** Conferir propriedade de `goiania.roilabs.com.br` no Search Console, submeter sitemap e acompanhar **páginas indexadas das 39** — é a métrica de decisão do GTM ("medir indexadas", [[40-gtm]]). Primeiro checkpoint ~2 semanas pós-deploy.
+- [ ] **LP/ajustes para Google Ads** quando a campanha `porcelanato goiânia` (140/mês, CPC alto — âncora validada no Keyword Planner, [[mercado]]) for ao ar. Nada a fazer antes de a Duda decidir a campanha.
+- **Bloqueado (não é dev agora):** Gatekeeper (buy, tier 2 de integração) depende de fechar o 1º fornecedor — Gate 3, campo.
 
 ---
 
@@ -70,7 +90,7 @@ dono: Jean (dev)
 
 - [x] **005 — verificar no browser** `/admin` e `/admin/financeiro` em prod/Docker; conferir métricas vs. banco e baixar o CSV no Excel (T012).
 - [x] **006 — verificar CRUD no browser**: criar `OBRA15` em `/admin/cupons`, editar/desativar/apagar, e um **checkout real com cupom** gravando `Pedido.cupomCodigo/desconto` (T015; a rota já foi confirmada por curl, falta a via navegador/checkout).
-- [ ] **007 — configurar o Asaas**: chaves + webhook (integração externa, separada do Mercado Pago do checkout) para a cobrança do success fee valer em prod.
+- **007 — configurar o Asaas**: movido para a lista autoritativa em [[#🎯 Agora (2026-07-02) — lista autoritativa|Agora]] (item 3).
 
 ## ✅ Resolvido — Logo (Task 2)
 
