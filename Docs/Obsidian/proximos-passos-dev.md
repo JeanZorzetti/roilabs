@@ -85,7 +85,7 @@ dono: Jean (dev)
 - [x] **Auto-gerar `llms.txt` da content collection — FEITO 2026-07-02.** `site/src/pages/llms.txt.ts` lê a coleção `blog` (padrão do `sitemap.xml.ts`); artigos com título+description do frontmatter, ordenados por pubDate. `public/llms.txt` manual removido (fonte única). Novo artigo entra sozinho no sitemap E no llms.txt. Vale em prod no próximo deploy do `/site`.
 - [x] **`sameAs` no Organization schema — FEITO 2026-07-02.** LinkedIn (`/company/roi-labs-curadoria`) + Instagram (`@roilabs.curadoria`) no `@graph` dos DOIS sites (`site` e `site-goiania`). Vale em prod no próximo redeploy. (SplitJud segue com a pendência dele — URLs do Aldo.)
 - [x] **Schema da home + breadcrumbs — FEITO 2026-07-02.** Home injeta `Service` + `Offer` (Growth Partner, pago pelo sucesso) via `jsonLdNodes`; artigos ganharam `BreadcrumbList` (Home → Blog → título) no `Article.astro`. JSON-LD validado por parse no build. Vale em prod no próximo redeploy do `/site`.
-- [ ] **OG image por artigo.** Todos os posts compartilham um único `og-image.jpg`. Gerar OG dinâmico por título (`@vercel/og` ou Satori no build) melhora o CTR em compartilhamento. Nice-to-have.
+- [x] **OG image por artigo — FEITO 2026-07-02.** `astro-og-canvas` (1 dep, sem binário nativo — Docker-safe): rota `open-graph/[...route].ts` gera 1 PNG por post da coleção (logo + título + description, fundo `#14171d`, borda laranja). `Base.astro` ganhou prop `ogImage`; artigos apontam pro PNG, demais páginas seguem no `og-image.jpg`. Visual conferido no build.
 
 ## 👤 Não-dev (Maria Eduarda / campo)
 

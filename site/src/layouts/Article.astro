@@ -61,7 +61,13 @@ const fmtDate = (d: Date) =>
   new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' }).format(d);
 ---
 
-<Base title={`${title} — ROI Labs`} description={description} ogType="article" jsonLdNodes={nodes}>
+<Base
+  title={`${title} — ROI Labs`}
+  description={description}
+  ogType="article"
+  ogImage={`/open-graph/${post.id}.png`}
+  jsonLdNodes={nodes}
+>
   <Header />
   <article class="article">
     <div class="article__wrap">
