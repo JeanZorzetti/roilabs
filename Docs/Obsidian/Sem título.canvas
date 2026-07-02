@@ -1,4 +1,50 @@
 {
-	"nodes":[],
-	"edges":[]
+	"nodes":[
+		{"id":"a1b2c3d4e5f60001","type":"group","label":"📚 Fontes (não editar)","x":-40,"y":-480,"width":860,"height":420},
+		{"id":"a1b2c3d4e5f60002","type":"file","file":"notebook/Blueprint Estratégico_ Hub de Infraestrutura Digital ROI Labs.md","x":0,"y":-400,"width":380,"height":300},
+		{"id":"a1b2c3d4e5f60003","type":"file","file":"notebook/Pesquisa Hub E-commerce ROI Labs.md","x":420,"y":-400,"width":380,"height":300},
+
+		{"id":"a1b2c3d4e5f60004","type":"file","file":"INDEX.md","x":1050,"y":-420,"width":500,"height":320,"color":"2"},
+
+		{"id":"a1b2c3d4e5f60005","type":"group","label":"⚡ Execução (vivo)","x":1900,"y":-480,"width":1260,"height":420},
+		{"id":"a1b2c3d4e5f60006","type":"file","file":"dashboard.md","x":1940,"y":-400,"width":360,"height":300},
+		{"id":"a1b2c3d4e5f60007","type":"file","file":"proximos-passos-dev.md","x":2340,"y":-400,"width":360,"height":300},
+		{"id":"a1b2c3d4e5f60008","type":"file","file":"handoff.md","x":2740,"y":-400,"width":360,"height":300},
+
+		{"id":"a1b2c3d4e5f60009","type":"file","file":"00-tese/tese.md","x":1100,"y":80,"width":400,"height":320,"color":"2"},
+
+		{"id":"a1b2c3d4e5f60010","type":"file","file":"10-mercado/mercado.md","x":100,"y":620,"width":320,"height":300},
+		{"id":"a1b2c3d4e5f60011","type":"file","file":"20-oferta/oferta.md","x":460,"y":620,"width":320,"height":300},
+		{"id":"a1b2c3d4e5f60012","type":"file","file":"30-modelo/modelo.md","x":820,"y":620,"width":320,"height":300},
+		{"id":"a1b2c3d4e5f60013","type":"file","file":"50-operacao/operacao.md","x":1180,"y":620,"width":320,"height":300},
+		{"id":"a1b2c3d4e5f60014","type":"file","file":"70-time/time.md","x":1540,"y":620,"width":320,"height":300},
+
+		{"id":"a1b2c3d4e5f60015","type":"group","label":"🚀 40 · GTM","x":1940,"y":560,"width":780,"height":420},
+		{"id":"a1b2c3d4e5f60016","type":"file","file":"40-gtm/gtm.md","x":1980,"y":620,"width":340,"height":300},
+		{"id":"a1b2c3d4e5f60017","type":"file","file":"40-gtm/pseo-execucao.md","x":2360,"y":620,"width":340,"height":300},
+
+		{"id":"a1b2c3d4e5f60018","type":"group","label":"⚖️ 60 · Legal-Fin","x":100,"y":1120,"width":1600,"height":820},
+		{"id":"a1b2c3d4e5f60019","type":"file","file":"60-legal-fin/legal-fin.md","x":140,"y":1180,"width":340,"height":300,"color":"2"},
+		{"id":"a1b2c3d4e5f60020","type":"file","file":"60-legal-fin/contrato-quadro.md","x":520,"y":1180,"width":340,"height":300},
+		{"id":"a1b2c3d4e5f60021","type":"file","file":"60-legal-fin/anexo-A-intermediacao.md","x":900,"y":1180,"width":340,"height":300},
+		{"id":"a1b2c3d4e5f60022","type":"file","file":"60-legal-fin/anexo-B-white-label.md","x":1280,"y":1180,"width":340,"height":300},
+		{"id":"a1b2c3d4e5f60023","type":"file","file":"60-legal-fin/centro-de-custo.md","x":140,"y":1560,"width":340,"height":300},
+		{"id":"a1b2c3d4e5f60024","type":"file","file":"60-legal-fin/projecao-financeira.md","x":520,"y":1560,"width":340,"height":300},
+		{"id":"a1b2c3d4e5f60025","type":"file","file":"60-legal-fin/auditoria.md","x":900,"y":1560,"width":340,"height":300},
+		{"id":"a1b2c3d4e5f60026","type":"file","file":"60-legal-fin/handoff.md","x":1280,"y":1560,"width":340,"height":300}
+	],
+	"edges":[
+		{"id":"e1a2b3c4d5e60001","fromNode":"a1b2c3d4e5f60001","fromSide":"right","toNode":"a1b2c3d4e5f60004","toSide":"left","label":"origem"},
+		{"id":"e1a2b3c4d5e60002","fromNode":"a1b2c3d4e5f60004","fromSide":"right","toNode":"a1b2c3d4e5f60005","toSide":"left","label":"status vivo"},
+		{"id":"e1a2b3c4d5e60003","fromNode":"a1b2c3d4e5f60004","fromSide":"bottom","toNode":"a1b2c3d4e5f60009","toSide":"top"},
+		{"id":"e1a2b3c4d5e60004","fromNode":"a1b2c3d4e5f60009","fromSide":"bottom","toNode":"a1b2c3d4e5f60010","toSide":"top"},
+		{"id":"e1a2b3c4d5e60005","fromNode":"a1b2c3d4e5f60009","fromSide":"bottom","toNode":"a1b2c3d4e5f60011","toSide":"top"},
+		{"id":"e1a2b3c4d5e60006","fromNode":"a1b2c3d4e5f60009","fromSide":"bottom","toNode":"a1b2c3d4e5f60012","toSide":"top"},
+		{"id":"e1a2b3c4d5e60007","fromNode":"a1b2c3d4e5f60009","fromSide":"bottom","toNode":"a1b2c3d4e5f60013","toSide":"top"},
+		{"id":"e1a2b3c4d5e60008","fromNode":"a1b2c3d4e5f60009","fromSide":"bottom","toNode":"a1b2c3d4e5f60014","toSide":"top"},
+		{"id":"e1a2b3c4d5e60009","fromNode":"a1b2c3d4e5f60009","fromSide":"right","toNode":"a1b2c3d4e5f60015","toSide":"left"},
+		{"id":"e1a2b3c4d5e60010","fromNode":"a1b2c3d4e5f60009","fromSide":"bottom","toNode":"a1b2c3d4e5f60018","toSide":"top"},
+		{"id":"e1a2b3c4d5e60011","fromNode":"a1b2c3d4e5f60016","fromSide":"right","toNode":"a1b2c3d4e5f60017","toSide":"left","label":"executa"},
+		{"id":"e1a2b3c4d5e60012","fromNode":"a1b2c3d4e5f60019","fromSide":"right","toNode":"a1b2c3d4e5f60020","toSide":"left","label":"instrumento"}
+	]
 }
