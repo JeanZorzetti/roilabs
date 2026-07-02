@@ -22,9 +22,28 @@ const seats = [
   { niche: 'Marcenaria sob medida', status: 'Em estudo', open: false },
   { niche: 'Pisos / Deck externo', status: 'Em estudo', open: false },
 ];
+
+// Nó próprio da home no @graph: o serviço Growth Partner (Base entrega Organization + WebSite).
+const jsonLdNodes = [
+  {
+    '@type': 'Service',
+    '@id': 'https://roilabs.com.br/#service',
+    name: 'Growth Partner — operação de vendas online pago pelo sucesso',
+    serviceType: 'Operação de vendas online (SEO programático de alta intenção)',
+    description:
+      'A ROI Labs constrói e opera a venda online de um fornecedor regional por nicho: páginas de alta intenção validadas por volume real de busca, sem mensalidade e sem custo fixo. Remuneração 100% variável, paga somente quando a venda acontece. Exclusividade de cadeira: uma empresa por nicho, por polo.',
+    provider: { '@id': 'https://roilabs.com.br/#org' },
+    areaServed: { '@type': 'City', name: 'Goiânia' },
+    offers: {
+      '@type': 'Offer',
+      description:
+        'Sem mensalidade: fração variável sobre a venda concretizada, com SLA de estoque e despacho.',
+    },
+  },
+];
 ---
 
-<Base>
+<Base jsonLdNodes={jsonLdNodes}>
   <Header />
 
   <main>
