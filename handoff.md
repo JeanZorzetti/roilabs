@@ -36,6 +36,8 @@ nicho âncora = **revestimentos/porcelanato**.
   - **US4** — `lib/ocupacao.ts` (`derivarOcupacao`, D6): estado da cadeira (ocupada por contratado | em prospecção | aberta) refletido no Painel (`/admin`) e em `/admin/cadeiras`, sem duplicar status em `Cadeira`.
   - **Verificado localmente:** `tsc --noEmit` limpo, `next build` limpo, `npm test` (5 suítes, incl. `success-fee.test.mjs`) passando.
 
+- **GEO — IndexNow no deploy (2026-07-02, `7a53d58`):** `src/scripts/indexnow.mjs` como postbuild nos DOIS sites (`/site` e `/site-goiania`; no goiânia encadeado após `check-feed`). Envia todas as URLs do `dist/sitemap.xml` a `api.indexnow.org`; chave pública `e72cab81d95c41fd915ce3331a10d1ad.txt` no `public/` de ambos. Ping não-fatal (falha da API não quebra o build). Testado local: HTTP 202 (9 URLs institucional, 72 goiânia). **Chave só valida quando o `.txt` estiver em prod → redeploy dos 2 sites ativa de verdade.**
+
 ## Pendências — Camada Parceiro (007), MANUAL
 
 - ~~`prisma db push` no host~~ — **feito 2026-07-01**: 3 tabelas novas (`parceiros`, `negocios_originados`, `faturas_success_fee`) aplicadas em `roilabs_db@2.24.207.200:5443`, verificadas via `prisma.count()` (0 registros, prontas para uso).
