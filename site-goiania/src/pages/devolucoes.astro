@@ -1,0 +1,98 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '556299999999';
+---
+
+<Base
+  title="Política de Devolução e Troca — ROI Labs Goiânia"
+  description="Como funcionam devoluções, trocas e reembolsos de porcelanato comprado em goiania.roilabs.com.br: arrependimento em 7 dias (CDC art. 49), defeito em até 90 dias e regras práticas de lote e tonalidade."
+>
+  <Header />
+
+  <main>
+    <section class="section">
+      <div class="wrap" style="max-width:72ch;">
+        <span class="eyebrow">Política de Devolução e Troca</span>
+        <h1 style="font-size:clamp(1.8rem,3.5vw,2.6rem);margin:0.4rem 0 1rem;">
+          Devoluções, trocas e reembolsos
+        </h1>
+        <p style="color:var(--d-muted);margin-bottom:2rem;">
+          Esta política vale para todas as compras feitas em goiania.roilabs.com.br e segue o
+          Código de Defesa do Consumidor (Lei 8.078/90).
+        </p>
+
+        <h2>Arrependimento — 7 dias</h2>
+        <p>
+          Comprou online e mudou de ideia? Você pode desistir da compra em até
+          <strong>7 dias corridos após o recebimento</strong>, sem precisar justificar
+          (CDC, art. 49). Condições:
+        </p>
+        <ul>
+          <li>Caixas <strong>fechadas e não assentadas</strong>, na embalagem original;</li>
+          <li>Reembolso <strong>integral</strong>, incluindo o frete pago, no mesmo meio de pagamento;</li>
+          <li>A coleta é agendada por nós, <strong>sem custo para você</strong>.</li>
+        </ul>
+
+        <h2>Produto com defeito — até 90 dias</h2>
+        <p>
+          Porcelanato é produto durável: defeitos de fabricação (trincas, empeno fora de norma,
+          diferença de calibre no mesmo lote) podem ser reclamados em até
+          <strong>90 dias</strong> (CDC, art. 26). Você escolhe entre <strong>troca</strong>,
+          <strong>abatimento proporcional</strong> ou <strong>reembolso</strong>.
+        </p>
+
+        <h2>Antes de assentar, confira</h2>
+        <p>
+          Tonalidade e calibre variam entre lotes — isso é característica do porcelanato, não
+          defeito. <strong>Confira as peças no recebimento e antes do assentamento.</strong>
+          Produto já assentado implica aceite do lote e da tonalidade; a partir daí a garantia
+          cobre apenas defeito de fabricação, não variação estética.
+        </p>
+
+        <h2>Trocas</h2>
+        <p>
+          Aceitamos troca por outro produto do catálogo em até 7 dias após o recebimento, com
+          caixas fechadas. Diferenças de valor são cobradas ou reembolsadas; o frete da troca é
+          combinado caso a caso com o fornecedor.
+        </p>
+
+        <h2>Como solicitar</h2>
+        <p>
+          Chame no <a href={`https://wa.me/${whatsapp}`}>WhatsApp</a> ou escreva para
+          <a href="mailto:parceria@roilabs.com.br">parceria@roilabs.com.br</a> com o
+          <strong>número do pedido</strong> e fotos das caixas (em caso de defeito). Respondemos
+          em até 24h úteis; reembolsos são processados pelo Mercado Pago no mesmo meio de
+          pagamento em até 7 dias úteis após a coleta.
+        </p>
+
+        <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:2rem;">
+          <a class="btn btn--ghost" href="/porcelanato">Ver porcelanatos</a>
+          <a class="btn btn--primary" href={`https://wa.me/${whatsapp}`}>Falar no WhatsApp</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  h2 {
+    font-size: clamp(1.15rem, 2vw, 1.4rem);
+    margin: 2rem 0 0.6rem;
+  }
+  p,
+  li {
+    line-height: 1.65;
+  }
+  ul {
+    padding-left: 1.2rem;
+    margin: 0.6rem 0 1rem;
+  }
+  a {
+    color: var(--hivis, inherit);
+  }
+</style>
