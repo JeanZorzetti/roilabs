@@ -17,7 +17,8 @@ dono: Jean (dev)
 ## ⏳ Ops rápidas (deploy/verificação, não é código)
 
 - [ ] **Criar conta Resend (free tier)** e setar na EasyPanel do `/app`: `RESEND_API_KEY`, `EMAIL_FROM`, `ALERT_EMAIL`. O código do ciclo 2 (`ef7bced`) já está no ar como no-op — com a chave, confirmação de pedido + alertas internos passam a sair sozinhos. Depois: verificar domínio `roilabs.com.br` no Resend pra sair do `onboarding@resend.dev`.
-- [ ] **Criar conta serper.dev (grátis, 2.500 buscas, sem cartão)** e setar o secret no repo: `gh secret set SERPER_API_KEY -R JeanZorzetti/roilabs`. Destrava o rank tracking semanal (DataForSEO zerou o saldo 2026-07-03 e não será recarregado agora; o script já prefere Serper quando a chave existe). Sem isso o cron de segunda falha.
+- [x] **Serper.dev — FEITO 2026-07-03.** Conta criada pelo Jean, secret `SERPER_API_KEY` setado no repo + env var local. 1ª rodada completa ok (40/40).
+- [ ] **⚠️ GitHub Actions do repo com `startup_failure` (billing).** Qualquer workflow (até um `echo ok`) falha em 1s sem jobs = Actions bloqueado na CONTA (repo privado: minutos grátis esgotados ou pagamento/spending limit — conferir em github.com/settings/billing). **Fallback JÁ ATIVO**: tarefa local `roilabs-rank-tracking` no Task Scheduler (segunda 09:00, roda atrasado se a máquina estava off) executa `rank-tracking-local.ps1` e commita/pusha sozinha — validada de ponta a ponta (`37c2255`). Quando o billing resolver, o workflow `rank-tracking.yml` volta a valer; aí remover a task local: `Unregister-ScheduledTask roilabs-rank-tracking`.
 
 - [x] **Redeploy manual do `/site` institucional na EasyPanel** — publica a chave IndexNow (`e72cab81...txt`; sem ela os pings dão 403). O lote GEO de 07-02 já foi ao ar no redeploy do item 1; este é só pra ativar o IndexNow.
 - [x] **Redeploy manual do `/app` na EasyPanel** — publica o demonstrativo do parceiro + admin mobile (`ea1e6de`).
