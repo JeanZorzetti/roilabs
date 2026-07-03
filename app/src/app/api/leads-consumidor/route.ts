@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { isAuthed } from '@/lib/auth';
+import { sendAlert, escapeHtml } from '@/lib/email';
 
 export const dynamic = 'force-dynamic';
 
@@ -35,6 +36,14 @@ export async function POST(req: NextRequest) {
       consentLGPD: true,
     },
   });
+
+  // Alerta interno fire-and-forget — lead B2C quente, responder rápido converte.
+  sendAlert(
+    `🛒 Lead novo — ${nome}`,
+    `<p><strong>${escapeHtml(nome)}</strong> · ${escapeHtml(whatsapp)}</p>
+     <p>${escapeHtml(cap(form.get('produto'), 200) || 'sem produto')} · ${escapeHtml(cap(form.get('pagina'), 300) || '')}</p>
+     <p><a href="https://app.roilabs.com.br/admin/leads">Abrir no admin</a></p>`
+  );
 
   const redirectTo = cap(form.get('redirect'), 300);
   if (redirectTo.startsWith('http')) return NextResponse.redirect(redirectTo, 303);

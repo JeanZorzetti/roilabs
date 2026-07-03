@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getPayment, verifyWebhookSignature } from '@/lib/mercadopago';
 import { resolverParametros, resolverPiso, resolverModalidade, type CamadasConfig } from '@/lib/centros-custo';
+import { sendEmail, sendAlert, escapeHtml } from '@/lib/email';
 
 export const dynamic = 'force-dynamic';
 
@@ -55,7 +56,7 @@ export async function POST(req: NextRequest) {
       // Load all DB layers once for the whole order, then resolve per slug.
       const [paramRows, skuRows] = await Promise.all([
         prisma.parametroCentroCusto.findMany(),
-        prisma.itemPedido.findMany({ where: { pedidoId: pedido.id }, select: { id: true, slug: true, subtotal: true } }),
+        prisma.itemPedido.findMany({ where: { pedidoId: pedido.id }, select: { id: true, slug: true, subtotal: true, caixas: true } }),
       ]);
       const globalRow = paramRows.find((r) => r.escopo === 'global') ?? null;
       const linhaRows = paramRows.filter((r) => r.escopo === 'linha');
@@ -93,6 +94,35 @@ export async function POST(req: NextRequest) {
           });
         }),
       ]);
+
+      // Pós-pagamento (fire-and-forget, nunca quebra o webhook): confirmação ao
+      // cliente (recibo nosso, além do MP) + alerta interno de pedido novo.
+      const brl = (v: unknown) => Number(v).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+      const itensHtml = skuRows
+        .map((i) => `<li>${escapeHtml(i.slug)} — ${i.caixas} caixa(s) · ${brl(i.subtotal)}</li>`)
+        .join('');
+      if (pedido.email) {
+        sendEmail(
+          pedido.email,
+          'Pedido confirmado — porcelanato Goiânia | ROI Labs',
+          `<p>Olá, ${escapeHtml(pedido.nome)}!</p>
+           <p>Recebemos a confirmação do seu pagamento. Seu pedido está reservado e o
+           fornecedor do polo de Goiânia já foi acionado.</p>
+           <ul>${itensHtml}</ul>
+           <p><strong>Total: ${brl(pedido.total)}</strong>${pedido.frete != null ? ` (frete incluso: ${brl(pedido.frete)})` : ' (frete a combinar)'}</p>
+           <p>Prazo de entrega/retirada: <strong>2 a 6 dias úteis</strong>. Entramos em
+           contato pelo WhatsApp informado para combinar os detalhes.</p>
+           <p>Dúvidas? Chame a gente: <a href="https://wa.me/5562993265713">WhatsApp (62) 99326-5713</a></p>
+           <p>— ROI Labs · goiania.roilabs.com.br</p>`
+        );
+      }
+      sendAlert(
+        `💰 Pedido pago — ${pedido.nome} · ${brl(pedido.total)}`,
+        `<p><strong>${escapeHtml(pedido.nome)}</strong> · ${escapeHtml(pedido.whatsapp)}${pedido.email ? ` · ${escapeHtml(pedido.email)}` : ''}</p>
+         <ul>${itensHtml}</ul>
+         <p>Total: <strong>${brl(pedido.total)}</strong> · entrega: ${escapeHtml(pedido.entrega)}</p>
+         <p><a href="https://app.roilabs.com.br/admin/pedidos">Abrir no admin</a></p>`
+      );
     }
   } else if (payment.status === 'refunded' || payment.status === 'charged_back') {
     await prisma.pedido.update({

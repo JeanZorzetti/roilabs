@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { isAuthed } from '@/lib/auth';
+import { sendAlert, escapeHtml } from '@/lib/email';
 
 export const dynamic = 'force-dynamic';
 
@@ -32,6 +33,14 @@ export async function POST(req: NextRequest) {
       mensagem: cap(form.get('mensagem'), 4000) || null,
     },
   });
+
+  // Alerta interno fire-and-forget — velocidade de resposta é conversão (Gate 3).
+  sendAlert(
+    `🏭 Candidatura nova — ${nome} (${empresa})`,
+    `<p><strong>${escapeHtml(nome)}</strong> · ${escapeHtml(empresa)} · ${escapeHtml(whatsapp)}</p>
+     <p>${escapeHtml(cap(form.get('categoria'), 120) || 'sem categoria')}</p>
+     <p><a href="https://app.roilabs.com.br/admin/candidaturas">Abrir no admin</a></p>`
+  );
 
   const redirectTo = cap(form.get('redirect'), 300);
   if (redirectTo.startsWith('http')) return NextResponse.redirect(redirectTo, 303);
