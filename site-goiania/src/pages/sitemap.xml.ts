@@ -5,14 +5,16 @@ import { produtos } from '../data/produtos';
 const SITE = 'https://goiania.roilabs.com.br';
 
 export const GET: APIRoute = () => {
+  // Barra final SEMPRE: sem ela o nginx responde 301 (formato directory do Astro) e o
+  // Googlebot queima crawl em redirect — foi 46% do rastreamento (GSC 2026-07-03).
   const urls = [
     { loc: `${SITE}/` },
-    { loc: `${SITE}/porcelanato` },
-    { loc: `${SITE}/obrigado` },
-    { loc: `${SITE}/devolucoes` },
-    { loc: `${SITE}/calculadora` },
-    ...pages.map((p) => ({ loc: `${SITE}/porcelanato/${p.slug}` })),
-    ...produtos.map((p) => ({ loc: `${SITE}/porcelanato/produto/${p.slug}` })),
+    { loc: `${SITE}/porcelanato/` },
+    { loc: `${SITE}/obrigado/` },
+    { loc: `${SITE}/devolucoes/` },
+    { loc: `${SITE}/calculadora/` },
+    ...pages.map((p) => ({ loc: `${SITE}/porcelanato/${p.slug}/` })),
+    ...produtos.map((p) => ({ loc: `${SITE}/porcelanato/produto/${p.slug}/` })),
   ];
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>

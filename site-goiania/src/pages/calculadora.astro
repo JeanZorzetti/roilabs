@@ -51,7 +51,7 @@ const jsonLdNodes = [
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Início', item: SITE },
-      { '@type': 'ListItem', position: 2, name: 'Calculadora de porcelanato', item: `${SITE}/calculadora` },
+      { '@type': 'ListItem', position: 2, name: 'Calculadora de porcelanato', item: `${SITE}/calculadora/` },
     ],
   },
 ];
@@ -146,7 +146,7 @@ const jsonLdNodes = [
           pronta-entrega — ou mande sua metragem no WhatsApp e receba o orçamento.
         </p>
         <div class="cta-block" style="display:flex;gap:1rem;flex-wrap:wrap;align-items:center;">
-          <a class="btn btn--primary" href="/porcelanato">Ver catálogo de porcelanato</a>
+          <a class="btn btn--primary" href="/porcelanato/">Ver catálogo de porcelanato</a>
           <WhatsappCta termoAlvo="porcelanato (já calculei a metragem)" numero={whatsapp} />
         </div>
       </div>

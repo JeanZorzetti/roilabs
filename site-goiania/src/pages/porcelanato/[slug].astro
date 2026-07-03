@@ -46,7 +46,7 @@ const tipo = page.tipo.charAt(0).toUpperCase() + page.tipo.slice(1);
         <nav class="breadcrumb" aria-label="Localização">
           <a href="/">Início</a>
           <span class="breadcrumb__sep" aria-hidden="true">›</span>
-          <a href="/porcelanato">Porcelanato</a>
+          <a href="/porcelanato/">Porcelanato</a>
           <span class="breadcrumb__sep" aria-hidden="true">›</span>
           <span aria-current="page">{tipo}</span>
         </nav>
@@ -150,7 +150,7 @@ const tipo = page.tipo.charAt(0).toUpperCase() + page.tipo.slice(1);
 
           <LeadForm
             produto={page.termoAlvo}
-            pagina={`/porcelanato/${page.slug}`}
+            pagina={`/porcelanato/${page.slug}/`}
             appUrl={appUrl}
           />
         </div>
@@ -166,7 +166,7 @@ const tipo = page.tipo.charAt(0).toUpperCase() + page.tipo.slice(1);
           </h2>
           <div class="related-grid">
             {relacionados.map((r) => (
-              <a href={`/porcelanato/${r.slug}`} class="related-card">
+              <a href={`/porcelanato/${r.slug}/`} class="related-card">
                 {r.titulo.replace(/ em Goiânia.*/, '')}
               </a>
             ))}

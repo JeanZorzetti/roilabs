@@ -120,7 +120,7 @@ const { slug, m2Caixa, preco } = Astro.props;
       const ambientes = getAmbientes();
       if (ambientes.length === 0) { preview.textContent = 'Informe ao menos um ambiente (largura × comprimento).'; return; }
       addFromSimulador(slug, ambientes, folgaFrac());
-      preview.innerHTML = `Adicionado! <a href="/carrinho">Ver carrinho (${lines().length})</a>`;
+      preview.innerHTML = `Adicionado! <a href="/carrinho/">Ver carrinho (${lines().length})</a>`;
     });
 
     addRoom(); // start with one empty room

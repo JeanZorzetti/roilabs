@@ -9,7 +9,7 @@ const { produto } = Astro.props;
 const nome = nomeProduto(produto);
 const a = produto.atributos;
 ---
-<a class="prod-card" href={`/porcelanato/produto/${produto.slug}`}>
+<a class="prod-card" href={`/porcelanato/produto/${produto.slug}/`}>
   <div class="prod-card__img">
     <img src={produto.imagens[0]} alt={`${a.marca} ${nome}`} loading="lazy" />
     {a.retificado && <span class="prod-card__badge">Retificado</span>}

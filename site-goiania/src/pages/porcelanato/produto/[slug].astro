@@ -24,7 +24,7 @@ const titulo = tituloProduto(produto);
 
 const SITE = Astro.site?.href.replace(/\/$/, '') ?? 'https://goiania.roilabs.com.br';
 const appUrl = import.meta.env.PUBLIC_APP_URL ?? 'https://app.roilabs.com.br';
-const url = `${SITE}/porcelanato/produto/${produto.slug}`;
+const url = `${SITE}/porcelanato/produto/${produto.slug}/`;
 
 const categorias = categoriasDoProduto(produto, pages);
 const relacionados = produtosRelacionados(produto, 4);
@@ -60,7 +60,7 @@ const jsonLdNodes = [
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Início', item: SITE },
-      { '@type': 'ListItem', position: 2, name: 'Porcelanato', item: `${SITE}/porcelanato` },
+      { '@type': 'ListItem', position: 2, name: 'Porcelanato', item: `${SITE}/porcelanato/` },
       { '@type': 'ListItem', position: 3, name: titulo, item: url },
     ],
   },
@@ -81,7 +81,7 @@ const jsonLdNodes = [
         <nav class="breadcrumb" aria-label="Localização">
           <a href="/">Início</a>
           <span class="breadcrumb__sep" aria-hidden="true">›</span>
-          <a href="/porcelanato">Porcelanato</a>
+          <a href="/porcelanato/">Porcelanato</a>
           <span class="breadcrumb__sep" aria-hidden="true">›</span>
           <span aria-current="page">{titulo}</span>
         </nav>
@@ -102,7 +102,7 @@ const jsonLdNodes = [
         </p>
         <LeadForm
           produto={titulo}
-          pagina={`/porcelanato/produto/${produto.slug}`}
+          pagina={`/porcelanato/produto/${produto.slug}/`}
           appUrl={appUrl}
         />
       </div>
@@ -115,7 +115,7 @@ const jsonLdNodes = [
           <h2 style="font-size:clamp(1.3rem,2.2vw,1.8rem);margin-bottom:1.4rem;">Categorias</h2>
           <div class="related-grid">
             {categorias.slice(0, 6).map((c) => (
-              <a href={`/porcelanato/${c.slug}`} class="related-card">
+              <a href={`/porcelanato/${c.slug}/`} class="related-card">
                 {c.titulo.replace(/ em Goiânia.*/, '')}
               </a>
             ))}

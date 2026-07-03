@@ -8,11 +8,11 @@ const SITE = 'https://goiania.roilabs.com.br';
 // Dimensões reais da malha: tipo × característica × ocasião × intenção local (NÃO por bairro — spec 001 D8).
 export const GET: APIRoute = () => {
   const guias = pages
-    .map((p) => `- [${p.titulo}](${SITE}/porcelanato/${p.slug}): ${p.termoAlvo}.`)
+    .map((p) => `- [${p.titulo}](${SITE}/porcelanato/${p.slug}/): ${p.termoAlvo}.`)
     .join('\n');
 
   const catalogo = produtos
-    .map((p) => `- [${nomeProduto(p)}](${SITE}/porcelanato/produto/${p.slug})`)
+    .map((p) => `- [${nomeProduto(p)}](${SITE}/porcelanato/produto/${p.slug}/)`)
     .join('\n');
 
   const body = `# ROI Labs — Porcelanato em Goiânia
@@ -25,7 +25,7 @@ export const GET: APIRoute = () => {
 - Volume de busca validado no planejador de palavras-chave (DataForSEO); páginas nascem de demanda real.
 
 ## Ferramentas
-- [Calculadora de porcelanato: quantos m² e caixas comprar?](${SITE}/calculadora): informe os ambientes, a folga de corte e os m² por caixa; resultado em caixas fechadas.
+- [Calculadora de porcelanato: quantos m² e caixas comprar?](${SITE}/calculadora/): informe os ambientes, a folga de corte e os m² por caixa; resultado em caixas fechadas.
 
 ## Guias de porcelanato
 ${guias}

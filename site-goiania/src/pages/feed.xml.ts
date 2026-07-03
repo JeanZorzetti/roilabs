@@ -13,7 +13,7 @@ const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replac
 export const GET: APIRoute = () => {
   const items = produtos.filter(elegivelParaFeed).map((p) => {
     const a = p.atributos;
-    const link = `${SITE}/porcelanato/produto/${p.slug}`;
+    const link = `${SITE}/porcelanato/produto/${p.slug}/`;
     return `    <item>
       <g:id>${esc(p.slug)}</g:id>
       <title>${esc(`${tituloProduto(p)} ${a.dimensao}`)}</title>

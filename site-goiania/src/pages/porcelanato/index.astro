@@ -42,7 +42,7 @@ const byTipo = pages.reduce<Record<string, typeof pages>>((acc, p) => {
 
         <div class="pseo-index-grid" style="margin-top:3rem;">
           {pages.map((p) => (
-            <a href={`/porcelanato/${p.slug}`} class="pseo-index-card">
+            <a href={`/porcelanato/${p.slug}/`} class="pseo-index-card">
               <div class="pseo-index-card__title">{p.titulo.replace(/ em Goiânia.*/, '')}</div>
               <div class="pseo-index-card__meta">
                 {p.tipo}{p.ocasiao ? ` · ${p.ocasiao}` : ''}

@@ -104,7 +104,7 @@ const { slug, m2Caixa, preco } = Astro.props;
       if (caixas === 0) { input.focus(); return; }
       addItem(slug, caixas);
       const total = lines().length;
-      preview.innerHTML = `Adicionado! <a href="/carrinho">Ver carrinho (${total})</a>`;
+      preview.innerHTML = `Adicionado! <a href="/carrinho/">Ver carrinho (${total})</a>`;
       input.value = '';
     });
   });
