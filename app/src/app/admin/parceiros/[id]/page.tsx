@@ -25,12 +25,15 @@ export default async function ParceiroDetalhePage({ params }: { params: Promise<
 
   return (
     <div className="page">
-      <div className="page__head">
-        <h1>{parceiro.nome}</h1>
-        <p>
-          {parceiro.cadeira?.niche ?? parceiro.nicho} · {parceiro.estagio}
-          {parceiro.comissaoPct !== null && ` · ${(Number(parceiro.comissaoPct) * 100).toFixed(1)}%`}
-        </p>
+      <div className="page__head" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1rem', flexWrap: 'wrap' }}>
+        <div>
+          <h1>{parceiro.nome}</h1>
+          <p>
+            {parceiro.cadeira?.niche ?? parceiro.nicho} · {parceiro.estagio}
+            {parceiro.comissaoPct !== null && ` · ${(Number(parceiro.comissaoPct) * 100).toFixed(1)}%`}
+          </p>
+        </div>
+        <a className="btn btn--sm" href={`/admin/parceiros/${parceiro.id}/demonstrativo`}>Demonstrativo do mês</a>
       </div>
 
       <div className="cc-section" style={{ marginBottom: '1.5rem' }}>

@@ -8,6 +8,7 @@ import Footer from '../components/Footer.astro';
 // Coupon validation is the one fetch (cross-origin JSON) — the server is the money authority.
 const appUrl = import.meta.env.PUBLIC_APP_URL ?? 'https://app.roilabs.com.br';
 const action = `${appUrl}/api/pedidos`;
+const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
 ---
 
 <Base
@@ -43,6 +44,10 @@ const action = `${appUrl}/api/pedidos`;
         <section class="cart-items" aria-label="Itens do carrinho">
           <ul class="cart-list"></ul>
           <div class="cart-actions">
+            <button type="button" class="btn btn--primary cart-whats" data-whats={whatsapp}>
+              Receber orçamento no WhatsApp
+            </button>
+            <p class="cart-whats__note">Compra consultiva? Mandamos seu carrinho pro nosso especialista — sem compromisso.</p>
             <button type="button" class="cart-share">🔗 Salvar / compartilhar carrinho</button>
             <p class="cart-share__msg" aria-live="polite"></p>
           </div>
@@ -132,7 +137,9 @@ const action = `${appUrl}/api/pedidos`;
   .cart-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 2rem; align-items: start; }
   @media (max-width: 760px) { .cart-grid { grid-template-columns: 1fr; } }
   .cart-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 1rem; }
-  .cart-actions { margin-top: 1.2rem; }
+  .cart-actions { margin-top: 1.2rem; display: grid; gap: 0.6rem; justify-items: start; }
+  .cart-whats { font-size: 0.95rem; }
+  .cart-whats__note { font-size: 0.82rem; color: var(--d-muted); margin: 0; }
   .cart-share { background: none; border: 1px solid var(--d-line-strong); color: var(--d-text); border-radius: 8px; padding: 0.6rem 0.9rem; cursor: pointer; font: inherit; font-size: 0.88rem; }
   .cart-share:hover { color: var(--hivis); border-color: var(--hivis); }
   .cart-share__msg { font-size: 0.82rem; color: var(--hivis); margin: 0.5rem 0 0; min-height: 1.1em; word-break: break-all; }
@@ -396,6 +403,17 @@ const action = `${appUrl}/api/pedidos`;
   $('.cart-coupon__apply').addEventListener('click', () => {
     const codigo = cupomInput.value.trim();
     if (codigo) applyCupom(codigo);
+  });
+
+  $('.cart-whats').addEventListener('click', () => {
+    const btn = $('.cart-whats') as HTMLButtonElement;
+    const msg = $('.cart-share__msg') as HTMLElement;
+    const cart = getCart();
+    if (cart.length === 0) { msg.textContent = 'Adicione itens antes de pedir o orçamento.'; return; }
+    const cartUrl = `${location.origin}/carrinho?c=${encodeCart()}`;
+    const texto = `Olá! Quero um orçamento deste carrinho de porcelanato:\n${cartUrl}`;
+    (window as any).himetrica?.track('orcamento_whatsapp', { itens: cart.length });
+    window.open(`https://wa.me/${btn.dataset.whats}?text=${encodeURIComponent(texto)}`, '_blank', 'noopener');
   });
 
   $('.cart-share').addEventListener('click', async () => {

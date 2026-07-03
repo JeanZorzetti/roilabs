@@ -280,3 +280,34 @@ a { color: inherit; }
 @media (max-width: 900px) {
   .board { grid-template-columns: 1fr; }
 }
+
+/* ── Demonstrativo do parceiro (printable) ─────────────────────────────── */
+.demo-toolbar { display: flex; gap: 0.75rem; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; }
+.demo-sheet { background: #fff; border: 1px solid var(--l-line); border-radius: 12px; padding: clamp(1.25rem, 3vw, 2rem); max-width: 900px; }
+.demo-head { display: flex; justify-content: space-between; gap: 1rem; align-items: flex-start; border-bottom: 2px solid var(--ink); padding-bottom: 0.9rem; margin-bottom: 1.1rem; flex-wrap: wrap; }
+.demo-brand { font-family: var(--font-display), sans-serif; font-weight: 800; letter-spacing: 0.04em; font-size: 1.1rem; }
+@media print {
+  .topbar, .demo-toolbar { display: none !important; }
+  .page.demo-page { padding: 0; max-width: none; }
+  .demo-sheet { border: 0; border-radius: 0; padding: 0; max-width: none; }
+  .fin-table tbody tr:hover { background: transparent; }
+}
+
+/* ── Mobile — admin operado de campo (celular) ─────────────────────────── */
+@media (max-width: 760px) {
+  .topbar { flex-wrap: wrap; gap: 0.5rem 1rem; }
+  /* nav vira trilho horizontal rolável em linha própria */
+  .topbar__nav {
+    order: 9; width: 100%; margin-left: 0;
+    overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+  }
+  .topbar__nav::-webkit-scrollbar { display: none; }
+  .topbar__nav a { flex-shrink: 0; }
+  /* toda tabela do admin rola na horizontal em vez de estourar a página
+     (cobre fin-table, cc-table e as tabelas inline de pedidos/leads) */
+  .page table { display: block; overflow-x: auto; }
+  .seat-row { grid-template-columns: 1fr; }
+  .cc-field { flex: 1 1 140px; }
+  .cc-field input, .cc-field select { width: 100%; }
+  .cc-field input[type="date"] { width: 100%; }
+}

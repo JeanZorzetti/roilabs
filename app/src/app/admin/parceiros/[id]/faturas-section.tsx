@@ -77,7 +77,11 @@ export default function FaturasSection({
         <tbody>
           {faturas.map((f) => (
             <tr key={f.id}>
-              <td>{f.competencia}</td>
+              <td>
+                <a href={`/admin/parceiros/${parceiroId}/demonstrativo?mes=${f.competencia}`} style={{ color: 'inherit' }}>
+                  {f.competencia}
+                </a>
+              </td>
               <td className="num">{brl(f.base)}</td>
               <td className="num">{brl(f.valor)}</td>
               <td style={{ color: STATUS_COLOR[f.status], fontWeight: 700 }}>{f.status}</td>
