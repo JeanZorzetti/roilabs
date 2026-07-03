@@ -16,6 +16,9 @@ dono: Jean (dev)
 
 ---
 
+> [!important] 2026-07-03 — Faxina de backlog
+> **Tudo que estava não-feito abaixo foi movido para [[backlog-pendencias]]** (não é prioridade agora). A lista ativa é a seção [[#🧭 Fora da caixa — ciclo 2 (2026-07-03)|Fora da caixa — ciclo 2]].
+
 ## 🎯 Agora (2026-07-02) — lista autoritativa
 
 ### Caminho crítico (em ordem)
@@ -58,6 +61,24 @@ dono: Jean (dev)
 - [x] **Demonstrativo do parceiro — FEITO 2026-07-03 (`ea1e6de`), antes da 1ª fatura Asaas.** `/admin/parceiros/[id]/demonstrativo?mes=YYYY-MM`: negócios repassados do mês, base (total−frete), % aplicado, valor. Fatura emitida = autoridade (snapshot); sem fatura = prévia via `calcularFaturaMensal`. Botão Imprimir/PDF (print CSS esconde chrome do admin) — é o PDF que vai pro parceiro. Links: header do parceiro + competência na tabela de faturas. ⏳ redeploy do `/app`.
 
 ---
+
+## 🧭 Fora da caixa — ciclo 2 (2026-07-03)
+
+> [!note] Ideias novas, ranqueadas por alavanca. **Verificado contra o código em 2026-07-03**: nada abaixo existe ainda (Product schema e FAQPage na malha JÁ existem — por isso não estão aqui). Item grande = spec (011+) antes de codar.
+
+### 🎯 Destravar o gate do negócio (fornecedor)
+
+- [ ] **⭐ CTA WhatsApp no site institucional.** O recrutamento de fornecedor é O gate do negócio (Gate 3) e hoje o único canal do site é o form (resposta "em até 48h úteis") — fornecedor high-ticket quer conversa, não formulário. Botão "Chamar no WhatsApp" no hero + no fim da página, `wa.me/5562993265713` com texto pré-preenchido ("Quero saber mais sobre a cadeira de revestimentos em Goiânia"), evento `whatsapp_click` já sai de graça (listener delegado no Base). Verificado: **zero** `wa.me` no `/site` hoje. Meio dia, mexe direto no funil B2B.
+
+### 💰 Converter mais (B2C goiânia)
+
+- [ ] **Calculadora de porcelanato standalone (`/calculadora`).** O `SimuladorM2.astro` já existe dentro do carrinho — extrair pra uma página própria topo-de-funil ("quanto porcelanato preciso?", "como calcular caixas?"), com FAQ/AEO no padrão da malha e CTA duplo: catálogo + orçamento WhatsApp. Captura quem ainda está medindo a obra — intenção que a malha (tipo/ambiente/ocasião) não cobre. Reuso quase total.
+- [ ] **Confirmação de pedido pro cliente.** Quem paga hoje só recebe o recibo do Mercado Pago — nada nosso. E-mail (Resend free tier) no webhook de pagamento: resumo do pedido, prazo 2–6 dias, WhatsApp de contato. Confiança high-ticket + menos "cadê meu pedido" no WhatsApp da Duda. Verificado: zero infra de e-mail no app. **Fazer junto com o alerta interno de lead/pedido do [[backlog-pendencias]] — mesma infra, 1 tarde.**
+
+### 📣 Escalar o canal (pSEO/GEO)
+
+- [ ] **Dimensão MARCA na malha pSEO.** Catálogo tem BIANCOGRES, Delta, Savane — "porcelanato biancogres goiânia" é query de fundo de funil que a malha não cobre. **Passo 1 obrigatório: validar volume no open-seo/DataForSEO (piso ≥ 200 do gate `check-matrix`)**; se validar, entra no motor da 008 como dados, quase sem código novo. Se não validar, mata a ideia sem custo.
+- [ ] **Rank tracking semanal das 39 + âncora.** Script contra o DataForSEO (open-seo já roda self-hosted com credencial ativa) puxando posição de `porcelanato goiânia` + as 39 páginas → CSV/nota semanal no vault. É a leitura de tração ANTES de o GSC maturar (checkpoint dele só ~07-15). Barato: 1 script + 1 cron.
 
 ## 🚀 Fase 1 — Subir o MVP no ar (caminho crítico, em ordem)
 
