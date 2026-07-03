@@ -35,6 +35,7 @@ const tipo = page.tipo.charAt(0).toUpperCase() + page.tipo.slice(1);
 <Base
   title={`${page.titulo} — ROI Labs`}
   description={page.intro.slice(0, 155)}
+  ogImage={`/open-graph/porcelanato/${page.slug}.png`}
   jsonLdNodes={jsonLdNodes}
 >
   <Header />

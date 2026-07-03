@@ -94,6 +94,7 @@ const jsonLdNodes = [
   title={`${titulo} — ${a.dimensao} | Porcelanato Goiânia`}
   description={descricaoProduto(produto)}
   ogType="product"
+  ogImage={produto.imagens[0] ?? '/og-image.jpg'}
   jsonLdNodes={jsonLdNodes}
 >
   <Header />
