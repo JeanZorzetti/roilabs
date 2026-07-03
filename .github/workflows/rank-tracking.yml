@@ -28,3 +28,11 @@ jobs:
           git config user.email "actions@users.noreply.github.com"
           git add Docs/Obsidian/rank-tracking.csv Docs/Obsidian/rank-tracking.md
           git diff --cached --quiet || { git commit -m "chore: weekly rank tracking $(date -u +%F)"; git push; }
+      # Weekly digest e-mail (leads/pedidos/GMV from the DB + this run's rank snapshot).
+      # Runs even if rank tracking failed — the DB stats are still worth sending.
+      - if: always()
+        run: |
+          curl -sf -X POST "https://app.roilabs.com.br/api/cron/digest" \
+            -H "X-Cron-Secret: ${{ secrets.CRON_SECRET }}" \
+            -H "Content-Type: text/plain" \
+            --data-binary @Docs/Obsidian/rank-tracking.md || echo "digest skipped"
