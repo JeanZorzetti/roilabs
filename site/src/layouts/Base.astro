@@ -54,6 +54,9 @@ const graph = {
 };
 
 const clarityId = import.meta.env.PUBLIC_CLARITY_ID;
+// GA4 do institucional (propriedade roilabs.com.br). Fallback hard-coded de propósito:
+// vale sem env na EasyPanel; PUBLIC_GA_ID sobrepõe se um dia precisar trocar.
+const gaId = import.meta.env.PUBLIC_GA_ID ?? 'G-7JD9J2QEDJ';
 ---
 
 <!doctype html>
@@ -86,6 +89,18 @@ const clarityId = import.meta.env.PUBLIC_CLARITY_ID;
     />
 
     <script type="application/ld+json" set:html={JSON.stringify(graph)} />
+
+    {gaId && (
+      <>
+        <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}></script>
+        <script is:inline define:vars={{ gaId }}>
+          window.dataLayer = window.dataLayer || [];
+          function gtag() { dataLayer.push(arguments); }
+          gtag('js', new Date());
+          gtag('config', gaId);
+        </script>
+      </>
+    )}
 
     {clarityId && (
       <script is:inline define:vars={{ clarityId }}>
