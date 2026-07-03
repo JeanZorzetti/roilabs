@@ -11,7 +11,7 @@ export const GET: APIRoute = async () => {
   );
 
   const artigos = posts
-    .map((p) => `- [${p.data.title}](${SITE}/blog/${p.id}): ${p.data.description}`)
+    .map((p) => `- [${p.data.title}](${SITE}/blog/${p.id}/): ${p.data.description}`)
     .join('\n');
 
   const body = `# ROI Labs
@@ -26,7 +26,7 @@ export const GET: APIRoute = async () => {
 
 ## Páginas principais
 - [Home e candidatura](${SITE}/): o modelo, o mapa de cadeiras de Goiânia e o formulário de candidatura do fornecedor.
-- [Blog](${SITE}/blog): como fornecedores de revestimentos e materiais de construção em Goiânia vendem pela internet.
+- [Blog](${SITE}/blog/): como fornecedores de revestimentos e materiais de construção em Goiânia vendem pela internet.
 
 ## Artigos
 ${artigos}

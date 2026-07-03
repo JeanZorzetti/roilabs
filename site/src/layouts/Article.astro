@@ -39,7 +39,7 @@ const nodes: Record<string, unknown>[] = [
     '@id': `${canonical}#breadcrumb`,
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://roilabs.com.br/' },
-      { '@type': 'ListItem', position: 2, name: 'Blog', item: 'https://roilabs.com.br/blog' },
+      { '@type': 'ListItem', position: 2, name: 'Blog', item: 'https://roilabs.com.br/blog/' },
       { '@type': 'ListItem', position: 3, name: title, item: canonical },
     ],
   },
@@ -109,7 +109,7 @@ const fmtDate = (d: Date) =>
         )
       }
 
-      <a class="article__back" href="/blog">← Todos os artigos</a>
+      <a class="article__back" href="/blog/">← Todos os artigos</a>
     </div>
   </article>
   <Footer />

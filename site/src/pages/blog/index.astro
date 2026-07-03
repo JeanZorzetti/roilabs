@@ -26,7 +26,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
       <div class="post-list">
         {
           posts.map((post) => (
-            <a class="post-card" href={`/blog/${post.id}`}>
+            <a class="post-card" href={`/blog/${post.id}/`}>
               {post.data.eyebrow && <span class="post-card__eyebrow">{post.data.eyebrow}</span>}
               <h2 class="post-card__title">{post.data.title}</h2>
               <p class="post-card__desc">{post.data.description}</p>

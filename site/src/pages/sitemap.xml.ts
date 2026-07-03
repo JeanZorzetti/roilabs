@@ -6,12 +6,14 @@ const SITE = 'https://roilabs.com.br';
 export const GET: APIRoute = async () => {
   const posts = await getCollection('blog', ({ data }) => !data.draft);
 
+  // Barra final SEMPRE: sem ela o nginx responde 301 http:// (mesmo bug do site-goiania,
+  // GSC 2026-07-03) e o Googlebot queima crawl em redirect.
   const urls = [
     { loc: `${SITE}/` },
-    { loc: `${SITE}/blog` },
-    { loc: `${SITE}/obrigado` },
+    { loc: `${SITE}/blog/` },
+    { loc: `${SITE}/obrigado/` },
     ...posts.map((p) => ({
-      loc: `${SITE}/blog/${p.id}`,
+      loc: `${SITE}/blog/${p.id}/`,
       lastmod: (p.data.updatedDate ?? p.data.pubDate).toISOString().slice(0, 10),
     })),
   ];
