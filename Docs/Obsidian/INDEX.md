@@ -43,6 +43,13 @@ Um nó *mora* em uma pasta só, mas *se liga* a vários. `pricing` mora em `30-m
   - [[legal-fin]] — estrutura societária, runway, riscos
   - [[time]] — Customer Success, curadoria comercial
 
+## Execução e medição (fora do DAG estratégico)
+
+Notas operacionais — não são nós de decisão, não têm `depends_on`:
+
+- **`80-dev/`** — execução dev/ops: [[proximos-passos-dev]] (lista ativa), [[backlog-pendencias]] (estacionado), [[merchant-center]] e [[meta-catalog]] (docs de ops dos feeds). **Regra: todo doc novo nasce aqui, não em `docs/` do repo.**
+- **`90-medicao/`** — dados que a automação escreve sozinha: [[rank-tracking]] (snapshot semanal, cron de segunda) + `rank-tracking.csv` (histórico) + exports do GSC. Não editar à mão.
+
 ## Fontes (documentos originais, não editar)
 
 - [[Blueprint Estratégico_ Hub de Infraestrutura Digital ROI Labs]] — blueprint linear de origem

@@ -18,7 +18,7 @@ dono: Jean (dev)
 
 - [ ] **Criar conta Resend (free tier)** e setar na EasyPanel do `/app`: `RESEND_API_KEY`, `EMAIL_FROM`, `ALERT_EMAIL`. O código do ciclo 2 (`ef7bced`) já está no ar como no-op — com a chave, confirmação de pedido + alertas internos passam a sair sozinhos. Depois: verificar domínio `roilabs.com.br` no Resend pra sair do `onboarding@resend.dev`.
 - [ ] **`CRON_SECRET` (digest semanal, ciclo 3)** — gerar um segredo (`openssl rand -hex 32`) e setar **nos dois lugares**: env var na EasyPanel do `/app` + secret `CRON_SECRET` no repo GitHub. Sem ele a rota `/api/cron/digest` responde 503 e o step de segunda no `rank-tracking.yml` é pulado (não quebra nada). E-mail só sai quando o Resend acima também existir.
-- [ ] **Meta Catalog (Duda, ciclo 3)** — cadastrar o feed `goiania.roilabs.com.br/feed.xml` no Commerce Manager (Instagram Shopping + catálogo do WhatsApp). Passo a passo pronto em `site-goiania/docs/meta-catalog.md`. Dev: zero mudança (feed do Merchant Center é aceito como está).
+- [ ] **Meta Catalog (Duda, ciclo 3)** — cadastrar o feed `goiania.roilabs.com.br/feed.xml` no Commerce Manager (Instagram Shopping + catálogo do WhatsApp). Passo a passo pronto em [[meta-catalog]]. Dev: zero mudança (feed do Merchant Center é aceito como está).
 - [x] **Serper.dev — FEITO 2026-07-03.** Conta criada pelo Jean, secret `SERPER_API_KEY` setado no repo + env var local. 1ª rodada completa ok (40/40).
 - [x] **GitHub Actions — RESOLVIDO 2026-07-03.** Causa era billing travado na conta (cartão); Jean atualizou o cartão → verificação concluiu → run `success` na nuvem commitando sozinha (`ad8bf00`). Cron oficial = `rank-tracking.yml` (segunda 09:00 UTC). Task local `roilabs-rank-tracking` REMOVIDA (ficaria em dobro); o runner `rank-tracking-local.ps1` segue no repo como fallback documentado.
 
@@ -26,7 +26,7 @@ dono: Jean (dev)
 - [x] **Redeploy manual do `/app` na EasyPanel** — publica o demonstrativo do parceiro + admin mobile (`ea1e6de`).
 - [ ] **Testar `/admin` no celular da Duda** pós-redeploy (kanban, pedidos, cadeiras, demonstrativo) — e **instalar como app** (Chrome → "Adicionar à tela inicial"; PWA do ciclo 3).
 - [ ] **Conferir eventos no painel himetrica** — em especial `orcamento_whatsapp` (carrinho) e o novo `orcamento_lead` (ciclo 3: carrinho capturado como lead) após o deploy automático do site-goiania.
-- [ ] **Merchant Center: Produtos → Diagnóstico** (~2026-07-05, 3 dias após cadastro) — meta ≥ 90% aprovados (SC-003). Reprovações → `site-goiania/docs/merchant-center.md`. Suspeito nº 1: imagens em CDN de terceiro (vteximg).
+- [ ] **Merchant Center: Produtos → Diagnóstico** (~2026-07-05, 3 dias após cadastro) — meta ≥ 90% aprovados (SC-003). Reprovações → [[merchant-center]]. Suspeito nº 1: imagens em CDN de terceiro (vteximg).
 - [ ] **GBP (Service Area Business)** — terminar verificação do perfil novo; depois me acionar p/ o nó `LocalBusiness` no @graph do goiânia (telephone + areaServed, SEM address) + GBP no `sameAs`. Fotos de produto prontas em `brand-assets/gbp-fotos/` (30 × 1000px).
 
 ## 📊 Medição (aguarda maturação)

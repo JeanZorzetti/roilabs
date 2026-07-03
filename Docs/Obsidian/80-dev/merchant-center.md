@@ -1,3 +1,10 @@
+---
+tipo: ops-doc
+status: vivo
+data: 2026-07-02
+dono: Duda (ops) / Jean (feed)
+---
+
 # Google Merchant Center — cadastro do feed (ops)
 
 Feed: `https://goiania.roilabs.com.br/feed.xml` — RSS 2.0 gerado no build a partir de `porcelanatos.json` (1 item por produto; contrato em `specs/009-merchant-center-feed/contracts/feed-xml.md`). Produto novo no JSON entra no feed no deploy seguinte, sem passo manual.

@@ -1,5 +1,5 @@
 # Rank tracking semanal da malha pSEO (goiania.roilabs.com.br) — segunda 09:00 UTC.
-# Resultado commitado direto no vault (Docs/Obsidian/rank-tracking.{csv,md}).
+# Resultado commitado direto no vault (Docs/Obsidian/90-medicao/rank-tracking.{csv,md}).
 # Fonte preferida: secret SERPER_API_KEY (serper.dev, 2.500 buscas grátis, sem cartão);
 # fallback: DATAFORSEO_API_KEY (precisa de saldo na conta — zerou em 2026-07-03).
 name: rank-tracking
@@ -26,7 +26,7 @@ jobs:
       - run: |
           git config user.name "rank-tracking"
           git config user.email "actions@users.noreply.github.com"
-          git add Docs/Obsidian/rank-tracking.csv Docs/Obsidian/rank-tracking.md
+          git add Docs/Obsidian/90-medicao/rank-tracking.csv Docs/Obsidian/90-medicao/rank-tracking.md
           git diff --cached --quiet || { git commit -m "chore: weekly rank tracking $(date -u +%F)"; git push; }
       # Weekly digest e-mail (leads/pedidos/GMV from the DB + this run's rank snapshot).
       # Runs even if rank tracking failed — the DB stats are still worth sending.
@@ -35,4 +35,4 @@ jobs:
           curl -sf -X POST "https://app.roilabs.com.br/api/cron/digest" \
             -H "X-Cron-Secret: ${{ secrets.CRON_SECRET }}" \
             -H "Content-Type: text/plain" \
-            --data-binary @Docs/Obsidian/rank-tracking.md || echo "digest skipped"
+            --data-binary @Docs/Obsidian/90-medicao/rank-tracking.md || echo "digest skipped"

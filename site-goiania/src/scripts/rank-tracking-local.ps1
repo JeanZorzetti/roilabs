@@ -13,7 +13,7 @@ git pull --rebase --autostash
 node site-goiania/src/scripts/rank-tracking.mjs
 if ($LASTEXITCODE -ne 0) { Stop-Transcript | Out-Null; exit 1 }
 
-git add Docs/Obsidian/rank-tracking.csv Docs/Obsidian/rank-tracking.md
+git add Docs/Obsidian/90-medicao/rank-tracking.csv Docs/Obsidian/90-medicao/rank-tracking.md
 git diff --cached --quiet
 if ($LASTEXITCODE -ne 0) {
   git commit -m "chore: weekly rank tracking $(Get-Date -Format yyyy-MM-dd)"

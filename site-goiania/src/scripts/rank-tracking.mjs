@@ -20,8 +20,8 @@ if (!SERPER && !DFS) {
 }
 
 const TARGET = 'goiania.roilabs.com.br';
-const CSV = path.join(ROOT, 'Docs/Obsidian/rank-tracking.csv');
-const NOTE = path.join(ROOT, 'Docs/Obsidian/rank-tracking.md');
+const CSV = path.join(ROOT, 'Docs/Obsidian/90-medicao/rank-tracking.csv');
+const NOTE = path.join(ROOT, 'Docs/Obsidian/90-medicao/rank-tracking.md');
 const hoje = new Date().toISOString().slice(0, 10);
 
 // Keywords = termoAlvo de cada página da malha (fonte única) + âncora do Keyword Planner.

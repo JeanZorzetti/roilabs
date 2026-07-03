@@ -46,7 +46,7 @@ dono: Jean (dev)
 
 ### 📣 Distribuição grátis (alavanca GEO/SEO que quase ninguém local usa)
 
-- [x] **⭐ Google Merchant Center — CONCLUÍDO 2026-07-02 (spec 009).** Feed no ar (`goiania.roilabs.com.br/feed.xml`, 30 itens, verificado em prod), gate `check-feed` postbuild provado, conta criada e feed cadastrado com busca diária: **30/30 processados sem erro estrutural** (SC-002 ✓). Bônus da esteira: página `/devolucoes` (CDC) criada — era exigência do Merchant Center e o site não tinha. ⏳ Único watch-point: itens "Em análise" — conferir **Produtos → Diagnóstico** em ~3 dias (meta ≥ 90% aprovados, SC-003); reprovações → troubleshooting em `site-goiania/docs/merchant-center.md`.
+- [x] **⭐ Google Merchant Center — CONCLUÍDO 2026-07-02 (spec 009).** Feed no ar (`goiania.roilabs.com.br/feed.xml`, 30 itens, verificado em prod), gate `check-feed` postbuild provado, conta criada e feed cadastrado com busca diária: **30/30 processados sem erro estrutural** (SC-002 ✓). Bônus da esteira: página `/devolucoes` (CDC) criada — era exigência do Merchant Center e o site não tinha. ⏳ Único watch-point: itens "Em análise" — conferir **Produtos → Diagnóstico** em ~3 dias (meta ≥ 90% aprovados, SC-003); reprovações → troubleshooting em [[merchant-center]].
 - [x] **IndexNow no deploy — FEITO 2026-07-02.** `src/scripts/indexnow.mjs` nos DOIS sites (postbuild; no goiânia encadeado após o `check-feed`), chave `e72cab81d95c41fd915ce3331a10d1ad.txt` no `public/` de ambos. Testado local: HTTP 202 (9 URLs institucional, 72 goiânia). Ping é não-fatal (falha da API nunca quebra o build). A chave valida quando o `.txt` for ao ar → **vale de verdade no próximo redeploy dos 2 sites**.
 - [x] **`LocalBusiness` + Google Business Profile.** Quando houver endereço/telefone comercial: 1 nó `LocalBusiness` no @graph do goiânia; o GBP em si é ops (Duda). É o que disputa o **local pack** de `porcelanato goiânia` — a âncora de 140/mês do Keyword Planner ([[mercado]]).
 - Review engine (gateado em 3–5 pedidos entregues) → movido para [[backlog-pendencias]].
@@ -89,7 +89,7 @@ dono: Jean (dev)
 
 ### 📣 Distribuição grátis (novo canal com o feed que já existe)
 
-- [x] **⭐ Meta Catalog (Instagram + WhatsApp) — DOC PRONTA 2026-07-03 (`9379f3e`), dev zero.** O `feed.xml` do Merchant Center é aceito como está pelo Commerce Manager (formato Google, compatibilidade campo a campo verificada). Passo a passo ops em `site-goiania/docs/meta-catalog.md`: catálogo E-commerce → feed URL diário → Instagram Shopping + catálogo no WhatsApp Business (Duda manda produto como card na conversa). ⏳ execução é ops (Duda) → [[backlog-pendencias]].
+- [x] **⭐ Meta Catalog (Instagram + WhatsApp) — DOC PRONTA 2026-07-03 (`9379f3e`), dev zero.** O `feed.xml` do Merchant Center é aceito como está pelo Commerce Manager (formato Google, compatibilidade campo a campo verificada). Passo a passo ops em [[meta-catalog]]: catálogo E-commerce → feed URL diário → Instagram Shopping + catálogo no WhatsApp Business (Duda manda produto como card na conversa). ⏳ execução é ops (Duda) → [[backlog-pendencias]].
 
 ### 📊 Operar com ritual (medição ativa)
 

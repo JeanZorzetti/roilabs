@@ -1,3 +1,10 @@
+---
+tipo: ops-doc
+status: vivo
+data: 2026-07-03
+dono: Duda (ops)
+---
+
 # Meta Catalog (Instagram + WhatsApp) — reusando o feed do Merchant Center
 
 O mesmo feed do Google (`https://goiania.roilabs.com.br/feed.xml`) alimenta o catálogo da Meta:
