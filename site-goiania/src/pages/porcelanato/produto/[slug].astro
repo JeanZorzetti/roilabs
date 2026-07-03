@@ -43,6 +43,8 @@ const jsonLdNodes = [
   {
     '@type': 'Product',
     name: titulo,
+    // sku = g:id do feed.xml → liga o rich result ao item do Merchant Center.
+    sku: produto.slug,
     image: produto.imagens,
     brand: { '@type': 'Brand', name: a.marca },
     category: 'Porcelanato',
@@ -52,8 +54,29 @@ const jsonLdNodes = [
       price: a.preco,
       priceCurrency: 'BRL',
       availability: 'https://schema.org/InStock',
+      itemCondition: 'https://schema.org/NewCondition',
       url,
       areaServed: { '@type': 'City', name: 'Goiânia' },
+      // Espelha lib/frete.ts do app (Grande Goiânia, 2–7 dias úteis); valor do
+      // frete varia por faixa de CEP → sem shippingRate fixo aqui.
+      shippingDetails: {
+        '@type': 'OfferShippingDetails',
+        shippingDestination: { '@type': 'DefinedRegion', addressCountry: 'BR', addressRegion: 'GO' },
+        deliveryTime: {
+          '@type': 'ShippingDeliveryTime',
+          transitTime: { '@type': 'QuantitativeValue', minValue: 2, maxValue: 7, unitCode: 'DAY' },
+        },
+      },
+      // Espelha /devolucoes/ (CDC art. 49: 7 dias, reembolso integral com frete).
+      hasMerchantReturnPolicy: {
+        '@type': 'MerchantReturnPolicy',
+        applicableCountry: 'BR',
+        returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnWindow',
+        merchantReturnDays: 7,
+        returnMethod: 'https://schema.org/ReturnByMail',
+        returnFees: 'https://schema.org/FreeReturn',
+        merchantReturnLink: `${SITE}/devolucoes/`,
+      },
     },
   },
   {
