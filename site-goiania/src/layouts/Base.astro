@@ -55,7 +55,9 @@ const graph = {
   ],
 };
 
-const gaId = import.meta.env.PUBLIC_GA_ID;
+// GA4 (mesma Google tag do institucional — fluxos da mesma propriedade). Fallback
+// hard-coded de propósito: vale sem env na EasyPanel; PUBLIC_GA_ID sobrepõe.
+const gaId = import.meta.env.PUBLIC_GA_ID ?? 'G-7JD9J2QEDJ';
 const clarityId = import.meta.env.PUBLIC_CLARITY_ID;
 ---
 
