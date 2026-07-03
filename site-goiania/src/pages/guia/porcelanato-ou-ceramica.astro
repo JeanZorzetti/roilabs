@@ -1,0 +1,221 @@
+---
+// Guia de decisão AEO: "porcelanato ou cerâmica?" — comparação de material,
+// a dúvida de quem ainda nem chegou na malha de categorias de porcelanato.
+import Base from '../../layouts/Base.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import Faq from '../../components/Faq.astro';
+import WhatsappCta from '../../components/WhatsappCta.astro';
+import { guias } from '../../data/guias';
+
+const SITE = Astro.site?.href.replace(/\/$/, '') ?? 'https://goiania.roilabs.com.br';
+const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
+const guia = guias.find((g) => g.slug === 'porcelanato-ou-ceramica')!;
+
+const faq = [
+  {
+    q: 'Qual a diferença técnica entre porcelanato e cerâmica?',
+    a: 'A absorção de água. O porcelanato é prensado com mais força e queimado em temperatura mais alta, ficando mais denso: absorve no máximo 0,5% de água (ABNT NBR 15463). A cerâmica comum absorve de 3% a 10%. Menos absorção significa mais resistência a manchas, impacto e variação de temperatura.',
+  },
+  {
+    q: 'Cerâmica aguenta o chão da cozinha e do banheiro?',
+    a: 'Aguenta, desde que seja um piso cerâmico com PEI adequado (4 ou 5 para cozinha). A diferença aparece no longo prazo: a cerâmica esmaltada pode gastar o esmalte em áreas de tráfego intenso e mancha com mais facilidade. Para uso leve (quarto, parede), a cerâmica resolve bem por menos dinheiro.',
+  },
+  {
+    q: 'A economia da cerâmica compensa no custo total da obra?',
+    a: 'Nem sempre. A peça cerâmica é mais barata, mas o custo total inclui argamassa, rejunte e mão de obra — que são parecidos nos dois casos. Como o porcelanato dura mais e mantém a aparência, a diferença por m² dilui na vida útil. Em áreas de tráfego alto, o porcelanato costuma sair mais barato por ano de uso.',
+  },
+  {
+    q: 'Porcelanato precisa de argamassa especial?',
+    a: 'Sim. Por absorver quase nada de água, o porcelanato exige argamassa colante ACII ou ACIII (para áreas externas e peças grandes, ACIII). Usar a ACI comum, de cerâmica, é causa clássica de peça descolando depois. O assentador também deve usar desempenadeira adequada ao formato da peça.',
+  },
+  {
+    q: 'Qual dos dois usar na área externa?',
+    a: 'Porcelanato antiderrapante. A cerâmica comum absorve mais água — em área descoberta ela sofre com chuva e sol e pode trincar ou desbotar. O porcelanato técnico ou esmaltado antiderrapante (classe R10 ou superior) é o padrão para calçada, garagem, borda de piscina e quintal.',
+  },
+  {
+    q: 'Cerâmica na parede e porcelanato no chão funciona?',
+    a: 'Funciona e é uma combinação comum para economizar: parede não sofre abrasão nem impacto, então a cerâmica (mais leve e mais barata) resolve; o piso, que apanha do dia a dia, recebe o porcelanato. Só alinhe tonalidade e paginação para o conjunto conversar.',
+  },
+];
+
+const jsonLdNodes = [
+  {
+    '@type': 'FAQPage',
+    mainEntity: faq.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  },
+  {
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Início', item: SITE },
+      { '@type': 'ListItem', position: 2, name: guia.titulo, item: `${SITE}/guia/${guia.slug}/` },
+    ],
+  },
+];
+
+const relacionados = [
+  { href: '/guia/como-escolher-porcelanato/', label: 'Como escolher porcelanato' },
+  { href: '/porcelanato/porcelanato-preco/', label: 'Preço do porcelanato' },
+  { href: '/porcelanato/piso-porcelanato/', label: 'Piso porcelanato' },
+  { href: '/porcelanato/porcelanato-area-externa/', label: 'Porcelanato área externa' },
+  { href: '/calculadora/', label: 'Calculadora de caixas' },
+];
+---
+
+<Base
+  title={`${guia.titulo} — Goiânia | ROI Labs`}
+  description="Porcelanato absorve ≤ 0,5% de água, resiste mais a manchas e tráfego e mantém a aparência; cerâmica custa menos e serve bem em paredes e áreas de uso leve. Compare e decida."
+  jsonLdNodes={jsonLdNodes}
+>
+  <Header />
+
+  <main>
+    <section class="pseo-hero">
+      <div class="wrap">
+        <nav class="breadcrumb" aria-label="Localização">
+          <a href="/">Início</a>
+          <span class="breadcrumb__sep" aria-hidden="true">›</span>
+          <span aria-current="page">Guia de decisão</span>
+        </nav>
+
+        <div class="pseo-hero__eyebrow">
+          <span class="eyebrow">Goiânia · Guia de decisão</span>
+        </div>
+        <h1>{guia.titulo}</h1>
+        <p class="pseo-hero__intro">
+          Resposta direta: o <strong>porcelanato</strong> é mais denso (absorve no máximo
+          0,5% de água), resiste mais a manchas, riscos e tráfego e mantém a aparência por
+          décadas — é a escolha para pisos e áreas molhadas ou externas. A
+          <strong>cerâmica</strong> custa menos por m² e atende bem paredes e ambientes de
+          uso leve. Se o orçamento permitir um só material, o porcelanato no piso é o
+          investimento que se paga.
+        </p>
+      </div>
+    </section>
+
+    <!-- Tabela comparativa -->
+    <section class="section section--light">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.6rem;">
+          Porcelanato × cerâmica, lado a lado
+        </h2>
+        <div class="comp-scroll">
+          <table class="comp-table">
+            <thead>
+              <tr>
+                <th scope="col">Critério</th>
+                <th scope="col">Porcelanato</th>
+                <th scope="col">Cerâmica</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Absorção de água</th>
+                <td>≤ 0,5% (NBR 15463) — quase impermeável</td>
+                <td>3% a 10% — mais porosa</td>
+              </tr>
+              <tr>
+                <th scope="row">Resistência</th>
+                <td>Alta a impacto, abrasão e manchas</td>
+                <td>Esmalte pode gastar em tráfego intenso</td>
+              </tr>
+              <tr>
+                <th scope="row">Acabamento das bordas</th>
+                <td>Geralmente retificado — junta fina (~2 mm)</td>
+                <td>Bordas bold — junta de 3 a 5 mm</td>
+              </tr>
+              <tr>
+                <th scope="row">Área externa</th>
+                <td>Sim, na versão antiderrapante</td>
+                <td>Não recomendada em área descoberta</td>
+              </tr>
+              <tr>
+                <th scope="row">Argamassa</th>
+                <td>ACII ou ACIII obrigatória</td>
+                <td>ACI resolve na maioria dos casos</td>
+              </tr>
+              <tr>
+                <th scope="row">Preço por m²</th>
+                <td>Maior na peça; dilui na vida útil</td>
+                <td>Menor — vantagem em parede e uso leve</td>
+              </tr>
+              <tr>
+                <th scope="row">Onde brilha</th>
+                <td>Pisos, cozinha, banheiro, sala, área externa</td>
+                <td>Paredes, quartos, ambientes de baixo tráfego</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Decisão prática -->
+    <section class="section">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.6rem;">
+          Como decidir na prática
+        </h2>
+        <ul class="guide-list">
+          <li>Piso de qualquer ambiente que molha (cozinha, banheiro, lavanderia, varanda): porcelanato — a baixa absorção evita mancha e infiltração no rejunte.</li>
+          <li>Piso de sala e corredores: porcelanato pela resistência ao tráfego; veja o <a href="/porcelanato/piso-porcelanato/">guia de piso porcelanato</a> e os formatos no <a href="/porcelanato/porcelanato-60x60/">60×60</a>, <a href="/porcelanato/porcelanato-90x90/">90×90</a> e <a href="/porcelanato/porcelanato-120x60/">120×60</a>.</li>
+          <li>Área externa descoberta, garagem e borda de piscina: só <a href="/porcelanato/porcelanato-externo-antiderrapante/">porcelanato antiderrapante</a> — cerâmica comum não segura sol e chuva.</li>
+          <li>Paredes internas e lavabo: cerâmica atende bem e libera orçamento para investir no piso.</li>
+          <li>Quarto de uso leve com orçamento apertado: cerâmica PEI 3+ funciona; se o plano é padronizar a casa toda com um material só, o porcelanato evita mistura de espessuras e juntas.</li>
+          <li>Calcule a quantidade certa antes de pedir orçamento: a <a href="/calculadora/">calculadora de caixas</a> soma os ambientes, aplica a folga de corte e devolve caixas fechadas.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section section--light">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.8rem;">Perguntas frequentes</h2>
+        <Faq items={faq} />
+      </div>
+    </section>
+
+    <!-- CTA duplo -->
+    <section class="section" id="contato">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:0.8rem;">
+          Ficou com o porcelanato? Veja preço real em Goiânia
+        </h2>
+        <p style="color:var(--d-muted);margin-bottom:2rem;max-width:54ch;">
+          Catálogo com fornecedores exclusivos do polo de Goiânia, preço por m² e
+          pronta-entrega — ou mande seus ambientes no WhatsApp e receba o comparativo.
+        </p>
+        <div class="cta-block" style="display:flex;gap:1rem;flex-wrap:wrap;align-items:center;">
+          <a class="btn btn--primary" href="/porcelanato/">Ver catálogo de porcelanato</a>
+          <WhatsappCta termoAlvo="porcelanato (comparando com cerâmica)" numero={whatsapp} />
+        </div>
+      </div>
+    </section>
+
+    <!-- Relacionados -->
+    <section class="section section--light">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.3rem,2.2vw,1.8rem);margin-bottom:1.4rem;">Veja também</h2>
+        <div class="related-grid">
+          {relacionados.map((r) => (
+            <a href={r.href} class="related-card">{r.label}</a>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .comp-scroll { overflow-x: auto; }
+  .comp-table { width: 100%; border-collapse: collapse; font-size: 0.92rem; min-width: 560px; }
+  .comp-table th, .comp-table td { text-align: left; padding: 0.8rem 0.9rem; border-bottom: 1px solid color-mix(in srgb, currentColor 18%, transparent); vertical-align: top; }
+  .comp-table thead th { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.75; }
+  .comp-table tbody th { font-weight: 700; width: 24%; }
+</style>

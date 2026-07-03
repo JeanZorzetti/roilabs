@@ -1,0 +1,221 @@
+---
+// Guia de decisão AEO: "como escolher porcelanato" — o guia-mãe que roteia
+// para toda a malha (tipo, acabamento, dimensão, ambiente) e a calculadora.
+import Base from '../../layouts/Base.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import Faq from '../../components/Faq.astro';
+import WhatsappCta from '../../components/WhatsappCta.astro';
+import { guias } from '../../data/guias';
+
+const SITE = Astro.site?.href.replace(/\/$/, '') ?? 'https://goiania.roilabs.com.br';
+const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
+const guia = guias.find((g) => g.slug === 'como-escolher-porcelanato')!;
+
+const faq = [
+  {
+    q: 'O que significa PEI no porcelanato?',
+    a: 'PEI é a classificação de resistência à abrasão superficial, de 1 a 5. Quanto maior, mais tráfego a superfície aguenta sem desgastar: PEI 3 atende quartos e salas de casa; PEI 4, cozinhas, corredores e áreas de serviço; PEI 5, comércio e tráfego intenso. O valor vem na ficha técnica de cada produto.',
+  },
+  {
+    q: 'Porcelanato retificado vale a pena?',
+    a: 'Para quem quer junta fina (cerca de 2 mm) e visual contínuo, sim — o retificado tem bordas cortadas em esquadro perfeito, permitindo peças quase coladas. Exige assentador caprichoso e contrapiso nivelado. Peças não retificadas (bold) pedem junta de 3 a 5 mm, que disfarça pequenas variações.',
+  },
+  {
+    q: 'Porcelanato grande fica bom em ambiente pequeno?',
+    a: 'Fica — e costuma até ampliar visualmente, porque tem menos juntas cortando o piso. A restrição é técnica, não estética: formatos grandes (90×90, 120×60) exigem contrapiso bem nivelado e argamassa aplicada na peça e no piso (dupla colagem). Em reformas com contrapiso irregular, o 60×60 é mais tolerante.',
+  },
+  {
+    q: 'Qual porcelanato é melhor para sala?',
+    a: 'Os mais usados são o polido (brilho e amplitude) e o acetinado (sobriedade e menos manutenção) — a comparação completa está no guia polido × acetinado. Na estética, o marmorizado dá clima clássico e o amadeirado, aconchego. Formatos 90×90 ou 120×60 valorizam salas amplas.',
+  },
+  {
+    q: 'Quantas caixas de porcelanato eu preciso comprar?',
+    a: 'Meça largura × comprimento de cada ambiente, some as áreas, acrescente folga de corte (10% no assentamento reto, 15% na diagonal) e divida pelos m² por caixa do modelo, arredondando para cima. A calculadora do site faz essa conta na hora — e compre tudo do mesmo lote para não variar tonalidade.',
+  },
+  {
+    q: 'Qual o preço do m² do porcelanato em Goiânia?',
+    a: 'Varia por formato, acabamento e linha — de opções de entrada a linhas premium marmorizadas e de grande formato. O catálogo mostra o preço por m² real de cada produto disponível no polo de Goiânia, e o guia de preço explica o que faz o valor subir ou descer.',
+  },
+];
+
+const jsonLdNodes = [
+  {
+    '@type': 'FAQPage',
+    mainEntity: faq.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  },
+  {
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Início', item: SITE },
+      { '@type': 'ListItem', position: 2, name: guia.titulo, item: `${SITE}/guia/${guia.slug}/` },
+    ],
+  },
+];
+
+const relacionados = [
+  { href: '/guia/porcelanato-polido-ou-acetinado/', label: 'Polido ou acetinado?' },
+  { href: '/guia/porcelanato-ou-ceramica/', label: 'Porcelanato ou cerâmica?' },
+  { href: '/porcelanato/porcelanato-preco/', label: 'Preço do porcelanato' },
+  { href: '/porcelanato/porcelanato-goiania/', label: 'Porcelanato em Goiânia' },
+  { href: '/calculadora/', label: 'Calculadora de caixas' },
+];
+---
+
+<Base
+  title={`${guia.titulo} — Goiânia | ROI Labs`}
+  description="7 passos para escolher porcelanato sem erro: ambiente, acabamento, tamanho, retificado, PEI, estética e quantidade de caixas — com links para os guias de cada perfil."
+  jsonLdNodes={jsonLdNodes}
+>
+  <Header />
+
+  <main>
+    <section class="pseo-hero">
+      <div class="wrap">
+        <nav class="breadcrumb" aria-label="Localização">
+          <a href="/">Início</a>
+          <span class="breadcrumb__sep" aria-hidden="true">›</span>
+          <span aria-current="page">Guia de decisão</span>
+        </nav>
+
+        <div class="pseo-hero__eyebrow">
+          <span class="eyebrow">Goiânia · Guia de decisão</span>
+        </div>
+        <h1>{guia.titulo}</h1>
+        <p class="pseo-hero__intro">
+          Resposta direta: escolha nesta ordem — <strong>1)</strong> o ambiente (interno ou
+          externo, seco ou molhado), <strong>2)</strong> o acabamento (polido, acetinado,
+          natural ou antiderrapante), <strong>3)</strong> o tamanho da peça,
+          <strong>4)</strong> retificado ou bold, <strong>5)</strong> a resistência (PEI),
+          <strong>6)</strong> a estética e <strong>7)</strong> a quantidade de caixas.
+          Decidir nessa sequência elimina 90% dos modelos errados antes de olhar preço.
+        </p>
+      </div>
+    </section>
+
+    <!-- Os 7 passos -->
+    <section class="section section--light">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.6rem;">
+          Os 7 passos, um a um
+        </h2>
+        <ol class="steps">
+          <li>
+            <strong>Ambiente.</strong> Interno seco (sala, quarto), interno molhado
+            (cozinha, banheiro, lavanderia) ou externo (varanda, garagem, piscina)?
+            Área externa descoberta já define: <a href="/porcelanato/porcelanato-externo-antiderrapante/">antiderrapante</a>,
+            sem exceção. Cozinha e banheiro pedem superfície com atrito quando molhada.
+          </li>
+          <li>
+            <strong>Acabamento.</strong> Polido para brilho em área social seca; acetinado
+            para o dia a dia e áreas que molham; natural para visual rústico e mais atrito.
+            Na dúvida entre os dois primeiros, o guia
+            <a href="/guia/porcelanato-polido-ou-acetinado/">polido × acetinado</a> resolve.
+          </li>
+          <li>
+            <strong>Tamanho da peça.</strong> <a href="/porcelanato/porcelanato-60x60/">60×60</a> é
+            o versátil que tolera contrapiso de reforma; <a href="/porcelanato/porcelanato-90x90/">90×90</a> e
+            <a href="/porcelanato/porcelanato-120x60/">120×60</a> reduzem juntas e valorizam
+            ambientes amplos, mas exigem piso bem nivelado e dupla colagem.
+          </li>
+          <li>
+            <strong>Retificado ou bold.</strong> <a href="/porcelanato/porcelanato-retificado/">Retificado</a> tem
+            borda em esquadro e junta fina (~2 mm) — visual contínuo. Bold pede junta de 3 a
+            5 mm e perdoa pequenas variações de nível. Retificado é o padrão do catálogo atual.
+          </li>
+          <li>
+            <strong>Resistência (PEI e absorção).</strong> PEI 3 para quartos, PEI 4 para
+            cozinha e corredores, PEI 5 para comércio. Absorção ≤ 0,5% é o que separa
+            porcelanato de cerâmica — se essa dúvida existe, comece por
+            <a href="/guia/porcelanato-ou-ceramica/">porcelanato ou cerâmica</a>.
+          </li>
+          <li>
+            <strong>Estética.</strong> <a href="/porcelanato/porcelanato-amadeirado/">Amadeirado</a> para
+            aconchego sem a manutenção da madeira; <a href="/porcelanato/porcelanato-marmorizado/">marmorizado</a> para
+            clima clássico; cores sólidas (<a href="/porcelanato/porcelanato-branco/">branco</a>,
+            <a href="/porcelanato/porcelanato-cinza/">cinza</a>, <a href="/porcelanato/porcelanato-bege/">bege</a>)
+            para base neutra que combina com tudo.
+          </li>
+          <li>
+            <strong>Quantidade.</strong> Some as áreas, aplique 10% de folga (15% na
+            diagonal) e arredonde para caixas fechadas — a
+            <a href="/calculadora/">calculadora</a> faz a conta. Compre tudo do mesmo lote:
+            tonalidade e calibre variam entre fabricações.
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- Erros comuns -->
+    <section class="section">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.6rem;">
+          5 erros que encarecem a obra
+        </h2>
+        <ul class="guide-list">
+          <li>Escolher pelo preço da peça e ignorar o conjunto: argamassa errada (porcelanato exige ACII/ACIII) e assentamento ruim custam mais que a diferença de linha.</li>
+          <li>Polido em área que molha: piso escorregadio é retrabalho certo — acabamento vem antes da estética.</li>
+          <li>Comprar sem folga de corte: faltar 2 caixas no fim da obra significa lote diferente e tonalidade visivelmente desigual.</li>
+          <li>Peça grande em contrapiso irregular: sem nivelamento, o formato grande "balança" e trinca — nivele antes ou desça para o 60×60.</li>
+          <li>Ignorar o rejunte: junta e cor do rejunte mudam o resultado final tanto quanto a peça — junta fina com rejunte no tom da peça é o acabamento que valoriza.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section section--light">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.8rem;">Perguntas frequentes</h2>
+        <Faq items={faq} />
+      </div>
+    </section>
+
+    <!-- CTA duplo -->
+    <section class="section" id="contato">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:0.8rem;">
+          Já sabe o perfil? Veja preço real em Goiânia
+        </h2>
+        <p style="color:var(--d-muted);margin-bottom:2rem;max-width:54ch;">
+          Catálogo com fornecedores exclusivos do polo de Goiânia, preço por m² e
+          pronta-entrega — ou descreva sua obra no WhatsApp e receba a curadoria pronta.
+        </p>
+        <div class="cta-block" style="display:flex;gap:1rem;flex-wrap:wrap;align-items:center;">
+          <a class="btn btn--primary" href="/porcelanato/">Ver catálogo de porcelanato</a>
+          <WhatsappCta termoAlvo="porcelanato (quero ajuda pra escolher)" numero={whatsapp} />
+        </div>
+      </div>
+    </section>
+
+    <!-- Relacionados -->
+    <section class="section section--light">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.3rem,2.2vw,1.8rem);margin-bottom:1.4rem;">Veja também</h2>
+        <div class="related-grid">
+          {relacionados.map((r) => (
+            <a href={r.href} class="related-card">{r.label}</a>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .steps { list-style: none; padding: 0; margin: 0; display: grid; gap: 1.1rem; counter-reset: passo; max-width: 62ch; }
+  .steps li { display: flex; gap: 0.9rem; line-height: 1.55; counter-increment: passo; }
+  .steps li::before {
+    content: counter(passo);
+    flex: none;
+    width: 1.9rem; height: 1.9rem;
+    display: grid; place-items: center;
+    border: 1px solid var(--hivis); border-radius: 50%;
+    color: var(--hivis); font-family: var(--font-mono); font-weight: 700; font-size: 0.85rem;
+  }
+</style>

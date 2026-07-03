@@ -1,6 +1,7 @@
 import type { APIRoute } from 'astro';
 import { pages } from '../data/porcelanato';
 import { produtos, nomeProduto } from '../data/produtos';
+import { guias as guiasDecisao } from '../data/guias';
 
 const SITE = 'https://goiania.roilabs.com.br';
 
@@ -26,6 +27,9 @@ export const GET: APIRoute = () => {
 
 ## Ferramentas
 - [Calculadora de porcelanato: quantos m² e caixas comprar?](${SITE}/calculadora/): informe os ambientes, a folga de corte e os m² por caixa; resultado em caixas fechadas.
+
+## Guias de decisão
+${guiasDecisao.map((g) => `- [${g.titulo}](${SITE}/guia/${g.slug}/): ${g.descricao}`).join('\n')}
 
 ## Guias de porcelanato
 ${guias}

@@ -5,6 +5,7 @@ import Footer from '../../components/Footer.astro';
 import ProdutoCard from '../../components/ProdutoCard.astro';
 import { pages } from '../../data/porcelanato';
 import { produtos } from '../../data/produtos';
+import { guias } from '../../data/guias';
 
 const SITE = Astro.site?.href.replace(/\/$/, '') ?? 'https://goiania.roilabs.com.br';
 
@@ -38,6 +39,22 @@ const byTipo = pages.reduce<Record<string, typeof pages>>((acc, p) => {
             {pages.length} guias completos por tipo, ocasião, dimensão e acabamento —
             com atributos técnicos, como escolher e FAQ para cada perfil de compra.
           </p>
+        </div>
+
+        <div style="margin-top:3rem;">
+          <h2 style="font-size:clamp(1.2rem,2vw,1.6rem);margin-bottom:1rem;">Ainda decidindo? Comece pelos guias de decisão</h2>
+          <div class="pseo-index-grid">
+            {guias.map((g) => (
+              <a href={`/guia/${g.slug}/`} class="pseo-index-card">
+                <div class="pseo-index-card__title">{g.titulo}</div>
+                <div class="pseo-index-card__meta">guia de decisão</div>
+              </a>
+            ))}
+            <a href="/calculadora/" class="pseo-index-card">
+              <div class="pseo-index-card__title">Calculadora: quantas caixas comprar?</div>
+              <div class="pseo-index-card__meta">ferramenta grátis</div>
+            </a>
+          </div>
         </div>
 
         <div class="pseo-index-grid" style="margin-top:3rem;">

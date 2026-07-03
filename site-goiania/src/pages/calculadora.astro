@@ -7,6 +7,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import Faq from '../components/Faq.astro';
 import WhatsappCta from '../components/WhatsappCta.astro';
+import { guias } from '../data/guias';
 
 const SITE = Astro.site?.href.replace(/\/$/, '') ?? 'https://goiania.roilabs.com.br';
 const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
@@ -167,6 +168,18 @@ const jsonLdNodes = [
         <div class="cta-block" style="display:flex;gap:1rem;flex-wrap:wrap;align-items:center;">
           <a class="btn btn--primary" href="/porcelanato/">Ver catálogo de porcelanato</a>
           <WhatsappCta termoAlvo="porcelanato (já calculei a metragem)" numero={whatsapp} />
+        </div>
+      </div>
+    </section>
+
+    <!-- Guias de decisão -->
+    <section class="section section--light">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.3rem,2.2vw,1.8rem);margin-bottom:1.4rem;">Ainda escolhendo o porcelanato?</h2>
+        <div class="related-grid">
+          {guias.map((g) => (
+            <a href={`/guia/${g.slug}/`} class="related-card">{g.titulo}</a>
+          ))}
         </div>
       </div>
     </section>

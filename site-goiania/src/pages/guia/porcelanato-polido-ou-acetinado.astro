@@ -1,0 +1,225 @@
+---
+// Guia de decisão AEO: "porcelanato polido ou acetinado?" — a dúvida que vem
+// ANTES das categorias /porcelanato/porcelanato-polido e /porcelanato-acetinado.
+// BLUF + tabela comparativa + FAQ (FAQPage) + CTA duplo, padrão da calculadora.
+import Base from '../../layouts/Base.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import Faq from '../../components/Faq.astro';
+import WhatsappCta from '../../components/WhatsappCta.astro';
+import { guias } from '../../data/guias';
+
+const SITE = Astro.site?.href.replace(/\/$/, '') ?? 'https://goiania.roilabs.com.br';
+const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
+const guia = guias.find((g) => g.slug === 'porcelanato-polido-ou-acetinado')!;
+
+const faq = [
+  {
+    q: 'Porcelanato polido risca fácil?',
+    a: 'O polido mostra riscos com mais facilidade do que o acetinado, porque a superfície espelhada evidencia qualquer marca. O material em si é duro; o problema é visual. Em áreas com arrasto de cadeiras e trânsito de areia, use feltro nos móveis e capacho na entrada — ou prefira o acetinado, que disfarça micro-riscos.',
+  },
+  {
+    q: 'Porcelanato acetinado escurece o ambiente?',
+    a: 'Não escurece, mas reflete menos luz que o polido. Em ambientes pequenos ou com pouca luz natural, o polido amplia a sensação de espaço pelo reflexo; o acetinado compensa bem com cores claras (branco, bege, cinza claro) e boa iluminação artificial.',
+  },
+  {
+    q: 'Pode usar porcelanato polido no banheiro?',
+    a: 'No banheiro seco (área do lavatório), sim. No box e em pisos que ficam molhados com frequência, o polido fica escorregadio e o risco de queda aumenta — a recomendação é acetinado ou natural no piso do banheiro e antiderrapante no box, reservando o polido para a parede, onde não se pisa.',
+  },
+  {
+    q: 'Qual dos dois é mais fácil de limpar?',
+    a: 'Os dois limpam com pano úmido e detergente neutro. O polido mostra poeira, pegadas e manchas de secagem com mais facilidade — limpa fácil, mas suja "aos olhos" mais rápido. O acetinado esconde o dia a dia e tolera mais tempo entre limpezas. Evite cera e produtos abrasivos em ambos.',
+  },
+  {
+    q: 'Polido e acetinado têm diferença de preço?',
+    a: 'No mesmo modelo e formato, o polido costuma custar um pouco mais por causa da etapa extra de polimento na fábrica. A diferença varia por fornecedor e linha — no catálogo você compara o preço por m² dos dois acabamentos disponíveis em Goiânia.',
+  },
+  {
+    q: 'Existe um meio-termo entre polido e acetinado?',
+    a: 'Sim, o acabamento polido acetinado (às vezes chamado de soft ou lux) — leve brilho sem espelhar, com toque acetinado. É opção para quem quer luminosidade sem a manutenção do polido. Disponibilidade varia por fornecedor; consulte o catálogo ou pergunte no WhatsApp.',
+  },
+];
+
+const jsonLdNodes = [
+  {
+    '@type': 'FAQPage',
+    mainEntity: faq.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  },
+  {
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Início', item: SITE },
+      { '@type': 'ListItem', position: 2, name: guia.titulo, item: `${SITE}/guia/${guia.slug}/` },
+    ],
+  },
+];
+
+const relacionados = [
+  { href: '/porcelanato/porcelanato-polido/', label: 'Porcelanato polido' },
+  { href: '/porcelanato/porcelanato-acetinado/', label: 'Porcelanato acetinado' },
+  { href: '/porcelanato/porcelanato-antiderrapante/', label: 'Porcelanato antiderrapante' },
+  { href: '/guia/como-escolher-porcelanato/', label: 'Como escolher porcelanato' },
+  { href: '/calculadora/', label: 'Calculadora de caixas' },
+];
+---
+
+<Base
+  title={`${guia.titulo} — Goiânia | ROI Labs`}
+  description="Polido amplia e ilumina áreas sociais secas; acetinado é seguro molhado, esconde riscos e pede menos manutenção. Compare os dois e veja qual usar em cada ambiente."
+  jsonLdNodes={jsonLdNodes}
+>
+  <Header />
+
+  <main>
+    <section class="pseo-hero">
+      <div class="wrap">
+        <nav class="breadcrumb" aria-label="Localização">
+          <a href="/">Início</a>
+          <span class="breadcrumb__sep" aria-hidden="true">›</span>
+          <span aria-current="page">Guia de decisão</span>
+        </nav>
+
+        <div class="pseo-hero__eyebrow">
+          <span class="eyebrow">Goiânia · Guia de decisão</span>
+        </div>
+        <h1>{guia.titulo}</h1>
+        <p class="pseo-hero__intro">
+          Resposta direta: escolha o <strong>polido</strong> para áreas sociais internas e
+          secas (sala, hall, quarto) onde brilho e amplitude importam; escolha o
+          <strong>acetinado</strong> para cozinha, banheiro, lavanderia e casas com
+          crianças, idosos ou pets — ele não espelha, é menos escorregadio quando molhado
+          e disfarça riscos e o dia a dia. Abaixo, a comparação completa.
+        </p>
+      </div>
+    </section>
+
+    <!-- Tabela comparativa -->
+    <section class="section section--light">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.6rem;">
+          Polido × acetinado, lado a lado
+        </h2>
+        <div class="comp-scroll">
+          <table class="comp-table">
+            <thead>
+              <tr>
+                <th scope="col">Critério</th>
+                <th scope="col">Polido</th>
+                <th scope="col">Acetinado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Aparência</th>
+                <td>Brilho espelhado, reflete luz e amplia o ambiente</td>
+                <td>Fosco aveludado, visual sóbrio e uniforme</td>
+              </tr>
+              <tr>
+                <th scope="row">Piso molhado</th>
+                <td>Escorregadio — evite em áreas que molham</td>
+                <td>Mais atrito; seguro no uso doméstico</td>
+              </tr>
+              <tr>
+                <th scope="row">Riscos e marcas</th>
+                <td>Evidencia riscos, poeira e pegadas</td>
+                <td>Disfarça micro-riscos e o uso diário</td>
+              </tr>
+              <tr>
+                <th scope="row">Manutenção</th>
+                <td>Limpeza fácil, mas exige frequência maior</td>
+                <td>Tolera mais tempo entre limpezas</td>
+              </tr>
+              <tr>
+                <th scope="row">Ambientes ideais</th>
+                <td>Sala, hall, quarto, parede de banheiro</td>
+                <td>Cozinha, banheiro, lavanderia, área de serviço, varanda coberta</td>
+              </tr>
+              <tr>
+                <th scope="row">Preço (mesmo modelo)</th>
+                <td>Um pouco maior — etapa extra de polimento</td>
+                <td>Em geral menor no mesmo formato</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quando escolher cada um -->
+    <section class="section">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.6rem;">
+          Quando escolher o polido
+        </h2>
+        <ul class="guide-list">
+          <li>Sala de estar, sala de jantar, hall e quartos — áreas internas que não molham, onde o reflexo amplia e valoriza o ambiente.</li>
+          <li>Ambientes pequenos ou com pouca luz natural: o brilho devolve a luz e dá sensação de amplitude.</li>
+          <li>Projetos com marmorizado: o polido realça os veios e entrega o efeito "mármore de verdade" — veja o <a href="/porcelanato/porcelanato-marmorizado/">porcelanato marmorizado</a>.</li>
+          <li>Paredes de banheiro e lavabo: onde não se pisa, o polido é só estética — sem risco de escorregar.</li>
+        </ul>
+
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin:2.4rem 0 1.6rem;">
+          Quando escolher o acetinado
+        </h2>
+        <ul class="guide-list">
+          <li>Cozinha, banheiro, lavanderia e qualquer piso que receba água ou gordura com frequência.</li>
+          <li>Casa com crianças, idosos ou pets: menos escorregadio e sem reflexo que evidencia arranhão de garra.</li>
+          <li>Áreas de alto tráfego (corredores, entrada): esconde riscos e marcas de uso melhor que o polido.</li>
+          <li>Quem quer o visual amadeirado: a maioria dos <a href="/porcelanato/porcelanato-amadeirado/">porcelanatos amadeirados</a> vem em acabamento acetinado ou natural — combina com o toque de madeira.</li>
+          <li>Área externa descoberta não é caso para nenhum dos dois: lá a escolha certa é o <a href="/porcelanato/porcelanato-externo-antiderrapante/">antiderrapante</a>.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section section--light">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.8rem;">Perguntas frequentes</h2>
+        <Faq items={faq} />
+      </div>
+    </section>
+
+    <!-- CTA duplo -->
+    <section class="section" id="contato">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:0.8rem;">
+          Decidiu o acabamento? Veja preço real em Goiânia
+        </h2>
+        <p style="color:var(--d-muted);margin-bottom:2rem;max-width:54ch;">
+          Catálogo com polidos e acetinados de fornecedores do polo de Goiânia, preço por
+          m² e pronta-entrega — ou mande seu ambiente no WhatsApp e receba a indicação.
+        </p>
+        <div class="cta-block" style="display:flex;gap:1rem;flex-wrap:wrap;align-items:center;">
+          <a class="btn btn--primary" href="/porcelanato/">Ver catálogo de porcelanato</a>
+          <WhatsappCta termoAlvo="porcelanato polido ou acetinado" numero={whatsapp} />
+        </div>
+      </div>
+    </section>
+
+    <!-- Relacionados -->
+    <section class="section section--light">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.3rem,2.2vw,1.8rem);margin-bottom:1.4rem;">Veja também</h2>
+        <div class="related-grid">
+          {relacionados.map((r) => (
+            <a href={r.href} class="related-card">{r.label}</a>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .comp-scroll { overflow-x: auto; }
+  .comp-table { width: 100%; border-collapse: collapse; font-size: 0.92rem; min-width: 560px; }
+  .comp-table th, .comp-table td { text-align: left; padding: 0.8rem 0.9rem; border-bottom: 1px solid color-mix(in srgb, currentColor 18%, transparent); vertical-align: top; }
+  .comp-table thead th { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.75; }
+  .comp-table tbody th { font-weight: 700; width: 24%; }
+</style>
