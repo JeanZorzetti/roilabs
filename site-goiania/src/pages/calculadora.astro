@@ -316,6 +316,7 @@ const jsonLdNodes = [
         mensagem: r
           ? `Calculou ${fmt(r.area)} m² + ${Math.round(r.folga * 100)}% folga, caixa de ${fmt(r.m2Caixa)} m² → ${r.caixas} caixa(s). Pediu orçamento.`
           : 'Pediu orçamento pela calculadora.',
+        origem: localStorage.getItem('rlft') ?? '',
       }),
       keepalive: true,
     }).catch(() => {});

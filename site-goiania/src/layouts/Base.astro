@@ -115,6 +115,22 @@ const clarityId = import.meta.env.PUBLIC_CLARITY_ID;
         var a = e.target && e.target.closest ? e.target.closest('a[href^="https://wa.me/"]') : null;
         if (a && window.himetrica) window.himetrica.track('whatsapp_click', { page: location.pathname });
       });
+      // First-touch attribution: 1ª página de entrada (query preserva UTMs) + referrer
+      // externo, gravados uma única vez. Forms consomem via input[name=origem] (nativos)
+      // ou lendo localStorage.rlft direto (POSTs via fetch).
+      try {
+        if (!localStorage.rlft) {
+          var ref = '';
+          try { ref = document.referrer && new URL(document.referrer).host !== location.host ? new URL(document.referrer).host : ''; } catch (_) {}
+          localStorage.rlft = (location.pathname + location.search + (ref ? ' ← ' + ref : '')).slice(0, 300);
+        }
+      } catch (_) {}
+      document.addEventListener('DOMContentLoaded', function () {
+        var v = '';
+        try { v = localStorage.rlft || ''; } catch (_) {}
+        if (!v) return;
+        document.querySelectorAll('input[name="origem"]').forEach(function (i) { i.value = v; });
+      });
     </script>
   </head>
   <body>

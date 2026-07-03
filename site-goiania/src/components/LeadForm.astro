@@ -17,6 +17,7 @@ const action = `${appUrl}/api/leads-consumidor`;
 
     <input type="hidden" name="produto" value={produto} />
     <input type="hidden" name="pagina" value={pagina} />
+    <input type="hidden" name="origem" />
     <input type="hidden" name="redirect" value={new URL('/obrigado/', Astro.site).href} />
 
     <div class="form__row">

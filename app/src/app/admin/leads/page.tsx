@@ -3,6 +3,9 @@ import { waLeadLink } from '@/lib/wa';
 
 export const dynamic = 'force-dynamic';
 
+// First-touch gravado pela rota como sufixo `[origem] ...` da mensagem (sem coluna no DB).
+const origemDe = (mensagem: string | null) => mensagem?.match(/^\[origem\] (.+)$/m)?.[1];
+
 export default async function LeadsConsumidorPage() {
   const leads = await prisma.leadConsumidor.findMany({ orderBy: { createdAt: 'desc' } });
 
@@ -20,6 +23,7 @@ export default async function LeadsConsumidorPage() {
             <th style={{ textAlign: 'left', padding: '0.6rem 0.8rem' }}>WhatsApp</th>
             <th style={{ textAlign: 'left', padding: '0.6rem 0.8rem' }}>Produto</th>
             <th style={{ textAlign: 'left', padding: '0.6rem 0.8rem' }}>Página</th>
+            <th style={{ textAlign: 'left', padding: '0.6rem 0.8rem' }}>Origem</th>
             <th style={{ textAlign: 'left', padding: '0.6rem 0.8rem' }}>Status</th>
             <th style={{ textAlign: 'left', padding: '0.6rem 0.8rem' }}>Data</th>
           </tr>
@@ -51,6 +55,7 @@ export default async function LeadsConsumidorPage() {
                 )}
               </td>
               <td style={{ padding: '0.6rem 0.8rem', color: 'var(--l-muted)', fontSize: '0.78rem' }}>{l.pagina ?? '—'}</td>
+              <td style={{ padding: '0.6rem 0.8rem', color: 'var(--l-muted)', fontSize: '0.78rem' }}>{origemDe(l.mensagem) ?? '—'}</td>
               <td style={{ padding: '0.6rem 0.8rem' }}>
                 <span style={{ background: 'var(--porcelain-2)', color: 'var(--green-strong)', padding: '0.2rem 0.5rem', borderRadius: 4, fontSize: '0.72rem', fontWeight: 700 }}>
                   {l.status}
@@ -63,7 +68,7 @@ export default async function LeadsConsumidorPage() {
           ))}
           {leads.length === 0 && (
             <tr>
-              <td colSpan={6} style={{ padding: '2rem', textAlign: 'center', color: 'var(--l-muted)' }}>
+              <td colSpan={7} style={{ padding: '2rem', textAlign: 'center', color: 'var(--l-muted)' }}>
                 Nenhum lead ainda.
               </td>
             </tr>

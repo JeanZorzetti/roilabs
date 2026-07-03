@@ -26,13 +26,21 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: false, error: 'consentimento LGPD obrigatório' }, { status: 400 });
   }
 
+  // First-touch (landing page + referrer, capturado no browser) vive como sufixo
+  // `[origem] ...` da mensagem — coluna própria só no próximo db push manual no host real.
+  const origem = cap(form.get('origem'), 300);
+  const mensagem =
+    [cap(form.get('mensagem'), 4000) || null, origem ? `[origem] ${origem}` : null]
+      .filter(Boolean)
+      .join('\n') || null;
+
   await prisma.leadConsumidor.create({
     data: {
       nome,
       whatsapp,
       produto: cap(form.get('produto'), 200) || null,
       pagina: cap(form.get('pagina'), 300) || null,
-      mensagem: cap(form.get('mensagem'), 4000) || null,
+      mensagem,
       consentLGPD: true,
     },
   });

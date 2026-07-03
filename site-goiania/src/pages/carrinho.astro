@@ -441,6 +441,7 @@ const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
         produto: `Orçamento carrinho (${cart.length} item(ns) · ${brl(total)})`,
         pagina: '/carrinho',
         mensagem: `Pediu orçamento pelo WhatsApp. Carrinho: ${location.origin}/carrinho?c=${encodeCart()}`,
+        origem: localStorage.getItem('rlft') ?? '',
       }),
       keepalive: true,
     }).catch(() => {});

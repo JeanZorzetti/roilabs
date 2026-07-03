@@ -22,6 +22,14 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: false, error: 'nome, empresa e whatsapp são obrigatórios' }, { status: 400 });
   }
 
+  // First-touch (landing page + referrer, capturado no browser) vive como sufixo
+  // `[origem] ...` da mensagem — coluna própria só no próximo db push manual no host real.
+  const origem = cap(form.get('origem'), 300);
+  const mensagem =
+    [cap(form.get('mensagem'), 4000) || null, origem ? `[origem] ${origem}` : null]
+      .filter(Boolean)
+      .join('\n') || null;
+
   await prisma.candidatura.create({
     data: {
       nome,
@@ -30,7 +38,7 @@ export async function POST(req: NextRequest) {
       cidade: cap(form.get('cidade'), 120) || null,
       categoria: cap(form.get('categoria'), 120) || null,
       site: cap(form.get('site'), 300) || null,
-      mensagem: cap(form.get('mensagem'), 4000) || null,
+      mensagem,
     },
   });
 
