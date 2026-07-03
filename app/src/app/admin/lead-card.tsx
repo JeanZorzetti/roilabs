@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { LEAD_STATUSES, LEAD_LABELS } from '@/lib/status';
+import { waNumber } from '@/lib/wa';
 
 type Lead = {
   id: string;
@@ -39,8 +40,7 @@ export function LeadCard({ lead }: { lead: Lead }) {
     router.refresh();
   }
 
-  // ponytail: assume a local BR number, prefix 55. Add country-code parsing if leads come from elsewhere.
-  const wa = '55' + lead.whatsapp.replace(/\D/g, '');
+  const wa = waNumber(lead.whatsapp);
 
   return (
     <div className="card">

@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/prisma';
+import { waPedidoLink } from '@/lib/wa';
 import { PedidoRow } from './pedido-row';
 import { RepassarParceiro } from './repassar-parceiro';
 
@@ -40,7 +41,7 @@ export default async function PedidosPage() {
 
       <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: 'monospace', fontSize: '0.85rem' }}>
         <thead>
-          <tr style={{ borderBottom: '1px solid #333' }}>
+          <tr style={{ borderBottom: '2px solid var(--l-line)' }}>
             {['Nome', 'WhatsApp', 'Itens', 'Frete', 'Cupom', 'Total', 'Pagamento', 'Fulfillment', 'Data', 'Ações'].map((h) => (
               <th key={h} style={{ textAlign: 'left', padding: '0.6rem 0.8rem', whiteSpace: 'nowrap' }}>{h}</th>
             ))}
@@ -48,40 +49,46 @@ export default async function PedidosPage() {
         </thead>
         <tbody>
           {pedidos.map((p) => (
-            <tr key={p.id} style={{ borderBottom: '1px solid #222', verticalAlign: 'top' }}>
+            <tr key={p.id} style={{ borderBottom: '1px solid var(--l-line)', verticalAlign: 'top' }}>
               <td style={{ padding: '0.6rem 0.8rem' }}>
                 <div>{p.nome}</div>
-                {p.email && <div style={{ color: '#888', fontSize: '0.78rem' }}>{p.email}</div>}
+                {p.email && <div style={{ color: 'var(--l-muted)', fontSize: '0.78rem' }}>{p.email}</div>}
               </td>
-              <td style={{ padding: '0.6rem 0.8rem' }}>
-                <a href={`https://wa.me/${p.whatsapp.replace(/\D/g, '')}`} target="_blank" rel="noopener">
-                  {p.whatsapp}
+              <td style={{ padding: '0.6rem 0.8rem', whiteSpace: 'nowrap' }}>
+                <a
+                  href={waPedidoLink(p)}
+                  target="_blank"
+                  rel="noopener"
+                  style={{ background: 'var(--green-strong)', color: '#fff', padding: '0.3rem 0.7rem', borderRadius: 5, textDecoration: 'none', fontWeight: 600 }}
+                >
+                  Chamar no WhatsApp
                 </a>
+                <div style={{ color: 'var(--l-muted)', fontSize: '0.78rem', marginTop: '0.3rem' }}>{p.whatsapp}</div>
               </td>
               <td style={{ padding: '0.6rem 0.8rem', maxWidth: 240 }}>
                 {p.itens.map((it) => (
-                  <div key={it.id} style={{ color: '#ccc', fontSize: '0.78rem', lineHeight: 1.5 }}>
+                  <div key={it.id} style={{ fontSize: '0.78rem', lineHeight: 1.5 }}>
                     {it.caixas}cx · {Number(it.m2).toFixed(2)}m² · {it.slug.replace('porcelanato-', '')}
                   </div>
                 ))}
-                <div style={{ color: '#888', fontSize: '0.75rem', marginTop: 2 }}>
+                <div style={{ color: 'var(--l-muted)', fontSize: '0.75rem', marginTop: 2 }}>
                   {p.entrega === 'retirada' ? 'Retirada' : p.entrega === 'a_combinar' ? 'Frete a combinar' : `Entrega · ${p.cep ?? '—'}`}
                 </div>
               </td>
               <td style={{ padding: '0.6rem 0.8rem', whiteSpace: 'nowrap' }}>
-                {p.frete == null ? <span style={{ color: '#888' }}>a combinar</span> : brl(p.frete)}
+                {p.frete == null ? <span style={{ color: 'var(--l-muted)' }}>a combinar</span> : brl(p.frete)}
               </td>
               <td style={{ padding: '0.6rem 0.8rem', whiteSpace: 'nowrap' }}>
                 {p.cupomCodigo ? (
-                  <span style={{ color: '#86efac' }}>{p.cupomCodigo} −{brl(p.desconto)}</span>
+                  <span style={{ color: 'var(--green-strong)' }}>{p.cupomCodigo} −{brl(p.desconto)}</span>
                 ) : (
-                  <span style={{ color: '#666' }}>—</span>
+                  <span style={{ color: 'var(--l-muted)' }}>—</span>
                 )}
               </td>
               <td style={{ padding: '0.6rem 0.8rem', whiteSpace: 'nowrap', fontWeight: 700 }}>{brl(p.total)}</td>
               <td style={{ padding: '0.6rem 0.8rem' }}>{pagBadge(p.statusPagamento)}</td>
               <td style={{ padding: '0.6rem 0.8rem' }}>{fulBadge(p.statusFulfillment)}</td>
-              <td style={{ padding: '0.6rem 0.8rem', color: '#666', fontSize: '0.78rem', whiteSpace: 'nowrap' }}>
+              <td style={{ padding: '0.6rem 0.8rem', color: 'var(--l-muted)', fontSize: '0.78rem', whiteSpace: 'nowrap' }}>
                 {p.createdAt.toISOString().slice(0, 10)}
               </td>
               <td style={{ padding: '0.6rem 0.8rem' }}>
@@ -93,7 +100,7 @@ export default async function PedidosPage() {
                     <RepassarParceiro pedidoId={p.id} parceiros={parceirosAtivos} />
                   )}
                   {p.statusPagamento === 'pago' && pedidosComRepasse.has(p.id) && (
-                    <span style={{ color: '#166534', fontSize: '0.78rem' }}>repassado</span>
+                    <span style={{ color: 'var(--green-strong)', fontSize: '0.78rem' }}>repassado</span>
                   )}
                 </div>
               </td>
@@ -101,7 +108,7 @@ export default async function PedidosPage() {
           ))}
           {pedidos.length === 0 && (
             <tr>
-              <td colSpan={10} style={{ padding: '2rem', textAlign: 'center', color: '#666' }}>
+              <td colSpan={10} style={{ padding: '2rem', textAlign: 'center', color: 'var(--l-muted)' }}>
                 Nenhum pedido ainda.
               </td>
             </tr>
