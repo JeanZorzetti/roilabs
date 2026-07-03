@@ -5,6 +5,12 @@ import Footer from '../components/Footer.astro';
 
 const apply = 'mailto:parceria@roilabs.com.br?subject=Candidatura%20%C3%A0%20cadeira%20%E2%80%94%20Goi%C3%A2nia';
 
+// Canal direto B2B (Gate 3): fornecedor high-ticket quer conversa, não formulário.
+const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
+const whatsHref = `https://wa.me/${whatsapp}?text=${encodeURIComponent(
+  'Quero saber mais sobre a cadeira de revestimentos em Goiânia'
+)}`;
+
 // Candidaturas vão para o app admin (app.roilabs.com.br), que grava no DB.
 // POST urlencoded simples (sem preflight CORS); a API redireciona pro `redirect`.
 const CANDIDATURAS_ENDPOINT = 'https://app.roilabs.com.br/api/candidaturas';
@@ -63,6 +69,7 @@ const jsonLdNodes = [
           </p>
           <div class="hero__actions">
             <a class="btn btn--primary" href="#candidatar">Aplicar para a cadeira</a>
+            <a class="btn btn--whats" href={whatsHref} target="_blank" rel="noopener">Chamar no WhatsApp</a>
             <a class="btn btn--ghost" href="#mecanica">Ver como funciona</a>
           </div>
         </div>
@@ -383,8 +390,11 @@ const jsonLdNodes = [
             Sem custo fixo, sem risco de tecnologia. Candidate-se antes do seu
             concorrente.
           </p>
+          <p class="close__whats">
+            <a class="btn btn--whats" href={whatsHref} target="_blank" rel="noopener">Chamar no WhatsApp agora</a>
+          </p>
           <p class="close__fine">
-            Resposta em até 48h úteis. Prefere e-mail?
+            Prefere formulário? Resposta em até 48h úteis. Ou e-mail:
             <a href={apply}>parceria@roilabs.com.br</a>
           </p>
         </div>

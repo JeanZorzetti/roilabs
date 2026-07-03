@@ -198,6 +198,16 @@ a {
   font-size: 0.75rem;
 }
 
+.btn--whats {
+  background: #25d366;
+  color: #06240f;
+}
+
+.btn--whats:hover {
+  background: #1fb659;
+  transform: translateY(-1px);
+}
+
 .btn--on-light.btn--ghost {
   border-color: var(--l-line-strong);
   color: var(--l-text);
@@ -935,6 +945,10 @@ a {
   margin-top: 1.2rem;
   color: var(--d-muted);
   max-width: 42ch;
+}
+
+.close__whats {
+  margin-top: 1.6rem;
 }
 
 .close__fine {
