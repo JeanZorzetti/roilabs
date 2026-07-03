@@ -17,7 +17,7 @@ dono: Jean (dev)
 ---
 
 > [!important] 2026-07-03 — Faxina de backlog
-> **Tudo que estava não-feito abaixo foi movido para [[backlog-pendencias]]** (não é prioridade agora). A lista ativa é a seção [[#🧭 Fora da caixa — ciclo 3 (2026-07-03)|Fora da caixa — ciclo 3]].
+> **Tudo que estava não-feito abaixo foi movido para [[backlog-pendencias]]** (não é prioridade agora). A lista ativa é a seção [[#🧭 Fora da caixa — ciclo 4 (2026-07-03)|Fora da caixa — ciclo 4]].
 
 ## 🎯 Agora (2026-07-02) — lista autoritativa
 
@@ -98,6 +98,23 @@ dono: Jean (dev)
 ### 📱 Admin na mão da Duda
 
 - [x] **PWA do admin — FEITO 2026-07-03 (`b0d153e`).** `manifest.ts` (Next metadata route) + ícones 192/512 (do `roilabs-icon.png`) + `appleWebApp` no layout: o admin instala na tela inicial do celular (Android/iOS), standalone, `start_url /admin`. Sem service worker por design (admin é dado vivo). ⏳ instalar no celular da Duda pós-redeploy → [[backlog-pendencias]].
+
+## 🧭 Fora da caixa — ciclo 4 (2026-07-03)
+
+> [!success] CICLO 4 EXECUTADO 2026-07-03 — 4/4 itens de código na `main` e pushados (deploy automático por push) + 2 docs de ops prontas.
+> Critério do ciclo: fechar o loop do lead + GEO sem depender de mineração de volume. Deliberadamente FORA (de novo): expandir malha pSEO (GSC vira fonte ~07-15), review engine (gate 3–5 pedidos), WhatsApp Cloud API (pago).
+
+### 💰 Converter mais (fechar o loop do lead)
+
+- [x] **⭐ WhatsApp 1-click no admin de leads — FEITO 2026-07-03 (`97635ce`).** `/admin/leads`: o link seco no número virou botão "Chamar no WhatsApp" que abre o `wa.me` do lead com mensagem contextual pronta (primeiro nome + produto/resumo do carrinho + link `?c=` salvo). O link do carrinho, antes enterrado em `mensagem` (invisível na tabela), aparece como "carrinho →" na coluna Produto. Prefixo 55 igual ao card de candidatura. ⏳ testar em prod (deploy automático).
+- [x] **Calculadora → lead — FEITO 2026-07-03 (`e6d511c`).** `/calculadora`: com resultado na tela, aparece micro-form opt-in ("Quer o preço dessa metragem?") — WhatsApp + LGPD, mesmo POST fire-and-forget do carrinho. O lead entra com o contexto do cálculo (m², folga, caixas). Novo evento himetrica `calculadora_lead`. ⏳ conferir evento no painel → [[backlog-pendencias]].
+
+### 📣 Distribuição grátis (GEO sem mineração de volume)
+
+- [x] **⭐ 3 guias de decisão AEO — FEITO 2026-07-03 (`4fdd4de`).** `/guia/porcelanato-polido-ou-acetinado/`, `/guia/porcelanato-ou-ceramica/` e `/guia/como-escolher-porcelanato/` — intenção-pergunta que vem ANTES da malha de categorias (zero canibalização, conferido contra os 41 slugs). BLUF + tabela comparativa + FAQPage + CTA duplo + interlink pesado (malha, calculadora, entre guias). Registro em `src/data/guias.ts` alimenta sitemap, llms.txt (seção "Guias de decisão"), hub `/porcelanato/` e "Veja também" da calculadora. Build: 79 páginas.
+- [x] **Product schema completo — FEITO 2026-07-03 (`8d22fa6`).** Offer das 30 páginas de produto ganhou `sku` (= `g:id` do feed → liga rich result ao Merchant Center), `itemCondition`, `OfferShippingDetails` (GO, trânsito 2–7 dias espelhando `lib/frete.ts`) e `MerchantReturnPolicy` (7 dias CDC, FreeReturn, link `/devolucoes/`). Habilita anotação de frete/devolução no SERP e reforça a aprovação dos itens em análise. Sem `shippingRate` fixo de propósito (frete varia por faixa de CEP).
+- [x] **Pinterest Catalogs — DOC PRONTA 2026-07-03, dev zero (a validar na 1ª ingestão).** Mesmo playbook do Meta Catalog: `feed.xml` direto no Pinterest (aceita XML formato Google). Passo a passo ops em [[pinterest-catalog]] — inclui claim do domínio (me acionar p/ meta tag) e fallback documentado se o parser reclamar. ⏳ execução ops → [[backlog-pendencias]].
+- [x] **Bing Webmaster Tools — DOC PRONTA 2026-07-03 (~10 min, Jean).** Importação 1-click do GSC (verificação + sitemaps dos 2 sites) + conferir pings IndexNow que já disparam a cada deploy. É a ponta solta do GEO (Copilot cita o índice Bing). Passo a passo em [[bing-webmaster]]. ⏳ execução → [[backlog-pendencias]].
 
 ## 🚀 Fase 1 — Subir o MVP no ar (caminho crítico, em ordem)
 

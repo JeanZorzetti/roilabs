@@ -25,7 +25,10 @@ dono: Jean (dev)
 - [x] **Redeploy manual do `/site` institucional na EasyPanel** — publica a chave IndexNow (`e72cab81...txt`; sem ela os pings dão 403). O lote GEO de 07-02 já foi ao ar no redeploy do item 1; este é só pra ativar o IndexNow.
 - [x] **Redeploy manual do `/app` na EasyPanel** — publica o demonstrativo do parceiro + admin mobile (`ea1e6de`).
 - [ ] **Testar `/admin` no celular da Duda** pós-redeploy (kanban, pedidos, cadeiras, demonstrativo) — e **instalar como app** (Chrome → "Adicionar à tela inicial"; PWA do ciclo 3).
-- [ ] **Conferir eventos no painel himetrica** — em especial `orcamento_whatsapp` (carrinho) e o novo `orcamento_lead` (ciclo 3: carrinho capturado como lead) após o deploy automático do site-goiania.
+- [ ] **Conferir eventos no painel himetrica** — em especial `orcamento_whatsapp` (carrinho), `orcamento_lead` (ciclo 3) e o novo `calculadora_lead` (ciclo 4) após o deploy automático do site-goiania.
+- [ ] **Testar o botão "Chamar no WhatsApp" em `/admin/leads`** (ciclo 4) — abrir um lead real, conferir que a mensagem vem com nome + contexto + link do carrinho.
+- [ ] **Pinterest Catalogs (ops, ciclo 4)** — conta business + claim do domínio (acionar Jean p/ meta tag) + cadastrar `feed.xml`. Passo a passo em [[pinterest-catalog]]. Validar 30/30 na 1ª ingestão.
+- [ ] **Bing Webmaster Tools (Jean, ~10 min, ciclo 4)** — importar propriedades do GSC + conferir sitemaps e pings IndexNow. Passo a passo em [[bing-webmaster]].
 - [ ] **Merchant Center: Produtos → Diagnóstico** (~2026-07-05, 3 dias após cadastro) — meta ≥ 90% aprovados (SC-003). Reprovações → [[merchant-center]]. Suspeito nº 1: imagens em CDN de terceiro (vteximg).
 - [ ] **GBP (Service Area Business)** — terminar verificação do perfil novo; depois me acionar p/ o nó `LocalBusiness` no @graph do goiânia (telephone + areaServed, SEM address) + GBP no `sameAs`. Fotos de produto prontas em `brand-assets/gbp-fotos/` (30 × 1000px).
 

@@ -23,6 +23,12 @@ nicho âncora = **revestimentos/porcelanato**.
 - **Fluxo:** site (estático) → `POST app.roilabs.com.br/api/candidaturas` (urlencoded, sem preflight) → DB → kanban `/admin`.
 
 ## Feito
+- **Ciclo 4 "fora da caixa" (2026-07-03, commits `97635ce`→`8d22fa6`) — 4 itens de código + 2 docs ops:**
+  - **WhatsApp 1-click no `/admin/leads`** — botão "Chamar no WhatsApp" abre o chat com mensagem contextual (nome + produto/carrinho + link `?c=`); link do carrinho exposto na tabela.
+  - **Calculadora → lead** — micro-form opt-in pós-resultado em `/calculadora` (WhatsApp + LGPD), lead entra com o contexto do cálculo; evento `calculadora_lead`.
+  - **3 guias de decisão AEO em `/guia/`** (polido×acetinado, porcelanato×cerâmica, como escolher) — BLUF + FAQPage + tabelas + interlink; registro `src/data/guias.ts` alimenta sitemap/llms.txt/hub/calculadora. 79 páginas no build.
+  - **Product schema completo** — Offer com `sku` (= g:id do feed), `OfferShippingDetails` (2–7 dias, GO) e `MerchantReturnPolicy` (7d CDC → `/devolucoes/`).
+  - **Docs ops:** Pinterest Catalogs (`Docs/Obsidian/80-dev/pinterest-catalog.md`, mesmo feed.xml) e Bing Webmaster (`bing-webmaster.md`, importar do GSC). Execução pendente em `backlog-pendencias`.
 - **Ciclo 2 "fora da caixa" (2026-07-03, commits `9e28bde`→`f9c0229`) — 5/5 itens:**
   - **CTA WhatsApp no `/site`** (hero + seção candidatar, `.btn--whats`) + listener `whatsapp_click` no Base (não existia no institucional, só no goiânia).
   - **`/calculadora` standalone no site-goiania** — matemática do carrinho (`m2ParaCaixas`), FAQ/AEO com FAQPage schema, CTA duplo, no sitemap/llms.txt/footer.
