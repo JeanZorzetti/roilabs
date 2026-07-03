@@ -17,7 +17,7 @@ dono: Jean (dev)
 ---
 
 > [!important] 2026-07-03 — Faxina de backlog
-> **Tudo que estava não-feito abaixo foi movido para [[backlog-pendencias]]** (não é prioridade agora). A lista ativa é a seção [[#🧭 Fora da caixa — ciclo 4 (2026-07-03)|Fora da caixa — ciclo 4]].
+> **Tudo que estava não-feito abaixo foi movido para [[backlog-pendencias]]** (não é prioridade agora). A lista ativa é a seção [[#🧭 Fora da caixa — ciclo 5 (2026-07-03)|Fora da caixa — ciclo 5]].
 
 ## 🎯 Agora (2026-07-02) — lista autoritativa
 
@@ -115,6 +115,25 @@ dono: Jean (dev)
 - [x] **Product schema completo — FEITO 2026-07-03 (`8d22fa6`).** Offer das 30 páginas de produto ganhou `sku` (= `g:id` do feed → liga rich result ao Merchant Center), `itemCondition`, `OfferShippingDetails` (GO, trânsito 2–7 dias espelhando `lib/frete.ts`) e `MerchantReturnPolicy` (7 dias CDC, FreeReturn, link `/devolucoes/`). Habilita anotação de frete/devolução no SERP e reforça a aprovação dos itens em análise. Sem `shippingRate` fixo de propósito (frete varia por faixa de CEP).
 - [x] **Pinterest Catalogs — DOC PRONTA 2026-07-03, dev zero (a validar na 1ª ingestão).** Mesmo playbook do Meta Catalog: `feed.xml` direto no Pinterest (aceita XML formato Google). Passo a passo ops em [[pinterest-catalog]] — inclui claim do domínio (me acionar p/ meta tag) e fallback documentado se o parser reclamar. ⏳ execução ops → [[backlog-pendencias]].
 - [x] **Bing Webmaster Tools — DOC PRONTA 2026-07-03 (~10 min, Jean).** Importação 1-click do GSC (verificação + sitemaps dos 2 sites) + conferir pings IndexNow que já disparam a cada deploy. É a ponta solta do GEO (Copilot cita o índice Bing). Passo a passo em [[bing-webmaster]]. ⏳ execução → [[backlog-pendencias]].
+
+## 🧭 Fora da caixa — ciclo 5 (2026-07-03)
+
+> [!success] CICLO 5 EXECUTADO 2026-07-03 — 5/5 itens em código, tudo na `main` e pushado (deploy automático por push).
+> Critério do ciclo: fechar o loop da VENDA (não só do lead) + GEO sem mineração de volume. Deliberadamente FORA (de novo): expandir malha pSEO (GSC vira fonte ~07-15), review engine (gate 3–5 pedidos), WhatsApp Cloud API (pago).
+
+### 💰 Fechar o loop da venda
+
+- [x] **⭐ WhatsApp 1-click no admin de pedidos — FEITO 2026-07-03 (`9ce927d`).** O link seco no número em `/admin/pedidos` virou botão "Chamar no WhatsApp" com mensagem por estado: **pendente = recuperação de pagamento** ("quer que eu te envie um novo link?"), pago+aguardando = aprovado + prazo (2–6 dias úteis / retirada / frete a combinar), pago+confirmado = confirmado com fornecedor. Reembolsado = chat sem template. Bônus: helpers `lib/wa.ts` compartilhados (dedup leads/candidatura) e as tabelas de pedidos/leads saíram do inline-escuro pros tokens LIGHT (AA — ver [[roilabs-app-admin-design-system]]). ⏳ testar em prod pós-deploy.
+- [x] **⭐ Fila de follow-up — FEITO 2026-07-03 (`ff2a9f1`).** `/admin/follow-up` (link na nav): 🛒 carrinhos salvos sem pedido pago (quente — recente converte) + 🧊 leads sem carrinho parados 48h+ em `novo`. Cada linha: WhatsApp 1-click + botão "Contatado ✓" (novo `PATCH /api/leads-consumidor/:id`, status novo|contatado|convertido|perdido) que tira da fila. Lógica única em `lib/follow-up.ts`, compartilhada com o digest. Match lead↔pedido pelos últimos 11 dígitos do WhatsApp.
+
+### 📊 Operar com ritual
+
+- [x] **Digest com "ação pendente" — FEITO 2026-07-03 (`c69722a`).** O e-mail semanal embute a mesma fila do follow-up (contagens + primeiros 5 nomes + link da fila) — cobra toda segunda até zerar. Segue no-op sem conta Resend → [[backlog-pendencias]].
+
+### 📣 GEO sem mineração de volume
+
+- [x] **⭐ Guia "quanto custa porcelanato" — FEITO 2026-07-03 (`2907adf`).** `/guia/quanto-custa-porcelanato/`: faixas de material **calculadas do catálogo real no build** (hoje R$ 65,99–144,99/m², tabela por acabamento — atualiza sozinha a cada publish), mão de obra + argamassa/rejunte como estimativa de mercado sinalizada, e a conta completa para 60 m². BLUF + FAQPage + CTA duplo + entrada no "Veja também" dos 3 guias. **Sem canibalizar**: a malha `porcelanato-preco` segue dona do termo transacional "porcelanato preço" e é interlinkada como catálogo. Registro em `guias.ts` → sitemap/llms.txt/hub/calculadora automáticos. Build: **80 páginas**.
+- [x] **ItemList na malha + schema no hub — FEITO 2026-07-03 (`bab745d`).** Ajuste na verificação: a malha **já tinha** BreadcrumbList (em `buildJsonLdNodes`) — o que faltava era **ItemList** espelhando a galeria de produtos (cada item aponta pra página de produto, que tem o Product+Offer completo com sku=g:id do feed) e o hub `/porcelanato/` **sem schema nenhum** → ganhou BreadcrumbList + ItemList das 40 categorias.
 
 ## 🚀 Fase 1 — Subir o MVP no ar (caminho crítico, em ordem)
 
