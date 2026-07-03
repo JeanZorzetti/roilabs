@@ -38,6 +38,8 @@ nicho âncora = **revestimentos/porcelanato**.
 
 - **GEO — IndexNow no deploy (2026-07-02, `7a53d58`):** `src/scripts/indexnow.mjs` como postbuild nos DOIS sites (`/site` e `/site-goiania`; no goiânia encadeado após `check-feed`). Envia todas as URLs do `dist/sitemap.xml` a `api.indexnow.org`; chave pública `e72cab81d95c41fd915ce3331a10d1ad.txt` no `public/` de ambos. Ping não-fatal (falha da API não quebra o build). Testado local: HTTP 202 (9 URLs institucional, 72 goiânia). **Chave só valida quando o `.txt` estiver em prod → redeploy dos 2 sites ativa de verdade.**
 
+- **Trio de conversão (2026-07-03, `ea1e6de`):** (1) carrinho do goiânia ganhou botão "Receber orçamento no WhatsApp" (link `?c=` → `wa.me/5562993265713` + evento `orcamento_whatsapp`); (2) `/admin/parceiros/[id]/demonstrativo?mes=` — demonstrativo mensal imprimível do success fee (fatura emitida = autoridade, senão prévia via `calcularFaturaMensal`; print CSS = PDF pro parceiro); (3) admin mobile ≤760px (nav rolável, tabelas com scroll horizontal, seat-rows empilhadas). site-goiania sobe por push; **`/app` precisa de redeploy manual** pra (2) e (3) valerem.
+
 ## Pendências — Camada Parceiro (007), MANUAL
 
 - ~~`prisma db push` no host~~ — **feito 2026-07-01**: 3 tabelas novas (`parceiros`, `negocios_originados`, `faturas_success_fee`) aplicadas em `roilabs_db@2.24.207.200:5443`, verificadas via `prisma.count()` (0 registros, prontas para uso).
