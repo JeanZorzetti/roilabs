@@ -10,6 +10,7 @@ export const GET: APIRoute = () => {
     { loc: `${SITE}/porcelanato` },
     { loc: `${SITE}/obrigado` },
     { loc: `${SITE}/devolucoes` },
+    { loc: `${SITE}/calculadora` },
     ...pages.map((p) => ({ loc: `${SITE}/porcelanato/${p.slug}` })),
     ...produtos.map((p) => ({ loc: `${SITE}/porcelanato/produto/${p.slug}` })),
   ];

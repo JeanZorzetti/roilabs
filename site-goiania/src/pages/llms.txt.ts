@@ -24,6 +24,9 @@ export const GET: APIRoute = () => {
 - Cada guia leva ao WhatsApp ou a um formulário de orçamento; a venda fecha com o fornecedor exclusivo do polo de Goiânia.
 - Volume de busca validado no planejador de palavras-chave (DataForSEO); páginas nascem de demanda real.
 
+## Ferramentas
+- [Calculadora de porcelanato: quantos m² e caixas comprar?](${SITE}/calculadora): informe os ambientes, a folga de corte e os m² por caixa; resultado em caixas fechadas.
+
 ## Guias de porcelanato
 ${guias}
 

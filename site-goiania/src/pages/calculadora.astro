@@ -1,0 +1,255 @@
+---
+// Calculadora standalone topo-de-funil ("quanto porcelanato preciso?").
+// Mesma matemática do carrinho (lib/cart) — aqui sem produto: o m²/caixa é
+// informado pelo usuário (vem na embalagem). CTA duplo: catálogo + WhatsApp.
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Faq from '../components/Faq.astro';
+import WhatsappCta from '../components/WhatsappCta.astro';
+
+const SITE = Astro.site?.href.replace(/\/$/, '') ?? 'https://goiania.roilabs.com.br';
+const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
+
+const faq = [
+  {
+    q: 'Quanto de folga devo considerar na compra de porcelanato?',
+    a: 'O padrão é 10% sobre a área medida, para cobrir cortes, quebras e reposição. Em instalação na diagonal ou em ambientes com muitos recortes (colunas, degraus, nichos), use 15%. A calculadora aceita de 5% a 20%.',
+  },
+  {
+    q: 'Quantos m² vêm em uma caixa de porcelanato?',
+    a: 'Varia por formato: caixas de porcelanato costumam render entre 1,5 m² e 3 m². O valor exato vem impresso na embalagem e na ficha técnica do produto — é o número que você informa na calculadora.',
+  },
+  {
+    q: 'Por que arredondar para caixas fechadas?',
+    a: 'Lojas e fornecedores vendem porcelanato por caixa fechada, não por peça avulsa. Arredondar para cima garante material suficiente e ainda deixa sobra do mesmo lote para reparos futuros.',
+  },
+  {
+    q: 'Devo comprar todo o porcelanato de uma vez?',
+    a: 'Sim. Tonalidade e calibre variam entre lotes de fabricação — comprar tudo de uma vez garante que as peças sejam do mesmo lote e não haja diferença visível de cor no piso pronto.',
+  },
+  {
+    q: 'Como calcular porcelanato para parede?',
+    a: 'A mesma conta: largura × altura de cada parede, somando as áreas e descontando vãos grandes como portas e janelas. Adicione a folga normalmente — recortes em parede também consomem peças.',
+  },
+  {
+    q: 'A sobra de porcelanato pode ser devolvida?',
+    a: 'Caixas fechadas e intactas costumam ser aceitas em devolução — confirme a política com o fornecedor antes da compra. De toda forma, vale guardar ao menos uma caixa do lote para futuras manutenções.',
+  },
+];
+
+const jsonLdNodes = [
+  {
+    '@type': 'FAQPage',
+    mainEntity: faq.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  },
+  {
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Início', item: SITE },
+      { '@type': 'ListItem', position: 2, name: 'Calculadora de porcelanato', item: `${SITE}/calculadora` },
+    ],
+  },
+];
+---
+
+<Base
+  title="Calculadora de porcelanato: quantos m² e caixas comprar? — Goiânia | ROI Labs"
+  description="Calcule quanto porcelanato você precisa: informe os ambientes (largura × comprimento), a folga de corte e os m² por caixa. Resultado em caixas fechadas, na hora."
+  jsonLdNodes={jsonLdNodes}
+>
+  <Header />
+
+  <main>
+    <section class="pseo-hero">
+      <div class="wrap">
+        <nav class="breadcrumb" aria-label="Localização">
+          <a href="/">Início</a>
+          <span class="breadcrumb__sep" aria-hidden="true">›</span>
+          <span aria-current="page">Calculadora</span>
+        </nav>
+
+        <div class="pseo-hero__eyebrow">
+          <span class="eyebrow">Goiânia · Ferramenta grátis</span>
+        </div>
+        <h1>Quanto porcelanato eu preciso? Calculadora de m² e caixas</h1>
+        <p class="pseo-hero__intro">
+          Meça cada ambiente (largura × comprimento), some as áreas, acrescente a folga de
+          corte — 10% no assentamento reto, 15% na diagonal — e divida pelos m² por caixa
+          do modelo escolhido, arredondando para cima. A calculadora abaixo faz essa conta
+          na hora, em caixas fechadas.
+        </p>
+      </div>
+    </section>
+
+    <!-- Calculadora -->
+    <section class="section section--light">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.6rem;">Calcule agora</h2>
+
+        <div class="calc" id="calc">
+          <div class="calc__rooms"></div>
+          <button type="button" class="calc__add">+ Adicionar ambiente</button>
+
+          <div class="calc__params">
+            <label class="calc__param">
+              Folga de corte/quebra (%)
+              <input class="calc__folga" type="number" min="5" max="20" step="1" value="10" inputmode="numeric" />
+            </label>
+            <label class="calc__param">
+              m² por caixa <span class="calc__hint">(vem na embalagem; em geral 1,5 a 3 m²)</span>
+              <input class="calc__m2caixa" type="number" min="0.5" max="10" step="0.01" value="2.5" inputmode="decimal" />
+            </label>
+          </div>
+
+          <div class="calc__result" aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Como calcular (AEO) -->
+    <section class="section">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.6rem;">
+          Como calcular caixas de porcelanato, passo a passo
+        </h2>
+        <ul class="guide-list">
+          <li>Meça a largura e o comprimento de cada ambiente, em metros, e multiplique um pelo outro para obter a área.</li>
+          <li>Some as áreas de todos os ambientes que vão receber o mesmo porcelanato.</li>
+          <li>Acrescente a folga de corte: 10% para assentamento reto, 15% para diagonal ou ambientes com muitos recortes.</li>
+          <li>Divida o total pelos m² por caixa do modelo (o valor vem na embalagem e na ficha técnica).</li>
+          <li>Arredonde para cima: a compra é sempre por caixa fechada — e a sobra do mesmo lote serve para reparos futuros.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section section--light">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.8rem;">Perguntas frequentes</h2>
+        <Faq items={faq} />
+      </div>
+    </section>
+
+    <!-- CTA duplo -->
+    <section class="section" id="contato">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:0.8rem;">
+          Já sabe quantas caixas? Veja preço real em Goiânia
+        </h2>
+        <p style="color:var(--d-muted);margin-bottom:2rem;max-width:54ch;">
+          Catálogo com fornecedores exclusivos do polo de Goiânia, preço por m² e
+          pronta-entrega — ou mande sua metragem no WhatsApp e receba o orçamento.
+        </p>
+        <div class="cta-block" style="display:flex;gap:1rem;flex-wrap:wrap;align-items:center;">
+          <a class="btn btn--primary" href="/porcelanato">Ver catálogo de porcelanato</a>
+          <WhatsappCta termoAlvo="porcelanato (já calculei a metragem)" numero={whatsapp} />
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .calc { display: grid; gap: 1rem; max-width: 34rem; }
+  .calc__add {
+    background: none; border: 1px dashed color-mix(in srgb, currentColor 35%, transparent);
+    color: inherit; border-radius: 8px; padding: 0.55rem; cursor: pointer; font: inherit; opacity: 0.85;
+  }
+  .calc__add:hover { color: var(--hivis); opacity: 1; }
+  .calc__params { display: flex; gap: 1.4rem; flex-wrap: wrap; }
+  .calc__param { display: grid; gap: 0.3rem; font-size: 0.85rem; opacity: 0.9; }
+  .calc__hint { opacity: 0.65; font-size: 0.78rem; }
+  .calc__param input {
+    width: 9rem; padding: 0.55rem 0.65rem; border-radius: 8px;
+    border: 1px solid color-mix(in srgb, currentColor 28%, transparent);
+    background: color-mix(in srgb, currentColor 6%, transparent); color: inherit; font: inherit;
+  }
+  .calc__result { min-height: 1.4em; font-size: 1.05rem; font-weight: 700; color: var(--hivis); }
+</style>
+
+<style is:global>
+  /* Room rows são criadas via innerHTML → sem atributo de escopo Astro (mesmo gotcha do SimuladorM2). */
+  .calc__room { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+  .calc__room input {
+    flex: 1 1 5rem; min-width: 0; padding: 0.6rem 0.7rem;
+    border: 1px solid color-mix(in srgb, currentColor 28%, transparent);
+    border-radius: 8px; background: color-mix(in srgb, currentColor 6%, transparent);
+    color: inherit; font: inherit;
+  }
+  .calc__room input:focus-visible { outline: 2px solid var(--hivis); outline-offset: 1px; }
+  .calc__room span { opacity: 0.6; font-size: 0.85rem; }
+  .calc__room button { background: none; border: 0; color: inherit; opacity: 0.6; cursor: pointer; font-size: 1.1rem; padding: 0 0.3rem; }
+  .calc__room button:hover { color: var(--hivis); opacity: 1; }
+  .calc__rooms { display: grid; gap: 0.6rem; }
+</style>
+
+<script>
+  import { m2ParaCaixas, clampPerda } from '../lib/cart';
+
+  const root = document.getElementById('calc')!;
+  const rooms = root.querySelector<HTMLElement>('.calc__rooms')!;
+  const addBtn = root.querySelector<HTMLButtonElement>('.calc__add')!;
+  const folgaInput = root.querySelector<HTMLInputElement>('.calc__folga')!;
+  const m2caixaInput = root.querySelector<HTMLInputElement>('.calc__m2caixa')!;
+  const result = root.querySelector<HTMLElement>('.calc__result')!;
+
+  const num = (el: HTMLInputElement) => parseFloat(el.value.replace(',', '.'));
+  const fmt = (n: number) => n.toFixed(2).replace('.', ',');
+
+  function addRoom() {
+    const row = document.createElement('div');
+    row.className = 'calc__room';
+    row.innerHTML = `
+      <input class="r-l" type="number" inputmode="decimal" min="0.1" step="0.1" placeholder="largura" />
+      <span>×</span>
+      <input class="r-c" type="number" inputmode="decimal" min="0.1" step="0.1" placeholder="compr." />
+      <span>m</span>
+      <button type="button" class="r-rm" aria-label="Remover ambiente">&times;</button>`;
+    rooms.appendChild(row);
+    refresh();
+  }
+
+  function refresh() {
+    const area = [...rooms.querySelectorAll<HTMLElement>('.calc__room')]
+      .map((r) => ({
+        l: num(r.querySelector<HTMLInputElement>('.r-l')!),
+        c: num(r.querySelector<HTMLInputElement>('.r-c')!),
+      }))
+      .filter((a) => a.l > 0 && a.c > 0)
+      .reduce((s, a) => s + a.l * a.c, 0);
+
+    if (area <= 0) { result.textContent = ''; return; }
+    const folga = clampPerda((parseFloat(folgaInput.value) || 0) / 100);
+    const m2Caixa = num(m2caixaInput);
+    if (!(m2Caixa > 0)) { result.textContent = `${fmt(area)} m² medidos — informe os m² por caixa.`; return; }
+    const caixas = m2ParaCaixas(area, m2Caixa, folga);
+    result.textContent =
+      `${fmt(area)} m² + ${Math.round(folga * 100)}% folga ` +
+      `= ${fmt(area * (1 + folga))} m² → ${caixas} caixa(s) · ${fmt(caixas * m2Caixa)} m² cobertos`;
+  }
+
+  addBtn.addEventListener('click', addRoom);
+  rooms.addEventListener('input', refresh);
+  rooms.addEventListener('click', (e) => {
+    const t = e.target as HTMLElement;
+    if (t.classList.contains('r-rm')) {
+      if (rooms.querySelectorAll('.calc__room').length > 1) t.closest('.calc__room')!.remove();
+      refresh();
+    }
+  });
+  folgaInput.addEventListener('change', () => {
+    folgaInput.value = String(Math.round(clampPerda((parseFloat(folgaInput.value) || 0) / 100) * 100));
+    refresh();
+  });
+  folgaInput.addEventListener('input', refresh);
+  m2caixaInput.addEventListener('input', refresh);
+
+  addRoom();
+</script>
