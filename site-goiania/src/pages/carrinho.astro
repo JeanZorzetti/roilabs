@@ -48,6 +48,20 @@ const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
               Receber orçamento no WhatsApp
             </button>
             <p class="cart-whats__note">Compra consultiva? Mandamos seu carrinho pro nosso especialista — sem compromisso.</p>
+            <!-- Safety net: shown after the WhatsApp click. If the visitor never sends the
+                 message, this is the only way the lead (and their cart) reaches the admin. -->
+            <form class="cart-callback" hidden>
+              <p class="cart-callback__title">Se preferir, deixe seu WhatsApp que nosso especialista te chama:</p>
+              <div class="cart-callback__row">
+                <input type="tel" name="cb-whatsapp" maxlength="40" inputmode="tel" placeholder="(62) 9xxxx-xxxx" required aria-label="Seu WhatsApp" />
+                <button type="submit" class="btn btn--ghost">Me chama</button>
+              </div>
+              <label class="cart-callback__consent">
+                <input type="checkbox" required />
+                <span>Autorizo contato conforme a <a href="https://roilabs.com.br/privacidade" target="_blank" rel="noopener" style="color:var(--hivis)">Política de Privacidade</a>. (LGPD)</span>
+              </label>
+              <p class="cart-callback__msg" aria-live="polite"></p>
+            </form>
             <button type="button" class="cart-share">🔗 Salvar / compartilhar carrinho</button>
             <p class="cart-share__msg" aria-live="polite"></p>
           </div>
@@ -140,6 +154,13 @@ const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
   .cart-actions { margin-top: 1.2rem; display: grid; gap: 0.6rem; justify-items: start; }
   .cart-whats { font-size: 0.95rem; }
   .cart-whats__note { font-size: 0.82rem; color: var(--d-muted); margin: 0; }
+  .cart-callback { display: grid; gap: 0.55rem; padding: 0.9rem 1rem; border: 1px dashed var(--d-line-strong); border-radius: 10px; max-width: 420px; }
+  .cart-callback__title { font-size: 0.85rem; color: var(--d-text); margin: 0; }
+  .cart-callback__row { display: flex; gap: 0.5rem; }
+  .cart-callback__row input { flex: 1; min-width: 0; padding: 0.6rem 0.7rem; border: 1px solid var(--d-line-strong); border-radius: 6px; font: inherit; background: var(--ink-3); color: var(--d-text); }
+  .cart-callback__consent { display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.78rem; color: var(--d-muted); cursor: pointer; }
+  .cart-callback__consent input { margin-top: 0.15rem; }
+  .cart-callback__msg { font-size: 0.82rem; color: #86efac; margin: 0; min-height: 1.1em; }
   .cart-share { background: none; border: 1px solid var(--d-line-strong); color: var(--d-text); border-radius: 8px; padding: 0.6rem 0.9rem; cursor: pointer; font: inherit; font-size: 0.88rem; }
   .cart-share:hover { color: var(--hivis); border-color: var(--hivis); }
   .cart-share__msg { font-size: 0.82rem; color: var(--hivis); margin: 0.5rem 0 0; min-height: 1.1em; word-break: break-all; }
@@ -405,6 +426,31 @@ const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
     if (codigo) applyCupom(codigo);
   });
 
+  // Snapshot the cart into the admin's lead kanban so a quote click survives a
+  // WhatsApp message that never gets sent. Fire-and-forget, same no-preflight
+  // urlencoded POST the pSEO LeadForm uses; failure never touches the UX.
+  function postOrcamentoLead(nome: string, whatsapp: string) {
+    const cart = getCart();
+    const total = lines().reduce((s, l) => s + l.subtotal, 0);
+    fetch(`${appUrl}/api/leads-consumidor`, {
+      method: 'POST',
+      body: new URLSearchParams({
+        nome,
+        whatsapp,
+        consent: '1',
+        produto: `Orçamento carrinho (${cart.length} item(ns) · ${brl(total)})`,
+        pagina: '/carrinho',
+        mensagem: `Pediu orçamento pelo WhatsApp. Carrinho: ${location.origin}/carrinho?c=${encodeCart()}`,
+      }),
+      keepalive: true,
+    }).catch(() => {});
+    (window as any).himetrica?.track('orcamento_lead', { itens: cart.length });
+  }
+
+  const cbForm = $('.cart-callback') as HTMLFormElement;
+  const cbInput = $('.cart-callback__row input') as HTMLInputElement;
+  const cbMsg = $('.cart-callback__msg') as HTMLElement;
+
   $('.cart-whats').addEventListener('click', () => {
     const btn = $('.cart-whats') as HTMLButtonElement;
     const msg = $('.cart-share__msg') as HTMLElement;
@@ -413,7 +459,23 @@ const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
     const cartUrl = `${location.origin}/carrinho?c=${encodeCart()}`;
     const texto = `Olá! Quero um orçamento deste carrinho de porcelanato:\n${cartUrl}`;
     (window as any).himetrica?.track('orcamento_whatsapp', { itens: cart.length });
+    // Checkout form already has contact + LGPD consent? Capture the lead right away;
+    // otherwise reveal the opt-in callback field for when the message isn't sent.
+    const nomeVal = (form.elements.namedItem('nome') as HTMLInputElement).value.trim();
+    const whatsVal = (form.elements.namedItem('whatsapp') as HTMLInputElement).value.trim();
+    const consentOk = (form.elements.namedItem('consent') as HTMLInputElement).checked;
+    if (whatsVal && consentOk) postOrcamentoLead(nomeVal || 'Orçamento WhatsApp', whatsVal);
+    else if (!cbMsg.textContent) cbForm.hidden = false;
     window.open(`https://wa.me/${btn.dataset.whats}?text=${encodeURIComponent(texto)}`, '_blank', 'noopener');
+  });
+
+  cbForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!cbForm.checkValidity()) { cbForm.reportValidity(); return; }
+    postOrcamentoLead('Orçamento WhatsApp (carrinho)', cbInput.value.trim());
+    cbMsg.textContent = 'Recebido! Nosso especialista te chama em até 24h úteis.';
+    (cbForm.querySelector('.cart-callback__row') as HTMLElement).hidden = true;
+    (cbForm.querySelector('.cart-callback__consent') as HTMLElement).hidden = true;
   });
 
   $('.cart-share').addEventListener('click', async () => {
