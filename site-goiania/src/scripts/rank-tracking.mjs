@@ -1,22 +1,21 @@
-﻿// Rank tracking semanal da malha pSEO + âncora, contra a SERP real (DataForSEO,
-// mesma credencial do open-seo). Leitura de tração ANTES de o GSC maturar.
+﻿// Rank tracking semanal da malha pSEO + âncora, contra a SERP real.
+// Leitura de tração ANTES de o GSC maturar (GSC vira a fonte grátis definitiva depois).
 //
-// Uso:  DATAFORSEO_API_KEY=<base64> node site-goiania/src/scripts/rank-tracking.mjs
+// Fonte (na ordem): SERPER_API_KEY (serper.dev — 2.500 buscas grátis no cadastro,
+// sem cartão) → DATAFORSEO_API_KEY (fallback; ~$0.01/keyword em depth 50, precisa
+// de saldo — 2026-07-03 a conta zerou no meio da rodada).
+//
+// Uso:  SERPER_API_KEY=<key> node site-goiania/src/scripts/rank-tracking.mjs
 // Cron: .github/workflows/rank-tracking.yml (semanal, commita o resultado no vault).
-//
-// Custo REAL (medido 2026-07-03): live regular cobra por profundidade — depth 50
-// ≈ $0.01/keyword → ~$0.40/rodada com ~40 keywords. Manter crédito na conta:
-// sem saldo a API devolve "Payment Required" (o script registra como erro e segue).
-// ponytail: sequencial e live (código simples); migrar p/ task_post em lote (~3× mais
-// barato) se o custo semanal passar a importar.
 import { readFileSync, appendFileSync, writeFileSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
-const KEY = process.env.DATAFORSEO_API_KEY;
-if (!KEY) {
-  console.error('rank-tracking: defina DATAFORSEO_API_KEY (base64, a mesma do open-seo/.env)');
+const SERPER = process.env.SERPER_API_KEY;
+const DFS = process.env.DATAFORSEO_API_KEY;
+if (!SERPER && !DFS) {
+  console.error('rank-tracking: defina SERPER_API_KEY (grátis em serper.dev) ou DATAFORSEO_API_KEY');
   process.exit(1);
 }
 
@@ -34,32 +33,47 @@ const keywords = [
   ]),
 ];
 
-console.log(`rank-tracking ${hoje}: ${keywords.length} keywords, alvo ${TARGET}`);
+console.log(
+  `rank-tracking ${hoje}: ${keywords.length} keywords, alvo ${TARGET}, fonte ${SERPER ? 'serper.dev' : 'dataforseo'}`
+);
 
+// Cada provider devolve { pos, url } (null = fora do top 50) ou lança.
+async function viaSerper(kw) {
+  const r = await fetch('https://google.serper.dev/search', {
+    method: 'POST',
+    headers: { 'X-API-KEY': SERPER, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ q: kw, gl: 'br', hl: 'pt-br', location: 'Goiania, State of Goias, Brazil', num: 50 }),
+  });
+  if (!r.ok) throw new Error(`serper HTTP ${r.status}`);
+  const j = await r.json();
+  const hit = (j.organic ?? []).find((i) => (i.link ?? '').includes(TARGET));
+  return { pos: hit?.position ?? null, url: hit?.link ?? '' };
+}
+
+async function viaDataForSeo(kw) {
+  const r = await fetch('https://api.dataforseo.com/v3/serp/google/organic/live/regular', {
+    method: 'POST',
+    headers: { Authorization: `Basic ${DFS}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify([
+      { keyword: kw, location_name: 'Goiania,State of Goias,Brazil', language_code: 'pt', depth: 50 },
+    ]),
+  });
+  const j = await r.json();
+  const task = j?.tasks?.[0];
+  if (task?.status_code !== 20000) throw new Error(task?.status_message ?? j?.status_message ?? 'erro API');
+  const hit = (task.result?.[0]?.items ?? []).find((i) => i.domain === TARGET || (i.url ?? '').includes(TARGET));
+  return { pos: hit?.rank_absolute ?? null, url: hit?.url ?? '' };
+}
+
+const check = SERPER ? viaSerper : viaDataForSeo;
 const results = [];
 for (const kw of keywords) {
-  const body = JSON.stringify([
-    { keyword: kw, location_name: 'Goiania,State of Goias,Brazil', language_code: 'pt', depth: 50 },
-  ]);
   try {
-    const r = await fetch('https://api.dataforseo.com/v3/serp/google/organic/live/regular', {
-      method: 'POST',
-      headers: { Authorization: `Basic ${KEY}`, 'Content-Type': 'application/json' },
-      body,
-    });
-    const j = await r.json();
-    const task = j?.tasks?.[0];
-    if (task?.status_code !== 20000) {
-      console.error(`  ${kw}: erro API — ${task?.status_message ?? j?.status_message}`);
-      results.push({ kw, pos: null, url: '', erro: true });
-      continue;
-    }
-    const items = task.result?.[0]?.items ?? [];
-    const hit = items.find((i) => i.domain === TARGET || (i.url ?? '').includes(TARGET));
-    results.push({ kw, pos: hit?.rank_absolute ?? null, url: hit?.url ?? '' });
-    console.log(`  ${kw}: ${hit ? `#${hit.rank_absolute}` : '—'}`);
+    const { pos, url } = await check(kw);
+    results.push({ kw, pos, url });
+    console.log(`  ${kw}: ${pos ? `#${pos}` : '—'}`);
   } catch (e) {
-    console.error(`  ${kw}: falha de rede — ${e.message}`);
+    console.error(`  ${kw}: erro — ${e.message}`);
     results.push({ kw, pos: null, url: '', erro: true });
   }
 }

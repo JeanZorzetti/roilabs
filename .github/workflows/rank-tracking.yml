@@ -1,6 +1,7 @@
 # Rank tracking semanal da malha pSEO (goiania.roilabs.com.br) — segunda 09:00 UTC.
 # Resultado commitado direto no vault (Docs/Obsidian/rank-tracking.{csv,md}).
-# Requer o secret DATAFORSEO_API_KEY (base64 — o mesmo valor do open-seo/.env).
+# Fonte preferida: secret SERPER_API_KEY (serper.dev, 2.500 buscas grátis, sem cartão);
+# fallback: DATAFORSEO_API_KEY (precisa de saldo na conta — zerou em 2026-07-03).
 name: rank-tracking
 
 on:
@@ -20,6 +21,7 @@ jobs:
           node-version: 22
       - run: node site-goiania/src/scripts/rank-tracking.mjs
         env:
+          SERPER_API_KEY: ${{ secrets.SERPER_API_KEY }}
           DATAFORSEO_API_KEY: ${{ secrets.DATAFORSEO_API_KEY }}
       - run: |
           git config user.name "rank-tracking"

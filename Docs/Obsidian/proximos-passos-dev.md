@@ -62,21 +62,21 @@ dono: Jean (dev)
 ## 🧭 Fora da caixa — ciclo 2 (2026-07-03)
 
 > [!success] CICLO 2 EXECUTADO 2026-07-03 — 5/5 itens em código, tudo na `main` e pushado.
-> Deploy do site-goiania é automático por push (calculadora + páginas de marca já a caminho). Pendências de ops abaixo em cada item.
+> **Todo deploy é automático por push** (site, site-goiania e app) — tudo abaixo já está indo ao ar. Ops restantes: contas Resend e serper.dev → [[backlog-pendencias]].
 
 ### 🎯 Destravar o gate do negócio (fornecedor)
 
-- [x] **⭐ CTA WhatsApp no site institucional — FEITO 2026-07-03 (`9e28bde`).** Botão verde "Chamar no WhatsApp" no hero + "Chamar no WhatsApp agora" no fim (seção candidatar), `wa.me/5562993265713` com texto pré-preenchido. A nota do ciclo assumia listener delegado no Base do `/site` — **não existia** (só no goiânia); adicionado, `whatsapp_click` agora dispara nos 2 sites. ⏳ **redeploy manual do `/site` na EasyPanel** pra valer em prod.
+- [x] **⭐ CTA WhatsApp no site institucional — FEITO 2026-07-03 (`9e28bde`).** Botão verde "Chamar no WhatsApp" no hero + "Chamar no WhatsApp agora" no fim (seção candidatar), `wa.me/5562993265713` com texto pré-preenchido. A nota do ciclo assumia listener delegado no Base do `/site` — **não existia** (só no goiânia); adicionado, `whatsapp_click` agora dispara nos 2 sites. Deploy automático por push.
 
 ### 💰 Converter mais (B2C goiânia)
 
 - [x] **Calculadora standalone — FEITO 2026-07-03 (`cb8945d`).** `goiania.roilabs.com.br/calculadora`: ambientes (largura×comprimento), folga 5–20%, m²/caixa informado pelo usuário, resultado em caixas fechadas (mesma matemática do carrinho, `m2ParaCaixas`). BLUF + passo-a-passo + FAQ 6 itens com FAQPage schema + CTA duplo (catálogo + WhatsApp). No sitemap, llms.txt e footer. Deploy automático por push.
-- [x] **Confirmação de pedido + alertas internos — FEITO 2026-07-03 (`ef7bced`).** `lib/email.ts` (Resend via fetch, sem SDK; no-op sem chave; fire-and-forget). Webhook de pagamento manda confirmação ao cliente (itens, total, prazo 2–6 dias úteis, WhatsApp) + alerta interno de pedido pago; candidaturas e leads-consumidor mandam alerta de lead novo (fechou também o item do [[backlog-pendencias]], mesma infra). ⏳ **ops: criar conta Resend, setar `RESEND_API_KEY`/`EMAIL_FROM`/`ALERT_EMAIL` na EasyPanel + redeploy do `/app`** (sem a chave nada quebra — vira no-op).
+- [x] **Confirmação de pedido + alertas internos — FEITO 2026-07-03 (`ef7bced`).** `lib/email.ts` (Resend via fetch, sem SDK; no-op sem chave; fire-and-forget). Webhook de pagamento manda confirmação ao cliente (itens, total, prazo 2–6 dias úteis, WhatsApp) + alerta interno de pedido pago; candidaturas e leads-consumidor mandam alerta de lead novo (fechou também o item do [[backlog-pendencias]], mesma infra). Já no ar como no-op; ⏳ conta Resend + env vars → [[backlog-pendencias]].
 
 ### 📣 Escalar o canal (pSEO/GEO)
 
 - [x] **Dimensão MARCA — VALIDADA E SHIPPADA 2026-07-03 (`ede5eed`).** Mineração real (DataForSEO, Goiás): `biancogres` **390**/mês ✅ e `delta porcelanato` **260**/mês ✅ passam o piso ≥ 200; **savane (10) e TODAS as variações "+goiânia" (null) mortas sem custo**, como previsto. 2 páginas novas (`/porcelanato/porcelanato-biancogres`, 18 produtos; `/porcelanato/porcelanato-delta`, 4 produtos) via 1 linha de match por marca no `tagsDoProduto` + dados curados com fatos reais do catálogo. Malha agora tem **41 páginas**.
-- [x] **Rank tracking semanal — FEITO 2026-07-03 (`f9c0229`).** `site-goiania/src/scripts/rank-tracking.mjs` (âncora + todos os termoAlvo da malha → posição top-50 Google Goiânia via DataForSEO) grava `rank-tracking.csv` (histórico) + `rank-tracking.md` (snapshot) aqui no vault. Cron: GitHub Actions toda segunda 09:00 UTC, commita o resultado (secret `DATAFORSEO_API_KEY` já setado no repo). **1ª rodada real: 18 keywords medidas, 0 no top 100** (malha tem ~2 semanas — baseline honesto). ⚠️ **crédito DataForSEO ESGOTOU no meio da rodada** (saldo era ~$0.44; custo real ≈ $0.01/keyword em depth 50 → ~$0.40/rodada). **Recarregar a conta DataForSEO** ou o cron de segunda só devolve "Payment Required".
+- [x] **Rank tracking semanal — FEITO 2026-07-03 (`f9c0229`).** `site-goiania/src/scripts/rank-tracking.mjs` (âncora + todos os termoAlvo da malha → posição top-50 Google Goiânia via DataForSEO) grava `rank-tracking.csv` (histórico) + `rank-tracking.md` (snapshot) aqui no vault. Cron: GitHub Actions toda segunda 09:00 UTC, commita o resultado (secret `DATAFORSEO_API_KEY` já setado no repo). **1ª rodada real: 18 keywords medidas, 0 no top 100** (malha tem ~2 semanas — baseline honesto). ⚠️ Crédito DataForSEO esgotou no meio da rodada e não será recarregado → **script migrado pra serper.dev** (2.500 buscas grátis; DataForSEO virou fallback). ⏳ criar conta + secret `SERPER_API_KEY` → [[backlog-pendencias]]. Quando o GSC maturar (~07-15), ele vira a fonte grátis definitiva.
 
 ## 🚀 Fase 1 — Subir o MVP no ar (caminho crítico, em ordem)
 
