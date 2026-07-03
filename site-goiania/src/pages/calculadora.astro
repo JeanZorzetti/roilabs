@@ -10,6 +10,7 @@ import WhatsappCta from '../components/WhatsappCta.astro';
 
 const SITE = Astro.site?.href.replace(/\/$/, '') ?? 'https://goiania.roilabs.com.br';
 const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
+const appUrl = import.meta.env.PUBLIC_APP_URL ?? 'https://app.roilabs.com.br';
 
 const faq = [
   {
@@ -107,6 +108,24 @@ const jsonLdNodes = [
           </div>
 
           <div class="calc__result" aria-live="polite"></div>
+
+          <!-- Revealed once there is a result: the calculation becomes a lead
+               (same opt-in pattern as the cart callback / orcamento_lead). -->
+          <form class="calc-lead" hidden data-app-url={appUrl}>
+            <p class="calc-lead__title">
+              Quer o preço dessa metragem? Deixe seu WhatsApp que nosso especialista
+              manda o orçamento com frete — sem compromisso.
+            </p>
+            <div class="calc-lead__row">
+              <input type="tel" name="cl-whatsapp" maxlength="40" inputmode="tel" placeholder="(62) 9xxxx-xxxx" required aria-label="Seu WhatsApp" />
+              <button type="submit" class="btn btn--primary">Quero o orçamento</button>
+            </div>
+            <label class="calc-lead__consent">
+              <input type="checkbox" required />
+              <span>Autorizo contato conforme a <a href="https://roilabs.com.br/privacidade" target="_blank" rel="noopener" style="color:var(--hivis)">Política de Privacidade</a>. (LGPD)</span>
+            </label>
+            <p class="calc-lead__msg" aria-live="polite"></p>
+          </form>
         </div>
       </div>
     </section>
@@ -172,6 +191,13 @@ const jsonLdNodes = [
     background: color-mix(in srgb, currentColor 6%, transparent); color: inherit; font: inherit;
   }
   .calc__result { min-height: 1.4em; font-size: 1.05rem; font-weight: 700; color: var(--hivis); }
+  .calc-lead { display: grid; gap: 0.55rem; padding: 0.9rem 1rem; border: 1px dashed color-mix(in srgb, currentColor 35%, transparent); border-radius: 10px; max-width: 420px; }
+  .calc-lead__title { font-size: 0.88rem; margin: 0; }
+  .calc-lead__row { display: flex; gap: 0.5rem; }
+  .calc-lead__row input { flex: 1; min-width: 0; padding: 0.6rem 0.7rem; border: 1px solid color-mix(in srgb, currentColor 28%, transparent); border-radius: 6px; font: inherit; background: color-mix(in srgb, currentColor 6%, transparent); color: inherit; }
+  .calc-lead__consent { display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.78rem; opacity: 0.85; cursor: pointer; }
+  .calc-lead__consent input { margin-top: 0.15rem; }
+  .calc-lead__msg { font-size: 0.82rem; color: #16a34a; margin: 0; min-height: 1.1em; }
 </style>
 
 <style is:global>
@@ -203,6 +229,12 @@ const jsonLdNodes = [
   const num = (el: HTMLInputElement) => parseFloat(el.value.replace(',', '.'));
   const fmt = (n: number) => n.toFixed(2).replace('.', ',');
 
+  const leadForm = root.querySelector<HTMLFormElement>('.calc-lead')!;
+  const leadInput = leadForm.querySelector<HTMLInputElement>('input[name="cl-whatsapp"]')!;
+  const leadMsg = leadForm.querySelector<HTMLElement>('.calc-lead__msg')!;
+  // Last valid calculation — becomes the lead's context on submit.
+  let ultimo: { area: number; folga: number; m2Caixa: number; caixas: number } | null = null;
+
   function addRoom() {
     const row = document.createElement('div');
     row.className = 'calc__room';
@@ -225,14 +257,16 @@ const jsonLdNodes = [
       .filter((a) => a.l > 0 && a.c > 0)
       .reduce((s, a) => s + a.l * a.c, 0);
 
-    if (area <= 0) { result.textContent = ''; return; }
+    if (area <= 0) { result.textContent = ''; ultimo = null; return; }
     const folga = clampPerda((parseFloat(folgaInput.value) || 0) / 100);
     const m2Caixa = num(m2caixaInput);
-    if (!(m2Caixa > 0)) { result.textContent = `${fmt(area)} m² medidos — informe os m² por caixa.`; return; }
+    if (!(m2Caixa > 0)) { result.textContent = `${fmt(area)} m² medidos — informe os m² por caixa.`; ultimo = null; return; }
     const caixas = m2ParaCaixas(area, m2Caixa, folga);
     result.textContent =
       `${fmt(area)} m² + ${Math.round(folga * 100)}% folga ` +
       `= ${fmt(area * (1 + folga))} m² → ${caixas} caixa(s) · ${fmt(caixas * m2Caixa)} m² cobertos`;
+    ultimo = { area, folga, m2Caixa, caixas };
+    leadForm.hidden = false; // once revealed, stays — don't yank the form while the user edits
   }
 
   addBtn.addEventListener('click', addRoom);
@@ -250,6 +284,33 @@ const jsonLdNodes = [
   });
   folgaInput.addEventListener('input', refresh);
   m2caixaInput.addEventListener('input', refresh);
+
+  // Calculation → lead: same fire-and-forget urlencoded POST the cart callback
+  // uses (no CORS preflight); failure never touches the UX.
+  leadForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!leadForm.checkValidity()) { leadForm.reportValidity(); return; }
+    const appUrl = leadForm.dataset.appUrl || 'https://app.roilabs.com.br';
+    const r = ultimo;
+    fetch(`${appUrl}/api/leads-consumidor`, {
+      method: 'POST',
+      body: new URLSearchParams({
+        nome: 'Calculadora de porcelanato',
+        whatsapp: leadInput.value.trim(),
+        consent: '1',
+        produto: r ? `Calculadora (${fmt(r.area)} m² → ${r.caixas} caixa(s))` : 'Calculadora',
+        pagina: '/calculadora',
+        mensagem: r
+          ? `Calculou ${fmt(r.area)} m² + ${Math.round(r.folga * 100)}% folga, caixa de ${fmt(r.m2Caixa)} m² → ${r.caixas} caixa(s). Pediu orçamento.`
+          : 'Pediu orçamento pela calculadora.',
+      }),
+      keepalive: true,
+    }).catch(() => {});
+    (window as any).himetrica?.track('calculadora_lead', { caixas: r?.caixas ?? 0 });
+    leadMsg.textContent = 'Recebido! Nosso especialista te chama em até 24h úteis com o orçamento.';
+    (leadForm.querySelector('.calc-lead__row') as HTMLElement).hidden = true;
+    (leadForm.querySelector('.calc-lead__consent') as HTMLElement).hidden = true;
+  });
 
   addRoom();
 </script>
