@@ -16,6 +16,10 @@ dono: Jean (dev)
 
 ## ⏳ Ops rápidas (deploy/verificação, não é código)
 
+- [ ] **Microsoft Clarity (ciclo 6, ~10 min)** — criar 2 projetos em clarity.microsoft.com (conta MS grátis): `goiania.roilabs.com.br` e `roilabs.com.br`; setar `PUBLIC_CLARITY_ID` (cada site com o seu ID) nas env vars de BUILD na EasyPanel + redeploy. Código já no ar como no-op (`a554300`).
+- [ ] **ntfy.sh (ciclo 6, ~5 min, sem conta)** — gerar nome de tópico longo/aleatório (ex.: `roilabs-alertas-$(openssl rand -hex 8)`), setar `NTFY_TOPIC` na EasyPanel do `/app`, instalar o app ntfy no celular (Duda + Jean) e assinar o tópico. Push imediato de lead/candidatura/pedido pago — não depende do Resend.
+- [ ] **Conferir OG do ciclo 6 pós-deploy** — 1 página de produto (deve mostrar a FOTO real) e 1 guia (PNG gerado com borda laranja) no opengraph.xyz; conferir também a coluna **Origem** em `/admin/leads` quando entrar o 1º lead novo.
+
 - [ ] **Criar conta Resend (free tier)** e setar na EasyPanel do `/app`: `RESEND_API_KEY`, `EMAIL_FROM`, `ALERT_EMAIL`. O código do ciclo 2 (`ef7bced`) já está no ar como no-op — com a chave, confirmação de pedido + alertas internos passam a sair sozinhos. Depois: verificar domínio `roilabs.com.br` no Resend pra sair do `onboarding@resend.dev`.
 - [ ] **`CRON_SECRET` (digest semanal, ciclo 3)** — gerar um segredo (`openssl rand -hex 32`) e setar **nos dois lugares**: env var na EasyPanel do `/app` + secret `CRON_SECRET` no repo GitHub. Sem ele a rota `/api/cron/digest` responde 503 e o step de segunda no `rank-tracking.yml` é pulado (não quebra nada). E-mail só sai quando o Resend acima também existir.
 - [ ] **Meta Catalog (Duda, ciclo 3)** — cadastrar o feed `goiania.roilabs.com.br/feed.xml` no Commerce Manager (Instagram Shopping + catálogo do WhatsApp). Passo a passo pronto em [[meta-catalog]]. Dev: zero mudança (feed do Merchant Center é aceito como está).
@@ -34,13 +38,15 @@ dono: Jean (dev)
 
 ## 📊 Medição (aguarda maturação)
 
+- [ ] **GSC miner — secret `GSC_SA_KEY` (~2026-07-15, junto do checkpoint da malha).** Service account com leitura na propriedade goiânia + secret no repo; a partir daí o cron semanal grava `90-medicao/gsc-miner.md` com candidatas a página nova + striking distance (substitui a mineração DataForSEO). Runbook completo: [[gsc-miner-setup]].
+
 - [ ] **⚠️ GSC goiânia — CAUSA ENCONTRADA E CORRIGIDA em código (2026-07-03, `36a2436`+`02937fb`); falta a ação no GSC.** Quadro real (print do Jean): 17 indexadas, 75 não (12 "página com redirecionamento", 50 "detectada não indexada", 13 "rastreada não indexada"); crawl despencou 261→6 req/dia. **Causa raiz (crawl stats): 46% do rastreamento batia em 301** — sitemap/llms/feed/JSON-LD/links internos apontavam URL SEM barra final; nginx (formato directory do Astro) devolvia 301 **para `http://`** (downgrade, nginx atrás do proxy TLS). Fix shipped nos DOIS sites: `absolute_redirect off` no nginx + barra final em toda URL emitida (canonical já tinha). **Ação restante no GSC (Jean, 5 min): resubmeter o `sitemap.xml` na propriedade goiânia + "Solicitar indexação" da home e do hub `/porcelanato/`** — acompanhar "páginas indexadas" (meta ≥ 35/41 da malha; métrica do GTM [[40-gtm]], checkpoint ~07-15). As 12 "com redirecionamento" devem migrar pra indexadas sozinhas nos próximos crawls.
 
 ## 🛡️ Proteger o que está no ar
 
 - [ ] **Backup automático do Postgres.** `roilabs_db` tem pedidos pagos e leads reais e **zero backup**. `pg_dump` diário via cron no VPS + cópia semanal fora dele; testar 1 restore de verdade. O item mais barato da lista contra o pior cenário.
 - [ ] **Uptime monitor + alerta.** cron-job.org (grátis, padrão do Compass) em 3 URLs: `app.roilabs.com.br/api/cadeiras` (prova app+DB), home goiânia, home institucional. Hoje checkout quebrado = ninguém sabe.
-- [x] **Alerta de lead/pedido novo — CÓDIGO FEITO 2026-07-03 (`ef7bced`, junto com a confirmação de pedido do ciclo 2).** Alertas em candidaturas, leads-consumidor e webhook de pagamento via `lib/email.ts` (Resend). Já no ar como no-op; ⏳ conta Resend + env vars (item em "Ops rápidas" acima).
+- [x] **Alerta de lead/pedido novo — CÓDIGO FEITO 2026-07-03 (`ef7bced`, junto com a confirmação de pedido do ciclo 2).** Alertas em candidaturas, leads-consumidor e webhook de pagamento via `lib/email.ts` (Resend). Já no ar como no-op; ⏳ conta Resend + env vars (item em "Ops rápidas" acima). **Update ciclo 6 (`c9eb662`): mesmo gatilho agora também manda push ntfy.sh — canal sem conta, só falta `NTFY_TOPIC` (item em "Ops rápidas").**
 
 ## 🌟 Gateado (não fazer antes do gate)
 

@@ -17,7 +17,7 @@ dono: Jean (dev)
 ---
 
 > [!important] 2026-07-03 — Faxina de backlog
-> **Tudo que estava não-feito abaixo foi movido para [[backlog-pendencias]]** (não é prioridade agora). A lista ativa é a seção [[#🧭 Fora da caixa — ciclo 5 (2026-07-03)|Fora da caixa — ciclo 5]].
+> **Tudo que estava não-feito abaixo foi movido para [[backlog-pendencias]]** (não é prioridade agora). A lista ativa é a seção [[#🧭 Fora da caixa — ciclo 6 (2026-07-03)|Fora da caixa — ciclo 6]].
 
 ## 🎯 Agora (2026-07-02) — lista autoritativa
 
@@ -134,6 +134,25 @@ dono: Jean (dev)
 
 - [x] **⭐ Guia "quanto custa porcelanato" — FEITO 2026-07-03 (`2907adf`).** `/guia/quanto-custa-porcelanato/`: faixas de material **calculadas do catálogo real no build** (hoje R$ 65,99–144,99/m², tabela por acabamento — atualiza sozinha a cada publish), mão de obra + argamassa/rejunte como estimativa de mercado sinalizada, e a conta completa para 60 m². BLUF + FAQPage + CTA duplo + entrada no "Veja também" dos 3 guias. **Sem canibalizar**: a malha `porcelanato-preco` segue dona do termo transacional "porcelanato preço" e é interlinkada como catálogo. Registro em `guias.ts` → sitemap/llms.txt/hub/calculadora automáticos. Build: **80 páginas**.
 - [x] **ItemList na malha + schema no hub — FEITO 2026-07-03 (`bab745d`).** Ajuste na verificação: a malha **já tinha** BreadcrumbList (em `buildJsonLdNodes`) — o que faltava era **ItemList** espelhando a galeria de produtos (cada item aponta pra página de produto, que tem o Product+Offer completo com sku=g:id do feed) e o hub `/porcelanato/` **sem schema nenhum** → ganhou BreadcrumbList + ItemList das 40 categorias.
+
+## 🧭 Fora da caixa — ciclo 6 (2026-07-03)
+
+> [!success] CICLO 6 EXECUTADO 2026-07-03 — 5/5 itens em código, tudo na `main` e pushado (deploy automático por push).
+> Critério do ciclo: enxergar o funil + fechar gaps de graça. Deliberadamente FORA (de novo): expandir malha antes do GSC (o miner abaixo destrava isso em ~07-15), review engine (gate 3–5 pedidos), WhatsApp Cloud API (pago).
+
+### 👀 Enxergar onde o funil vaza
+
+- [x] **⭐ Microsoft Clarity nos 2 sites — FEITO 2026-07-03 (`a554300`).** Tag no `Base.astro` de ambos, gateada em `PUBLIC_CLARITY_ID` (no-op sem a env, mesmo padrão do `PUBLIC_GA_ID`). himetrica diz O QUE converte; Clarity (grátis, ilimitado) mostra ONDE trava — heatmap + gravação de sessão no carrinho/checkout/calculadora. ⏳ ops: criar os 2 projetos no Clarity + env var → [[backlog-pendencias]].
+- [x] **⭐ Atribuição first-touch no lead — FEITO 2026-07-03 (`20a7fa1`).** Os 2 sites gravam 1× a página de entrada (query preserva UTMs) + referrer externo em `localStorage.rlft`; TODO caminho de lead envia como `origem` (LeadForm da malha, form de candidatura, micro-forms do carrinho e da calculadora). Sem coluna nova (DB de prod inalcançável daqui): o servidor grava como sufixo `[origem] ...` na `mensagem`, e `/admin/leads` ganhou coluna **Origem** parseada de lá. Upgrade p/ coluna real no próximo `db push` manual.
+
+### 📲 Fechar gaps de alerta e preview (custo zero)
+
+- [x] **⭐ Push ntfy.sh em lead/candidatura/pedido pago — FEITO 2026-07-03 (`c9eb662`).** `sendAlert` agora despacha e-mail (Resend) E push ntfy.sh — cada canal no-op sem a própria env. ntfy é grátis e SEM conta: o tópico é o segredo; Duda instala o app e assina. Fecha hoje o buraco "alerta de lead" que esperava a conta Resend. ⏳ `NTFY_TOPIC` na EasyPanel + assinar no celular → [[backlog-pendencias]].
+- [x] **OG image por página no goiânia — FEITO 2026-07-03 (`94d3e6b`).** O funil roda em link de WhatsApp compartilhado (carrinho `?c=`, cards da Duda, guias): produto usa a **foto real** como og:image; malha (41), guias (4), hub e calculadora ganham PNG gerado (`astro-og-canvas`, mesma receita do `/site`). `og:image:width/height` só nas imagens locais 1200×630.
+
+### ⛏️ Destravar a expansão da malha (para ~07-15)
+
+- [x] **⭐ GSC miner — FEITO 2026-07-03 (`f5271fc`).** `site-goiania/src/scripts/gsc-miner.mjs` (zero-dep, JWT de service account via `node:crypto`) minera a Search Console API (grátis): candidatas a **página nova** (query com impressão real sem página dedicada) + **striking distance** (página dedicada em posição 8–30) → `90-medicao/gsc-miner.md`, no mesmo cron semanal do rank-tracking (step non-fatal, no-op sem secret). Substitui a mineração DataForSEO. ⏳ criar `GSC_SA_KEY` quando o GSC maturar (~07-15) — runbook [[gsc-miner-setup]].
 
 ## 🚀 Fase 1 — Subir o MVP no ar (caminho crítico, em ordem)
 

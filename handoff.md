@@ -23,6 +23,12 @@ nicho âncora = **revestimentos/porcelanato**.
 - **Fluxo:** site (estático) → `POST app.roilabs.com.br/api/candidaturas` (urlencoded, sem preflight) → DB → kanban `/admin`.
 
 ## Feito
+- **Ciclo 6 "fora da caixa" (2026-07-03, commits `a554300`→`f5271fc`) — 5/5 itens, custo zero:**
+  - **Microsoft Clarity nos 2 sites** (`a554300`) — tag gateada em `PUBLIC_CLARITY_ID` (no-op sem env). ⏳ ops: criar 2 projetos + env de build na EasyPanel.
+  - **Push ntfy.sh nos alertas internos** (`c9eb662`) — `sendAlert` despacha e-mail + push (canais independentes, cada um no-op sem a própria env). Sem conta: o tópico é o segredo. ⏳ `NTFY_TOPIC` + assinar no app ntfy.
+  - **Atribuição first-touch** (`20a7fa1`) — landing page (com UTMs) + referrer externo em `localStorage.rlft`, enviado como `origem` por TODOS os caminhos de lead; servidor grava como sufixo `[origem]` na `mensagem` (sem migração — DB de prod inalcançável daqui); coluna Origem em `/admin/leads`. Coluna real no próximo `db push` manual.
+  - **OG por página no goiânia** (`94d3e6b`) — produto usa a foto real; malha/guias/hub/calculadora ganham PNG `astro-og-canvas` (receita do `/site`). Preview rico nos links de WhatsApp.
+  - **GSC miner** (`f5271fc`) — Search Console API via service account (zero-dep), gera candidatas a página nova + striking distance no vault, no cron semanal do rank-tracking (no-op sem `GSC_SA_KEY`). Runbook `Docs/Obsidian/80-dev/gsc-miner-setup.md`; ativar ~07-15.
 - **Ciclo 4 "fora da caixa" (2026-07-03, commits `97635ce`→`8d22fa6`) — 4 itens de código + 2 docs ops:**
   - **WhatsApp 1-click no `/admin/leads`** — botão "Chamar no WhatsApp" abre o chat com mensagem contextual (nome + produto/carrinho + link `?c=`); link do carrinho exposto na tabela.
   - **Calculadora → lead** — micro-form opt-in pós-resultado em `/calculadora` (WhatsApp + LGPD), lead entra com o contexto do cálculo; evento `calculadora_lead`.
