@@ -19,9 +19,11 @@ Custo: R$ 0. Dev: zero mudança de código (o feed já cumpre os campos exigidos
 1. **Business Manager**: acessar [business.facebook.com](https://business.facebook.com) com a conta
    que administra a página do Facebook / Instagram da ROI Labs (criar o Business se não existir).
 2. **Commerce Manager → Catálogos → Criar catálogo** → tipo **E-commerce** → "Enviar informações do produto".
-3. No catálogo: **Fontes de dados → Feed de dados → Adicionar feed**:
+3. No catálogo: **Catálogo → Fontes de dados → Adicionar itens** → opção **"Arquivo de dados"**
+   (é o antigo "feed de dados" — não confundir com "Manual"). Na etapa seguinte, escolher
+   **"Usar uma URL"** (não o upload de arquivo):
    - URL do feed: `https://goiania.roilabs.com.br/feed.xml`
-   - Atualização programada: **diária** (mesma cadência do Merchant Center);
+   - Recarregamento programado: **diário** (mesma cadência do Merchant Center);
    - Sem login/senha (feed público);
    - Moeda padrão: BRL.
 4. Conferir a 1ª importação: **30/30 itens** sem erro (a Meta mostra o diagnóstico por item,
