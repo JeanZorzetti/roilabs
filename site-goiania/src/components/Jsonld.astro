@@ -1,8 +1,9 @@
 ---
-// Emite JSON-LD inline para Product + FAQPage + BreadcrumbList.
+// Emite JSON-LD inline para Product + FAQPage + BreadcrumbList + ItemList.
 // Usado pelo template [slug].astro via jsonLdNodes no Base.astro.
 
 import type { PorcelanatoPage } from '../data/porcelanato';
+import { produtosDaCategoria, tituloProduto } from '../data/produtos';
 
 interface Props {
   page: PorcelanatoPage;
@@ -50,6 +51,24 @@ export function buildJsonLdNodes(page: PorcelanatoPage, site: string): Record<st
     ],
   };
 
-  return [product, faqPage, breadcrumb];
+  // ItemList espelha a galeria de produtos da página (mesmo slice(0, 8) do template);
+  // cada item aponta pra página de produto, que tem o Product+Offer completo (sku=g:id).
+  const galeria = produtosDaCategoria(page.slug, page.tipo).slice(0, 8);
+  const itemList: Record<string, unknown> | null =
+    galeria.length > 1
+      ? {
+          '@type': 'ItemList',
+          name: `${page.termoAlvo} — opções em Goiânia`,
+          numberOfItems: galeria.length,
+          itemListElement: galeria.map((p, i) => ({
+            '@type': 'ListItem',
+            position: i + 1,
+            name: tituloProduto(p),
+            url: `${site}/porcelanato/produto/${p.slug}/`,
+          })),
+        }
+      : null;
+
+  return itemList ? [product, faqPage, breadcrumb, itemList] : [product, faqPage, breadcrumb];
 }
 ---

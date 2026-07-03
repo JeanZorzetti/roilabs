@@ -15,11 +15,34 @@ const byTipo = pages.reduce<Record<string, typeof pages>>((acc, p) => {
   (acc[key] = acc[key] ?? []).push(p);
   return acc;
 }, {});
+
+// Hub: breadcrumb + ItemList das páginas de categoria da malha.
+const jsonLdNodes = [
+  {
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Início', item: SITE },
+      { '@type': 'ListItem', position: 2, name: 'Porcelanato', item: `${SITE}/porcelanato/` },
+    ],
+  },
+  {
+    '@type': 'ItemList',
+    name: 'Guias de porcelanato em Goiânia',
+    numberOfItems: pages.length,
+    itemListElement: pages.map((p, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: p.titulo,
+      url: `${SITE}/porcelanato/${p.slug}/`,
+    })),
+  },
+];
 ---
 
 <Base
   title="Porcelanato em Goiânia — Guias por Tipo e Ambiente | ROI Labs"
   description="Explore todos os guias de porcelanato para Goiânia: amadeirado, marmorizado, acetinado, antiderrapante, por ambiente e dimensão. Curadoria ROI Labs."
+  jsonLdNodes={jsonLdNodes}
 >
   <Header />
 
