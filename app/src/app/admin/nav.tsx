@@ -7,6 +7,7 @@ const LINKS: [string, string][] = [
   ['/admin/candidaturas', 'Candidaturas'],
   ['/admin/cadeiras', 'Cadeiras'],
   ['/admin/leads', 'Leads Goiânia'],
+  ['/admin/follow-up', 'Follow-up'],
   ['/admin/pedidos', 'Pedidos'],
   ['/admin/parceiros', 'Parceiros'],
   ['/admin/centros-de-custo', 'Centros de custo'],
