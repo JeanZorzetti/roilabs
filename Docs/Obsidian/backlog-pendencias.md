@@ -16,8 +16,8 @@ dono: Jean (dev)
 
 ## ⏳ Ops rápidas (deploy/verificação, não é código)
 
-- [ ] **Redeploy manual do `/site` institucional na EasyPanel** — publica a chave IndexNow (`e72cab81...txt`; sem ela os pings dão 403). O lote GEO de 07-02 já foi ao ar no redeploy do item 1; este é só pra ativar o IndexNow.
-- [ ] **Redeploy manual do `/app` na EasyPanel** — publica o demonstrativo do parceiro + admin mobile (`ea1e6de`).
+- [x] **Redeploy manual do `/site` institucional na EasyPanel** — publica a chave IndexNow (`e72cab81...txt`; sem ela os pings dão 403). O lote GEO de 07-02 já foi ao ar no redeploy do item 1; este é só pra ativar o IndexNow.
+- [x] **Redeploy manual do `/app` na EasyPanel** — publica o demonstrativo do parceiro + admin mobile (`ea1e6de`).
 - [ ] **Testar `/admin` no celular da Duda** pós-redeploy (kanban, pedidos, cadeiras, demonstrativo).
 - [ ] **Conferir eventos no painel himetrica** — em especial o novo `orcamento_whatsapp` (carrinho) após o deploy automático do site-goiania.
 - [ ] **Merchant Center: Produtos → Diagnóstico** (~2026-07-05, 3 dias após cadastro) — meta ≥ 90% aprovados (SC-003). Reprovações → `site-goiania/docs/merchant-center.md`. Suspeito nº 1: imagens em CDN de terceiro (vteximg).

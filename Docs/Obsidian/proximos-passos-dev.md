@@ -29,13 +29,12 @@ dono: Jean (dev)
 	- OG de 1 artigo responde PNG em `/open-graph/...` e aparece no preview (opengraph.xyz ou similar);
 	- JSON-LD da home valida com `Service`+`Offer` (validator.schema.org) e `sameAs` presente nos 2 sites;
 	- **eventos himetrica chegando no painel**: `whatsapp_click` nos 2 sites, `candidatura_convertida` (institucional), `pedido_convertido`/`lead_convertido` (goiânia). Dedupe por sessionStorage — testar reload do `/obrigado` não duplica.
-- [ ] **3. Configurar o Asaas (chaves + webhook)** — última pendência do MVP (feature 007). Sem isso a cobrança do success fee não roda. Integração externa, separada do Mercado Pago do checkout.
+- **3. Configurar o Asaas** → movido para [[backlog-pendencias]].
 
 ### Depois (dev, ranqueado por alavanca)
 
-- [ ] **GSC: medir a malha pSEO.** Conferir propriedade de `goiania.roilabs.com.br` no Search Console, submeter sitemap e acompanhar **páginas indexadas das 39** — é a métrica de decisão do GTM ("medir indexadas", [[40-gtm]]). Primeiro checkpoint ~2 semanas pós-deploy.
 - [x] **LP/ajustes para Google Ads** quando a campanha `porcelanato goiânia` (140/mês, CPC alto — âncora validada no Keyword Planner, [[mercado]]) for ao ar. Nada a fazer antes de a Duda decidir a campanha.
-- **Bloqueado (não é dev agora):** Gatekeeper (buy, tier 2 de integração) depende de fechar o 1º fornecedor — Gate 3, campo.
+- GSC (medição da malha) e Gatekeeper (bloqueado) → movidos para [[backlog-pendencias]].
 
 ## 🧭 Fora da caixa — próximo ciclo (2026-07-02)
 
@@ -43,16 +42,14 @@ dono: Jean (dev)
 
 ### 🛡️ Proteger o que está no ar
 
-- [ ] **Backup automático do Postgres.** `roilabs_db` tem pedidos pagos e leads reais e **zero backup**. `pg_dump` diário via cron no VPS + cópia semanal fora dele (qualquer object storage); testar 1 restore de verdade. É o item mais barato da lista contra o pior cenário.
-- [ ] **Uptime monitor + alerta.** cron-job.org (grátis, padrão já usado no Compass) em 3 URLs: `app.roilabs.com.br/api/cadeiras` (prova app+DB vivos), home do goiânia e home do institucional. Hoje, checkout quebrado = ninguém fica sabendo até alguém reclamar.
-- [ ] **Alerta de lead/pedido novo.** Hoje candidatura e pedido pago só aparecem pra quem abre o admin — em high-ticket local, velocidade de resposta É conversão. Lazy: fetch fire-and-forget pra um e-mail (Resend free tier) dentro do `POST /api/candidaturas` e do webhook de pagamento. Nada disso existe no código (verificado).
+- Backup do Postgres, uptime monitor e alerta de lead/pedido → movidos para [[backlog-pendencias]].
 
 ### 📣 Distribuição grátis (alavanca GEO/SEO que quase ninguém local usa)
 
 - [x] **⭐ Google Merchant Center — CONCLUÍDO 2026-07-02 (spec 009).** Feed no ar (`goiania.roilabs.com.br/feed.xml`, 30 itens, verificado em prod), gate `check-feed` postbuild provado, conta criada e feed cadastrado com busca diária: **30/30 processados sem erro estrutural** (SC-002 ✓). Bônus da esteira: página `/devolucoes` (CDC) criada — era exigência do Merchant Center e o site não tinha. ⏳ Único watch-point: itens "Em análise" — conferir **Produtos → Diagnóstico** em ~3 dias (meta ≥ 90% aprovados, SC-003); reprovações → troubleshooting em `site-goiania/docs/merchant-center.md`.
 - [x] **IndexNow no deploy — FEITO 2026-07-02.** `src/scripts/indexnow.mjs` nos DOIS sites (postbuild; no goiânia encadeado após o `check-feed`), chave `e72cab81d95c41fd915ce3331a10d1ad.txt` no `public/` de ambos. Testado local: HTTP 202 (9 URLs institucional, 72 goiânia). Ping é não-fatal (falha da API nunca quebra o build). A chave valida quando o `.txt` for ao ar → **vale de verdade no próximo redeploy dos 2 sites**.
 - [x] **`LocalBusiness` + Google Business Profile.** Quando houver endereço/telefone comercial: 1 nó `LocalBusiness` no @graph do goiânia; o GBP em si é ops (Duda). É o que disputa o **local pack** de `porcelanato goiânia` — a âncora de 140/mês do Keyword Planner ([[mercado]]).
-- [ ] **Review engine → estrelas no SERP.** Pós-venda pede avaliação (link no `/obrigado` ou follow-up WhatsApp), admin grava, e as páginas de produto expõem `AggregateRating` quando ≥ 3 avaliações reais. **Ativar só com 3–5 pedidos entregues** — antes disso é schema vazio (e risco de penalidade).
+- Review engine (gateado em 3–5 pedidos entregues) → movido para [[backlog-pendencias]].
 
 ### 💰 Converter mais com o que já existe
 
@@ -134,7 +131,7 @@ dono: Jean (dev)
 
 - [x] **005 — verificar no browser** `/admin` e `/admin/financeiro` em prod/Docker; conferir métricas vs. banco e baixar o CSV no Excel (T012).
 - [x] **006 — verificar CRUD no browser**: criar `OBRA15` em `/admin/cupons`, editar/desativar/apagar, e um **checkout real com cupom** gravando `Pedido.cupomCodigo/desconto` (T015; a rota já foi confirmada por curl, falta a via navegador/checkout).
-- **007 — configurar o Asaas**: movido para a lista autoritativa em [[#🎯 Agora (2026-07-02) — lista autoritativa|Agora]] (item 3).
+- **007 — configurar o Asaas**: movido para [[backlog-pendencias]].
 
 ## ✅ Resolvido — Logo (Task 2)
 
@@ -153,6 +150,4 @@ dono: Jean (dev)
 
 ## 👤 Não-dev (Maria Eduarda / campo)
 
-- [ ] Fechar 1º fornecedor A-Player de revestimentos (Gate 3) — [[mercado]] / [[time]]
-- [ ] Definir piso de take rate em R$ após ver tickets reais — [[modelo]]
-- [ ] Resíduo legal/fiscal com contador/advogado — [[legal-fin]]
+- Movidos para [[backlog-pendencias]] (Gate 3, piso de take rate, legal/fiscal).
