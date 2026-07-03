@@ -16,7 +16,7 @@ dono: Jean (dev)
 
 ## ⏳ Ops rápidas (deploy/verificação, não é código)
 
-- [ ] **Microsoft Clarity (ciclo 6, ~10 min)** — criar 2 projetos em clarity.microsoft.com (conta MS grátis): `goiania.roilabs.com.br` e `roilabs.com.br`; setar `PUBLIC_CLARITY_ID` (cada site com o seu ID) nas env vars de BUILD na EasyPanel + redeploy. Código já no ar como no-op (`a554300`).
+- [x] **Microsoft Clarity — NO AR 2026-07-03.** Jean criou os 2 projetos; IDs hard-coded como fallback no código (goiânia `xgun692iah` em `8d85e62`, institucional `v09iongg9z` em `2a34e57`) — env na EasyPanel dispensada (`PUBLIC_CLARITY_ID` segue sobrepondo). Verificado no HTML de prod do goiânia; dados no painel em ~2h. **Bônus na mesma leva: GA4 `G-7JD9J2QEDJ` (mesma Google tag) nos 2 sites** (`581efdc` institucional + `98e6abe` goiânia), verificado em prod — gotcha: o testador do Google falha se testar `www.goiania...` (host não existe; testar sem www).
 - [ ] **ntfy.sh (ciclo 6, ~5 min, sem conta)** — gerar nome de tópico longo/aleatório (ex.: `roilabs-alertas-$(openssl rand -hex 8)`), setar `NTFY_TOPIC` na EasyPanel do `/app`, instalar o app ntfy no celular (Duda + Jean) e assinar o tópico. Push imediato de lead/candidatura/pedido pago — não depende do Resend.
 - [ ] **Conferir OG do ciclo 6 pós-deploy** — 1 página de produto (deve mostrar a FOTO real) e 1 guia (PNG gerado com borda laranja) no opengraph.xyz; conferir também a coluna **Origem** em `/admin/leads` quando entrar o 1º lead novo.
 
