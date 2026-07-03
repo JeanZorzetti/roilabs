@@ -321,6 +321,24 @@ a {
   color: var(--d-muted);
 }
 
+/* FAQ dentro de seção clara (calculadora, guias) — sem isto o texto some no fundo porcelain */
+.section--light .faq,
+.section--light .faq__item {
+  border-color: var(--l-line);
+}
+
+.section--light .faq__item summary {
+  color: var(--l-text);
+}
+
+.section--light .faq__item summary::after {
+  color: var(--hivis-deep);
+}
+
+.section--light .faq__a {
+  color: var(--l-muted);
+}
+
 /* ---------- form ---------- */
 .form-card {
   background: linear-gradient(160deg, var(--ink-2), var(--ink));
@@ -578,6 +596,17 @@ a {
 .related-card:hover {
   border-color: var(--hivis);
   color: var(--hivis);
+}
+
+/* related-card dentro de seção clara (calculadora, guias) */
+.section--light .related-card {
+  border-color: var(--l-line-strong);
+  color: var(--l-text);
+}
+
+.section--light .related-card:hover {
+  border-color: var(--hivis-deep);
+  color: var(--hivis-deep);
 }
 
 /* index do silo */
