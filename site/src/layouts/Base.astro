@@ -53,7 +53,9 @@ const graph = {
   ],
 };
 
-const clarityId = import.meta.env.PUBLIC_CLARITY_ID;
+// Clarity projeto do institucional. Fallback hard-coded (igual ao gaId);
+// PUBLIC_CLARITY_ID sobrepõe.
+const clarityId = import.meta.env.PUBLIC_CLARITY_ID ?? 'v09iongg9z';
 // GA4 do institucional (propriedade roilabs.com.br). Fallback hard-coded de propósito:
 // vale sem env na EasyPanel; PUBLIC_GA_ID sobrepõe se um dia precisar trocar.
 const gaId = import.meta.env.PUBLIC_GA_ID ?? 'G-7JD9J2QEDJ';
