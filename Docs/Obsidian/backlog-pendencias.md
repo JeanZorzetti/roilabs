@@ -28,7 +28,7 @@ dono: Jean (dev)
 
 ## 📊 Medição (aguarda maturação)
 
-- [ ] **GSC: medir a malha pSEO.** Conferir propriedade de `goiania.roilabs.com.br`, submeter sitemap e acompanhar **páginas indexadas das 39** — métrica de decisão do GTM ([[40-gtm]]). Primeiro checkpoint ~2 semanas pós-deploy (a partir de ~2026-07-15).
+- [ ] **⚠️ URGENTE — GSC: `goiania.roilabs.com.br` aparenta NÃO estar indexado.** Evidência (2026-07-03, SERP via serper.dev): institucional ranqueia #1/#2/#4 pra query de marca, mas **zero URLs do subdomínio goiânia** em qualquer query — incluindo marca e as 40 do rank tracking. Ação: conferir/criar propriedade no GSC, **submeter `sitemap.xml`** e pedir indexação da home + hub `/porcelanato`. Sem isso a malha de 41 páginas não existe pro Google. Depois: acompanhar páginas indexadas (métrica de decisão do GTM, [[40-gtm]]); checkpoint ~2026-07-15.
 
 ## 🛡️ Proteger o que está no ar
 
