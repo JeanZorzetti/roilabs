@@ -17,7 +17,7 @@ dono: Jean (dev)
 ---
 
 > [!important] 2026-07-03 — Faxina de backlog
-> **Tudo que estava não-feito abaixo foi movido para [[backlog-pendencias]]** (não é prioridade agora). A lista ativa é a seção [[#🧭 Fora da caixa — ciclo 2 (2026-07-03)|Fora da caixa — ciclo 2]].
+> **Tudo que estava não-feito abaixo foi movido para [[backlog-pendencias]]** (não é prioridade agora). A lista ativa é a seção [[#🧭 Fora da caixa — ciclo 3 (2026-07-03)|Fora da caixa — ciclo 3]].
 
 ## 🎯 Agora (2026-07-02) — lista autoritativa
 
@@ -77,6 +77,27 @@ dono: Jean (dev)
 
 - [x] **Dimensão MARCA — VALIDADA E SHIPPADA 2026-07-03 (`ede5eed`).** Mineração real (DataForSEO, Goiás): `biancogres` **390**/mês ✅ e `delta porcelanato` **260**/mês ✅ passam o piso ≥ 200; **savane (10) e TODAS as variações "+goiânia" (null) mortas sem custo**, como previsto. 2 páginas novas (`/porcelanato/porcelanato-biancogres`, 18 produtos; `/porcelanato/porcelanato-delta`, 4 produtos) via 1 linha de match por marca no `tagsDoProduto` + dados curados com fatos reais do catálogo. Malha agora tem **41 páginas**.
 - [x] **Rank tracking semanal — FEITO 2026-07-03 (`f9c0229`).** `site-goiania/src/scripts/rank-tracking.mjs` (âncora + todos os termoAlvo da malha → posição top-50 Google Goiânia via DataForSEO) grava `rank-tracking.csv` (histórico) + `rank-tracking.md` (snapshot) aqui no vault. Cron: GitHub Actions toda segunda 09:00 UTC, commita o resultado (secret `DATAFORSEO_API_KEY` já setado no repo). **1ª rodada real: 18 keywords medidas, 0 no top 100** (malha tem ~2 semanas — baseline honesto). ⚠️ Crédito DataForSEO esgotou no meio da rodada e não será recarregado → **script migrado pra serper.dev** (2.500 buscas grátis; DataForSEO virou fallback). ⏳ criar conta + secret `SERPER_API_KEY` → [[backlog-pendencias]]. Quando o GSC maturar (~07-15), ele vira a fonte grátis definitiva.
+
+## 🧭 Fora da caixa — ciclo 3 (2026-07-03)
+
+> [!success] CICLO 3 EXECUTADO 2026-07-03 — 4/4 itens em código, tudo na `main` e pushado (deploy automático por push).
+> Critério do ciclo: alavanca ÷ esforço com custo zero. Deliberadamente FORA: expandir malha pSEO (mineração de volume bloqueada sem saldo DataForSEO — GSC vira fonte grátis ~07-15), review engine (gate 3–5 pedidos) e WhatsApp Cloud API (pago).
+
+### 💰 Converter mais (B2C goiânia)
+
+- [x] **⭐ Carrinho capturado como lead no orçamento WhatsApp — FEITO 2026-07-03 (`75bef94`).** O clique em "Receber orçamento no WhatsApp" agora grava o carrinho no kanban de leads do admin: se o form de checkout já tem contato+LGPD, POST oportunista direto; senão aparece um micro-form opt-in ("deixe seu WhatsApp que nosso especialista te chama") — é o seguro contra quem abre o wa.me e nunca aperta enviar. Lead entra com resumo (N itens · total) + link `?c=` do carrinho. Novo evento himetrica `orcamento_lead`. ⏳ conferir evento no painel → [[backlog-pendencias]].
+
+### 📣 Distribuição grátis (novo canal com o feed que já existe)
+
+- [x] **⭐ Meta Catalog (Instagram + WhatsApp) — DOC PRONTA 2026-07-03 (`9379f3e`), dev zero.** O `feed.xml` do Merchant Center é aceito como está pelo Commerce Manager (formato Google, compatibilidade campo a campo verificada). Passo a passo ops em `site-goiania/docs/meta-catalog.md`: catálogo E-commerce → feed URL diário → Instagram Shopping + catálogo no WhatsApp Business (Duda manda produto como card na conversa). ⏳ execução é ops (Duda) → [[backlog-pendencias]].
+
+### 📊 Operar com ritual (medição ativa)
+
+- [x] **Digest semanal por e-mail — FEITO 2026-07-03 (`7c782cb`).** `POST /api/cron/digest` no app (auth `X-Cron-Secret`): agrega 7 dias (leads consumidor, candidaturas, pedidos, pagos, GMV) e manda e-mail via `lib/email.ts` (mesmo no-op do ciclo 2), embutindo o snapshot do rank-tracking que o workflow de segunda acabou de commitar. Step novo no `rank-tracking.yml` (non-fatal, roda mesmo se o rank falhar). ⏳ setar `CRON_SECRET` (EasyPanel + GitHub secret) e conta Resend → [[backlog-pendencias]].
+
+### 📱 Admin na mão da Duda
+
+- [x] **PWA do admin — FEITO 2026-07-03 (`b0d153e`).** `manifest.ts` (Next metadata route) + ícones 192/512 (do `roilabs-icon.png`) + `appleWebApp` no layout: o admin instala na tela inicial do celular (Android/iOS), standalone, `start_url /admin`. Sem service worker por design (admin é dado vivo). ⏳ instalar no celular da Duda pós-redeploy → [[backlog-pendencias]].
 
 ## 🚀 Fase 1 — Subir o MVP no ar (caminho crítico, em ordem)
 
