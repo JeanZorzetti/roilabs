@@ -23,10 +23,17 @@ jobs:
         env:
           SERPER_API_KEY: ${{ secrets.SERPER_API_KEY }}
           DATAFORSEO_API_KEY: ${{ secrets.DATAFORSEO_API_KEY }}
-      - run: |
+      # GSC miner (expansão da malha): no-op até o secret GSC_SA_KEY existir —
+      # setup em Docs/Obsidian/80-dev/gsc-miner-setup.md. Non-fatal por design.
+      - if: always()
+        run: node site-goiania/src/scripts/gsc-miner.mjs || echo "gsc-miner skipped"
+        env:
+          GSC_SA_KEY: ${{ secrets.GSC_SA_KEY }}
+      - if: always()
+        run: |
           git config user.name "rank-tracking"
           git config user.email "actions@users.noreply.github.com"
-          git add Docs/Obsidian/90-medicao/rank-tracking.csv Docs/Obsidian/90-medicao/rank-tracking.md
+          git add Docs/Obsidian/90-medicao/
           git diff --cached --quiet || { git commit -m "chore: weekly rank tracking $(date -u +%F)"; git push; }
       # Weekly digest e-mail (leads/pedidos/GMV from the DB + this run's rank snapshot).
       # Runs even if rank tracking failed — the DB stats are still worth sending.
