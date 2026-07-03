@@ -1400,6 +1400,87 @@ export const pages: PorcelanatoPage[] = [
     ],
     relacionados: ['porcelanato-area-externa', 'porcelanato-piscina', 'piso-antiderrapante'],
   },
+
+  // ──────── Por marca (ciclo 2, validado 2026-07-03): fundo de funil de marca ────────
+  // Savane (10/mês) e variações "+goiânia" (null) reprovadas no piso ≥ 200 — não publicar.
+  {
+    slug: 'porcelanato-biancogres',
+    termoAlvo: 'porcelanato biancogres',
+    volume: 390, // real Goiás: "biancogres" (DataForSEO 2026-07-03); "porcelanato biancogres" = 70
+    tipo: 'genérico',
+    titulo: 'Porcelanato BIANCOGRES em Goiânia: Catálogo e Preços',
+    intro:
+      'A BIANCOGRES é a marca com mais opções no polo de Goiânia: 18 modelos em pronta-entrega, do marmorizado polido de 120×120 cm ao amadeirado 20×120 cm, passando por linhas externas antiderrapantes. Preços entre R$ 90,99 e R$ 139,99 por m², todos retificados, com orçamento na hora pelo WhatsApp.',
+    comoEscolher: [
+      'Para sala e hall de alto padrão, as linhas marmorizadas (Marmo Perla, Cristallo Quartz, Tivoli, Pulpis) em 100×100 ou 120×120 cm valorizam as veias contínuas.',
+      'Para clima de madeira sem manutenção, o Carvalho Natural 20×120 cm e o Castilla Noce simulam tábua corrida.',
+      'Para área externa, garagem e borda de piscina, as versões Externo (Grigio, Arezzo) têm acabamento antiderrapante.',
+      'Linhas urbanas (Chicago, Legado) em Mate/Acetinado seguram o dia a dia de cozinha e áreas de tráfego intenso.',
+      'Todos os modelos são retificados: rejunte fino e assentamento alinhado — confira a dimensão na ficha de cada produto.',
+    ],
+    atributos: {
+      acabamento: 'Polido / Acetinado / Mate / Natural / Externo',
+      dimensao: '80×80 cm a 120×120 cm (e 20×120 cm amadeirado)',
+    },
+    faq: [
+      {
+        q: 'Onde comprar porcelanato BIANCOGRES em Goiânia?',
+        a: 'No polo de Goiânia, conectamos você ao fornecedor exclusivo com 18 modelos BIANCOGRES em pronta-entrega — marmorizados, amadeirados e linhas externas. Orçamento pelo WhatsApp com preço real por m².',
+      },
+      {
+        q: 'Quanto custa o porcelanato BIANCOGRES?',
+        a: 'No catálogo do polo de Goiânia, os modelos BIANCOGRES vão de R$ 90,99 a R$ 139,99 por m², conforme linha, formato e acabamento. O preço exato de cada modelo está na página do produto.',
+      },
+      {
+        q: 'Porcelanato BIANCOGRES é retificado?',
+        a: 'Sim — todos os modelos BIANCOGRES do catálogo são retificados, com bordas a 90° que permitem rejunte fino (1,5 a 2 mm) e visual contínuo.',
+      },
+      {
+        q: 'Qual linha BIANCOGRES usar em área externa?',
+        a: 'As versões com acabamento Externo — como Grigio Externo (90×90 cm) e Arezzo Externo — têm superfície antiderrapante própria para quintal, garagem e área de piscina.',
+      },
+    ],
+    relacionados: ['porcelanato-delta', 'porcelanato-marmorizado', 'porcelanato-amadeirado', 'porcelanato-preco'],
+  },
+  {
+    slug: 'porcelanato-delta',
+    termoAlvo: 'delta porcelanato',
+    volume: 260, // real Goiás: "delta porcelanato" (DataForSEO 2026-07-03); "porcelanato delta" = 140
+    tipo: 'genérico',
+    titulo: 'Porcelanato Delta em Goiânia: Modelos Polidos e Preços',
+    intro:
+      'A Delta é a porta de entrada do porcelanato polido no polo de Goiânia: modelos retificados a partir de R$ 67,99 por m², nos formatos 62×62, 72×72 e 60×120 cm. Brilho de polido com o melhor custo por metro do catálogo — orçamento na hora pelo WhatsApp.',
+    comoEscolher: [
+      'O Madrid Bloc 60×120 cm é a escolha para salas amplas: formato retangular grande com veia marmorizada.',
+      'Nero Polido (62×62 ou 72×72 cm) cria contraste dramático em salas e halls; combine com rejunte grafite.',
+      'Avorio Polido é o tom claro que amplia ambientes menores mantendo o brilho de polido.',
+      'Polido no piso pede cuidado em áreas molhadas — para cozinha e banheiro, considere usar na parede.',
+      'Todos retificados: rejunte fino e alinhamento contínuo entre as peças.',
+    ],
+    atributos: {
+      acabamento: 'Polido',
+      dimensao: '62×62 cm / 72×72 cm / 60×120 cm',
+    },
+    faq: [
+      {
+        q: 'Onde comprar porcelanato Delta em Goiânia?',
+        a: 'Conectamos você ao fornecedor do polo de Goiânia com os modelos Delta polidos em pronta-entrega (Madrid Bloc, Nero, Avorio). Orçamento com preço real por m² pelo WhatsApp.',
+      },
+      {
+        q: 'Quanto custa o porcelanato Delta?',
+        a: 'No catálogo do polo de Goiânia, os modelos Delta vão de R$ 67,99 a R$ 144,99 por m² — entre os melhores custos por metro em porcelanato polido retificado.',
+      },
+      {
+        q: 'Porcelanato Delta polido escorrega?',
+        a: 'Como todo polido, a superfície fica escorregadia molhada. Use em ambientes internos secos (sala, quarto, hall); para áreas molhadas, prefira acabamento acetinado ou natural.',
+      },
+      {
+        q: 'Porcelanato Delta é retificado?',
+        a: 'Sim — os modelos Delta do catálogo são retificados, permitindo rejunte fino e visual contínuo no assentamento.',
+      },
+    ],
+    relacionados: ['porcelanato-biancogres', 'porcelanato-polido', 'porcelanato-preco'],
+  },
 ];
 
 // ponytail: mapa para lookup por slug em O(1)

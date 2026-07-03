@@ -74,6 +74,9 @@ export function tagsDoProduto(p: Produto): Set<string> {
   // retificado
   if (p.atributos.retificado) t.add('porcelanato-retificado');
 
+  // marca → slug de categoria (páginas por marca do ciclo 2: biancogres, delta)
+  t.add(`porcelanato-${p.atributos.marca.toLowerCase()}`);
+
   // externo / antiderrapante
   if (['externo', 'rústico', 'rustico'].includes(ac) || /externo/.test(s)) {
     t.add('porcelanato-area-externa');
