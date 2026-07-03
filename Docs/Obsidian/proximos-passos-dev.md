@@ -61,21 +61,22 @@ dono: Jean (dev)
 
 ## 🧭 Fora da caixa — ciclo 2 (2026-07-03)
 
-> [!note] Ideias novas, ranqueadas por alavanca. **Verificado contra o código em 2026-07-03**: nada abaixo existe ainda (Product schema e FAQPage na malha JÁ existem — por isso não estão aqui). Item grande = spec (011+) antes de codar.
+> [!success] CICLO 2 EXECUTADO 2026-07-03 — 5/5 itens em código, tudo na `main` e pushado.
+> Deploy do site-goiania é automático por push (calculadora + páginas de marca já a caminho). Pendências de ops abaixo em cada item.
 
 ### 🎯 Destravar o gate do negócio (fornecedor)
 
-- [ ] **⭐ CTA WhatsApp no site institucional.** O recrutamento de fornecedor é O gate do negócio (Gate 3) e hoje o único canal do site é o form (resposta "em até 48h úteis") — fornecedor high-ticket quer conversa, não formulário. Botão "Chamar no WhatsApp" no hero + no fim da página, `wa.me/5562993265713` com texto pré-preenchido ("Quero saber mais sobre a cadeira de revestimentos em Goiânia"), evento `whatsapp_click` já sai de graça (listener delegado no Base). Verificado: **zero** `wa.me` no `/site` hoje. Meio dia, mexe direto no funil B2B.
+- [x] **⭐ CTA WhatsApp no site institucional — FEITO 2026-07-03 (`9e28bde`).** Botão verde "Chamar no WhatsApp" no hero + "Chamar no WhatsApp agora" no fim (seção candidatar), `wa.me/5562993265713` com texto pré-preenchido. A nota do ciclo assumia listener delegado no Base do `/site` — **não existia** (só no goiânia); adicionado, `whatsapp_click` agora dispara nos 2 sites. ⏳ **redeploy manual do `/site` na EasyPanel** pra valer em prod.
 
 ### 💰 Converter mais (B2C goiânia)
 
-- [ ] **Calculadora de porcelanato standalone (`/calculadora`).** O `SimuladorM2.astro` já existe dentro do carrinho — extrair pra uma página própria topo-de-funil ("quanto porcelanato preciso?", "como calcular caixas?"), com FAQ/AEO no padrão da malha e CTA duplo: catálogo + orçamento WhatsApp. Captura quem ainda está medindo a obra — intenção que a malha (tipo/ambiente/ocasião) não cobre. Reuso quase total.
-- [ ] **Confirmação de pedido pro cliente.** Quem paga hoje só recebe o recibo do Mercado Pago — nada nosso. E-mail (Resend free tier) no webhook de pagamento: resumo do pedido, prazo 2–6 dias, WhatsApp de contato. Confiança high-ticket + menos "cadê meu pedido" no WhatsApp da Duda. Verificado: zero infra de e-mail no app. **Fazer junto com o alerta interno de lead/pedido do [[backlog-pendencias]] — mesma infra, 1 tarde.**
+- [x] **Calculadora standalone — FEITO 2026-07-03 (`cb8945d`).** `goiania.roilabs.com.br/calculadora`: ambientes (largura×comprimento), folga 5–20%, m²/caixa informado pelo usuário, resultado em caixas fechadas (mesma matemática do carrinho, `m2ParaCaixas`). BLUF + passo-a-passo + FAQ 6 itens com FAQPage schema + CTA duplo (catálogo + WhatsApp). No sitemap, llms.txt e footer. Deploy automático por push.
+- [x] **Confirmação de pedido + alertas internos — FEITO 2026-07-03 (`ef7bced`).** `lib/email.ts` (Resend via fetch, sem SDK; no-op sem chave; fire-and-forget). Webhook de pagamento manda confirmação ao cliente (itens, total, prazo 2–6 dias úteis, WhatsApp) + alerta interno de pedido pago; candidaturas e leads-consumidor mandam alerta de lead novo (fechou também o item do [[backlog-pendencias]], mesma infra). ⏳ **ops: criar conta Resend, setar `RESEND_API_KEY`/`EMAIL_FROM`/`ALERT_EMAIL` na EasyPanel + redeploy do `/app`** (sem a chave nada quebra — vira no-op).
 
 ### 📣 Escalar o canal (pSEO/GEO)
 
-- [ ] **Dimensão MARCA na malha pSEO.** Catálogo tem BIANCOGRES, Delta, Savane — "porcelanato biancogres goiânia" é query de fundo de funil que a malha não cobre. **Passo 1 obrigatório: validar volume no open-seo/DataForSEO (piso ≥ 200 do gate `check-matrix`)**; se validar, entra no motor da 008 como dados, quase sem código novo. Se não validar, mata a ideia sem custo.
-- [ ] **Rank tracking semanal das 39 + âncora.** Script contra o DataForSEO (open-seo já roda self-hosted com credencial ativa) puxando posição de `porcelanato goiânia` + as 39 páginas → CSV/nota semanal no vault. É a leitura de tração ANTES de o GSC maturar (checkpoint dele só ~07-15). Barato: 1 script + 1 cron.
+- [x] **Dimensão MARCA — VALIDADA E SHIPPADA 2026-07-03 (`ede5eed`).** Mineração real (DataForSEO, Goiás): `biancogres` **390**/mês ✅ e `delta porcelanato` **260**/mês ✅ passam o piso ≥ 200; **savane (10) e TODAS as variações "+goiânia" (null) mortas sem custo**, como previsto. 2 páginas novas (`/porcelanato/porcelanato-biancogres`, 18 produtos; `/porcelanato/porcelanato-delta`, 4 produtos) via 1 linha de match por marca no `tagsDoProduto` + dados curados com fatos reais do catálogo. Malha agora tem **41 páginas**.
+- [x] **Rank tracking semanal — FEITO 2026-07-03 (`f9c0229`).** `site-goiania/src/scripts/rank-tracking.mjs` (âncora + todos os termoAlvo da malha → posição top-50 Google Goiânia via DataForSEO) grava `rank-tracking.csv` (histórico) + `rank-tracking.md` (snapshot) aqui no vault. Cron: GitHub Actions toda segunda 09:00 UTC, commita o resultado (secret `DATAFORSEO_API_KEY` já setado no repo). **1ª rodada real: 18 keywords medidas, 0 no top 100** (malha tem ~2 semanas — baseline honesto). ⚠️ **crédito DataForSEO ESGOTOU no meio da rodada** (saldo era ~$0.44; custo real ≈ $0.01/keyword em depth 50 → ~$0.40/rodada). **Recarregar a conta DataForSEO** ou o cron de segunda só devolve "Payment Required".
 
 ## 🚀 Fase 1 — Subir o MVP no ar (caminho crítico, em ordem)
 

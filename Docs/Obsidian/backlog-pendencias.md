@@ -31,7 +31,7 @@ dono: Jean (dev)
 
 - [ ] **Backup automático do Postgres.** `roilabs_db` tem pedidos pagos e leads reais e **zero backup**. `pg_dump` diário via cron no VPS + cópia semanal fora dele; testar 1 restore de verdade. O item mais barato da lista contra o pior cenário.
 - [ ] **Uptime monitor + alerta.** cron-job.org (grátis, padrão do Compass) em 3 URLs: `app.roilabs.com.br/api/cadeiras` (prova app+DB), home goiânia, home institucional. Hoje checkout quebrado = ninguém sabe.
-- [ ] **Alerta de lead/pedido novo.** Fetch fire-and-forget pra e-mail (Resend free tier) no `POST /api/candidaturas` e no webhook de pagamento. Em high-ticket local, velocidade de resposta É conversão. (Sinergia com "confirmação de pedido ao cliente" do ciclo 2 — mesma infra Resend, fazer juntos.)
+- [x] **Alerta de lead/pedido novo — CÓDIGO FEITO 2026-07-03 (`ef7bced`, junto com a confirmação de pedido do ciclo 2).** Alertas em candidaturas, leads-consumidor e webhook de pagamento via `lib/email.ts` (Resend). ⏳ ops: criar conta Resend + setar `RESEND_API_KEY`/`ALERT_EMAIL` na EasyPanel + redeploy do `/app` (sem chave = no-op, nada quebra).
 
 ## 🌟 Gateado (não fazer antes do gate)
 

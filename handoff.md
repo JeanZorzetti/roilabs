@@ -23,6 +23,12 @@ nicho âncora = **revestimentos/porcelanato**.
 - **Fluxo:** site (estático) → `POST app.roilabs.com.br/api/candidaturas` (urlencoded, sem preflight) → DB → kanban `/admin`.
 
 ## Feito
+- **Ciclo 2 "fora da caixa" (2026-07-03, commits `9e28bde`→`f9c0229`) — 5/5 itens:**
+  - **CTA WhatsApp no `/site`** (hero + seção candidatar, `.btn--whats`) + listener `whatsapp_click` no Base (não existia no institucional, só no goiânia). ⏳ redeploy manual do `/site`.
+  - **`/calculadora` standalone no site-goiania** — matemática do carrinho (`m2ParaCaixas`), FAQ/AEO com FAQPage schema, CTA duplo, no sitemap/llms.txt/footer. Deploy automático por push.
+  - **E-mail transacional no `/app`** (`lib/email.ts`, Resend via fetch, no-op sem chave): confirmação de pedido ao cliente no webhook MP + alertas internos (pedido pago, candidatura, lead B2C). ⏳ ops: conta Resend + `RESEND_API_KEY`/`EMAIL_FROM`/`ALERT_EMAIL` na EasyPanel + redeploy do `/app`.
+  - **Dimensão MARCA na malha** — validada por volume real (Goiás): biancogres 390 ✅, delta porcelanato 260 ✅, savane/`+goiânia` mortos. 2 páginas novas via tag de marca no `tagsDoProduto`; malha = 41 páginas.
+  - **Rank tracking semanal** — `site-goiania/src/scripts/rank-tracking.mjs` (top-50 Goiânia, DataForSEO) → `Docs/Obsidian/rank-tracking.{csv,md}`; cron GitHub Actions seg 09:00 UTC (secret setado). Baseline 07-03: 0 no top 100. ⚠️ **crédito DataForSEO zerou — recarregar** (~$0.40/rodada).
 - **Fase 1:** schema+seed (6 cadeiras), os 2 Apps na EasyPanel, DNS dos 2 domínios, form ligado à API.
 - **Fase 2 (E2E em prod):** form→303→`/obrigado`→kanban; login+troca de status; `/admin/cadeiras`; UTF-8 limpo; leads de teste apagados.
 - **Fase 3 (admin controla o site):**
