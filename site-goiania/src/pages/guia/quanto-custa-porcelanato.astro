@@ -1,0 +1,289 @@
+---
+// Guia de decisão AEO: "quanto custa porcelanato?" — a pergunta de preço que vem
+// antes da categoria. As faixas de material saem do catálogo real (porcelanatos.json)
+// e se atualizam sozinhas a cada build; mão de obra e insumos são estimativa de
+// mercado, sinalizada como tal. A malha /porcelanato/porcelanato-preco/ segue dona
+// do termo transacional "porcelanato preço" — aqui é a conta completa da obra.
+import Base from '../../layouts/Base.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import Faq from '../../components/Faq.astro';
+import WhatsappCta from '../../components/WhatsappCta.astro';
+import { guias } from '../../data/guias';
+import { produtos, formatPreco } from '../../data/produtos';
+
+const SITE = Astro.site?.href.replace(/\/$/, '') ?? 'https://goiania.roilabs.com.br';
+const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
+const guia = guias.find((g) => g.slug === 'quanto-custa-porcelanato')!;
+
+// Faixas reais do catálogo (só itens com preço), agrupadas por acabamento.
+const precos = produtos.map((p) => p.atributos.preco).filter((v) => v > 0);
+const minGeral = Math.min(...precos);
+const maxGeral = Math.max(...precos);
+
+const grupos = new Map<string, number[]>();
+for (const p of produtos) {
+  if (p.atributos.preco <= 0) continue;
+  grupos.set(p.atributos.acabamento, [...(grupos.get(p.atributos.acabamento) ?? []), p.atributos.preco]);
+}
+const faixas = [...grupos.entries()]
+  .map(([acabamento, valores]) => ({
+    acabamento,
+    modelos: valores.length,
+    min: Math.min(...valores),
+    max: Math.max(...valores),
+  }))
+  .sort((a, b) => a.min - b.min);
+
+// Estimativas de mercado (Goiânia, 2026) — NÃO vêm do catálogo; sempre exibidas
+// como faixa e com aviso de confirmar no orçamento do assentador.
+const MO_MIN = 45;
+const MO_MAX = 90; // R$/m² assentamento; formato grande e paginação especial ficam no topo
+const INSUMO_MIN = 10;
+const INSUMO_MAX = 18; // R$/m² argamassa ACII/ACIII + rejunte
+
+// Exemplo de conta para um apartamento de 60 m² (folga de corte 10%).
+const AREA = 60;
+const m2Compra = Math.ceil(AREA * 1.1);
+const exMatMin = m2Compra * minGeral;
+const exMatMax = m2Compra * maxGeral;
+const exMoMin = AREA * MO_MIN;
+const exMoMax = AREA * MO_MAX;
+const exInsumoMin = AREA * INSUMO_MIN;
+const exInsumoMax = AREA * INSUMO_MAX;
+const exTotalMin = exMatMin + exMoMin + exInsumoMin;
+const exTotalMax = exMatMax + exMoMax + exInsumoMax;
+
+const faq = [
+  {
+    q: 'Quanto custa o m² de porcelanato em Goiânia?',
+    a: `No catálogo do polo de Goiânia, os ${precos.length} modelos com preço real vão de ${formatPreco(minGeral)} a ${formatPreco(maxGeral)} por m². Acabamentos naturais e formatos menores abrem a faixa; polidos de formato grande e marmorizados premium fecham. Pontas de estoque e promoções reduzem bastante o valor final.`,
+  },
+  {
+    q: 'Quanto custa a mão de obra para colocar porcelanato?',
+    a: `Em Goiânia, o assentamento de porcelanato costuma ficar entre R$ ${MO_MIN} e R$ ${MO_MAX} por m² (estimativa de mercado — confirme no orçamento). Formatos grandes (90×90, 120×60), paginação diagonal e nivelamento de contrapiso puxam o valor para cima.`,
+  },
+  {
+    q: 'Além da peça e da mão de obra, o que entra no custo?',
+    a: `Argamassa colante ACII ou ACIII (obrigatória para porcelanato), rejunte, espaçadores/niveladores e o frete — juntos, algo como R$ ${INSUMO_MIN} a R$ ${INSUMO_MAX} por m² em insumos. Some também a folga de corte: 5% a 10% em paginação reta e até 20% na diagonal.`,
+  },
+  {
+    q: 'Quanto custa a obra completa, com material e colocação?',
+    a: `Para ${AREA} m² com folga de 10% (${m2Compra} m² comprados), a conta completa fica entre ${formatPreco(exTotalMin)} e ${formatPreco(exTotalMax)}: material de ${formatPreco(exMatMin)} a ${formatPreco(exMatMax)}, mão de obra de ${formatPreco(exMoMin)} a ${formatPreco(exMoMax)} e insumos de ${formatPreco(exInsumoMin)} a ${formatPreco(exInsumoMax)}. O piso escolhido é o que mais mexe no total.`,
+  },
+  {
+    q: 'Porcelanato barato é confiável?',
+    a: 'Pode ser — barato não é sinônimo de ruim quando o motivo é ponta de estoque ou promoção de lote. O que importa é a classe de resistência à abrasão adequada ao ambiente: para quarto de uso leve, uma classe menor resolve; para cozinha, corredor e comércio, priorize resistência mesmo que custe mais por m².',
+  },
+  {
+    q: 'Onde vejo preços reais de porcelanato em Goiânia hoje?',
+    a: `No catálogo do polo de Goiânia: ${produtos.length} modelos com preço real por m², dimensão, acabamento e ficha técnica — sem "consulte". Dá para pedir o orçamento fechado com frete pelo WhatsApp na hora.`,
+  },
+];
+
+const jsonLdNodes = [
+  {
+    '@type': 'FAQPage',
+    mainEntity: faq.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  },
+  {
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Início', item: SITE },
+      { '@type': 'ListItem', position: 2, name: guia.titulo, item: `${SITE}/guia/${guia.slug}/` },
+    ],
+  },
+];
+
+const relacionados = [
+  { href: '/porcelanato/porcelanato-preco/', label: 'Preço do porcelanato (catálogo)' },
+  { href: '/calculadora/', label: 'Calculadora de caixas' },
+  { href: '/guia/como-escolher-porcelanato/', label: 'Como escolher porcelanato' },
+  { href: '/guia/porcelanato-ou-ceramica/', label: 'Porcelanato ou cerâmica' },
+  { href: '/guia/porcelanato-polido-ou-acetinado/', label: 'Polido ou acetinado' },
+];
+---
+
+<Base
+  title={`${guia.titulo} | ROI Labs`}
+  description={`Hoje o m² vai de ${formatPreco(minGeral)} a ${formatPreco(maxGeral)} no catálogo do polo; colocação ≈ R$ ${MO_MIN}–${MO_MAX}/m². Veja a conta completa para 60 m².`}
+  jsonLdNodes={jsonLdNodes}
+>
+  <Header />
+
+  <main>
+    <section class="pseo-hero">
+      <div class="wrap">
+        <nav class="breadcrumb" aria-label="Localização">
+          <a href="/">Início</a>
+          <span class="breadcrumb__sep" aria-hidden="true">›</span>
+          <span aria-current="page">Guia de decisão</span>
+        </nav>
+
+        <div class="pseo-hero__eyebrow">
+          <span class="eyebrow">Goiânia · Guia de decisão</span>
+        </div>
+        <h1>{guia.titulo}</h1>
+        <p class="pseo-hero__intro">
+          Resposta direta: no catálogo do polo de Goiânia hoje, o porcelanato custa de
+          <strong>{formatPreco(minGeral)} a {formatPreco(maxGeral)} por m²</strong> —
+          {precos.length} modelos com preço real, sem "consulte". A colocação (mão de obra)
+          fica tipicamente entre <strong>R$ {MO_MIN} e R$ {MO_MAX} por m²</strong>, mais
+          R$ {INSUMO_MIN}–{INSUMO_MAX}/m² de argamassa e rejunte. Ou seja: o custo pronto,
+          por m², é a soma peça + obra — e a peça é onde a escolha mais pesa.
+        </p>
+      </div>
+    </section>
+
+    <!-- Faixas reais por acabamento -->
+    <section class="section section--light">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.6rem;">
+          Preço por m² no polo de Goiânia, por acabamento
+        </h2>
+        <div class="comp-scroll">
+          <table class="comp-table">
+            <thead>
+              <tr>
+                <th scope="col">Acabamento</th>
+                <th scope="col">Modelos no catálogo</th>
+                <th scope="col">Faixa por m²</th>
+              </tr>
+            </thead>
+            <tbody>
+              {faixas.map((f) => (
+                <tr>
+                  <th scope="row">{f.acabamento}</th>
+                  <td>{f.modelos}</td>
+                  <td>
+                    {f.min === f.max
+                      ? formatPreco(f.min)
+                      : `${formatPreco(f.min)} a ${formatPreco(f.max)}`}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p style="font-family:var(--font-mono);font-size:0.75rem;color:var(--l-muted);margin-top:0.9rem;">
+          Faixas calculadas do catálogo real do polo — atualizam automaticamente a cada
+          publicação do site. Veja os modelos em <a href="/porcelanato/porcelanato-preco/">preço do porcelanato</a>.
+        </p>
+      </div>
+    </section>
+
+    <!-- O que define o preço -->
+    <section class="section">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.6rem;">
+          O que define o preço do porcelanato
+        </h2>
+        <ul class="guide-list">
+          <li>Formato: peças grandes (<a href="/porcelanato/porcelanato-90x90/">90×90</a>, <a href="/porcelanato/porcelanato-120x60/">120×60</a>) custam mais por m² que o <a href="/porcelanato/porcelanato-60x60/">60×60</a> — e também elevam a mão de obra.</li>
+          <li>Acabamento: <a href="/guia/porcelanato-polido-ou-acetinado/">polido brilha e custa mais; acetinado</a> e natural abrem a faixa de entrada.</li>
+          <li>Estética: marmorizados e amadeirados premium ficam no topo da tabela acima.</li>
+          <li>Classe técnica: maior resistência à abrasão (cozinha, comércio) custa mais — e é onde não vale economizar.</li>
+          <li>Lote e estoque: ponta de estoque no polo é o mesmo produto por menos — pergunte antes de fechar.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- A conta completa -->
+    <section class="section section--light">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.6rem;">
+          A conta completa: exemplo para {AREA} m²
+        </h2>
+        <div class="comp-scroll">
+          <table class="comp-table">
+            <thead>
+              <tr>
+                <th scope="col">Item</th>
+                <th scope="col">Como calcula</th>
+                <th scope="col">Faixa</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Porcelanato</th>
+                <td>{m2Compra} m² ({AREA} m² + 10% de folga) × preço do modelo</td>
+                <td>{formatPreco(exMatMin)} a {formatPreco(exMatMax)}</td>
+              </tr>
+              <tr>
+                <th scope="row">Mão de obra*</th>
+                <td>{AREA} m² × R$ {MO_MIN}–{MO_MAX}/m²</td>
+                <td>{formatPreco(exMoMin)} a {formatPreco(exMoMax)}</td>
+              </tr>
+              <tr>
+                <th scope="row">Argamassa + rejunte*</th>
+                <td>{AREA} m² × R$ {INSUMO_MIN}–{INSUMO_MAX}/m²</td>
+                <td>{formatPreco(exInsumoMin)} a {formatPreco(exInsumoMax)}</td>
+              </tr>
+              <tr>
+                <th scope="row">Total</th>
+                <td>peça + obra + insumos</td>
+                <td><strong>{formatPreco(exTotalMin)} a {formatPreco(exTotalMax)}</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="font-family:var(--font-mono);font-size:0.75rem;color:var(--l-muted);margin-top:0.9rem;">
+          *Mão de obra e insumos são estimativa de mercado em Goiânia — confirme no orçamento
+          do seu assentador. A quantidade exata de caixas (com folga certa por paginação) sai na
+          <a href="/calculadora/">calculadora de caixas</a>.
+        </p>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.8rem;">Perguntas frequentes</h2>
+        <Faq items={faq} />
+      </div>
+    </section>
+
+    <!-- CTA duplo -->
+    <section class="section section--light" id="contato">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:0.8rem;">
+          Orçamento fechado com a sua metragem
+        </h2>
+        <p style="color:var(--l-muted);margin-bottom:2rem;max-width:54ch;">
+          Mande os ambientes (largura × comprimento) no WhatsApp e receba a conta completa —
+          modelo, caixas fechadas e frete — com preço real do polo de Goiânia.
+        </p>
+        <div class="cta-block" style="display:flex;gap:1rem;flex-wrap:wrap;align-items:center;">
+          <a class="btn btn--primary" href="/porcelanato/">Ver catálogo com preços</a>
+          <WhatsappCta termoAlvo="porcelanato (quero a conta da minha obra)" numero={whatsapp} />
+        </div>
+      </div>
+    </section>
+
+    <!-- Relacionados -->
+    <section class="section">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.3rem,2.2vw,1.8rem);margin-bottom:1.4rem;">Veja também</h2>
+        <div class="related-grid">
+          {relacionados.map((r) => (
+            <a href={r.href} class="related-card">{r.label}</a>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .comp-scroll { overflow-x: auto; }
+  .comp-table { width: 100%; border-collapse: collapse; font-size: 0.92rem; min-width: 560px; }
+  .comp-table th, .comp-table td { text-align: left; padding: 0.8rem 0.9rem; border-bottom: 1px solid color-mix(in srgb, currentColor 18%, transparent); vertical-align: top; }
+  .comp-table thead th { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.75; }
+  .comp-table tbody th { font-weight: 700; width: 24%; }
+</style>

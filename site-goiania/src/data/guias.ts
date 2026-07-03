@@ -23,6 +23,12 @@ export const guias = [
     descricao:
       'Do ambiente ao lote: acabamento, tamanho, retificado, PEI, estética e quantidade de caixas — com links para os guias e produtos de cada perfil.',
   },
+  {
+    slug: 'quanto-custa-porcelanato',
+    titulo: 'Quanto custa porcelanato em Goiânia: m², colocação e custo total',
+    descricao:
+      'Faixas reais de preço por m² do catálogo do polo (por acabamento), estimativa de mão de obra de assentamento e a conta do custo total — com exemplo para 60 m².',
+  },
 ] as const;
 
 export type Guia = (typeof guias)[number];
