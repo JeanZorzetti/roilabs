@@ -9,6 +9,8 @@ const mono = Space_Mono({ subsets: ['latin'], variable: '--font-mono', weight: [
 export const metadata: Metadata = {
   title: 'ROI Labs · Admin',
   robots: { index: false, follow: false },
+  icons: { icon: '/icon-192.png', apple: '/icon-192.png' },
+  appleWebApp: { capable: true, title: 'ROI Admin' },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
