@@ -1,0 +1,152 @@
+---
+// Busca interna client-only (mesmo padrão do MiniCart): nada renderiza no HTML
+// pré-renderizado das páginas pSEO — botão, overlay e painel nascem via JS.
+// Índice estático em /busca-index.json (gerado no build); filtro local por
+// tokens sem acento. Termo buscado vira evento himetrica `busca_interna` —
+// insumo de mineração de keyword grátis (complementa o GSC miner).
+---
+
+<style is:global>
+  .site-search-overlay {
+    position: fixed; inset: 0; background: rgba(0, 0, 0, 0.55);
+    opacity: 0; visibility: hidden; transition: opacity 0.2s ease; z-index: 70;
+  }
+  .site-search-overlay[data-open] { opacity: 1; visibility: visible; }
+  .site-search {
+    position: fixed; top: 9vh; left: 50%; transform: translateX(-50%) scale(0.98);
+    width: min(560px, 92vw); background: var(--ink-2);
+    border: 1px solid var(--d-line); border-radius: 12px; z-index: 71;
+    opacity: 0; visibility: hidden; transition: opacity 0.15s ease, transform 0.15s ease;
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.45); overflow: hidden;
+  }
+  .site-search[data-open] { opacity: 1; visibility: visible; transform: translateX(-50%) scale(1); }
+  .site-search__input {
+    width: 100%; padding: 1rem 1.1rem; border: 0; border-bottom: 1px solid var(--d-line);
+    background: transparent; color: var(--d-text); font: inherit; font-size: 1rem; outline: none;
+  }
+  .site-search__results { max-height: 55vh; overflow-y: auto; }
+  .site-search__item {
+    display: block; padding: 0.7rem 1.1rem; text-decoration: none;
+    border-bottom: 1px solid color-mix(in srgb, currentColor 8%, transparent);
+  }
+  .site-search__item:last-child { border-bottom: 0; }
+  .site-search__item:hover, .site-search__item:focus-visible { background: color-mix(in srgb, currentColor 8%, transparent); }
+  .site-search__item-t { color: var(--d-text); font-size: 0.92rem; font-weight: 600; }
+  .site-search__item-s { color: var(--d-muted); font-size: 0.78rem; }
+  .site-search__empty { padding: 1.4rem 1.1rem; color: var(--d-muted); font-size: 0.9rem; }
+  .site-search__empty a { color: var(--hivis); }
+</style>
+
+<script>
+  type Entry = { t: string; s: string; u: string; k: string };
+
+  const norm = (s: string) =>
+    s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+
+  // Botão no nav (criado via JS: sem JS não existe busca, então sem botão morto).
+  const nav = document.querySelector('.nav');
+  if (nav) {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'nav__link search-link';
+    btn.textContent = 'Buscar';
+    btn.setAttribute('aria-label', 'Buscar no site');
+    btn.style.cssText = 'background:none;border:0;cursor:pointer;font:inherit;padding:0;';
+    nav.prepend(btn);
+
+    const overlay = document.createElement('div');
+    overlay.className = 'site-search-overlay';
+    const panel = document.createElement('div');
+    panel.className = 'site-search';
+    panel.setAttribute('role', 'dialog');
+    panel.setAttribute('aria-label', 'Buscar no site');
+    panel.innerHTML = `
+      <input class="site-search__input" type="search" placeholder="Busque por produto, marca, cor, formato…" aria-label="Termo de busca" />
+      <div class="site-search__results"></div>`;
+    document.body.append(overlay, panel);
+
+    const input = panel.querySelector<HTMLInputElement>('.site-search__input')!;
+    const results = panel.querySelector<HTMLElement>('.site-search__results')!;
+
+    let index: Entry[] | null = null;
+    let hits: Entry[] = [];
+    const trackedZero = new Set<string>();
+    let zeroTimer: ReturnType<typeof setTimeout> | undefined;
+
+    async function ensureIndex() {
+      if (!index) {
+        try {
+          index = (await (await fetch('/busca-index.json')).json()) as Entry[];
+        } catch { index = []; }
+      }
+      return index;
+    }
+
+    function render(q: string) {
+      const nq = norm(q.trim());
+      clearTimeout(zeroTimer);
+      if (nq.length < 2 || !index) { results.innerHTML = ''; hits = []; return; }
+      const tokens = nq.split(/\s+/);
+      hits = index.filter((e) => tokens.every((t) => e.k.includes(t))).slice(0, 8);
+
+      if (hits.length === 0) {
+        results.innerHTML = `
+          <div class="site-search__empty">
+            Nada encontrado para <strong class="site-search__q"></strong>.
+            Veja o <a href="/porcelanato/">catálogo completo</a> ou pergunte no WhatsApp.
+          </div>`;
+        results.querySelector('.site-search__q')!.textContent = q.trim();
+        // Zero resultado = demanda sem página — o dado mais valioso da busca.
+        zeroTimer = setTimeout(() => {
+          if (!trackedZero.has(nq)) {
+            trackedZero.add(nq);
+            (window as any).himetrica?.track('busca_interna', { termo: q.trim(), resultados: 0 });
+          }
+        }, 1200);
+        return;
+      }
+
+      results.innerHTML = hits
+        .map(
+          (e, i) => `
+          <a class="site-search__item" href="${e.u}" data-i="${i}">
+            <div class="site-search__item-t"></div>
+            <div class="site-search__item-s"></div>
+          </a>`,
+        )
+        .join('');
+      // Valores via textContent (índice é nosso, mas o hábito certo é não interpolar em HTML).
+      results.querySelectorAll<HTMLElement>('.site-search__item').forEach((el, i) => {
+        el.querySelector('.site-search__item-t')!.textContent = hits[i].t;
+        el.querySelector('.site-search__item-s')!.textContent = hits[i].s;
+      });
+    }
+
+    function open() {
+      overlay.setAttribute('data-open', '');
+      panel.setAttribute('data-open', '');
+      ensureIndex().then(() => render(input.value));
+      input.focus();
+    }
+    function close() {
+      overlay.removeAttribute('data-open');
+      panel.removeAttribute('data-open');
+    }
+
+    btn.addEventListener('click', open);
+    overlay.addEventListener('click', close);
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+
+    input.addEventListener('input', () => render(input.value));
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && hits[0]) {
+        (window as any).himetrica?.track('busca_interna', { termo: input.value.trim(), destino: hits[0].u });
+        location.href = hits[0].u;
+      }
+    });
+    results.addEventListener('click', (e) => {
+      const a = (e.target as HTMLElement).closest<HTMLAnchorElement>('.site-search__item');
+      if (a) (window as any).himetrica?.track('busca_interna', { termo: input.value.trim(), destino: a.getAttribute('href') ?? '' });
+    });
+  }
+</script>
