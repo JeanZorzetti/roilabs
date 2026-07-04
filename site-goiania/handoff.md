@@ -16,6 +16,14 @@ Ambas as páginas de categoria (`/porcelanato/porcelanato-fachada/` e `/porcelan
 
 Build local (`astro build`, 85 páginas) + `check-feed.mjs` verificados OK. Nada de novo pra rodar em prod — muda só qual foto aparece, sem novo asset.
 
+### Addendum mesmo dia: 0 repetição de verdade (Jean recusou o "só 4 páginas repetem")
+
+O Jean pediu pra minerar mais fotos até não sobrar NENHUMA repetição — o gap eram as 5 páginas "amadeirado" (só 1 produto real no catálogo pra todas elas). 2 fixes, sem produto novo:
+1. **`capaDe()` passou a considerar `imagensAmbiente` também**, não só `imagens` — a foto de ambiente do carvalho-natural (já baixada no ciclo 11, nunca usada como capa) virou 1 opção grátis.
+2. **Minerei 2 fotos novas de verdade** direto do site oficial (`biancogres.com.br/pt_BR/produto/carvalho-natural`, media 11025 "face-1" e 11028 "face-2" — close-ups de textura, framing diferente das 2 já usadas) e rodei `node src/scripts/fetch-images.mjs` (fluxo padrão, mesmo dos ciclos 11/13): baixou pra `public/img/produtos/porcelanato-20x120-carvalho-natural-{3,4}.jpg`, gerou `.webp`, reescreveu `porcelanatos.json` com o caminho local.
+
+Resultado: `porcelanato-20x120-carvalho-natural` foi de 2 pra 4 fotos de catálogo + 1 ambiente = **5 fotos reais**, exatamente o que as 5 páginas amadeirado precisavam. **40/40 cards do hub com capa, 40/40 fotos distintas — zero repetição confirmada** no HTML buildado (`grep`+`uniq -c`, todas com count 1) e visualmente via Playwright.
+
 ---
 
 ## 2026-07-04 — Ciclo 13: acervo fechado em 25/30 (era 23/30) + lupa em hover na galeria

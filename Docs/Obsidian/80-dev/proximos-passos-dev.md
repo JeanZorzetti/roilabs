@@ -49,12 +49,13 @@ dono: Jean (dev)
 > [!warning] Pendente confirmar com o Jean
 > As 2 fotos do Grigio Externo 90x90 vieram de fora do fluxo `media-miner`/`fetch-ambiente.mjs` (arquivos passados diretamente, origem não confirmada) — `ProdutoDetalhe.astro` legenda TODA foto de `imagensAmbiente` como "foto do fabricante". Se essas 2 não forem do site oficial da Biancogres, a legenda fica incorreta pra esse produto específico — confirmar a fonte ou ajustar o texto.
 
-## 🧭 Fora da caixa — ciclo 14 (2026-07-04) — 2/2 itens EXECUTADOS
+## 🧭 Fora da caixa — ciclo 14 (2026-07-04) — 3/3 itens EXECUTADOS
 
 > [!note] Pedido direto do Jean (fora da ordem de espera por dados do checkpoint ~07-15): as 34 fotos do catálogo apareciam repetidas nos cards de `/porcelanato/`, e 2 categorias não tinham NENHUMA foto. Handoff técnico completo em `site-goiania/handoff.md`.
 
-- [x] **Capas do hub sem repetição.** Causa raiz única: `capaDe()` sempre pegava o produto `[0]` da categoria — como várias categorias compartilham tag/tipo, o mesmo produto (`carvalho-natural`, posição 0 do JSON) virava capa de 14 dos 40 cards. Trocado por seleção sem repetição (1ª passada: produto ainda não usado; 2ª: outra foto do mesmo produto; só repete de fato quando não há alternativa real). **40/40 cards com capa, 37 fotos distintas** — só a família "amadeirado" (4 páginas) repete, porque existe 1 único produto amadeirado no catálogo inteiro (ceiling de estoque, não de código).
+- [x] **Capas do hub sem repetição.** Causa raiz única: `capaDe()` sempre pegava o produto `[0]` da categoria — como várias categorias compartilham tag/tipo, o mesmo produto (`carvalho-natural`, posição 0 do JSON) virava capa de 14 dos 40 cards. Trocado por seleção sem repetição (1ª passada: produto ainda não usado; 2ª: outra foto do mesmo produto; só repete de fato quando não há alternativa real).
 - [x] **`porcelanato-fachada` e `porcelanato-60x60` ganharam foto real.** Nenhum produto tinha tag pra essas 2 categorias (dimensão "60x60" não existe no catálogo real; "fachada" não existia como tag). Estendida a função única de casamento produto→categoria (`tagsDoProduto`, raiz compartilhada pelo hub E pela página da categoria): 60x60 aceita 62×62 como formato próximo (mesmo padrão já usado em 90x90/91x91); fachada aceita qualquer produto com acabamento Externo/Rústico. As 2 páginas agora mostram hero + galeria de produto (antes: só texto).
+- [x] **Jean recusou repetição residual → minerado até fechar 100%.** Os 2 fixes acima deixaram 37/40 fotos distintas (só a família "amadeirado", 5 páginas, tinha 1 único produto real no catálogo). Fechado com: (1) `capaDe()` passou a considerar `imagensAmbiente` também, não só `imagens` — 1 foto grátis já baixada desde o ciclo 11; (2) minerei 2 fotos novas de verdade do site oficial da Biancogres (`biancogres.com.br/pt_BR/produto/carvalho-natural`) via `fetch-images.mjs` (fluxo padrão dos ciclos 11/13). **40/40 cards com capa, 40/40 fotos distintas — zero repetição confirmada** no build (`grep`+`uniq -c`) e visualmente via Playwright.
 
 ## ⏭️ Próximo checkpoint
 

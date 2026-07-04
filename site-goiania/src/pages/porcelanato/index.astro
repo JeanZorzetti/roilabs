@@ -32,7 +32,7 @@ for (const p of pages) {
   let escolha = fresh?.imagens[0];
   if (!escolha) {
     for (const c of candidatos) {
-      escolha = c.imagens.find((img) => !usedCovers.has(img));
+      escolha = [...c.imagens, ...(c.imagensAmbiente ?? [])].find((img) => !usedCovers.has(img));
       if (escolha) break;
     }
   }
