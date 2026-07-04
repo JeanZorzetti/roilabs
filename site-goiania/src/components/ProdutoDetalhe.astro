@@ -16,8 +16,8 @@ const tituloProduto = `${a.marca} ${nome}`;
 const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
 ---
 <div class="prod-detail">
-  <!-- Galeria (exibição em .webp; data-full guarda o original pro zoom) -->
-  <div class="prod-detail__gallery">
+  <!-- Galeria (exibição em .webp; data-full guarda o original pro zoom/lupa) -->
+  <div class:list={['prod-detail__gallery', produto.imagens.length > 1 && 'has-thumbs']}>
     <button class="prod-detail__main" type="button" aria-label={`Ampliar foto de ${tituloProduto}`}>
       <img src={imgDisplay(produto.imagens[0])} data-full={produto.imagens[0]} alt={tituloProduto} />
     </button>
@@ -28,6 +28,7 @@ const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
         ))}
       </div>
     )}
+    <div class="prod-detail__zoom-pane" aria-hidden="true"></div>
   </div>
 
   <!-- Zoom nativo: porcelanato é textura, ver grande decide compra -->
@@ -58,6 +59,32 @@ const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
           main.dataset.full = thumb.dataset.full ?? thumb.src;
         });
       });
+    }
+
+    // Lupa em hover (desktop com mouse, tela com espaço pro painel) — estilo
+    // Mercado Livre. Clique continua abrindo o dialog fullscreen acima; a lupa
+    // é um atalho a mais, não substitui (toque não tem hover, então só ganha o dialog).
+    // ponytail: painel sempre abre à direita, sem detecção de borda — se a tela
+    // ficar entre ~880-1180px o painel pode invadir o texto; ajustar limiar abaixo
+    // ou adicionar flip-to-left se isso incomodar na prática.
+    const mainBtn = main?.closest<HTMLButtonElement>('button');
+    const pane = detail?.querySelector<HTMLElement>('.prod-detail__zoom-pane');
+    if (main && mainBtn && pane && window.matchMedia('(hover: hover) and (pointer: fine) and (min-width: 1180px)').matches) {
+      const ZOOM = 2.5;
+      mainBtn.addEventListener('mousemove', (e) => {
+        const rect = mainBtn.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+        pane.style.left = `${mainBtn.offsetLeft + mainBtn.offsetWidth + 16}px`;
+        pane.style.top = `${mainBtn.offsetTop}px`;
+        pane.style.width = `${mainBtn.offsetWidth}px`;
+        pane.style.height = `${mainBtn.offsetHeight}px`;
+        pane.style.backgroundImage = `url(${main.dataset.full})`;
+        pane.style.backgroundSize = `${ZOOM * 100}% ${ZOOM * 100}%`;
+        pane.style.backgroundPosition = `${x}% ${y}%`;
+        pane.style.display = 'block';
+      });
+      mainBtn.addEventListener('mouseleave', () => { pane.style.display = 'none'; });
     }
   </script>
 

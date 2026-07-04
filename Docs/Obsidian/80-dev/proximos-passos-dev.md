@@ -32,6 +32,20 @@ dono: Jean (dev)
 
 - [x] **5. Fotos ambientadas — FEITO PARCIAL 2026-07-04 (`589685f`), decisão consciente de pular a autorização formal.** Mudança de plano: em vez de esperar a Duda pedir aos fornecedores, o Jean pediu a mineração direta dos sites oficiais (Biancogres/Delta) e aceitou o risco de usar as imagens sem autorização explícita por escrito — **fica registrado aqui pra não se perder essa decisão.** `fetch-ambiente.mjs` (curadoria manual, não crawler) confirmou 6/30 produtos com foto de ambiente do fabricante na MESMA coleção e MESMA dimensão do catálogo (todos Biancogres: Marmo Perla, Arezzo Grigio, Arezzo Beige EXT/Satin, Chicago Grafite, Persia Beige); Delta não tinha correspondência exata pros 4 SKUs do catálogo. Renderiza como seção "Veja em ambiente" no produto (`ProdutoDetalhe`) e substitui a foto no hero da malha quando existe; sitemap de imagens ganhou as 6 fotos. **Vídeo: capacidade implementada (iframe), mas nenhum vídeo atribuído** — o único vídeo oficial encontrado é genérico da marca, não por SKU; ⏳ pendente é a Duda achar/pedir vídeo específico por produto quando houver. 2ª foto por produto (múltiplos ângulos) não minerada — fica pro próximo ciclo se o acervo virar prioridade de novo. **Handoff completo pra ampliar (Savane 0/8 nunca pesquisado, Biancogres 12 faltando, método validado) em `site-goiania/handoff.md`.**
 
+## 🧭 Fora da caixa — ciclo 12 (2026-07-04) — acervo de ambiente, 6/30 → 23/30
+
+> [!success] Continuação do ciclo 11 item 5, executado antes do checkpoint ~07-15 (o Jean priorizou o acervo). 2 levas: WebSearch/Playwright manual + ferramenta nova `media-miner` (achou o filtro de busca interno de Biancogres/Savane que o Google não indexava). Handoff completo em `site-goiania/handoff.md`.
+
+- [x] **Biancogres 6/18 → 15/18, Savane 0/8 → 8/8 completo, Delta segue 0/4** (confirmado de novo: a marca nunca teve foto de ambiente real — não é falha de busca). Ficaram só 3 SKUs genuinamente ambíguos (coleções diferentes, mesma dimensão/acabamento — catálogo não desambigua, forçar uma arrisca mostrar textura errada pro cliente).
+
+## 🧭 Fora da caixa — ciclo 13 (2026-07-04)
+
+> [!note] 3 frentes pedidas pelo Jean: fechar o gate do acervo que o ciclo 12 deixou pendente, mais fotos por produto, e uma galeria melhor na página de produto.
+
+- [x] **⭐ Lupa em hover na galeria do produto — FEITO 2026-07-04.** Estilo Mercado Livre: em telas ≥880px com mais de 1 foto (`.has-thumbs`), os thumbs viram coluna à esquerda da foto principal; em desktop com mouse (`hover:hover`+`pointer:fine`+≥1180px), passar o cursor na foto abre um painel ao lado com zoom 2,5× seguindo o cursor — reaproveita o mesmo `data-full` (original full-res) que já alimentava o `<dialog>` do ciclo 11. Zero dependência nova (`background-position` em % faz a matemática da lupa sozinho). Clique continua abrindo o dialog fullscreen em qualquer dispositivo — a lupa é um atalho a mais, não substitui (touch não tem hover). Verificado via Playwright: grid lado a lado, painel posicionado e com zoom corretos seguindo o cursor, dialog ainda abre no clique, lupa desativa <1180px ou sem mouse.
+- [ ] **Terminar o acervo (23/30 → ?).** Os 7 que faltam estão bloqueados em decisão do Jean, não em busca — ver pergunta.
+- [ ] **Melhoria de qualidade das imagens.** Escopo a confirmar com o Jean — candidato natural é a 2ª foto por produto (textura), que o ciclo 12 já viu nas páginas da Biancogres mas não usou (só filtrou "ambiente") — ver pergunta.
+
 ## ⏭️ Próximo checkpoint
 
-- **~07-15** — GSC miner + checkpoint da malha ([[backlog-pendencias]]): a partir daí os dados (GSC, Clarity, coluna Origem, `busca_interna` com 0 resultado) escolhem o ciclo 12 — não especular antes.
+- **~07-15** — GSC miner + checkpoint da malha ([[backlog-pendencias]]): a partir daí os dados (GSC, Clarity, coluna Origem, `busca_interna` com 0 resultado) escolhem o ciclo 14 — não especular antes.

@@ -952,6 +952,53 @@ a {
   cursor: pointer;
 }
 
+.prod-detail__gallery {
+  position: relative;
+}
+
+/* thumbs viram coluna à esquerda da foto principal (estilo Mercado Livre) só
+   quando há espaço e mais de 1 foto — com 1 foto só (maioria do catálogo hoje)
+   a imagem principal segue ocupando a largura toda. */
+@media (min-width: 880px) {
+  .prod-detail__gallery.has-thumbs {
+    display: grid;
+    grid-template-columns: 72px 1fr;
+    gap: 0.6rem;
+  }
+
+  .prod-detail__gallery.has-thumbs .prod-detail__thumbs {
+    grid-column: 1;
+    grid-row: 1;
+    flex-direction: column;
+    margin-top: 0;
+  }
+
+  .prod-detail__gallery.has-thumbs .prod-detail__main {
+    grid-column: 2;
+    grid-row: 1;
+  }
+}
+
+/* Lupa em hover — painel posicionado/preenchido via JS em ProdutoDetalhe.astro.
+   Só ativa em desktop com mouse (ver matchMedia no script); clique continua
+   abrindo o .img-zoom fullscreen em qualquer dispositivo. */
+.prod-detail__zoom-pane {
+  display: none;
+  position: absolute;
+  background-repeat: no-repeat;
+  border: 1px solid var(--d-line-strong);
+  border-radius: 14px;
+  background-color: var(--ink-2);
+  pointer-events: none;
+  z-index: 20;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+}
+
+.section--light .prod-detail__zoom-pane {
+  border-color: var(--l-line-strong);
+  background-color: var(--porcelain-2);
+}
+
 .prod-detail__preco {
   margin-top: 0.8rem;
   font-family: var(--font-display);
