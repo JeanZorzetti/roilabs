@@ -1,5 +1,23 @@
 # Handoff — site-goiania
 
+## 2026-07-04 — Ciclo 14: capas do hub sem repetição + fachada/60x60 com foto real
+
+> Pedido direto do Jean: as 34 fotos do catálogo apareciam repetidas nos cards de `/porcelanato/`, e 2 categorias (`porcelanato-fachada`, `porcelanato-60x60`) não tinham NENHUM produto casando (zero foto, zero galeria).
+
+**Causa raiz (uma só, 2 sintomas):** `capaDe()` em `index.astro` sempre pegava `produtosDaCategoria(slug, tipo)[0].imagens[0]` — o 1º produto que bate a tag/tipo. Como várias categorias compartilham a mesma tag (ex.: 5 páginas "amadeirado", 4 páginas "antiderrapante") ou são `BROAD` (retornam o catálogo inteiro), o `[0]` era sempre o MESMO produto — `porcelanato-20x120-carvalho-natural` (posição 0 do JSON) virou capa de **14 dos 40 cards**.
+
+**Fix 1 — cobertura sem repetição (`index.astro`):** antes do render, monta um `Map<slug, imagem>` percorrendo as 40 páginas na ordem declarada: pra cada categoria, tenta um produto ainda não usado por nenhuma outra (1ª passada); se não sobrar produto novo, aceita repetir produto mas com outra foto dele (2ª passada); só repete a MESMA foto quando a categoria não tem nenhuma alternativa real no catálogo. Resultado: **40/40 cards com capa, 37 fotos distintas** — só as 4 páginas da família "amadeirado" (`-cozinha`, `-varanda`, `-sala` + a genérica) repetem, porque **existe apenas 1 produto amadeirado em todo o catálogo** (`ponytail: ceiling de estoque, não bug — só desaparece se entrar um 2º produto amadeirado no JSON`).
+
+**Fix 2 — 2 categorias com zero produto (`produtos.ts::tagsDoProduto`):** nenhum produto tinha a dimensão exata "60x60" nem a tag "fachada" existia. Em vez de forçar manualmente essas 2 páginas, estendi a mesma função que já casa produto→categoria (raiz única, os 2 lugares que chamam — hub e página da categoria — ganham de graça):
+- `porcelanato-60x60` passou a aceitar `62x62` também (mesmo padrão já usado pra 90x90/91x91 no código) → pega `Avorio Polido` (Delta, 62×62cm) como opção real, foto e ficha técnica corretas (a página mostra "62×62cm" de verdade, não finge ser 60×60).
+- `porcelanato-fachada` ganhou a tag de qualquer produto com acabamento Externo/Rústico (já eram tagueados p/ área externa) → 5 candidatos reais (Grigio Externo, Grigio Externo 90x90, Arezzo Externo, Castilla Noce, Chicago 80x80 Grafite).
+
+Ambas as páginas de categoria (`/porcelanato/porcelanato-fachada/` e `/porcelanato/porcelanato-60x60/`) agora renderizam hero-strip + galeria/ficha de produto (antes: só texto, `produtosRel.length === 0`).
+
+Build local (`astro build`, 85 páginas) + `check-feed.mjs` verificados OK. Nada de novo pra rodar em prod — muda só qual foto aparece, sem novo asset.
+
+---
+
 ## 2026-07-04 — Ciclo 13: acervo fechado em 25/30 (era 23/30) + lupa em hover na galeria
 
 > Fecha o handoff do ciclo 12 abaixo. As 3 decisões que só o Jean podia bater o martelo foram resolvidas via pergunta direta (AskUserQuestion); 1 decisão adicional (Onix Bianco Lux) tomada por mim por consistência com a regra já aplicada ao Delta.

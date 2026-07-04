@@ -78,10 +78,10 @@ export function tagsDoProduto(p: Produto): Set<string> {
   if (/grigio|grafite|cinza|nebbia|chicago|chigaco|legado/.test(s)) t.add('porcelanato-cinza');
   if (/\bnero\b|preto/.test(s)) t.add('porcelanato-preto');
 
-  // dimensão → slug de categoria
+  // dimensão → slug de categoria (agrupa formatos próximos, mesmo padrão já usado em 90x90/91x91)
   if (/^(60x120|120x60)/.test(dim)) t.add('porcelanato-120x60');
   if (/^(90x90|91x91)/.test(dim)) t.add('porcelanato-90x90');
-  if (/^60x60/.test(dim)) t.add('porcelanato-60x60');
+  if (/^(60x60|62x62)/.test(dim)) t.add('porcelanato-60x60');
 
   // retificado
   if (p.atributos.retificado) t.add('porcelanato-retificado');
@@ -94,6 +94,7 @@ export function tagsDoProduto(p: Produto): Set<string> {
     t.add('porcelanato-area-externa');
     t.add('porcelanato-antiderrapante');
     t.add('porcelanato-externo-antiderrapante');
+    t.add('porcelanato-fachada');
   }
 
   // ocasião: cozinha = acabamento apto a piso de cozinha (acetinado/natural, não escorrega c/ óleo)

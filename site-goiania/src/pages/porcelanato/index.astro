@@ -16,10 +16,31 @@ const byTipo = pages.reduce<Record<string, typeof pages>>((acc, p) => {
   return acc;
 }, {});
 
-// Ciclo 11 (hub visual): capa do card = foto do 1º produto da categoria
-// (dado já computado no build); categoria sem produto segue como card texto.
-const capaDe = (slug: string, tipo: string) =>
-  produtosDaCategoria(slug, tipo)[0]?.imagens[0];
+// Ciclo 14: capa do card sem repetição. Pegar sempre imagens[0] do 1º produto
+// da categoria (ciclo 11) fazia várias categorias com o mesmo tipo/tag mostrarem
+// a mesma foto (ex.: 14 cards usando a mesma foto de "amadeirado"). Agora cada
+// categoria reserva uma foto ainda não usada por nenhuma outra: 1ª passada pega
+// produto ainda não mostrado; 2ª passada aceita repetir produto mas com outra
+// foto dele; só repete foto de verdade quando a categoria não tem alternativa
+// real no catálogo (ex.: "amadeirado" só tem 1 produto — ceiling de estoque, não bug).
+const usedCovers = new Set<string>();
+const capas = new Map<string, string>();
+for (const p of pages) {
+  const candidatos = produtosDaCategoria(p.slug, p.tipo);
+  if (candidatos.length === 0) continue;
+  const fresh = candidatos.find((c) => !usedCovers.has(c.imagens[0]));
+  let escolha = fresh?.imagens[0];
+  if (!escolha) {
+    for (const c of candidatos) {
+      escolha = c.imagens.find((img) => !usedCovers.has(img));
+      if (escolha) break;
+    }
+  }
+  escolha = escolha ?? candidatos[0].imagens[0];
+  usedCovers.add(escolha);
+  capas.set(p.slug, escolha);
+}
+const capaDe = (slug: string) => capas.get(slug);
 
 // Hub: breadcrumb + ItemList das páginas de categoria da malha + Product com
 // AggregateOffer do catálogo inteiro (faixa real de R$/m² computada no build,
@@ -107,7 +128,7 @@ const jsonLdNodes = [
 
         <div class="pseo-index-grid" style="margin-top:3rem;">
           {pages.map((p) => {
-            const capa = capaDe(p.slug, p.tipo);
+            const capa = capaDe(p.slug);
             return (
               <a href={`/porcelanato/${p.slug}/`} class={`pseo-index-card${capa ? ' pseo-index-card--img' : ''}`}>
                 {capa && (
