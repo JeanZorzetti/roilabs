@@ -148,5 +148,12 @@
       const a = (e.target as HTMLElement).closest<HTMLAnchorElement>('.site-search__item');
       if (a) (window as any).himetrica?.track('busca_interna', { termo: input.value.trim(), destino: a.getAttribute('href') ?? '' });
     });
+
+    // Deep-link ?q= (alvo do SearchAction no @graph): abre a busca já preenchida.
+    const q = new URLSearchParams(location.search).get('q');
+    if (q) {
+      input.value = q;
+      open();
+    }
   }
 </script>
