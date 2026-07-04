@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
 import { derivarOcupacao } from '@/lib/ocupacao';
+import { breakdownOrigem, bucketOrigem } from '@/lib/origem';
 
 export const dynamic = 'force-dynamic';
 
@@ -12,6 +13,7 @@ export default async function PainelPage() {
   const now = new Date();
   const h24 = new Date(now.getTime() - 24 * 60 * 60 * 1000);
   const d7 = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+  const d30 = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
   const [
@@ -26,6 +28,7 @@ export default async function PainelPage() {
     cadeiraGroups,
     pedidos7d,
     leadsCount7d,
+    leads30d,
   ] = await Promise.all([
     prisma.candidatura.count({ where: { createdAt: { gte: h24 } } }),
     prisma.candidatura.count({ where: { createdAt: { gte: d7 } } }),
@@ -42,7 +45,19 @@ export default async function PainelPage() {
     prisma.cadeira.findMany({ select: { polo: true, parceiros: { select: { estagio: true, contratoEm: true } } } }),
     prisma.pedido.count({ where: { statusPagamento: 'pago', createdAt: { gte: d7 } } }),
     prisma.leadConsumidor.count({ where: { createdAt: { gte: d7 } } }),
+    prisma.leadConsumidor.findMany({
+      where: { createdAt: { gte: d30 } },
+      select: { mensagem: true, createdAt: true },
+    }),
   ]);
+
+  // First-touch: qual página/canal de entrada gera lead (parse do sufixo [origem]).
+  const origem30 = breakdownOrigem(leads30d).slice(0, 10);
+  const origem7Counts = new Map<string, number>();
+  for (const l of leads30d.filter((l) => l.createdAt >= d7)) {
+    const k = bucketOrigem(l.mensagem);
+    origem7Counts.set(k, (origem7Counts.get(k) ?? 0) + 1);
+  }
 
   const gmvPagoMes = Number(gmvMes._sum.total ?? 0);
   const pedidosPagosMes = gmvMes._count.id;
@@ -113,6 +128,30 @@ export default async function PainelPage() {
             </div>
           </div>
         </div>
+
+        {origem30.length > 0 && (
+          <div className="cc-card" style={{ marginTop: '0.8rem' }}>
+            <div className="cc-card__label">Origem dos leads · first-touch (top 10, 30d)</div>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.82rem', marginTop: '0.5rem' }}>
+              <thead>
+                <tr style={{ borderBottom: '1px solid var(--l-line)', color: 'var(--l-muted)' }}>
+                  <th style={{ textAlign: 'left', padding: '0.35rem 0.5rem' }}>Página de entrada / canal</th>
+                  <th style={{ textAlign: 'right', padding: '0.35rem 0.5rem' }}>7d</th>
+                  <th style={{ textAlign: 'right', padding: '0.35rem 0.5rem' }}>30d</th>
+                </tr>
+              </thead>
+              <tbody>
+                {origem30.map(([bucket, total]) => (
+                  <tr key={bucket} style={{ borderBottom: '1px solid var(--l-line)' }}>
+                    <td style={{ padding: '0.35rem 0.5rem', fontFamily: 'monospace' }}>{bucket}</td>
+                    <td style={{ padding: '0.35rem 0.5rem', textAlign: 'right' }}>{origem7Counts.get(bucket) ?? 0}</td>
+                    <td style={{ padding: '0.35rem 0.5rem', textAlign: 'right', fontWeight: 700 }}>{total}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
 
       {/* Mês corrente */}

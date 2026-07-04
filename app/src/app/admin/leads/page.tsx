@@ -1,10 +1,8 @@
 import { prisma } from '@/lib/prisma';
 import { waLeadLink } from '@/lib/wa';
+import { origemDe } from '@/lib/origem';
 
 export const dynamic = 'force-dynamic';
-
-// First-touch gravado pela rota como sufixo `[origem] ...` da mensagem (sem coluna no DB).
-const origemDe = (mensagem: string | null) => mensagem?.match(/^\[origem\] (.+)$/m)?.[1];
 
 export default async function LeadsConsumidorPage() {
   const leads = await prisma.leadConsumidor.findMany({ orderBy: { createdAt: 'desc' } });
@@ -51,6 +49,19 @@ export default async function LeadsConsumidorPage() {
                     <a href={l.mensagem.match(/https?:\/\/\S+/)![0]} target="_blank" rel="noopener">
                       carrinho →
                     </a>
+                    {/* Same ?c= token rendered as a formal quote (print → PDF) — the link Duda sends. */}
+                    {l.mensagem.match(/https?:\/\/\S+/)![0].includes('/carrinho?c=') && (
+                      <>
+                        {' · '}
+                        <a
+                          href={l.mensagem.match(/https?:\/\/\S+/)![0].replace('/carrinho?c=', '/orcamento?c=')}
+                          target="_blank"
+                          rel="noopener"
+                        >
+                          orçamento →
+                        </a>
+                      </>
+                    )}
                   </>
                 )}
               </td>

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { sendAlert, escapeHtml } from '@/lib/email';
 import { filaFollowUp } from '@/lib/follow-up';
+import { breakdownOrigem } from '@/lib/origem';
 
 export const dynamic = 'force-dynamic';
 
@@ -20,9 +21,12 @@ export async function POST(req: NextRequest) {
   }
 
   const desde = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-  const [candidaturas, leads, pedidos, pagos, fila] = await Promise.all([
+  const [candidaturas, leadsSemana, pedidos, pagos, fila] = await Promise.all([
     prisma.candidatura.count({ where: { createdAt: { gte: desde } } }),
-    prisma.leadConsumidor.count({ where: { createdAt: { gte: desde } } }),
+    prisma.leadConsumidor.findMany({
+      where: { createdAt: { gte: desde } },
+      select: { mensagem: true },
+    }),
     prisma.pedido.count({ where: { createdAt: { gte: desde } } }),
     prisma.pedido.findMany({
       where: { createdAt: { gte: desde }, statusPagamento: 'pago' },
@@ -30,8 +34,16 @@ export async function POST(req: NextRequest) {
     }),
     filaFollowUp(),
   ]);
+  const leads = leadsSemana.length;
   const gmv = pagos.reduce((s, p) => s + Number(p.total), 0);
   const rank = (await req.text()).trim().slice(0, 20000);
+
+  // First-touch da semana: qual página/canal de entrada gerou os leads.
+  const origens = breakdownOrigem(leadsSemana).slice(0, 5);
+  const origemHtml = origens.length
+    ? `<h2>Origem dos leads (first-touch)</h2>
+     <ul>${origens.map(([b, n]) => `<li><strong>${n}</strong> × ${escapeHtml(b)}</li>`).join('')}</ul>`
+    : '';
 
   // Ação pendente: same queue as /admin/follow-up — the digest nags until it's cleared.
   const pendentes = fila.carrinhos.length + fila.frios.length + fila.pendentes.length;
@@ -54,6 +66,7 @@ export async function POST(req: NextRequest) {
        <li><strong>${leads}</strong> leads consumidor (goiânia) · <strong>${candidaturas}</strong> candidaturas (institucional)</li>
        <li><strong>${pedidos}</strong> pedidos criados · <strong>${pagos.length}</strong> pagos · GMV <strong>${brl(gmv)}</strong></li>
      </ul>
+     ${origemHtml}
      ${acaoPendente}
      <p><a href="https://app.roilabs.com.br/admin">Abrir o admin</a></p>
      ${rank ? `<h2>Rank tracking (segunda)</h2><pre style="font-size:12px">${escapeHtml(rank)}</pre>` : ''}`
