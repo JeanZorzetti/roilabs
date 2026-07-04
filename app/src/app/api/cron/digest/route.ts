@@ -34,12 +34,13 @@ export async function POST(req: NextRequest) {
   const rank = (await req.text()).trim().slice(0, 20000);
 
   // Ação pendente: same queue as /admin/follow-up — the digest nags until it's cleared.
-  const pendentes = fila.carrinhos.length + fila.frios.length;
+  const pendentes = fila.carrinhos.length + fila.frios.length + fila.pendentes.length;
   const nomes = (ls: { nome: string }[]) =>
     ls.slice(0, 5).map((l) => escapeHtml(l.nome)).join(', ') + (ls.length > 5 ? ` +${ls.length - 5}` : '');
   const acaoPendente = pendentes
-    ? `<h2>⚠️ Ação pendente — ${pendentes} leads na fila</h2>
+    ? `<h2>⚠️ Ação pendente — ${pendentes} contatos na fila</h2>
      <ul>
+       ${fila.pendentes.length ? `<li><strong>${fila.pendentes.length}</strong> pedido(s) sem pagamento: ${nomes(fila.pendentes)}</li>` : ''}
        ${fila.carrinhos.length ? `<li><strong>${fila.carrinhos.length}</strong> carrinho(s) sem pedido pago: ${nomes(fila.carrinhos)}</li>` : ''}
        ${fila.frios.length ? `<li><strong>${fila.frios.length}</strong> lead(s) sem resposta há 48h+: ${nomes(fila.frios)}</li>` : ''}
      </ul>
