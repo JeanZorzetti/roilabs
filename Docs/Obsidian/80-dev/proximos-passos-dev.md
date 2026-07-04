@@ -220,6 +220,33 @@ dono: Jean (dev)
 
 > Verificação do ciclo: build goiânia **83 páginas** (+`/orcamento`), `wa-float` presente em todas, `noindex` só no orçamento; build institucional **10 páginas** (+`404.html`), 2 links goiânia na home e 2 por artigo; `tsc --noEmit` limpo no app; E2E do orçamento via preview+Playwright (caso feliz + token inválido).
 
+## 🧭 Fora da caixa — ciclo 10 (2026-07-04)
+
+> [!success] CICLO 10 EXECUTADO 2026-07-04 — 4/4 itens + extra em código, tudo na `main` e pushado (deploy automático por push).
+> Critério do ciclo: fechar o pós-venda + rich results de preço + segunda ferramenta de decisão. **Nota de disciplina:** verificação contra o código matou 2 candidatos antes de propor (author/Person no blog e honeypot/rate-limit nos POSTs públicos — ambos JÁ EXISTIAM). Deliberadamente FORA (de novo): expandir malha (GSC miner ~07-15), review engine (gate 3–5 pedidos), WhatsApp Cloud API (pago), amostra/promotions (mortos no ciclo 9).
+
+### 📦 Fechar o pós-venda (a caixa-preta do "paguei e agora?")
+
+- [x] **⭐ Acompanhamento público do pedido — FEITO 2026-07-04.** `GET /api/pedidos/:id/status` público read-only no app (o cuid É o token — não-enumerável; resposta sem PII: statuses+entrega+data+itens, CORS igual `/api/cadeiras`) + página `goiania.roilabs.com.br/pedido/?t=` (noindex, fetch em runtime — reflete o admin sem rebuild): timeline 3 passos (pagamento→reserva→entrega), mensagem por estado (pendente=recuperação, pago=reserva 24h, confirmado=prazo, reembolsado) e WhatsApp contextual com nº do pedido. Entradas: botão **"Acompanhar pedido"** no `/obrigado` (vira ação primária) + link no e-mail de confirmação do webhook. E2E preview+Playwright: token inválido cai no estado "não encontrado" com saída útil. ⏳ caso feliz a conferir em prod com um pedido real (sem credenciais local).
+
+### 📣 Rich result de preço (GEO de graça em 42 páginas)
+
+- [x] **⭐ `AggregateOffer` na malha (41) + hub — FEITO 2026-07-04.** O `Product` da malha estava **sem offers** (warning no GSC): agora leva `AggregateOffer` com faixa real de R$/m² da categoria computada do catálogo no build (mesma mecânica do guia quanto-custa — atualiza sozinha). O hub `/porcelanato/` ganhou nó `Product` próprio com a faixa do catálogo inteiro (hoje R$ 65,99–144,99, 30 ofertas) — é a página da âncora "porcelanato goiânia" mostrando faixa de preço no rich result. Verificado no HTML buildado (malha + hub).
+
+### 💰 Segunda ferramenta de decisão (playbook da calculadora)
+
+- [x] **⭐ Comparador de porcelanatos `/comparar` — FEITO 2026-07-04.** Porcelanato é compra comparativa e nenhum player local tem ferramenta: 2–3 modelos lado a lado (foto, R$/m², **R$/caixa** — o desembolso real, dimensão, acabamento, m²/caixa, retificado, classe AD), badge "menor preço", links ver produto/calcular caixas. **Deep-link compartilhável `?p=slug-a,slug-b`** (URL reflete a seleção — a Duda manda comparação pronta no WhatsApp) + entrada "Comparar com outro porcelanato →" na página de produto. Micro-form de lead com contexto da comparação (eventos `comparador` e `comparador_lead`). Página indexável com BLUF + "o que comparar" + FAQPage; registrada em sitemap/llms.txt/busca/footer/OG. E2E preview+Playwright: deep-link, matemática (144,99×2,88=417,57 ✓), badge, 3º slot, lead form.
+
+### 🤝 Captação B2B (a ponte inversa do ciclo 9)
+
+- [x] **CTA B2B no footer do goiânia — FEITO 2026-07-04.** O cross-link do ciclo 9 era só institucional→goiânia; no inverso havia 1 link genérico no `/sobre`. Fornecedor concorrente navegando o catálogo é lead do Gate 3: linha "É fornecedor de porcelanato? **Venda no polo sem custo fixo — 1 cadeira por nicho →**" no footer das 85 páginas, apontando pra `roilabs.com.br/#candidatar`. O site é a prova viva do modelo.
+
+### 🖼️ Extra
+
+- [x] **OG por página nas utilitárias — FEITO 2026-07-04.** `/orcamento` e `/pedido` rodam em link compartilhado no WhatsApp e tinham preview genérico: PNG próprio via astro-og-canvas (mesma esteira do ciclo 6) + `/comparar` também.
+
+> Verificação do ciclo: build goiânia **85 páginas** (+`/comparar` +`/pedido`), `check-feed OK` 30 itens, `AggregateOffer` no HTML da malha e do hub, OGs comparar/orcamento/pedido gerados, comparar em sitemap/llms/busca-index, CTA B2B na home, deep-link comparar no HTML do produto; `tsc --noEmit` limpo no app; comparador + /pedido (estado miss) E2E via preview+Playwright. IndexNow 403 transiente local, como sempre.
+
 ## 🚀 Fase 1 — Subir o MVP no ar (caminho crítico, em ordem)
 
 - [x] **Aplicar schema no DB.** De uma máquina que alcança `2.24.207.200`, dentro de `/app`: `npm install` → `npx prisma db push` → `npm run db:seed` (carrega as 6 cadeiras, idempotente). ⚠️ NÃO confiar no runner standalone p/ schema — fazer `db push` manual.
