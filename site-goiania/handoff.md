@@ -1,5 +1,27 @@
 # Handoff — site-goiania
 
+## 2026-07-04 — Ciclo 13: acervo fechado em 25/30 (era 23/30) + lupa em hover na galeria
+
+> Fecha o handoff do ciclo 12 abaixo. As 3 decisões que só o Jean podia bater o martelo foram resolvidas via pergunta direta (AskUserQuestion); 1 decisão adicional (Onix Bianco Lux) tomada por mim por consistência com a regra já aplicada ao Delta.
+
+### Acervo — decisões
+
+| Pendência | Decisão do Jean | Resultado |
+|---|---|---|
+| **Grigio Externo 90x90** (3 candidatos empatados) | Passou 2 fotos próprias em vez de escolher uma das 3 coleções | `imagensAmbiente[0]` = `porcelanato-grigio-externo-90x90-1.png` (a 2ª, `-2.webp`, ficou salva mas não usada — UI só renderiza `imagensAmbiente[0]`) |
+| **Lux 100x100** (~24 produtos com o nome) | Aceitou o risco de foto genérica | Reaproveitada a foto de `pulpis-grigio-ac-100x100cm-biancogres` — o próprio arquivo da Biancogres já rotula a variante "pulpis-grigio-lux-100x100" entre as que mostra, é o match genérico mais próximo real que existe (adicionado em `AMBIENTE_POR_SLUG`) |
+| **Delta (4) + Onix Bianco Lux `bianco-luz-polido-biancogres` (1)** | — (não perguntado; decisão minha) | **0/5 permanente, documentado.** Mesma regra do Delta original: 2 buscas já confirmaram que nenhum tem foto de ambiente real (só simulador/close-up de textura) — mostrar isso seria enganoso, pior que não ter foto. |
+
+**Total: 25/30.** Teto até surgir nova informação (ex.: Jean identificar a coleção exata do Lux, ou a Biancogres fotografar ambiente do Onix Bianco Lux).
+
+⚠️ **Pendente confirmar com o Jean**: as 2 fotos do Grigio Externo 90x90 vieram por fora do fluxo `media-miner` (arquivos passados direto, não uma URL do site oficial) — não confirmei a origem. A seção `prod-ambiente` legenda toda foto como "foto do fabricante"; se essas 2 não forem da Biancogres, o texto fica incorreto pra esse produto.
+
+### Lupa em hover na galeria (pedido do Jean, estilo Mercado Livre)
+
+`ProdutoDetalhe.astro` + `global.css`: thumbs em coluna à esquerda em ≥880px quando há >1 foto (`.has-thumbs`); em desktop com mouse (`hover:hover`+`pointer:fine`+≥1180px) passar o cursor na foto principal abre um painel com zoom 2,5× seguindo o cursor, via `background-position`/`background-size` em % (sem dependência nova). Reaproveita o `data-full` (full-res original) que já existia pro `<dialog>` de zoom do ciclo 11 — clique continua abrindo o fullscreen em qualquer dispositivo, a lupa é um atalho a mais pro desktop. `ponytail:` painel sempre abre à direita sem detecção de borda; se `min-width:1180px` ainda deixar o painel invadindo o texto em alguma resolução, ajustar o limiar ou adicionar flip-to-left.
+
+---
+
 ## 2026-07-04 — Ciclo 12: acervo de ambiente — 23/30 (era 6/30), handoff pra ciclo 13
 
 > Continuação do ciclo 11 item 5. 2 levas: (1) WebSearch+Playwright manual, (2) ferramenta `media-miner` (`ROI Labs/media-miner`) usando o filtro de busca interno dos próprios sites, que desbloqueou quase tudo que a 1ª leva não achava.

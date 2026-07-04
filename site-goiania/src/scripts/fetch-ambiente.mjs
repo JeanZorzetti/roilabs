@@ -70,6 +70,15 @@ const AMBIENTE_POR_SLUG = {
     'https://www.biancogres.com.br/media/17780/conversions/ambiente-travertino-tivoli-str-120x120-travertino-tivoli-ext-120x120-thumb_480p.jpg',
   'porcelanato-grigio-externo-biancogres':
     'https://www.biancogres.com.br/media/9754/conversions/ambiente-biancogres-persia-grigio-100x100-persia-grigio-ext-100x100-thumb_480p.jpg',
+  // 'Lux' é sufixo de acabamento usado em ~24 produtos Biancogres (não uma
+  // coleção) — impossível achar o ambiente exato do slug genérico do catálogo.
+  // Decisão do Jean (ciclo 13): aceitar uma foto genérica de acabamento Lux
+  // mesmo sem bater a coleção exata. Esta é a MESMA foto já usada por
+  // porcelanato-pulpis-grigio-ac-100x100cm-biancogres (o arquivo já rotula a
+  // variante "pulpis-grigio-lux-100x100" entre as que mostra) — é o match
+  // mais próximo real, não um genérico qualquer.
+  'porcelanato-100x100-lux-biancogres':
+    'https://www.biancogres.com.br/media/17644/conversions/ambiente-porcelanato-pulpis-grigio-lux-100x100-pulpis-grigio-satin-100x100-thumb_480p.jpg',
 };
 
 const catalog = JSON.parse(readFileSync(CATALOG, 'utf8'));

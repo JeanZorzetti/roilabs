@@ -238,7 +238,10 @@
       "m2_caixa": 3,
       "retificado": true,
       "classe_ad": 1
-    }
+    },
+    "imagensAmbiente": [
+      "/img/ambientes/porcelanato-100x100-lux-biancogres.jpg"
+    ]
   },
   {
     "slug": "porcelanato-grigio-externo-90x90",
@@ -254,7 +257,10 @@
       "m2_caixa": 2.4,
       "retificado": true,
       "classe_ad": 4
-    }
+    },
+    "imagensAmbiente": [
+      "/img/ambientes/porcelanato-grigio-externo-90x90-1.png"
+    ]
   },
   {
     "slug": "porcelanato-arezzo-externo-beige",
