@@ -112,6 +112,8 @@ export async function POST(req: NextRequest) {
            <p><strong>Total: ${brl(pedido.total)}</strong>${pedido.frete != null ? ` (frete incluso: ${brl(pedido.frete)})` : ' (frete a combinar)'}</p>
            <p>Prazo de entrega/retirada: <strong>2 a 6 dias úteis</strong>. Entramos em
            contato pelo WhatsApp informado para combinar os detalhes.</p>
+           <p>Acompanhe o status do seu pedido a qualquer momento:
+           <a href="https://goiania.roilabs.com.br/pedido/?t=${pedido.id}">acompanhar pedido</a></p>
            <p>Dúvidas? Chame a gente: <a href="https://wa.me/5562993265713">WhatsApp (62) 99326-5713</a></p>
            <p>— ROI Labs · goiania.roilabs.com.br</p>`
         );
