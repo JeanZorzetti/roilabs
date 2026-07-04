@@ -20,6 +20,17 @@
 
 `ProdutoDetalhe.astro` + `global.css`: thumbs em coluna à esquerda em ≥880px quando há >1 foto (`.has-thumbs`); em desktop com mouse (`hover:hover`+`pointer:fine`+≥1180px) passar o cursor na foto principal abre um painel com zoom 2,5× seguindo o cursor, via `background-position`/`background-size` em % (sem dependência nova). Reaproveita o `data-full` (full-res original) que já existia pro `<dialog>` de zoom do ciclo 11 — clique continua abrindo o fullscreen em qualquer dispositivo, a lupa é um atalho a mais pro desktop. `ponytail:` painel sempre abre à direita sem detecção de borda; se `min-width:1180px` ainda deixar o painel invadindo o texto em alguma resolução, ajustar o limiar ou adicionar flip-to-left.
 
+### 2ª foto por produto (Jean voltou atrás — a lupa só faz sentido com >1 foto)
+
+Só 1/30 produtos tinha 2+ fotos, então a coluna de miniaturas não aparecia em quase nenhuma página — o Jean notou isso ao testar em prod e pediu pra minerar a 2ª foto depois de ter dito "deixe como está" antes. Resultado: **21/30 com 2+ fotos**.
+
+- **16 Biancogres + Onix Bianco Lux (`bianco-luz-polido-biancogres`)**: páginas oficiais `biancogres.com.br/produto/<slug>` (achado por WebSearch quando o slug não era óbvio, ou o filtro interno `?nome-produto=` quando o Google não indexava — mesmo achado do ciclo 12). Toda página tem várias fotos `f01`/`f02`.../`f12` de close-up com **media ID sequencial ao da foto de ambiente já usada** (ex.: ambiente=media/17572 → f02=media/17573) — acelera achar a página certa. Escolhida 1 foto por produto (`f2` ou similar), adicionada em `imagens[1]`.
+- **4 Delta**: `deltaceramica.com.br/produto-in.php?id=N` tem `files/product/img_*.jpg` (foto de textura real) SEPARADA de `files/simulator/` (a renderização genérica já rejeitada no gate de ambiente) — a de produto é uma foto real do material, válida pra galeria (diferente de reivindicar "ambiente"/room). IDs achados por `site:deltaceramica.com.br "<nome> <dimensão>"`.
+- **Savane (8) NÃO tem 2ª foto — estrutural, confirmado na página real (não é busca malfeita)**: o carrossel do produto mostra só 1 thumbnail; "ver foto do ambiente" é um TOGGLE separado, não uma 2ª foto da galeria. Não existe close-up adicional pra minerar.
+- **`porcelanato-grigio-externo-90x90` ficou de fora** de propósito — mesma coleção ainda ambígua (3 candidatos empatados), adicionar uma foto de produto arriscaria a mesma coisa que já foi evitada no ambiente.
+
+Script: URLs entraram direto em `imagens[1]` no `porcelanatos.json`, depois `node src/scripts/fetch-images.mjs` (já existente, sem mudança) baixou+gerou os `.webp`. Verificado via Playwright nas 2 páginas que o Jean apontou como exemplo (`marmo-perla`, `cristallo-quartz`): `.has-thumbs` ativo, 2 thumbs, imagem principal 200.
+
 ---
 
 ## 2026-07-04 — Ciclo 12: acervo de ambiente — 23/30 (era 6/30), handoff pra ciclo 13
