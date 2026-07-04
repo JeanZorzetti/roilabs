@@ -142,7 +142,9 @@ const jsonLdNodes = [
   p {
     line-height: 1.65;
   }
-  a {
+  /* Só links de corpo — o escopo do Astro (a[data-astro-cid]) vence .btn--primary/.btn--ghost
+     e pintava o texto dos botões de laranja sobre laranja (visto em prod 2026-07-04). */
+  a:not(.btn) {
     color: var(--hivis, inherit);
   }
 </style>

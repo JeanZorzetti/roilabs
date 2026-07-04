@@ -92,7 +92,9 @@ const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
     padding-left: 1.2rem;
     margin: 0.6rem 0 1rem;
   }
-  a {
+  /* Só links de corpo — o escopo do Astro (a[data-astro-cid]) vence .btn--primary/.btn--ghost
+     e pintava o texto dos botões de laranja sobre laranja (visto em prod 2026-07-04). */
+  a:not(.btn) {
     color: var(--hivis, inherit);
   }
 </style>
