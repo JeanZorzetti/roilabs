@@ -108,9 +108,18 @@ const jsonLdNodes = [
               m² por caixa <span class="calc__hint">(vem na embalagem; em geral 1,5 a 3 m²)</span>
               <input class="calc__m2caixa" type="number" min="0.5" max="10" step="0.01" value="2.5" inputmode="decimal" />
             </label>
+            <label class="calc__param">
+              Tamanho da peça <span class="calc__hint">(pra estimar rejunte)</span>
+              <select class="calc__tamanho">
+                <option value="0.5">Pequena (até 30×30 cm)</option>
+                <option value="0.35" selected>Média (45×45 a 60×60 cm)</option>
+                <option value="0.25">Grande (60×120 cm ou maior)</option>
+              </select>
+            </label>
           </div>
 
           <div class="calc__result" aria-live="polite"></div>
+          <p class="calc__acessorios" aria-live="polite"></p>
 
           <!-- Revealed once there is a result: the calculation becomes a lead
                (same opt-in pattern as the cart callback / orcamento_lead). -->
@@ -206,6 +215,7 @@ const jsonLdNodes = [
     background: color-mix(in srgb, currentColor 6%, transparent); color: inherit; font: inherit;
   }
   .calc__result { min-height: 1.4em; font-size: 1.05rem; font-weight: 700; color: var(--hivis-deep); }
+  .calc__acessorios { margin: 0; font-size: 0.85rem; opacity: 0.8; }
   .calc-lead { display: grid; gap: 0.55rem; padding: 0.9rem 1rem; border: 1px dashed color-mix(in srgb, currentColor 35%, transparent); border-radius: 10px; max-width: 420px; }
   .calc-lead__title { font-size: 0.88rem; margin: 0; }
   .calc-lead__row { display: flex; gap: 0.5rem; }
@@ -249,7 +259,9 @@ const jsonLdNodes = [
   const addBtn = root.querySelector<HTMLButtonElement>('.calc__add')!;
   const folgaInput = root.querySelector<HTMLInputElement>('.calc__folga')!;
   const m2caixaInput = root.querySelector<HTMLInputElement>('.calc__m2caixa')!;
+  const tamanhoInput = root.querySelector<HTMLSelectElement>('.calc__tamanho')!;
   const result = root.querySelector<HTMLElement>('.calc__result')!;
+  const acessorios = root.querySelector<HTMLElement>('.calc__acessorios')!;
 
   const num = (el: HTMLInputElement) => parseFloat(el.value.replace(',', '.'));
   const fmt = (n: number) => n.toFixed(2).replace('.', ',');
@@ -305,14 +317,24 @@ const jsonLdNodes = [
       .filter((a) => a.l > 0 && a.c > 0)
       .reduce((s, a) => s + a.l * a.c, 0);
 
-    if (area <= 0) { result.textContent = ''; ultimo = null; return; }
+    if (area <= 0) { result.textContent = ''; acessorios.textContent = ''; ultimo = null; return; }
     const folga = clampPerda((parseFloat(folgaInput.value) || 0) / 100);
     const m2Caixa = num(m2caixaInput);
-    if (!(m2Caixa > 0)) { result.textContent = `${fmt(area)} m² medidos — informe os m² por caixa.`; ultimo = null; return; }
+    if (!(m2Caixa > 0)) { result.textContent = `${fmt(area)} m² medidos — informe os m² por caixa.`; acessorios.textContent = ''; ultimo = null; return; }
     const caixas = m2ParaCaixas(area, m2Caixa, folga);
     result.textContent =
       `${fmt(area)} m² + ${Math.round(folga * 100)}% folga ` +
       `= ${fmt(area * (1 + folga))} m² → ${caixas} caixa(s) · ${fmt(caixas * m2Caixa)} m² cobertos`;
+
+    // Rejunte e argamassa são pra área instalada (sem a folga de corte, que é
+    // sobra de caixa, não material espalhado no piso). Coeficiente de rejunte
+    // por m² varia com o tamanho da peça (juntas maiores em peças pequenas).
+    const kgRejunte = area * parseFloat(tamanhoInput.value);
+    const sacosArgamassa = Math.ceil((area * 5) / 20);
+    acessorios.textContent =
+      `Estimativa de material: ~${fmt(kgRejunte)} kg de rejunte · ${sacosArgamassa} saco(s) de ` +
+      `argamassa (20 kg) — confirme com o revendedor.`;
+
     ultimo = { area, folga, m2Caixa, caixas };
     leadForm.hidden = false; // once revealed, stays — don't yank the form while the user edits
   }
@@ -332,6 +354,7 @@ const jsonLdNodes = [
   });
   folgaInput.addEventListener('input', refresh);
   m2caixaInput.addEventListener('input', refresh);
+  tamanhoInput.addEventListener('change', refresh);
 
   // Calculation → lead: same fire-and-forget urlencoded POST the cart callback
   // uses (no CORS preflight); failure never touches the UX.
