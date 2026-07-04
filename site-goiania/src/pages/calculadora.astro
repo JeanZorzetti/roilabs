@@ -1,7 +1,8 @@
 ---
 // Calculadora standalone topo-de-funil ("quanto porcelanato preciso?").
-// Mesma matemática do carrinho (lib/cart) — aqui sem produto: o m²/caixa é
-// informado pelo usuário (vem na embalagem). CTA duplo: catálogo + WhatsApp.
+// Mesma matemática do carrinho (lib/cart) — o m²/caixa é informado pelo usuário
+// (vem na embalagem) OU pré-preenchido via ?m2caixa=&produto=&nome= quando o
+// visitante chega da página de produto. CTA duplo: catálogo + WhatsApp.
 import Base from '../layouts/Base.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
@@ -215,7 +216,17 @@ const jsonLdNodes = [
 </style>
 
 <style is:global>
-  /* Room rows são criadas via innerHTML → sem atributo de escopo Astro (mesmo gotcha do SimuladorM2). */
+  /* Elementos criados via JS → sem atributo de escopo Astro (mesmo gotcha do SimuladorM2). */
+  .calc__ctx {
+    margin: 0 0 0.2rem;
+    padding: 0.55rem 0.8rem;
+    border-left: 3px solid var(--hivis);
+    background: color-mix(in srgb, currentColor 5%, transparent);
+    border-radius: 0 8px 8px 0;
+    font-size: 0.88rem;
+    font-weight: 600;
+  }
+  .calc__ctx a { color: var(--hivis-deep); font-weight: 400; }
   .calc__room { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
   .calc__room input {
     flex: 1 1 5rem; min-width: 0; padding: 0.6rem 0.7rem;
@@ -242,6 +253,29 @@ const jsonLdNodes = [
 
   const num = (el: HTMLInputElement) => parseFloat(el.value.replace(',', '.'));
   const fmt = (n: number) => n.toFixed(2).replace('.', ',');
+
+  // Deep-link da página de produto: pré-preenche o m²/caixa e guarda o contexto
+  // pro lead. Tudo via textContent/atributos validados — nada da URL vira HTML.
+  const qs = new URLSearchParams(location.search);
+  const qsM2 = parseFloat((qs.get('m2caixa') ?? '').replace(',', '.'));
+  const qsSlug = /^[a-z0-9-]{1,80}$/.test(qs.get('produto') ?? '') ? qs.get('produto')! : '';
+  const qsNome = (qs.get('nome') ?? '').slice(0, 80).trim();
+  const produtoCtx = qsM2 >= 0.5 && qsM2 <= 10 && qsNome ? qsNome : '';
+  if (qsM2 >= 0.5 && qsM2 <= 10) {
+    m2caixaInput.value = String(qsM2);
+    if (qsNome) {
+      const ctx = document.createElement('p');
+      ctx.className = 'calc__ctx';
+      ctx.textContent = `Calculando para: ${qsNome} — caixa de ${fmt(qsM2)} m²`;
+      if (qsSlug) {
+        const back = document.createElement('a');
+        back.href = `/porcelanato/produto/${qsSlug}/`;
+        back.textContent = 'ver produto →';
+        ctx.append(' · ', back);
+      }
+      root.prepend(ctx);
+    }
+  }
 
   const leadForm = root.querySelector<HTMLFormElement>('.calc-lead')!;
   const leadInput = leadForm.querySelector<HTMLInputElement>('input[name="cl-whatsapp"]')!;
@@ -312,11 +346,16 @@ const jsonLdNodes = [
         nome: 'Calculadora de porcelanato',
         whatsapp: leadInput.value.trim(),
         consent: '1',
-        produto: r ? `Calculadora (${fmt(r.area)} m² → ${r.caixas} caixa(s))` : 'Calculadora',
+        produto: produtoCtx
+          ? `${produtoCtx}${r ? ` (${fmt(r.area)} m² → ${r.caixas} caixa(s))` : ''}`
+          : r ? `Calculadora (${fmt(r.area)} m² → ${r.caixas} caixa(s))` : 'Calculadora',
         pagina: '/calculadora',
-        mensagem: r
-          ? `Calculou ${fmt(r.area)} m² + ${Math.round(r.folga * 100)}% folga, caixa de ${fmt(r.m2Caixa)} m² → ${r.caixas} caixa(s). Pediu orçamento.`
-          : 'Pediu orçamento pela calculadora.',
+        mensagem: [
+          r
+            ? `Calculou ${fmt(r.area)} m² + ${Math.round(r.folga * 100)}% folga, caixa de ${fmt(r.m2Caixa)} m² → ${r.caixas} caixa(s). Pediu orçamento.`
+            : 'Pediu orçamento pela calculadora.',
+          produtoCtx ? `Produto: ${produtoCtx}${qsSlug ? ` (/porcelanato/produto/${qsSlug}/)` : ''}` : '',
+        ].filter(Boolean).join(' '),
         origem: localStorage.getItem('rlft') ?? '',
       }),
       keepalive: true,

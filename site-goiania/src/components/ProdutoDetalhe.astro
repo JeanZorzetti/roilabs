@@ -51,6 +51,13 @@ const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
       </tbody>
     </table>
 
+    <!-- Calculadora pré-preenchida: o produto já sabe seu m²/caixa — o usuário só mede o ambiente. -->
+    <p class="prod-detail__calc">
+      <a href={`/calculadora/?m2caixa=${a.m2_caixa}&produto=${produto.slug}&nome=${encodeURIComponent(tituloProduto)}`}>
+        Quantas caixas preciso? Calcular com este porcelanato →
+      </a>
+    </p>
+
     <div class="cta-block">
       <AddToCart slug={produto.slug} m2Caixa={a.m2_caixa} preco={a.preco} />
       <WhatsappCta termoAlvo={tituloProduto} numero={whatsapp} />
