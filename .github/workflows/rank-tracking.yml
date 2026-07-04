@@ -29,6 +29,12 @@ jobs:
         run: node site-goiania/src/scripts/gsc-miner.mjs || echo "gsc-miner skipped"
         env:
           GSC_SA_KEY: ${{ secrets.GSC_SA_KEY }}
+      # Core Web Vitals (PageSpeed Insights, grátis) — no-op até o secret PSI_API_KEY
+      # existir (anônimo dá 429; chave grátis no console do Google). Non-fatal por design.
+      - if: always()
+        run: node site-goiania/src/scripts/cwv-psi.mjs || echo "cwv skipped"
+        env:
+          PSI_API_KEY: ${{ secrets.PSI_API_KEY }}
       - if: always()
         run: |
           git config user.name "rank-tracking"
