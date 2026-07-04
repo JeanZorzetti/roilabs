@@ -29,6 +29,26 @@ const AMBIENTE_POR_SLUG = {
     'https://www.biancogres.com.br/media/9488/conversions/ambiente-biancogres-chicago-grafite-satin-80x80-chicago-grafite-ext-80x80-alta-thumb_480p.jpg',
   'porcelanato-persia-beige-biancogres':
     'https://www.biancogres.com.br/media/17118/conversions/ambiente-porcelanato-pulpis-marrone-lux-60x120-persia-beige-satin-100x100-thumb_480p.jpg',
+  // Savane (ciclo 12): só 2/8 com página oficial + dimensão/acabamento batendo
+  // exato; os outros 6 foram descontinuados/renomeados no site (ver handoff).
+  'porcelanato-56x113cm-pietra-di-matera-natural':
+    'https://www.savane.com.br/public/images/products/ambients/pietra-96eca814eb.jpg',
+  'porcelanato-90x90cm-urban-branco-polido':
+    'https://www.savane.com.br/public/images/products/ambients/urban-branco-f5-8504e32fd6.png',
+  // Biancogres (ciclo 12): completando os 12 que faltavam — 5 batem
+  // dimensão+acabamento exatos, os outros 7 não têm página oficial viva
+  // (descontinuados/renomeados) ou têm página mas sem foto de ambiente
+  // (Onix Bianco Lux 60x120: só fotos de textura, ver handoff).
+  'porcelanato-20x120-carvalho-natural':
+    'https://www.biancogres.com.br/media/11027/conversions/ambiente-biancogres-carvalho-natural-e-moove-grafite-rgb-thumb_480p.jpg',
+  'porcelanato-cristallo-quartz-biancogres':
+    'https://www.biancogres.com.br/media/17730/conversions/ambiente-porcelanato-cristallo-quartz-velvet-60x120-thumb_480p.jpg',
+  'porcelanato-chicago-nebbia-biancogres':
+    'https://www.biancogres.com.br/media/17610/conversions/ambiente-porcelanato-chicago-nebbia-100x100-thumb_480p.jpg',
+  'porcelanato-chigaco-grigio-biancogres':
+    'https://www.biancogres.com.br/media/17748/conversions/ambiente-porcelanato-chicago-grigio-satin-100x100-chicago-grigio-ext-100x100-thumb_480p.jpg',
+  'porcelanato-pulpis-grigio-ac-100x100cm-biancogres':
+    'https://www.biancogres.com.br/media/17644/conversions/ambiente-porcelanato-pulpis-grigio-lux-100x100-pulpis-grigio-satin-100x100-thumb_480p.jpg',
 };
 
 const catalog = JSON.parse(readFileSync(CATALOG, 'utf8'));

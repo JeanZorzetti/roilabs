@@ -1,5 +1,47 @@
 # Handoff — site-goiania
 
+## 2026-07-04 — Ciclo 12: acervo de ambiente — 13/30 (era 6/30), handoff pra ciclo 13
+
+> Continuação do ciclo 11 item 5. Seguiu a ordem recomendada: Savane → completar Biancogres → Delta.
+
+### Resultado
+
+| Marca | Ciclo 11 | Ciclo 12 | Faltando |
+|---|---|---|---|
+| **BIANCOGRES** | 6/18 | **11/18** | 7 |
+| **SAVANE** | 0/8 | **2/8** | 6 |
+| **DELTA** | 0/4 | 0/4 (confirmado, não é falha) | 4 |
+
+5 novos matches Biancogres (dimensão+acabamento exatos, foto `ambiente-` específica do tamanho): Carvalho Natural (20x120), Cristallo Quartz Velvet (60x120), Chicago Nebbia (100x100), Chicago Grigio (100x100), Pulpis Grigio (100x100 — slug tem sufixo "-ac", official é "Satin"=Acetinado; catálogo tem o campo `acabamento` como "Mate" pra esse item, inconsistência pré-existente no dado, não travou o match dado nome+dimensão+slug batendo).
+
+2 novos matches Savane (site é SPA — precisou Playwright, WebFetch não renderiza JS): Pietra di Matera (56x113, `savane.com.br/produto/pietra-di-matera-365`), Urban Branco Polido (90x90, `.../urban-branco-polido-480`). Estrutura Savane: 1 foto de ambiente por página em `/public/images/products/ambients/`, sem variação por tamanho (mais simples que Biancogres).
+
+### O que ficou de fora (documentado, não é buraco silencioso)
+
+- **Biancogres — Onix Bianco Lux (60x120 Polido)**: página existe, dimensão bate, mas só tem fotos de textura/peça (`onix-bianco-face-*`), nenhuma com prefixo `ambiente-`. Sem foto disponível, não é erro de busca.
+- **Biancogres — Legado Grigio (20x120), Tivoli Strutturato (120x120), Lux (100x100), Grigio Externo (100x100 e 90x90), Castilla Noce (80x80)**: sem página oficial viva encontrada com esse nome exato. Tivoli só existe como Satin/EXT/Rock(45x90) — nenhum com acabamento "Strutturato". Castilla Noce só aparece na revista de lançamentos 2026 (PDF), página individual ainda não indexada/live.
+- **Savane — Rock Face Matera/Trulli, Pietra di Trulli, Perla Acetinado, Strato Marmo Bege/Grigio**: sem página oficial encontrada (descontinuados ou renomeados — ex. "Perla" virou "Oásis Pérola", produto diferente). Terrazine tem página mas só em 72x72 Acetinado ou 91x91 **Externo** (não Acetinado) — finish não bate, não forçado.
+- **Delta**: confirmado de novo — todas as páginas usam `/files/simulator/` (render genérico) + `/files/faces/` (textura), sem pasta de ambiente real. Mesma conclusão do ciclo 11, não é falha de busca.
+
+### Método (reforça o do ciclo 11)
+
+- **Savane é SPA** (React/Vue) — WebFetch não renderiza, retorna só HTML de template com `{{ }}`. Precisa Playwright (`browser_navigate` + `browser_evaluate` lendo `document.querySelectorAll('img')`). URL de produto: `savane.com.br/produto/<slug>-<id>`; achar via `site:savane.com.br/produto "<nome>"`.
+- **Biancogres tem seletor de tamanho na própria página** (`label.product__sizes__button`) — clicar no tamanho certo antes de ler o `Acabamento`/`M²/Caixa`, porque o valor exibido muda por formato selecionado (ex.: Carvalho Natural mostra Acetinado tanto pra 26x106 quanto 20x120, mas `M²/Caixa` muda e é o sinal mais confiável quando o nome do finish não bate literalmente com o campo do catálogo).
+- **Slugs "-ac-" no catálogo** = abreviação de "Acetinado" (não confiar cegamente no campo `atributos.acabamento`, que às vezes tem uma segunda categorização inconsistente com o nome do produto/slug).
+
+### Próximos passos (ciclo 13, se for ampliar mais)
+
+1. **2ª foto por produto (textura)** — item 4 do ciclo 11 ainda não feito: Biancogres expõe várias fotos `f02`/`f03` por modelo, dá pra popular `imagens[1]`/`imagens[2]` sem nova busca.
+2. **Vídeo por SKU** — decisão do Jean ainda pendente (vídeo genérico de linha rotulado vs. continuar sem vídeo).
+3. Biancogres restantes (7) e Savane restantes (6) provavelmente ficam permanentemente sem foto de ambiente — não há mais pistas de busca não tentadas; só valeria revisitar se os sites forem redesenhados.
+
+### Gotchas (novos)
+
+- **`AMBIENTE_POR_SLUG` em `fetch-ambiente.mjs` agora tem 13 entradas** (6 Biancogres ciclo 11 + 5 Biancogres ciclo 12 + 2 Savane ciclo 12) — script rodado, `13/13 fotos de ambiente` baixadas, `porcelanatos.json` atualizado.
+- **Onix Bianco Lux é o primeiro caso "dimensão bate mas sem foto"** — vale lembrar que confirmar nome+dimensão não garante existir `ambiente-`; sempre checar a lista de imagens antes de adicionar ao mapa.
+
+---
+
 ## 2026-07-04 — Ciclo 11 item 5: acervo de ambiente — PARCIAL, handoff pra ciclo 12
 
 > Objetivo do item: dar ao catálogo (30 produtos, média 1,1 foto/cada) fotos de ambiente decorado + vídeo. Ciclo 11 fechou com 6/30 — este handoff existe pra ciclo 12 ampliar sem repetir descoberta já feita.

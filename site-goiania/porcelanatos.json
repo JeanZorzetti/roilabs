@@ -13,7 +13,10 @@
       "m2_caixa": 1.7,
       "retificado": true,
       "classe_ad": 2
-    }
+    },
+    "imagensAmbiente": [
+      "/img/ambientes/porcelanato-20x120-carvalho-natural.jpg"
+    ]
   },
   {
     "slug": "porcelanato-marmo-perla-biancogres",
@@ -48,7 +51,10 @@
       "m2_caixa": 2.2,
       "retificado": null,
       "classe_ad": 2
-    }
+    },
+    "imagensAmbiente": [
+      "/img/ambientes/porcelanato-cristallo-quartz-biancogres.jpg"
+    ]
   },
   {
     "slug": "porcelanato-legado-grigio-ac-biancogres",
@@ -147,7 +153,10 @@
       "m2_caixa": 3,
       "retificado": true,
       "classe_ad": 2
-    }
+    },
+    "imagensAmbiente": [
+      "/img/ambientes/porcelanato-pulpis-grigio-ac-100x100cm-biancogres.jpg"
+    ]
   },
   {
     "slug": "porcelanato-persia-beige-biancogres",
@@ -182,7 +191,10 @@
       "m2_caixa": 3,
       "retificado": true,
       "classe_ad": 2
-    }
+    },
+    "imagensAmbiente": [
+      "/img/ambientes/porcelanato-chicago-nebbia-biancogres.jpg"
+    ]
   },
   {
     "slug": "porcelanato-chigaco-grigio-biancogres",
@@ -198,7 +210,10 @@
       "m2_caixa": 3,
       "retificado": true,
       "classe_ad": 2
-    }
+    },
+    "imagensAmbiente": [
+      "/img/ambientes/porcelanato-chigaco-grigio-biancogres.jpg"
+    ]
   },
   {
     "slug": "porcelanato-100x100-lux-biancogres",
@@ -371,7 +386,10 @@
       "m2_caixa": 2.43,
       "retificado": true,
       "classe_ad": null
-    }
+    },
+    "imagensAmbiente": [
+      "/img/ambientes/porcelanato-90x90cm-urban-branco-polido.jpg"
+    ]
   },
   {
     "slug": "porcelanato-91x91cm-perla-acetinado",
@@ -403,7 +421,10 @@
       "m2_caixa": 2.5,
       "retificado": null,
       "classe_ad": null
-    }
+    },
+    "imagensAmbiente": [
+      "/img/ambientes/porcelanato-56x113cm-pietra-di-matera-natural.jpg"
+    ]
   },
   {
     "slug": "porcelanato-56x113cm-pietra-di-trulli-natural",
