@@ -1,27 +1,47 @@
 import type { APIRoute } from 'astro';
 import { pages } from '../data/porcelanato';
-import { produtos } from '../data/produtos';
+import { produtos, produtosDaCategoria } from '../data/produtos';
 import { guias } from '../data/guias';
 
 const SITE = 'https://goiania.roilabs.com.br';
 
+const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
 export const GET: APIRoute = () => {
   // Barra final SEMPRE: sem ela o nginx responde 301 (formato directory do Astro) e o
   // Googlebot queima crawl em redirect — foi 46% do rastreamento (GSC 2026-07-03).
-  const urls = [
+  // Extensão image: — porcelanato é compra visual; Google Imagens indexa a partir daqui.
+  const urls: { loc: string; imgs?: string[] }[] = [
     { loc: `${SITE}/` },
     { loc: `${SITE}/porcelanato/` },
     { loc: `${SITE}/obrigado/` },
     { loc: `${SITE}/devolucoes/` },
     { loc: `${SITE}/calculadora/` },
     ...guias.map((g) => ({ loc: `${SITE}/guia/${g.slug}/` })),
-    ...pages.map((p) => ({ loc: `${SITE}/porcelanato/${p.slug}/` })),
-    ...produtos.map((p) => ({ loc: `${SITE}/porcelanato/produto/${p.slug}/` })),
+    ...pages.map((p) => ({
+      loc: `${SITE}/porcelanato/${p.slug}/`,
+      // Fotos da galeria da categoria (mesmas dos produtos — Google deduplica).
+      imgs: produtosDaCategoria(p.slug, p.tipo)
+        .map((x) => x.imagens[0])
+        .filter(Boolean)
+        .slice(0, 5),
+    })),
+    ...produtos.map((p) => ({
+      loc: `${SITE}/porcelanato/produto/${p.slug}/`,
+      imgs: p.imagens,
+    })),
   ];
 
+  const entry = (u: { loc: string; imgs?: string[] }) => {
+    const imgs = (u.imgs ?? [])
+      .map((i) => `<image:image><image:loc>${esc(i)}</image:loc></image:image>`)
+      .join('');
+    return `  <url><loc>${u.loc}</loc>${imgs}</url>`;
+  };
+
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${urls.map((u) => `  <url><loc>${u.loc}</loc></url>`).join('\n')}
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+${urls.map(entry).join('\n')}
 </urlset>`;
 
   return new Response(xml, { headers: { 'Content-Type': 'application/xml; charset=utf-8' } });
