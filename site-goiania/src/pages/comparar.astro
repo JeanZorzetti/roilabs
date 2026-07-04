@@ -1,0 +1,359 @@
+---
+// Comparador de porcelanatos lado a lado — porcelanato é compra comparativa e
+// nenhum player local tem ferramenta. Client-side sobre o catálogo do build
+// (mesmo playbook da calculadora: ferramenta → lead com contexto). Deep-link
+// compartilhável ?p=slug-a,slug-b (a Duda manda a comparação pronta no WhatsApp).
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Faq from '../components/Faq.astro';
+import WhatsappCta from '../components/WhatsappCta.astro';
+import { produtos, tituloProduto, formatPreco } from '../data/produtos';
+import { guias } from '../data/guias';
+
+const SITE = Astro.site?.href.replace(/\/$/, '') ?? 'https://goiania.roilabs.com.br';
+const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
+const appUrl = import.meta.env.PUBLIC_APP_URL ?? 'https://app.roilabs.com.br';
+
+// Payload do comparador: só o que a tabela renderiza. Ordenado por título pro select.
+const cmpData = produtos
+  .map((p) => ({
+    slug: p.slug,
+    titulo: tituloProduto(p),
+    img: p.imagens[0] ?? '',
+    preco: p.atributos.preco,
+    dimensao: p.atributos.dimensao,
+    acabamento: p.atributos.acabamento,
+    m2caixa: p.atributos.m2_caixa,
+    retificado: p.atributos.retificado,
+    classeAd: p.atributos.classe_ad,
+  }))
+  .sort((a, b) => a.titulo.localeCompare(b.titulo, 'pt-BR'));
+
+const faq = [
+  {
+    q: 'O que comparar entre dois porcelanatos além do preço?',
+    a: 'Quatro pontos técnicos: acabamento (polido brilha e risca mais fácil; acetinado disfarça uso), classe de abrasão AD (3 ou mais para áreas de passagem), retificado (borda reta permite junta fina) e m² por caixa (muda o custo real da compra, que é sempre por caixa fechada).',
+  },
+  {
+    q: 'Preço por m² ou preço por caixa: qual usar na comparação?',
+    a: 'Os dois. O preço por m² compara o material; o preço por caixa é o que você paga de fato, porque a venda é por caixa fechada. Um porcelanato mais barato por m² com caixa de 2,5 m² pode custar mais na compra do que outro com caixa de 1,5 m².',
+  },
+  {
+    q: 'Porcelanato retificado vale a diferença de preço?',
+    a: 'Para pisos amplos e visual contínuo, sim: a borda retificada permite junta de 1–2 mm e o piso parece uma peça só. Em áreas pequenas ou com muitos recortes, o não retificado com junta de 3–5 mm cumpre bem e costuma custar menos.',
+  },
+  {
+    q: 'Posso combinar dois porcelanatos diferentes na mesma obra?',
+    a: 'Sim, é comum: um para área seca (sala/quartos) e outro antiderrapante para áreas molhadas ou externas. Compare os dois aqui e confira se as dimensões conversam entre si — transições entre formatos muito diferentes pedem mais recorte.',
+  },
+];
+
+const jsonLdNodes = [
+  {
+    '@type': 'FAQPage',
+    mainEntity: faq.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  },
+  {
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Início', item: SITE },
+      { '@type': 'ListItem', position: 2, name: 'Comparar porcelanatos', item: `${SITE}/comparar/` },
+    ],
+  },
+];
+---
+
+<Base
+  title="Comparar porcelanatos lado a lado: preço, acabamento e ficha técnica — Goiânia | ROI Labs"
+  description="Compare 2 ou 3 porcelanatos do catálogo de Goiânia lado a lado: preço por m² e por caixa, dimensão, acabamento, retificado e classe AD. Grátis, na hora."
+  ogImage="/open-graph/comparar.png"
+  jsonLdNodes={jsonLdNodes}
+>
+  <Header />
+
+  <main>
+    <section class="pseo-hero">
+      <div class="wrap">
+        <nav class="breadcrumb" aria-label="Localização">
+          <a href="/">Início</a>
+          <span class="breadcrumb__sep" aria-hidden="true">›</span>
+          <span aria-current="page">Comparar</span>
+        </nav>
+
+        <div class="pseo-hero__eyebrow">
+          <span class="eyebrow">Goiânia · Ferramenta grátis</span>
+        </div>
+        <h1>Compare porcelanatos lado a lado</h1>
+        <p class="pseo-hero__intro">
+          Escolha 2 ou 3 modelos do catálogo do polo de Goiânia e compare o que decide a
+          compra: preço por m² e por caixa fechada, dimensão, acabamento, retificado e
+          classe de abrasão. A comparação vira um link — compartilhe no WhatsApp.
+        </p>
+      </div>
+    </section>
+
+    <!-- Comparador -->
+    <section class="section section--light">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.6rem;">Escolha os porcelanatos</h2>
+
+        <div class="cmp" id="cmp" data-app-url={appUrl}>
+          <div class="cmp__pickers">
+            {[1, 2, 3].map((n) => (
+              <label class="cmp__picker">
+                {`Porcelanato ${n}`}{n === 3 && <span class="cmp__hint"> (opcional)</span>}
+                <select class="cmp__select" aria-label={`Escolher porcelanato ${n}`}>
+                  <option value="">— escolher —</option>
+                  {cmpData.map((p) => (
+                    <option value={p.slug}>{`${p.titulo} · ${p.dimensao} · ${formatPreco(p.preco)}/m²`}</option>
+                  ))}
+                </select>
+              </label>
+            ))}
+          </div>
+
+          <div class="cmp__table-wrap" aria-live="polite"></div>
+
+          <!-- Revelado com 2+ produtos na tela: a comparação vira lead com contexto
+               (mesmo opt-in da calculadora / orcamento_lead). -->
+          <form class="calc-lead cmp-lead" hidden data-app-url={appUrl}>
+            <p class="calc-lead__title">
+              Na dúvida entre eles? Deixe seu WhatsApp que nosso especialista compara
+              pelo seu ambiente e manda o orçamento dos dois — sem compromisso.
+            </p>
+            <div class="calc-lead__row">
+              <input type="tel" name="cl-whatsapp" maxlength="40" inputmode="tel" placeholder="(62) 9xxxx-xxxx" required aria-label="Seu WhatsApp" />
+              <button type="submit" class="btn btn--primary">Quero ajuda pra decidir</button>
+            </div>
+            <label class="calc-lead__consent">
+              <input type="checkbox" required />
+              <span>Autorizo contato conforme a <a href="https://roilabs.com.br/privacidade" target="_blank" rel="noopener" style="color:var(--hivis)">Política de Privacidade</a>. (LGPD)</span>
+            </label>
+            <p class="calc-lead__msg" aria-live="polite"></p>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- O que comparar (AEO) -->
+    <section class="section">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.6rem;">
+          O que olhar ao comparar dois porcelanatos
+        </h2>
+        <ul class="guide-list">
+          <li><strong>Preço por caixa, não só por m²:</strong> a compra é por caixa fechada — multiplique o R$/m² pelos m² da caixa para ver o desembolso real.</li>
+          <li><strong>Acabamento pelo ambiente:</strong> polido brilha e exige mais manutenção; acetinado e natural disfarçam o uso diário; externo pede antiderrapante.</li>
+          <li><strong>Classe de abrasão (AD):</strong> 3 ou mais para corredores, cozinha e áreas de passagem; 4–5 para uso intenso ou comercial.</li>
+          <li><strong>Retificado × bold:</strong> retificado permite junta fina (1–2 mm) e visual contínuo; não retificado pede junta maior e costuma custar menos.</li>
+          <li><strong>m² por caixa e recorte:</strong> peças grandes rendem caixas maiores, mas geram mais perda em ambientes recortados — ajuste a folga na <a href="/calculadora/">calculadora</a>.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section section--light">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.8rem;">Perguntas frequentes</h2>
+        <Faq items={faq} />
+      </div>
+    </section>
+
+    <!-- CTA duplo -->
+    <section class="section" id="contato">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:0.8rem;">
+          Decidiu? Veja o preço real e feche em Goiânia
+        </h2>
+        <p style="color:var(--d-muted);margin-bottom:2rem;max-width:54ch;">
+          Catálogo com fornecedores exclusivos do polo de Goiânia, preço por m² e
+          pronta-entrega — ou mande a comparação no WhatsApp e receba o orçamento.
+        </p>
+        <div class="cta-block" style="display:flex;gap:1rem;flex-wrap:wrap;align-items:center;">
+          <a class="btn btn--primary" href="/porcelanato/">Ver catálogo de porcelanato</a>
+          <WhatsappCta termoAlvo="porcelanato (estou comparando modelos)" numero={whatsapp} />
+        </div>
+      </div>
+    </section>
+
+    <!-- Guias de decisão -->
+    <section class="section section--light">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.3rem,2.2vw,1.8rem);margin-bottom:1.4rem;">Ainda escolhendo o porcelanato?</h2>
+        <div class="related-grid">
+          {guias.map((g) => (
+            <a href={`/guia/${g.slug}/`} class="related-card">{g.titulo}</a>
+          ))}
+          <a href="/calculadora/" class="related-card">Calculadora de caixas (m² → caixas)</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Base>
+
+<script type="application/json" id="cmp-data" set:html={JSON.stringify(cmpData)} />
+
+<style>
+  .cmp { display: grid; gap: 1.4rem; }
+  .cmp__pickers { display: flex; gap: 1.2rem; flex-wrap: wrap; }
+  .cmp__picker { display: grid; gap: 0.3rem; font-size: 0.85rem; opacity: 0.9; flex: 1 1 16rem; max-width: 24rem; }
+  .cmp__hint { opacity: 0.65; }
+  .cmp__select {
+    padding: 0.6rem 0.65rem; border-radius: 8px; font: inherit; width: 100%;
+    border: 1px solid color-mix(in srgb, currentColor 28%, transparent);
+    background: color-mix(in srgb, currentColor 6%, transparent); color: inherit;
+  }
+  /* Micro-form de lead: mesmas classes/visual da calculadora (estilos são scoped lá). */
+  .calc-lead { display: grid; gap: 0.55rem; padding: 0.9rem 1rem; border: 1px dashed color-mix(in srgb, currentColor 35%, transparent); border-radius: 10px; max-width: 420px; }
+  .calc-lead__title { font-size: 0.88rem; margin: 0; }
+  .calc-lead__row { display: flex; gap: 0.5rem; }
+  .calc-lead__row input { flex: 1; min-width: 0; padding: 0.6rem 0.7rem; border: 1px solid color-mix(in srgb, currentColor 28%, transparent); border-radius: 6px; font: inherit; background: color-mix(in srgb, currentColor 6%, transparent); color: inherit; }
+  .calc-lead__consent { display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.78rem; opacity: 0.85; cursor: pointer; }
+  .calc-lead__consent input { margin-top: 0.15rem; }
+  .calc-lead__msg { font-size: 0.82rem; color: #16a34a; margin: 0; min-height: 1.1em; }
+</style>
+
+<style is:global>
+  /* Tabela criada via JS → sem atributo de escopo Astro (mesmo gotcha da calculadora). */
+  .cmp__table-wrap { overflow-x: auto; }
+  .cmp__table { width: 100%; border-collapse: collapse; font-size: 0.92rem; min-width: 34rem; }
+  .cmp__table th, .cmp__table td { padding: 0.6rem 0.6rem; text-align: left; border-bottom: 1px solid color-mix(in srgb, currentColor 14%, transparent); vertical-align: top; }
+  .cmp__table thead th { font-size: 0.95rem; }
+  .cmp__table tbody th { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; opacity: 0.7; font-weight: 600; white-space: nowrap; }
+  .cmp__table img { width: 110px; height: 110px; object-fit: cover; border-radius: 8px; display: block; }
+  .cmp__best { display: inline-block; margin-left: 0.4rem; padding: 0.1rem 0.45rem; border-radius: 999px; background: var(--hivis); color: #14171d; font-size: 0.68rem; font-weight: 700; vertical-align: middle; white-space: nowrap; }
+  .cmp__table a { color: var(--hivis-deep); }
+</style>
+
+<script>
+  // Não importar de data/produtos aqui: puxaria o porcelanatos.json inteiro pro
+  // bundle do client — os dados já vêm embutidos no #cmp-data.
+  const formatPreco = (v: number) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+  type Cmp = {
+    slug: string; titulo: string; img: string; preco: number; dimensao: string;
+    acabamento: string; m2caixa: number; retificado: boolean | null; classeAd: number | null;
+  };
+  const data: Cmp[] = JSON.parse(document.getElementById('cmp-data')!.textContent!);
+  const bySlug = new Map(data.map((p) => [p.slug, p]));
+
+  const root = document.getElementById('cmp')!;
+  const selects = [...root.querySelectorAll<HTMLSelectElement>('.cmp__select')];
+  const wrap = root.querySelector<HTMLElement>('.cmp__table-wrap')!;
+  const leadForm = root.querySelector<HTMLFormElement>('.cmp-lead')!;
+  const leadInput = leadForm.querySelector<HTMLInputElement>('input[name="cl-whatsapp"]')!;
+  const leadMsg = leadForm.querySelector<HTMLElement>('.calc-lead__msg')!;
+
+  const fmtM2 = (n: number) => n.toFixed(2).replace('.', ',');
+  let atuais: Cmp[] = [];
+
+  function render() {
+    atuais = selects.map((s) => bySlug.get(s.value)).filter((p): p is Cmp => !!p);
+    wrap.textContent = '';
+    if (atuais.length < 2) return;
+
+    // Comparação compartilhável: a URL sempre reflete a seleção atual.
+    history.replaceState(null, '', `?p=${atuais.map((p) => p.slug).join(',')}`);
+
+    const menorM2 = Math.min(...atuais.map((p) => p.preco));
+    const menorCx = Math.min(...atuais.map((p) => p.preco * p.m2caixa));
+
+    const table = document.createElement('table');
+    table.className = 'cmp__table';
+
+    const linhas: [string, (p: Cmp) => (string | Node)[]][] = [
+      ['Foto', (p) => {
+        if (!p.img) return ['—'];
+        const img = document.createElement('img');
+        img.src = p.img; img.alt = p.titulo; img.loading = 'lazy';
+        return [img];
+      }],
+      ['Preço/m²', (p) => [`${formatPreco(p.preco)}`, ...(p.preco === menorM2 ? [best()] : [])]],
+      ['Preço/caixa', (p) => [`${formatPreco(p.preco * p.m2caixa)}`, ...(p.preco * p.m2caixa === menorCx ? [best()] : [])]],
+      ['Dimensão', (p) => [p.dimensao]],
+      ['Acabamento', (p) => [p.acabamento]],
+      ['m²/caixa', (p) => [`${fmtM2(p.m2caixa)} m²`]],
+      ['Retificado', (p) => [p.retificado === null ? '—' : p.retificado ? 'Sim' : 'Não']],
+      ['Classe AD', (p) => [p.classeAd === null ? '—' : String(p.classeAd)]],
+      ['', (p) => {
+        const ver = document.createElement('a');
+        ver.href = `/porcelanato/produto/${p.slug}/`; ver.textContent = 'ver produto →';
+        const calc = document.createElement('a');
+        calc.href = `/calculadora/?m2caixa=${p.m2caixa}&produto=${p.slug}&nome=${encodeURIComponent(p.titulo)}`;
+        calc.textContent = 'calcular caixas →';
+        const sep = document.createElement('span');
+        sep.textContent = ' · ';
+        return [ver, sep, calc];
+      }],
+    ];
+
+    function best() {
+      const b = document.createElement('span');
+      b.className = 'cmp__best'; b.textContent = 'menor preço';
+      return b;
+    }
+
+    const thead = table.createTHead().insertRow();
+    thead.appendChild(document.createElement('th'));
+    for (const p of atuais) {
+      const th = document.createElement('th');
+      th.textContent = p.titulo;
+      thead.appendChild(th);
+    }
+
+    const tbody = table.createTBody();
+    for (const [nome, valor] of linhas) {
+      const tr = tbody.insertRow();
+      const th = document.createElement('th');
+      th.scope = 'row'; th.textContent = nome;
+      tr.appendChild(th);
+      for (const p of atuais) tr.insertCell().append(...valor(p));
+    }
+
+    wrap.appendChild(table);
+    leadForm.hidden = false; // revelado, fica — não some enquanto o usuário troca a seleção
+    (window as any).himetrica?.track('comparador', { produtos: atuais.map((p) => p.slug).join(',') });
+  }
+
+  selects.forEach((s) => s.addEventListener('change', render));
+
+  // Deep-link ?p=slug-a,slug-b(,slug-c) — só slugs válidos do catálogo entram.
+  const qsSlugs = (new URLSearchParams(location.search).get('p') ?? '')
+    .split(',')
+    .filter((s) => bySlug.has(s))
+    .slice(0, 3);
+  qsSlugs.forEach((slug, i) => { selects[i].value = slug; });
+  if (qsSlugs.length >= 2) render();
+
+  // Comparação → lead: mesmo POST fire-and-forget da calculadora.
+  leadForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!leadForm.checkValidity()) { leadForm.reportValidity(); return; }
+    const appUrl = leadForm.dataset.appUrl || 'https://app.roilabs.com.br';
+    const nomes = atuais.map((p) => p.titulo).join(' × ');
+    fetch(`${appUrl}/api/leads-consumidor`, {
+      method: 'POST',
+      body: new URLSearchParams({
+        nome: 'Comparador de porcelanatos',
+        whatsapp: leadInput.value.trim(),
+        consent: '1',
+        produto: nomes ? `Comparando: ${nomes}` : 'Comparador',
+        pagina: '/comparar',
+        mensagem: `Comparou ${nomes || 'porcelanatos'} e pediu ajuda pra decidir. Comparação: ${location.origin}/comparar/?p=${atuais.map((p) => p.slug).join(',')}`,
+        origem: localStorage.getItem('rlft') ?? '',
+      }),
+      keepalive: true,
+    }).catch(() => {});
+    (window as any).himetrica?.track('comparador_lead', { produtos: atuais.map((p) => p.slug).join(',') });
+    leadMsg.textContent = 'Recebido! Nosso especialista te chama em até 24h úteis.';
+    (leadForm.querySelector('.calc-lead__row') as HTMLElement).hidden = true;
+    (leadForm.querySelector('.calc-lead__consent') as HTMLElement).hidden = true;
+  });
+</script>

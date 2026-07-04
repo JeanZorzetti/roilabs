@@ -41,6 +41,12 @@ export const GET: APIRoute = () => {
       k: norm('calculadora quantas caixas m2 metragem quanto porcelanato preciso calcular'),
     },
     {
+      t: 'Comparador de porcelanatos (lado a lado)',
+      s: 'Ferramenta',
+      u: '/comparar/',
+      k: norm('comparar comparador comparacao diferenca entre porcelanatos qual melhor preco lado a lado'),
+    },
+    {
       t: 'Como funciona — quem somos, entrega e pagamento',
       s: 'Institucional',
       u: '/sobre/',

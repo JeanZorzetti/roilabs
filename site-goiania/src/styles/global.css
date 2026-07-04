@@ -272,6 +272,17 @@ a {
   color: var(--d-muted);
 }
 
+/* Captação B2B no footer (fornecedor navegando o catálogo → candidatura). */
+.site-footer__b2b {
+  flex-basis: 100%;
+  font-size: 0.85rem;
+  color: var(--d-muted);
+}
+
+.site-footer__b2b a {
+  color: var(--hivis);
+}
+
 /* ---------- FAQ (accordion nativo) ---------- */
 .faq {
   border-top: 1px solid var(--d-line);

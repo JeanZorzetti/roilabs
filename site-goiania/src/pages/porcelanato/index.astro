@@ -16,8 +16,27 @@ const byTipo = pages.reduce<Record<string, typeof pages>>((acc, p) => {
   return acc;
 }, {});
 
-// Hub: breadcrumb + ItemList das páginas de categoria da malha.
+// Hub: breadcrumb + ItemList das páginas de categoria da malha + Product com
+// AggregateOffer do catálogo inteiro (faixa real de R$/m² computada no build,
+// mesma mecânica do guia quanto-custa) — é a página que disputa a âncora
+// "porcelanato goiânia" e ganha faixa de preço no rich result.
+const precos = produtos.map((p) => p.atributos.preco).filter((v) => v > 0);
 const jsonLdNodes = [
+  {
+    '@type': 'Product',
+    name: 'Porcelanato em Goiânia',
+    description:
+      'Catálogo de porcelanato no polo de Goiânia: amadeirado, marmorizado, acetinado, polido e antiderrapante, com preço por m² e venda por caixa fechada.',
+    brand: { '@type': 'Brand', name: 'ROI Labs — Polo Goiânia' },
+    offers: {
+      '@type': 'AggregateOffer',
+      priceCurrency: 'BRL',
+      lowPrice: Math.min(...precos),
+      highPrice: Math.max(...precos),
+      offerCount: precos.length,
+      url: `${SITE}/porcelanato/`,
+    },
+  },
   {
     '@type': 'BreadcrumbList',
     itemListElement: [

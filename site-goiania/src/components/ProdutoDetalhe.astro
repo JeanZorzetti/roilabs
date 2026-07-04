@@ -56,6 +56,10 @@ const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
       <a href={`/calculadora/?m2caixa=${a.m2_caixa}&produto=${produto.slug}&nome=${encodeURIComponent(tituloProduto)}`}>
         Quantas caixas preciso? Calcular com este porcelanato →
       </a>
+      <br />
+      <a href={`/comparar/?p=${produto.slug}`}>
+        Na dúvida? Comparar com outro porcelanato →
+      </a>
     </p>
 
     <div class="cta-block">

@@ -35,8 +35,9 @@ import Footer from '../components/Footer.astro';
       </div>
 
       <div style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin-top:1.5rem;">
+        <a class="btn btn--primary thanks-acompanhar" hidden href="/pedido/">Acompanhar pedido</a>
         <a class="btn btn--ghost" href="/porcelanato/">Ver mais porcelanatos</a>
-        <a class="btn btn--primary" href="/">Início</a>
+        <a class="btn btn--primary thanks-inicio" href="/">Início</a>
       </div>
     </div>
   </main>
@@ -86,6 +87,15 @@ import Footer from '../components/Footer.astro';
     box.querySelector<HTMLElement>('.thanks-pedido__title')!.textContent = info.title;
     box.querySelector<HTMLElement>('.thanks-pedido__msg')!.textContent = info.msg;
     box.querySelector<HTMLElement>('.thanks-pedido__ref')!.textContent = `Pedido #${pedido}`;
+
+    // Tracking link: the order id is the capability token of /pedido/?t= (also sent
+    // in the confirmation e-mail). Demote "Início" so this is the primary action.
+    const track = document.querySelector<HTMLAnchorElement>('.thanks-acompanhar')!;
+    track.href = `/pedido/?t=${encodeURIComponent(pedido)}`;
+    track.hidden = false;
+    const inicio = document.querySelector<HTMLElement>('.thanks-inicio')!;
+    inicio.classList.remove('btn--primary');
+    inicio.classList.add('btn--ghost');
 
     // On rejection the cart stays; otherwise clear it so a refresh doesn't re-buy.
     if (status === 'approved' || status === 'pending' || status === 'in_process') {

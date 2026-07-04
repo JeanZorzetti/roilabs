@@ -15,11 +15,28 @@ const { page, site } = Astro.props;
 export function buildJsonLdNodes(page: PorcelanatoPage, site: string): Record<string, unknown>[] {
   const url = `${site}/porcelanato/${page.slug}/`;
 
+  // AggregateOffer da categoria: faixa de R$/m² computada do catálogo real no build
+  // (mesma mecânica do guia quanto-custa — atualiza sozinha a cada publish). Sem ele o
+  // Product da malha fica sem offers (warning no GSC) e a categoria não mostra faixa
+  // de preço no rich result. lowPrice/highPrice na mesma unidade do produto: R$/m².
+  const todos = produtosDaCategoria(page.slug, page.tipo).filter((p) => p.atributos.preco > 0);
+  const precos = todos.map((p) => p.atributos.preco);
+
   const product: Record<string, unknown> = {
     '@type': 'Product',
     name: page.termoAlvo,
     description: page.intro,
     brand: { '@type': 'Brand', name: 'ROI Labs — Polo Goiânia' },
+    ...(precos.length > 0 && {
+      offers: {
+        '@type': 'AggregateOffer',
+        priceCurrency: 'BRL',
+        lowPrice: Math.min(...precos),
+        highPrice: Math.max(...precos),
+        offerCount: precos.length,
+        url,
+      },
+    }),
     additionalProperty: [] as Record<string, unknown>[],
   };
 

@@ -1,0 +1,194 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+// Acompanhamento público do pedido via ?t=<id> (o cuid é o token — o cliente o recebe
+// no back_url do Mercado Pago e no e-mail de confirmação). Fetch em runtime no app
+// (mesmo padrão do mapa de cadeiras do institucional): reflete o admin sem rebuild.
+// noindex: página utilitária de query param, fora do sitemap por design.
+const appUrl = import.meta.env.PUBLIC_APP_URL ?? 'https://app.roilabs.com.br';
+const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
+---
+
+<Base
+  title="Acompanhar pedido — Porcelanato Goiânia | ROI Labs"
+  description="Acompanhe o status do seu pedido de porcelanato em Goiânia: pagamento, confirmação com o fornecedor e entrega."
+  ogImage="/open-graph/pedido.png"
+  noindex
+>
+  <Header />
+
+  <main class="section" data-app-url={appUrl} data-whatsapp={whatsapp}>
+    <div class="wrap ped-wrap">
+      <!-- Estado: sem token / não encontrado -->
+      <div class="ped-miss" hidden>
+        <span class="eyebrow">Pedido</span>
+        <h1 style="font-size:clamp(1.8rem,3.5vw,2.4rem);margin:0.4rem 0 1rem;">Pedido não encontrado</h1>
+        <p style="color:var(--d-muted);margin-bottom:2rem;">
+          O link pode ter vindo incompleto. Confira o link do seu e-mail de confirmação
+          ou chame no WhatsApp com o seu nome que localizamos o pedido na hora.
+        </p>
+        <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+          <a class="btn btn--primary" href="/porcelanato/">Ver porcelanatos</a>
+          <a class="btn btn--ghost" data-whats-miss href={`https://wa.me/${whatsapp}?text=${encodeURIComponent('Olá! Quero saber o status do meu pedido de porcelanato.')}`}>Falar no WhatsApp</a>
+        </div>
+      </div>
+
+      <!-- Estado: carregando -->
+      <p class="ped-loading" style="color:var(--d-muted);">Carregando o status do pedido…</p>
+
+      <!-- Documento de status -->
+      <article class="ped" hidden aria-label="Status do pedido">
+        <span class="eyebrow">Acompanhar pedido</span>
+        <h1 class="ped__title" style="font-size:clamp(1.8rem,3.5vw,2.4rem);margin:0.4rem 0 0.3rem;">—</h1>
+        <p class="ped__ref" style="font-family:monospace;color:var(--d-muted);font-size:0.85rem;margin:0 0 1.4rem;"></p>
+
+        <ol class="ped__steps">
+          <li data-step="pagamento"><strong>Pagamento</strong><span>Pix ou cartão via Mercado Pago</span></li>
+          <li data-step="reserva"><strong>Reserva confirmada</strong><span>fornecedor do polo confirma o lote em até 24h</span></li>
+          <li data-step="entrega"><strong>Entrega ou retirada</strong><span class="ped__entrega">prazo típico: 2–7 dias úteis</span></li>
+        </ol>
+
+        <p class="ped__msg" style="color:var(--d-muted);margin:1.4rem 0 0;"></p>
+
+        <div class="ped__itens-box">
+          <div class="ped__itens-title">Itens do pedido</div>
+          <ul class="ped__itens"></ul>
+        </div>
+
+        <div style="display:flex;gap:0.8rem;flex-wrap:wrap;margin-top:1.6rem;">
+          <a class="btn btn--primary" data-whats href={`https://wa.me/${whatsapp}`}>Falar sobre este pedido no WhatsApp</a>
+          <a class="btn btn--ghost" href="/porcelanato/">Ver mais porcelanatos</a>
+        </div>
+      </article>
+    </div>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .ped-wrap { max-width: 760px; }
+  .ped { border: 1px solid var(--d-line); border-radius: 12px; background: var(--ink-2); padding: clamp(1.2rem, 3vw, 2.2rem); }
+  .ped__steps { list-style: none; margin: 1.2rem 0 0; padding: 0; display: grid; gap: 0; counter-reset: step; }
+  .ped__steps li { position: relative; padding: 0 0 1.1rem 2.3rem; counter-increment: step; }
+  .ped__steps li::before {
+    content: counter(step); position: absolute; left: 0; top: 0;
+    width: 1.6rem; height: 1.6rem; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.78rem; font-weight: 700;
+    background: var(--ink); color: var(--d-muted); border: 1px solid var(--d-line-strong);
+  }
+  .ped__steps li:not(:last-child)::after {
+    content: ''; position: absolute; left: 0.78rem; top: 1.75rem; bottom: 0.15rem;
+    width: 1px; background: var(--d-line-strong);
+  }
+  .ped__steps li strong { display: block; color: var(--d-muted); font-size: 0.95rem; }
+  .ped__steps li span { font-size: 0.8rem; color: var(--d-muted); }
+  .ped__steps li.done::before { content: '✓'; background: var(--hivis); color: #14171d; border-color: var(--hivis); }
+  .ped__steps li.done strong, .ped__steps li.atual strong { color: var(--d-text); }
+  .ped__steps li.atual::before { border-color: var(--hivis); color: var(--hivis); }
+  .ped__itens-box { margin-top: 1.4rem; padding-top: 1.2rem; border-top: 1px dashed var(--d-line-strong); }
+  .ped__itens-title { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--d-muted); margin-bottom: 0.5rem; }
+  .ped__itens { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.3rem; }
+  .ped__itens li { font-size: 0.9rem; color: var(--d-text); }
+  .ped__itens li em { color: var(--d-muted); font-style: normal; }
+</style>
+
+<script>
+  const main = document.querySelector<HTMLElement>('main')!;
+  const appUrl = main.dataset.appUrl!;
+  const whatsapp = main.dataset.whatsapp!;
+  const token = new URLSearchParams(location.search).get('t') || '';
+
+  const miss = document.querySelector<HTMLElement>('.ped-miss')!;
+  const loading = document.querySelector<HTMLElement>('.ped-loading')!;
+  const doc = document.querySelector<HTMLElement>('.ped')!;
+
+  function showMiss() {
+    loading.hidden = true;
+    doc.hidden = true;
+    miss.hidden = false;
+  }
+
+  type Status = {
+    statusPagamento: string;
+    statusFulfillment: string;
+    entrega: string;
+    createdAt: string;
+    itens: { slug: string; caixas: number }[];
+  };
+
+  function render(p: Status) {
+    // (pagamento, fulfillment) → título + mensagem + passo atual (1|2|3; 0 = reembolsado)
+    const reembolsado = p.statusPagamento === 'reembolsado';
+    const pago = p.statusPagamento === 'pago';
+    const confirmado = pago && p.statusFulfillment === 'confirmado';
+    const state = reembolsado
+      ? {
+          titulo: 'Pedido reembolsado',
+          msg: 'Este pedido foi reembolsado integralmente. Qualquer dúvida sobre o estorno, chame a gente no WhatsApp.',
+          passo: 0,
+        }
+      : confirmado
+        ? {
+            titulo: 'Confirmado com o fornecedor ✓',
+            msg:
+              p.entrega === 'retirada'
+                ? 'Lote confirmado. Combinamos a retirada pelo WhatsApp informado no pedido.'
+                : 'Lote confirmado. A entrega segue o prazo típico de 2–7 dias úteis — combinamos os detalhes pelo WhatsApp informado no pedido.',
+            passo: 3,
+          }
+        : pago
+          ? {
+              titulo: 'Pagamento aprovado — reserva em confirmação',
+              msg: 'Seu pagamento foi aprovado e o pedido entrou como reserva: o fornecedor do polo confirma a disponibilidade do lote em até 24h. Se faltar, o valor é reembolsado integralmente.',
+              passo: 2,
+            }
+          : {
+              titulo: 'Aguardando pagamento',
+              msg: 'Ainda não recebemos a confirmação do pagamento (o Pix pode levar alguns minutos). Se o pagamento não foi concluído, chame no WhatsApp que enviamos um novo link.',
+              passo: 1,
+            };
+
+    doc.querySelector<HTMLElement>('.ped__title')!.textContent = state.titulo;
+    const data = new Date(p.createdAt).toLocaleDateString('pt-BR');
+    doc.querySelector<HTMLElement>('.ped__ref')!.textContent = `Pedido #${token.slice(-8)} · feito em ${data}`;
+    doc.querySelector<HTMLElement>('.ped__msg')!.textContent = state.msg;
+    if (p.entrega === 'retirada') {
+      doc.querySelector<HTMLElement>('.ped__entrega')!.textContent = 'retirada grátis no fornecedor';
+    }
+
+    doc.querySelectorAll<HTMLElement>('.ped__steps li').forEach((li, i) => {
+      li.classList.toggle('done', state.passo > i + 1 || (state.passo === 3 && i === 2));
+      li.classList.toggle('atual', state.passo === i + 1 && state.passo !== 3);
+    });
+
+    const ul = doc.querySelector<HTMLElement>('.ped__itens')!;
+    for (const item of p.itens) {
+      const li = document.createElement('li');
+      const nome = item.slug.replace(/-/g, ' ');
+      li.textContent = `${nome} `;
+      const em = document.createElement('em');
+      em.textContent = `— ${item.caixas} caixa(s)`;
+      li.appendChild(em);
+      ul.appendChild(li);
+    }
+
+    const waMsg = encodeURIComponent(`Olá! Sobre o meu pedido #${token.slice(-8)} de porcelanato: `);
+    doc.querySelector<HTMLAnchorElement>('[data-whats]')!.href = `https://wa.me/${whatsapp}?text=${waMsg}`;
+
+    loading.hidden = true;
+    doc.hidden = false;
+  }
+
+  if (!token) {
+    showMiss();
+  } else {
+    fetch(`${appUrl}/api/pedidos/${encodeURIComponent(token)}/status`)
+      .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
+      .then(render)
+      .catch(showMiss);
+  }
+</script>

@@ -15,6 +15,20 @@ const pages: Record<string, { title: string; description: string }> = {
     title: 'Calculadora de porcelanato: quantos m² e caixas comprar?',
     description: 'Informe os ambientes, a folga de corte e os m² por caixa — resultado em caixas fechadas, na hora.',
   },
+  comparar: {
+    title: 'Compare porcelanatos lado a lado',
+    description: 'Preço por m² e por caixa, dimensão, acabamento, retificado e classe AD — 2 ou 3 modelos do catálogo de Goiânia.',
+  },
+  // Páginas utilitárias (noindex) que rodam em link compartilhado no WhatsApp —
+  // o preview rico importa mesmo sem SEO.
+  orcamento: {
+    title: 'Seu orçamento de porcelanato — Goiânia',
+    description: 'Itens, metragem e valores, com validade de 30 dias. Pagamento online (Pix ou cartão), retirada grátis ou entrega.',
+  },
+  pedido: {
+    title: 'Acompanhe seu pedido de porcelanato',
+    description: 'Status do pagamento, confirmação com o fornecedor do polo e prazo de entrega ou retirada — em tempo real.',
+  },
   ...Object.fromEntries(
     malha.map((p) => [`porcelanato/${p.slug}`, { title: p.titulo, description: p.intro.slice(0, 140) }]),
   ),
