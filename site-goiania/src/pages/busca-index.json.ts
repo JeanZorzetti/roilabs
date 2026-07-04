@@ -40,6 +40,12 @@ export const GET: APIRoute = () => {
       u: '/calculadora/',
       k: norm('calculadora quantas caixas m2 metragem quanto porcelanato preciso calcular'),
     },
+    {
+      t: 'Como funciona — quem somos, entrega e pagamento',
+      s: 'Institucional',
+      u: '/sobre/',
+      k: norm('como funciona sobre quem somos entrega prazo frete pagamento pix cartao mercado pago devolucao troca confianca loja'),
+    },
   ];
 
   return new Response(JSON.stringify(entries), {

@@ -1,0 +1,148 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
+
+const SITE = Astro.site?.href.replace(/\/$/, '') ?? 'https://goiania.roilabs.com.br';
+
+// E-E-A-T + confiança de compra: quem vende, como a compra funciona, entrega,
+// pagamento e devolução — o que o Merchant Center e um comprador de high-ticket
+// local esperam encontrar antes de pagar.
+const jsonLdNodes = [
+  {
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Início', item: SITE },
+      { '@type': 'ListItem', position: 2, name: 'Como funciona', item: `${SITE}/sobre/` },
+    ],
+  },
+  {
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'Quem vende o porcelanato em goiania.roilabs.com.br?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'A ROI Labs opera a venda online como Growth Partner de fornecedores do polo de revestimentos de Goiânia. O catálogo é real: cada produto tem ficha técnica, preço e estoque do fornecedor local, e a entrega sai do polo.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Como funciona o pagamento?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'O checkout usa o Mercado Pago (Pix ou cartão). Você também pode fechar por WhatsApp com orçamento formal antes de pagar — o pedido só é confirmado com o fornecedor após o pagamento aprovado.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Qual o prazo e a área de entrega?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Entregamos na Grande Goiânia com prazo de 2 a 7 dias úteis após a confirmação do pagamento. O frete é calculado por CEP no carrinho; retirada no polo pode ser combinada pelo WhatsApp.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Posso devolver ou trocar?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Sim. Arrependimento em até 7 dias corridos após o recebimento com reembolso integral (CDC, art. 49) e defeito de fabricação em até 90 dias, com caixas fechadas e não assentadas. A política completa está em goiania.roilabs.com.br/devolucoes/.',
+        },
+      },
+    ],
+  },
+];
+---
+
+<Base
+  title="Como funciona — quem somos, entrega e pagamento | ROI Labs Goiânia"
+  description="Quem está por trás de goiania.roilabs.com.br: a ROI Labs conecta você aos fornecedores do polo de porcelanato de Goiânia. Veja como funciona a compra, o pagamento via Mercado Pago, a entrega em 2–7 dias úteis e a política de devolução."
+  jsonLdNodes={jsonLdNodes}
+>
+  <Header />
+
+  <main>
+    <section class="section">
+      <div class="wrap" style="max-width:72ch;">
+        <span class="eyebrow">Como funciona</span>
+        <h1 style="font-size:clamp(1.8rem,3.5vw,2.6rem);margin:0.4rem 0 1rem;">
+          Porcelanato do polo de Goiânia, comprado online com segurança
+        </h1>
+        <p style="color:var(--d-muted);margin-bottom:2rem;">
+          Este site é operado pela <strong>ROI Labs</strong>, Growth Partner de fornecedores
+          regionais: nós construímos a venda online e os fornecedores do polo de revestimentos
+          de Goiânia entregam o produto. Você compra direto da fonte, com curadoria, preço de
+          polo e atendimento humano no WhatsApp.
+        </p>
+
+        <h2>1. Escolha com dados reais</h2>
+        <p>
+          Todo produto do <a href="/porcelanato/">catálogo</a> tem ficha técnica completa —
+          dimensão, acabamento, classe de abrasão, m² por caixa — e preço real do fornecedor.
+          Se estiver em dúvida, os <a href="/guia/como-escolher-porcelanato/">guias de decisão</a>
+          e a <a href="/calculadora/">calculadora de caixas</a> resolvem as duas perguntas mais
+          comuns: qual porcelanato e quanto comprar.
+        </p>
+
+        <h2>2. Feche pelo site ou pelo WhatsApp</h2>
+        <p>
+          O carrinho fecha no checkout com <strong>Mercado Pago</strong> (Pix ou cartão) — o
+          pedido só é confirmado com o fornecedor após o pagamento aprovado. Prefere conferir
+          antes? Peça um <strong>orçamento pelo WhatsApp</strong>: um especialista responde em
+          até 24h úteis com disponibilidade e condições.
+        </p>
+
+        <h2>3. Receba na Grande Goiânia</h2>
+        <p>
+          Entrega em <strong>2 a 7 dias úteis</strong> após a confirmação do pagamento, com
+          frete calculado por CEP no carrinho. Retirada no polo pode ser combinada pelo
+          WhatsApp. Confira as peças no recebimento — tonalidade e calibre variam entre lotes,
+          e a conferência antes do assentamento protege a sua garantia.
+        </p>
+
+        <h2>4. Compra protegida</h2>
+        <p>
+          Arrependimento em até <strong>7 dias</strong> com reembolso integral (CDC, art. 49) e
+          defeito de fabricação em até <strong>90 dias</strong>. As regras completas — inclusive
+          troca e a prática de lote/tonalidade — estão na
+          <a href="/devolucoes/">política de devolução e troca</a>.
+        </p>
+
+        <h2>Quem é a ROI Labs</h2>
+        <p>
+          A ROI Labs é uma operação de growth para fornecedores regionais: construímos o canal
+          de venda online e somos remunerados apenas quando a venda acontece. Goiânia —
+          um dos maiores polos de revestimento do Brasil — é o nosso primeiro polo, no nicho de
+          porcelanato. Institucional em <a href="https://roilabs.com.br" target="_blank" rel="noopener">roilabs.com.br</a>;
+          contato em <a href="mailto:parceria@roilabs.com.br">parceria@roilabs.com.br</a>.
+        </p>
+
+        <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:2rem;">
+          <a class="btn btn--ghost" href="/porcelanato/">Ver o catálogo</a>
+          <a class="btn btn--primary" href={`https://wa.me/${whatsapp}?text=${encodeURIComponent('Olá! Vi o site de porcelanato de Goiânia e quero um orçamento.')}`}>
+            Falar no WhatsApp
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  h2 {
+    font-size: clamp(1.15rem, 2vw, 1.4rem);
+    margin: 2rem 0 0.6rem;
+  }
+  p {
+    line-height: 1.65;
+  }
+  a {
+    color: var(--hivis, inherit);
+  }
+</style>

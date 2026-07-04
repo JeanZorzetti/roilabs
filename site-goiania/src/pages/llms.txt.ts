@@ -38,6 +38,7 @@ ${guias}
 ${catalogo}
 
 ## Contato
+- [Como funciona: quem somos, entrega, pagamento e devolução](${SITE}/sobre/)
 - Local: Goiânia, GO, Brasil
 - Orçamento: WhatsApp e formulário nas páginas de guia e de produto.
 `;

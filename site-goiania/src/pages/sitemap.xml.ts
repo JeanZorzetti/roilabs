@@ -16,6 +16,7 @@ export const GET: APIRoute = () => {
     { loc: `${SITE}/porcelanato/` },
     { loc: `${SITE}/obrigado/` },
     { loc: `${SITE}/devolucoes/` },
+    { loc: `${SITE}/sobre/` },
     { loc: `${SITE}/calculadora/` },
     ...guias.map((g) => ({ loc: `${SITE}/guia/${g.slug}/` })),
     ...pages.map((p) => ({
