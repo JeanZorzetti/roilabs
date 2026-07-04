@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { produtos, tituloProduto, descricaoProduto, elegivelParaFeed } from '../data/produtos';
+import { produtos, tituloProduto, descricaoProduto, elegivelParaFeed, imgAbs } from '../data/produtos';
 
 // Google Merchant Center product feed (RSS 2.0 + g: namespace).
 // Contract: specs/009-merchant-center-feed/contracts/feed-xml.md
@@ -42,7 +42,7 @@ export const GET: APIRoute = () => {
       <title>${esc(`${tituloProduto(p)} ${a.dimensao}`)}</title>
       <description>${esc(descricaoProduto(p))}</description>
       <link>${link}</link>
-      <g:image_link>${esc(p.imagens[0])}</g:image_link>
+      <g:image_link>${esc(imgAbs(p.imagens[0], SITE))}</g:image_link>
       <g:price>${a.preco.toFixed(2)} BRL</g:price>
       <g:unit_pricing_measure>1sqm</g:unit_pricing_measure>
       <g:unit_pricing_base_measure>1sqm</g:unit_pricing_base_measure>

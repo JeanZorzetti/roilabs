@@ -43,6 +43,15 @@ export const descricaoProduto = (p: Produto) =>
 // Google — omitir e corrigir na fonte. check-feed.mjs reaplica esta regra no JSON.
 export const elegivelParaFeed = (p: Produto) => Boolean(p.imagens[0]) && p.atributos.preco > 0;
 
+// Foto de EXIBIÇÃO: variante .webp ≤900px gerada por fetch-images.mjs (ciclo 11).
+// O original (.jpg/.png) fica para feed, OG e zoom full-res.
+export const imgDisplay = (src: string) =>
+  src.startsWith('/img/') ? src.replace(/\.\w+$/, '.webp') : src;
+
+// URL absoluta para superfícies que exigem (feed, image sitemap, JSON-LD).
+export const imgAbs = (src: string, site: string) =>
+  src.startsWith('http') ? src : `${site}${src}`;
+
 // ponytail: taxonomia heurística por slug/acabamento/dimensão. Trocar por tags
 // curadas no JSON se a precisão do match importar.
 export function tagsDoProduto(p: Produto): Set<string> {

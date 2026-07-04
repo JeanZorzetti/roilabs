@@ -67,6 +67,11 @@ for (const item of items) {
   }
   const price = item.match(/<g:price>([^<]*)<\/g:price>/)?.[1] ?? '';
   if (price && !/^\d+\.\d{2} BRL$/.test(price)) errors.push(`item ${id}: g:price fora do formato "NN.NN BRL" — "${price}"`);
+  // Ciclo 11: imagem self-hosted — hotlink de CDN de terceiro é regressão.
+  const img = item.match(/<g:image_link>([^<]*)<\/g:image_link>/)?.[1] ?? '';
+  if (img && !img.startsWith('https://goiania.roilabs.com.br/img/')) {
+    errors.push(`item ${id}: g:image_link fora do domínio próprio — "${img}"`);
+  }
 }
 
 // 5. encoding: no replacement char, no raw & outside entities

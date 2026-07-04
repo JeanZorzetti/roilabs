@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro';
 import { pages } from '../data/porcelanato';
-import { produtos, produtosDaCategoria } from '../data/produtos';
+import { produtos, produtosDaCategoria, imgAbs } from '../data/produtos';
 import { guias } from '../data/guias';
 
 const SITE = 'https://goiania.roilabs.com.br';
@@ -36,7 +36,7 @@ export const GET: APIRoute = () => {
 
   const entry = (u: { loc: string; imgs?: string[] }) => {
     const imgs = (u.imgs ?? [])
-      .map((i) => `<image:image><image:loc>${esc(i)}</image:loc></image:image>`)
+      .map((i) => `<image:image><image:loc>${esc(imgAbs(i, SITE))}</image:loc></image:image>`)
       .join('');
     return `  <url><loc>${u.loc}</loc>${imgs}</url>`;
   };

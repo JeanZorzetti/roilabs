@@ -4,7 +4,7 @@ import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import ProdutoCard from '../../components/ProdutoCard.astro';
 import { pages } from '../../data/porcelanato';
-import { produtos } from '../../data/produtos';
+import { produtos, produtosDaCategoria, imgDisplay } from '../../data/produtos';
 import { guias } from '../../data/guias';
 
 const SITE = Astro.site?.href.replace(/\/$/, '') ?? 'https://goiania.roilabs.com.br';
@@ -15,6 +15,11 @@ const byTipo = pages.reduce<Record<string, typeof pages>>((acc, p) => {
   (acc[key] = acc[key] ?? []).push(p);
   return acc;
 }, {});
+
+// Ciclo 11 (hub visual): capa do card = foto do 1º produto da categoria
+// (dado já computado no build); categoria sem produto segue como card texto.
+const capaDe = (slug: string, tipo: string) =>
+  produtosDaCategoria(slug, tipo)[0]?.imagens[0];
 
 // Hub: breadcrumb + ItemList das páginas de categoria da malha + Product com
 // AggregateOffer do catálogo inteiro (faixa real de R$/m² computada no build,
@@ -101,15 +106,25 @@ const jsonLdNodes = [
         </div>
 
         <div class="pseo-index-grid" style="margin-top:3rem;">
-          {pages.map((p) => (
-            <a href={`/porcelanato/${p.slug}/`} class="pseo-index-card">
-              <div class="pseo-index-card__title">{p.titulo.replace(/ em Goiânia.*/, '')}</div>
-              <div class="pseo-index-card__meta">
-                {p.tipo}{p.ocasiao ? ` · ${p.ocasiao}` : ''}
-                {p.atributos.dimensao ? ` · ${p.atributos.dimensao}` : ''}
-              </div>
-            </a>
-          ))}
+          {pages.map((p) => {
+            const capa = capaDe(p.slug, p.tipo);
+            return (
+              <a href={`/porcelanato/${p.slug}/`} class={`pseo-index-card${capa ? ' pseo-index-card--img' : ''}`}>
+                {capa && (
+                  <div class="pseo-index-card__cover">
+                    <img src={imgDisplay(capa)} alt="" loading="lazy" />
+                  </div>
+                )}
+                <div class="pseo-index-card__body">
+                  <div class="pseo-index-card__title">{p.titulo.replace(/ em Goiânia.*/, '')}</div>
+                  <div class="pseo-index-card__meta">
+                    {p.tipo}{p.ocasiao ? ` · ${p.ocasiao}` : ''}
+                    {p.atributos.dimensao ? ` · ${p.atributos.dimensao}` : ''}
+                  </div>
+                </div>
+              </a>
+            );
+          })}
         </div>
       </div>
     </section>

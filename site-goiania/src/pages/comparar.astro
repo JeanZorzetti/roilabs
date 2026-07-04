@@ -8,7 +8,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import Faq from '../components/Faq.astro';
 import WhatsappCta from '../components/WhatsappCta.astro';
-import { produtos, tituloProduto, formatPreco } from '../data/produtos';
+import { produtos, tituloProduto, formatPreco, imgDisplay } from '../data/produtos';
 import { guias } from '../data/guias';
 
 const SITE = Astro.site?.href.replace(/\/$/, '') ?? 'https://goiania.roilabs.com.br';
@@ -20,7 +20,7 @@ const cmpData = produtos
   .map((p) => ({
     slug: p.slug,
     titulo: tituloProduto(p),
-    img: p.imagens[0] ?? '',
+    img: imgDisplay(p.imagens[0] ?? ''),
     preco: p.atributos.preco,
     dimensao: p.atributos.dimensao,
     acabamento: p.atributos.acabamento,

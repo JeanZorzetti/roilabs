@@ -11,6 +11,7 @@ import {
   descricaoProduto,
   categoriasDoProduto,
   produtosRelacionados,
+  imgAbs,
 } from '../../../data/produtos';
 import { pages } from '../../../data/porcelanato';
 
@@ -45,7 +46,7 @@ const jsonLdNodes = [
     name: titulo,
     // sku = g:id do feed.xml → liga o rich result ao item do Merchant Center.
     sku: produto.slug,
-    image: produto.imagens,
+    image: produto.imagens.map((i) => imgAbs(i, SITE)),
     brand: { '@type': 'Brand', name: a.marca },
     category: 'Porcelanato',
     additionalProperty,

@@ -1,7 +1,7 @@
 ---
 import WhatsappCta from './WhatsappCta.astro';
 import AddToCart from './AddToCart.astro';
-import { nomeProduto, formatPreco, type Produto } from '../data/produtos';
+import { nomeProduto, formatPreco, imgDisplay, type Produto } from '../data/produtos';
 
 interface Props {
   produto: Produto;
@@ -16,19 +16,50 @@ const tituloProduto = `${a.marca} ${nome}`;
 const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
 ---
 <div class="prod-detail">
-  <!-- Galeria -->
+  <!-- Galeria (exibição em .webp; data-full guarda o original pro zoom) -->
   <div class="prod-detail__gallery">
-    <div class="prod-detail__main">
-      <img src={produto.imagens[0]} alt={tituloProduto} />
-    </div>
+    <button class="prod-detail__main" type="button" aria-label={`Ampliar foto de ${tituloProduto}`}>
+      <img src={imgDisplay(produto.imagens[0])} data-full={produto.imagens[0]} alt={tituloProduto} />
+    </button>
     {produto.imagens.length > 1 && (
       <div class="prod-detail__thumbs">
         {produto.imagens.slice(0, 5).map((src, i) => (
-          <img src={src} alt={`${tituloProduto} — foto ${i + 1}`} loading="lazy" />
+          <img src={imgDisplay(src)} data-full={src} alt={`${tituloProduto} — foto ${i + 1}`} loading="lazy" />
         ))}
       </div>
     )}
   </div>
+
+  <!-- Zoom nativo: porcelanato é textura, ver grande decide compra -->
+  <dialog class="img-zoom">
+    <button class="img-zoom__close" type="button" aria-label="Fechar">✕</button>
+    <img src="" alt={tituloProduto} />
+  </dialog>
+
+  <script>
+    // Zoom (dialog nativo, top-layer passa por cima do MiniCart) + thumbs
+    // trocam a foto principal. Zoom mostra o ORIGINAL (data-full), não a webp.
+    const detail = document.querySelector('.prod-detail');
+    const main = detail?.querySelector<HTMLImageElement>('.prod-detail__main img');
+    const dlg = detail?.querySelector<HTMLDialogElement>('.img-zoom');
+    const dlgImg = dlg?.querySelector('img');
+    if (main && dlg && dlgImg) {
+      main.closest('button')?.addEventListener('click', () => {
+        dlgImg.src = main.dataset.full ?? main.src;
+        dlg.showModal();
+      });
+      dlg.addEventListener('click', (e) => {
+        const t = e.target as HTMLElement;
+        if (t === dlg || t.closest('.img-zoom__close')) dlg.close();
+      });
+      detail?.querySelectorAll<HTMLImageElement>('.prod-detail__thumbs img').forEach((thumb) => {
+        thumb.addEventListener('click', () => {
+          main.src = thumb.src;
+          main.dataset.full = thumb.dataset.full ?? thumb.src;
+        });
+      });
+    }
+  </script>
 
   <!-- Info + ficha + CTA -->
   <div class="prod-detail__info">

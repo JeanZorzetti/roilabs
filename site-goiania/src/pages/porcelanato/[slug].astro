@@ -9,7 +9,7 @@ import ProdutoCard from '../../components/ProdutoCard.astro';
 import ProdutoDetalhe from '../../components/ProdutoDetalhe.astro';
 import { buildJsonLdNodes } from '../../components/Jsonld.astro';
 import { pages } from '../../data/porcelanato';
-import { produtosDaCategoria } from '../../data/produtos';
+import { produtosDaCategoria, imgDisplay, nomeProduto } from '../../data/produtos';
 
 export function getStaticPaths() {
   return pages.map((p) => ({ params: { slug: p.slug }, props: { page: p } }));
@@ -57,12 +57,23 @@ const tipo = page.tipo.charAt(0).toUpperCase() + page.tipo.slice(1);
         </div>
         <h1>{page.titulo}</h1>
         <p class="pseo-hero__intro">{page.intro}</p>
+
+        <!-- Ciclo 11: fotos reais da categoria no hero (linkam pra galeria) -->
+        {produtosRel.length > 0 && (
+          <div class="pseo-hero__strip">
+            {produtosRel.slice(0, 4).map((prod) => (
+              <a href="#catalogo" aria-label={`Ver ${nomeProduto(prod)} no catálogo`}>
+                <img src={imgDisplay(prod.imagens[0])} alt={nomeProduto(prod)} />
+              </a>
+            ))}
+          </div>
+        )}
       </div>
     </section>
 
     <!-- 1 produto: ficha completa inline (ficha técnica real vive no produto) -->
     {produtosRel.length === 1 && (
-      <section class="section section--light">
+      <section class="section section--light" id="catalogo">
         <div class="wrap">
           <ProdutoDetalhe produto={produtosRel[0]} headingTag="h2" />
         </div>
@@ -71,7 +82,7 @@ const tipo = page.tipo.charAt(0).toUpperCase() + page.tipo.slice(1);
 
     <!-- 2+ produtos: galeria de cards do catálogo -->
     {produtosRel.length > 1 && (
-      <section class="section section--light">
+      <section class="section section--light" id="catalogo">
         <div class="wrap">
           <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:0.6rem;">
             {produtosRel.length} opções disponíveis em Goiânia
