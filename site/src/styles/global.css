@@ -692,6 +692,27 @@ a {
   color: var(--d-muted);
 }
 
+/* prova viva: link pro polo 1 no ar (goiania.roilabs.com.br) */
+.prova-viva {
+  margin-top: 2.2rem;
+  padding: 1.4rem 1.6rem;
+  border: 1px dashed var(--d-line-strong);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.4rem;
+  flex-wrap: wrap;
+}
+.prova-viva p {
+  margin: 0;
+  max-width: 52ch;
+  color: var(--d-muted);
+}
+.prova-viva strong {
+  color: var(--d-text);
+}
+
 /* ---------- footer ---------- */
 .site-footer {
   border-top: 1px solid var(--d-line);

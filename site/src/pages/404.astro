@@ -1,0 +1,57 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
+const whatsHref = `https://wa.me/${whatsapp}?text=${encodeURIComponent(
+  'Olá! Caí num link quebrado no site da ROI Labs — pode me ajudar?'
+)}`;
+
+// Canal é 100% SEO/GEO: link quebrado não pode devolver a home com 200 (soft 404).
+// Antes deste arquivo o nginx fazia exatamente isso; agora é 404 real (error_page
+// no nginx.conf) com saída útil — mesmo padrão aplicado no goiânia (ciclo 8).
+const posts = (await getCollection('blog'))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 4);
+---
+
+<Base
+  title="Página não encontrada — ROI Labs"
+  description="Essa página não existe ou mudou de endereço. Veja o modelo Growth Partner, os artigos do blog ou fale direto no WhatsApp."
+>
+  <Header />
+
+  <main>
+    <section class="section" style="padding-top:clamp(4rem,10vw,7rem);">
+      <div class="wrap" style="max-width:72ch;">
+        <span class="eyebrow">Erro 404</span>
+        <h1 style="font-size:clamp(1.8rem,3.5vw,2.6rem);margin:0.4rem 0 1rem;">
+          Essa página não existe (ou mudou de endereço)
+        </h1>
+        <p style="opacity:0.75;margin-bottom:2rem;">
+          O link pode ter vindo quebrado ou o endereço mudou. Vá para uma das áreas abaixo —
+          ou chame no WhatsApp que a gente te aponta o caminho.
+        </p>
+
+        <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:2.5rem;">
+          <a class="btn btn--primary" href="/#candidatar">Candidatar minha empresa</a>
+          <a class="btn btn--ghost" href="/blog/">Ver o blog</a>
+          <a class="btn btn--whats" href={whatsHref} target="_blank" rel="noopener">Falar no WhatsApp</a>
+        </div>
+
+        <h2 style="font-size:clamp(1.15rem,2vw,1.4rem);margin:0 0 1rem;">Artigos recentes</h2>
+        <ul style="list-style:none;margin:0;padding:0;display:grid;gap:0.7rem;">
+          {posts.map((p) => (
+            <li>
+              <a href={`/blog/${p.id}/`} style="color:inherit;">{p.data.title}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Base>
