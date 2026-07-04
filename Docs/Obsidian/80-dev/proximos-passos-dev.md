@@ -196,6 +196,30 @@ dono: Jean (dev)
 
 > Build goiânia verificado local: **82 páginas** (+ `/sobre` + `404.html`), `check-feed OK`, `/sobre/` no sitemap/llms.txt/busca-index (76 entradas), `SearchAction` e deep-link `?q=` presentes no HTML/JS buildado, `cwv-psi.mjs` exit 0 sem chave (no-op provado). IndexNow 403 transiente local, como sempre.
 
+## 🧭 Fora da caixa — ciclo 9 (2026-07-04)
+
+> [!success] CICLO 9 EXECUTADO 2026-07-04 — 5/5 itens em código (`d10dd8b`→`f860ca7` + doc), tudo na `main` e pushado (deploy automático por push).
+> Critério do ciclo: fechar o loop comercial (orçamento → atribuição) + pontes que ninguém pediu. **Nota de disciplina (de novo):** a verificação contra o código matou 1 candidato antes de propor (guia "área externa/antiderrapante" canibalizaria 8 slugs da malha) e 2 itens foram trocados a pedido do Jean (amostra e promotions feed). Deliberadamente FORA: expandir malha (GSC miner ~07-15), review engine (gate 3–5 pedidos), WhatsApp Cloud API (pago), banner LGPD (decisão de negócio, derruba conversão).
+
+### 💰 Converter mais (fechar o loop da proposta)
+
+- [x] **⭐ Página de orçamento formal `/orcamento?c=` — FEITO 2026-07-04 (`d10dd8b`).** O mesmo token do link de compartilhar renderiza um orçamento profissional: cabeçalho com logo/contato, Nº derivado do timestamp do token (reabrir o link = mesmo número), emissão + validade (30d, o TTL do link), tabela (m²/caixa, caixas, cobre m², R$/m², subtotal), condições (frete por região, MP, CDC) e print CSS → **PDF em papel branco** (padrão do demonstrativo do parceiro). NÃO restaura o carrinho do visitante (snapshot); "Fechar pedido agora" leva o token pro `/carrinho`. `noindex` (prop nova no Base) e fora do sitemap. Entradas: botão "📄 Abrir como orçamento" no carrinho + link **"orçamento →"** no `/admin/leads` (troca `/carrinho?c=` por `/orcamento?c=` — é o link que a Duda manda). Evento himetrica `orcamento_view`. **E2E local provado** (preview + Playwright): 2 produtos reais, matemática confere, estado expirado com saída útil.
+- [x] **⭐ WhatsApp flutuante no goiânia — FEITO 2026-07-04 (`d10dd8b`).** Botão fixed verde (56px, bottom-right, z-50 — o MiniCart drawer em z-60/61 passa por cima) em TODAS as páginas via `Base.astro`, mensagem pré-preenchida, `display:none` no print. Cai no listener delegado de `whatsapp_click` que já existia = tracking de graça. Verificado no HTML buildado (home, hub, orçamento, 404).
+
+### 🕳️ Fechar buraco de crawl (institucional)
+
+- [x] **⭐ 404 real no institucional — FEITO 2026-07-04 (`13659b3`).** Mesmo soft-404 que o goiânia tinha (nginx `try_files /index.html` = home com 200): agora `error_page 404` + `try_files =404` + `404.astro` com saída real (CTA candidatura/blog/WhatsApp + 4 artigos recentes da coleção). O institucional é o site cujo canal é 100% SEO/GEO — era o buraco mais barato do crawl. Build: 10 páginas (+404).
+
+### 📣 Distribuição grátis (a ponte que faltava)
+
+- [x] **⭐ Cross-link institucional → goiânia — FEITO 2026-07-04 (`13659b3`).** `roilabs.com.br` tinha ZERO links pro e-commerce (confirmado por grep). Agora: link no footer ("Polo 1 no ar"), strip **"prova viva"** na seção Mercado da home ("Não é maquete — a máquina do polo 1 já está no ar" + CTA) e link no CTA dos 6 artigos do blog GEO ("veja a operação funcionando"). Equity de domínio + prova social do modelo pro fornecedor do Gate 3.
+
+### 👀 Enxergar o funil (fechar o loop do ciclo 6)
+
+- [x] **⭐ Breakdown de origem no cockpit + digest — FEITO 2026-07-04 (`f860ca7`).** `lib/origem.ts` novo (parse do sufixo `[origem]` → bucket página de entrada + `utm_source` + referrer externo; `origemDe` saiu do leads/page.tsx pra lá — dedup). `/admin` ganhou tabela "Origem dos leads · first-touch" (top 10, colunas 7d/30d) na seção Demanda; o digest de segunda lista o top 5 da semana. Responde "malha/guia/calculadora/busca gera lead?" com dado, não opinião. Upgrade futuro: coluna real no próximo `db push` manual.
+
+> Verificação do ciclo: build goiânia **83 páginas** (+`/orcamento`), `wa-float` presente em todas, `noindex` só no orçamento; build institucional **10 páginas** (+`404.html`), 2 links goiânia na home e 2 por artigo; `tsc --noEmit` limpo no app; E2E do orçamento via preview+Playwright (caso feliz + token inválido).
+
 ## 🚀 Fase 1 — Subir o MVP no ar (caminho crítico, em ordem)
 
 - [x] **Aplicar schema no DB.** De uma máquina que alcança `2.24.207.200`, dentro de `/app`: `npm install` → `npx prisma db push` → `npm run db:seed` (carrega as 6 cadeiras, idempotente). ⚠️ NÃO confiar no runner standalone p/ schema — fazer `db push` manual.
