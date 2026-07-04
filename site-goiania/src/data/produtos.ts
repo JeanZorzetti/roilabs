@@ -3,6 +3,9 @@ import rawData from '../../porcelanatos.json';
 export interface Produto {
   slug: string;
   imagens: string[];
+  // Foto de AMBIENTE (cômodo decorado) do fabricante — curadoria manual,
+  // cobertura parcial por design (ciclo 11 item 5). Ver fetch-ambiente.mjs.
+  imagensAmbiente?: string[];
   video: string | null;
   atributos: {
     marca: string;

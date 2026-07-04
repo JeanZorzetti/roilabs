@@ -29,7 +29,10 @@
       "m2_caixa": 2.2,
       "retificado": true,
       "classe_ad": 2
-    }
+    },
+    "imagensAmbiente": [
+      "/img/ambientes/porcelanato-marmo-perla-biancogres.jpg"
+    ]
   },
   {
     "slug": "porcelanato-cristallo-quartz-biancogres",
@@ -109,7 +112,10 @@
       "m2_caixa": 2.88,
       "retificado": true,
       "classe_ad": 2
-    }
+    },
+    "imagensAmbiente": [
+      "/img/ambientes/porcelanato-arezzo-grigrio-biancogres.jpg"
+    ]
   },
   {
     "slug": "porcelanato-grigio-externo-biancogres",
@@ -157,7 +163,10 @@
       "m2_caixa": 3,
       "retificado": true,
       "classe_ad": 2
-    }
+    },
+    "imagensAmbiente": [
+      "/img/ambientes/porcelanato-persia-beige-biancogres.jpg"
+    ]
   },
   {
     "slug": "porcelanato-chicago-nebbia-biancogres",
@@ -237,7 +246,10 @@
       "m2_caixa": 2.4,
       "retificado": true,
       "classe_ad": 4
-    }
+    },
+    "imagensAmbiente": [
+      "/img/ambientes/porcelanato-arezzo-externo-beige.jpg"
+    ]
   },
   {
     "slug": "porcelanato-arezzo-beige-biancogres",
@@ -253,7 +265,10 @@
       "m2_caixa": 2.4,
       "retificado": true,
       "classe_ad": 2
-    }
+    },
+    "imagensAmbiente": [
+      "/img/ambientes/porcelanato-arezzo-beige-biancogres.jpg"
+    ]
   },
   {
     "slug": "porcelanato-castilla-noce-biancogres",
@@ -289,7 +304,10 @@
       "m2_caixa": 2.6,
       "retificado": true,
       "classe_ad": 4
-    }
+    },
+    "imagensAmbiente": [
+      "/img/ambientes/porcelanato-chicago-80x80-grafite-biancogres.jpg"
+    ]
   },
   {
     "slug": "porcelanato-madrid-bloc-polido-delta",

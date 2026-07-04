@@ -30,7 +30,7 @@ export const GET: APIRoute = () => {
     })),
     ...produtos.map((p) => ({
       loc: `${SITE}/porcelanato/produto/${p.slug}/`,
-      imgs: p.imagens,
+      imgs: [...p.imagens, ...(p.imagensAmbiente ?? [])],
     })),
   ];
 

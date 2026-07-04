@@ -99,3 +99,27 @@ const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
     </div>
   </div>
 </div>
+
+<!-- Ambiente + vídeo (ciclo 11 item 5) — cobertura parcial por design: só
+     produtos com foto oficial do fabricante confirmada (fetch-ambiente.mjs). -->
+{(produto.imagensAmbiente?.[0] || produto.video) && (
+  <div class="prod-ambiente">
+    {produto.imagensAmbiente?.[0] && (
+      <figure class="prod-ambiente__foto">
+        <img src={imgDisplay(produto.imagensAmbiente[0])} alt={`${tituloProduto} aplicado em ambiente`} loading="lazy" />
+        <figcaption>Veja em ambiente — foto do fabricante</figcaption>
+      </figure>
+    )}
+    {produto.video && (
+      <div class="prod-ambiente__video">
+        <iframe
+          src={produto.video}
+          title={`Vídeo — ${tituloProduto}`}
+          loading="lazy"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        ></iframe>
+      </div>
+    )}
+  </div>
+)}
