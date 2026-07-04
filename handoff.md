@@ -23,6 +23,12 @@ nicho âncora = **revestimentos/porcelanato**.
 - **Fluxo:** site (estático) → `POST app.roilabs.com.br/api/candidaturas` (urlencoded, sem preflight) → DB → kanban `/admin`.
 
 ## Feito
+- **Ciclo 8 "fora da caixa" (2026-07-04) — 4/4 itens, custo zero:**
+  - **`/sobre` (Como funciona) no goiânia** — quem vende, 4 passos da compra (MP, entrega 2–7 dias, CDC), FAQPage schema; em sitemap/llms.txt/footer/busca.
+  - **404 real + página útil** — nginx devolvia a home com 200 pra URL desconhecida (soft 404); agora `error_page 404` + `404.astro` com CTA catálogo/calculadora/WhatsApp + guias.
+  - **SearchAction no @graph + deep-link `?q=`** — sitelinks searchbox; SiteSearch abre pré-preenchido via `/?q=termo`.
+  - **CWV semanal via PageSpeed Insights** — `cwv-psi.mjs` no cron de segunda → `90-medicao/cwv.{csv,md}`; no-op sem `PSI_API_KEY` (anônimo dá 429). ⏳ secret.
+  - 3 itens propostos caíram na verificação: relacionados no produto, FAQ da malha e digest→ntfy **já existiam**.
 - **Ciclo 6 "fora da caixa" (2026-07-03, commits `a554300`→`f5271fc`) — 5/5 itens, custo zero:**
   - **Microsoft Clarity nos 2 sites** (`a554300`) — tag gateada em `PUBLIC_CLARITY_ID` (no-op sem env). ⏳ ops: criar 2 projetos + env de build na EasyPanel.
   - **Push ntfy.sh nos alertas internos** (`c9eb662`) — `sendAlert` despacha e-mail + push (canais independentes, cada um no-op sem a própria env). Sem conta: o tópico é o segredo. ⏳ `NTFY_TOPIC` + assinar no app ntfy.

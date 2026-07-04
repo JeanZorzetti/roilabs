@@ -176,6 +176,26 @@ dono: Jean (dev)
 
 > Build goiânia verificado local: 80 páginas, `check-feed OK`, sitemap com 199 `image:loc`, busca-index 75 entradas, deep-link calculadora no HTML do produto. App: `tsc --noEmit` limpo (build real é no Docker, como sempre). IndexNow local deu 403 transiente (chave confirmada no ar via HTTP 200) — ping se repete a cada deploy e é não-fatal.
 
+## 🧭 Fora da caixa — ciclo 8 (2026-07-04)
+
+> [!success] CICLO 8 EXECUTADO 2026-07-04 — 4/4 itens em código, tudo na `main` e pushado (deploy automático por push).
+> Critério do ciclo: confiança de compra + fechar buracos de crawl/medição de custo zero. **Nota de disciplina:** 3 itens propostos caíram na verificação contra o código porque JÁ EXISTIAM — produtos relacionados no produto (`produtosRelacionados`, ciclo anterior), FAQ+FAQPage na malha (curado em `porcelanato.ts` desde a spec 008) e digest via ntfy (`sendAlert` já despacha e-mail E push; só espera o `CRON_SECRET` de ops). Deliberadamente FORA (de novo): expandir malha (GSC miner ~07-15), review engine (gate 3–5 pedidos), WhatsApp Cloud API (pago).
+
+### 🤝 Confiança de compra (E-E-A-T + Merchant Center)
+
+- [x] **⭐ Página `/sobre` (Como funciona) no goiânia — FEITO 2026-07-04.** Quem vende (ROI Labs Growth Partner + fornecedores do polo), os 4 passos da compra (catálogo→pagamento MP→entrega 2–7 dias úteis→devolução CDC) e FAQPage schema com as 4 perguntas de confiança. Registrada em sitemap, llms.txt (seção Contato), footer ("Como funciona") e busca interna. Vira o endereço institucional do goiânia p/ GBP/sameAs quando a verificação concluir.
+
+### 🕳️ Fechar buracos de crawl e UX
+
+- [x] **⭐ 404 de verdade + página útil — FEITO 2026-07-04.** O nginx devolvia a HOME com HTTP 200 pra URL desconhecida (`try_files ... /index.html` = **soft 404** — pior que 404 para o GSC que já sofreu com crawl). Agora: `error_page 404 /404.html` + `try_files =404`, e `404.astro` com saída real (CTA catálogo/calculadora/WhatsApp + grid dos 4 guias + dica da busca). Funil roda em link de WhatsApp — link quebrado agora recupera o usuário.
+- [x] **SearchAction no @graph + deep-link `?q=` — FEITO 2026-07-04.** O nó `WebSite` do goiânia ganhou `potentialAction: SearchAction` (target `/?q={search_term_string}`) e o SiteSearch abre pré-preenchido quando a URL tem `?q=` (qualquer página). Habilita sitelinks searchbox e declara a busca interna pros crawlers de IA. Verificado no HTML buildado.
+
+### 📉 Medição (CWV de prod, série histórica)
+
+- [x] **CWV semanal via PageSpeed Insights API — FEITO 2026-07-04.** `site-goiania/src/scripts/cwv-psi.mjs` (zero-dep): Lighthouse mobile NA INFRA DO GOOGLE contra prod (Lighthouse local Windows/OneDrive é não-confiável, gotcha conhecido) — 1 página por template (home, hub, malha, produto, calculadora) → `90-medicao/cwv.csv` (histórico) + `cwv.md` (snapshot), step non-fatal no cron de segunda. ⚠️ **Anônimo dá HTTP 429 direto (testado)** → script é no-op sem `PSI_API_KEY` (mesmo padrão do gsc-miner). ⏳ criar chave grátis + secret → [[backlog-pendencias]].
+
+> Build goiânia verificado local: **82 páginas** (+ `/sobre` + `404.html`), `check-feed OK`, `/sobre/` no sitemap/llms.txt/busca-index (76 entradas), `SearchAction` e deep-link `?q=` presentes no HTML/JS buildado, `cwv-psi.mjs` exit 0 sem chave (no-op provado). IndexNow 403 transiente local, como sempre.
+
 ## 🚀 Fase 1 — Subir o MVP no ar (caminho crítico, em ordem)
 
 - [x] **Aplicar schema no DB.** De uma máquina que alcança `2.24.207.200`, dentro de `/app`: `npm install` → `npx prisma db push` → `npm run db:seed` (carrega as 6 cadeiras, idempotente). ⚠️ NÃO confiar no runner standalone p/ schema — fazer `db push` manual.
