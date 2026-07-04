@@ -26,7 +26,7 @@ depends_on:
 - ✅ **Nicho âncora = construção/acabamento → primeira cadeira em revestimentos/porcelanato.** Escolhido por *fit* com a tese hiperlocal (alto ticket, produto frete-sensível favorece o fornecedor local, fornecedores fracos no online = ICP) — **não** pelo maior volume bruto (que seria moda/Região da 44, mas é atacado nacional, fora da tese). Base: Goiânia é a 3ª maior praça imobiliária do país; acabamento >30% das compras de obra.
 - ✅ **Validar demanda antes de abrir cada cadeira (3 gates):** (1) volume no Keyword Planner por região para "[produto] + [bairro/cidade]"; (2) SERP local fraca (só marketplace genérico = brecha); (3) ≥1 fornecedor A-Player real disponível. Abre só se os 3 baterem.
 
-> ✅ **Gate 1 validado (2026-06-28):** demanda local existe — ver seção abaixo. ⏳ Resta o Gate 3 (fechar 1º fornecedor A-Player).
+> ✅ **Gate 1 validado (2026-06-28):** demanda local existe — ver seção abaixo. ⏳ Resta o Gate 3 (fechar 1º fornecedor A-Player) — candidatos minerados em [[fornecedores-goiania]] (2026-07-04, não contatados ainda).
 
 ## Validação de demanda — Keyword Planner (Goiânia)
 
