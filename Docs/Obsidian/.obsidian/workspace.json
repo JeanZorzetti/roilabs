@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "proximos-passos-dev.md",
+                "file": "80-dev/backlog-pendencias.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "proximos-passos-dev"
+              "title": "backlog-pendencias"
             }
           }
         ]
@@ -183,44 +183,44 @@
       "bases:Criar nova base": false
     }
   },
-  "active": "3c183d87334b6597",
+  "active": "59965b684d953507",
   "lastOpenFiles": [
-    "proximos-passos-dev.md.tmp.12468.31fbbef4d08e",
-    "Sem título.canvas",
-    "proximos-passos-dev.md.tmp.12468.b7d1b0512ab0",
-    "Sem título.canvas.tmp.6036.a10afac299de",
-    "Sem título.base",
+    "80-dev/proximos-passos-dev.md.tmp.19756.cddf06bf9f53",
+    "80-dev/changelog-ciclos.md.tmp.19756.7f96c6c42f52",
+    "80-dev/changelog-ciclos.md",
+    "80-dev/proximos-passos-dev.md.tmp.31932.a08b1cb5f5d3",
+    "80-dev/proximos-passos-dev.md.tmp.33036.29484aa0c849",
+    "80-dev/proximos-passos-dev.md",
+    "80-dev/backlog-pendencias.md.tmp.21228.16c6b5d3487e",
+    "80-dev/backlog-pendencias.md",
+    "80-dev/proximos-passos-dev.md.tmp.29404.c00759c0f974",
+    "80-dev/gsc-miner-setup.md",
+    "80-dev/gsc-miner-setup.md.tmp.29404.5b8d894f5fe3",
+    "80-dev/proximos-passos-dev.md.tmp.19296.2a009d3b31e4",
+    "80-dev/pinterest-catalog.md",
+    "80-dev/bing-webmaster.md",
+    "80-dev/bing-webmaster.md.tmp.27444.e3b6166f0fcf",
+    "80-dev/pinterest-catalog.md.tmp.27444.af34aec4c7af",
+    "80-dev/merchant-center.md",
+    "80-dev/meta-catalog.md",
+    "80-dev/meta-catalog.md.tmp.7464.8c1869eebdc4",
+    "20-oferta/oferta.md",
+    "backlog-pendencias.md",
+    "90-medicao/rank-tracking.md",
     "proximos-passos-dev.md",
-    "proximos-passos-dev.md.tmp.6036.027dc4e44dda",
-    "proximos-passos-dev.md.tmp.6036.b813a43f1314",
-    "proximos-passos-dev.md.tmp.6036.0eed67dc7134",
-    "proximos-passos-dev.md.tmp.35720.1f1e75584fcb",
+    "dashboard.md",
+    "_template.md",
+    "00-tese/tese.md",
+    "rank-tracking.md",
+    "Sem título.canvas",
     "10-mercado/mercado.md",
     "60-legal-fin/anexo-A-intermediacao.md",
     "60-legal-fin/contrato-quadro.md",
-    "00-tese/tese.md",
-    "proximos-passos-dev.md.tmp.25280.09e2030303dd",
     "60-legal-fin/centro-de-custo.md",
     "30-modelo/modelo.md",
-    "20-oferta/oferta.md",
-    "dashboard.md",
     "60-legal-fin/projecao-financeira.md",
     "60-legal-fin/auditoria.md",
     "60-legal-fin/handoff.md",
-    "60-legal-fin/legal-fin.md",
-    "40-gtm/pseo-execucao.md",
-    "proximos-passos-dev.md.tmp.50808.dd8c71200f20",
-    "proximos-passos-dev.md.tmp.50808.12ca09770143",
-    "60-legal-fin/anexo-B-white-label.md",
-    "60-legal-fin/minuta-contrato-intermediacao.md",
-    "40-gtm/gtm.md",
-    "handoff.md",
-    "70-time/time.md",
-    "50-operacao/operacao.md",
-    "notebook/Blueprint Estratégico_ Hub de Infraestrutura Digital Roylabs.md",
-    "notebook/Pesquisa Hub E-commerce ROI Labs.md",
-    "notebook/Blueprint Estratégico_ Hub de Infraestrutura Digital ROI Labs.md",
-    "INDEX.md",
-    "_template.md"
+    "60-legal-fin/legal-fin.md"
   ]
 }
