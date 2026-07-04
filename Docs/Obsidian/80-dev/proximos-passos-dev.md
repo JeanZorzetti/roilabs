@@ -154,6 +154,28 @@ dono: Jean (dev)
 
 - [x] **⭐ GSC miner — FEITO 2026-07-03 (`f5271fc`).** `site-goiania/src/scripts/gsc-miner.mjs` (zero-dep, JWT de service account via `node:crypto`) minera a Search Console API (grátis): candidatas a **página nova** (query com impressão real sem página dedicada) + **striking distance** (página dedicada em posição 8–30) → `90-medicao/gsc-miner.md`, no mesmo cron semanal do rank-tracking (step non-fatal, no-op sem secret). Substitui a mineração DataForSEO. ⏳ criar `GSC_SA_KEY` quando o GSC maturar (~07-15) — runbook [[gsc-miner-setup]].
 
+## 🧭 Fora da caixa — ciclo 7 (2026-07-04)
+
+> [!success] CICLO 7 EXECUTADO 2026-07-04 — 6/6 itens em código, tudo na `main` e pushado (deploy automático por push).
+> Critério do ciclo: proteger o que está no ar + fechar as últimas colas de conversão/distribuição de custo zero. Deliberadamente FORA (de novo): expandir malha (GSC miner ~07-15), review engine (gate 3–5 pedidos), WhatsApp Cloud API (pago).
+
+### 🛡️ Proteger o que está no ar (puxado do backlog — agora é o item mais barato contra o pior cenário)
+
+- [x] **⭐ `/api/health` + script de backup + runbook — FEITO 2026-07-04 (`8dd24bf`).** `GET /api/health` prova app+DB (`SELECT 1`, 200/503, sem dado — seguro sem auth) pro uptime monitor. `app/scripts/backup-postgres.sh` (dump custom diário, retenção 14d, `.gitattributes` força LF). Runbook completo em [[backup-uptime]]: cron no VPS, teste de restore obrigatório, cópia semanal fora do VPS, 3 monitores cron-job.org. ⏳ execução ops → [[backlog-pendencias]].
+
+### 💰 Converter mais (fechar as colas do funil)
+
+- [x] **⭐ Pedidos sem pagamento na fila de follow-up — FEITO 2026-07-04 (`706e7db`).** Bucket novo `pendentes` em `lib/follow-up.ts`: pedido criado e não pago (24h–14d), excluindo quem pagou outro pedido depois (match últimos 11 dígitos). Seção no topo do `/admin/follow-up` reusando o template de recuperação do `waPedidoLink` (ciclo 5); sai da fila por mudança de status ou 14d (sem coluna nova). Digest conta junto na "ação pendente".
+- [x] **⭐ Calculadora pré-preenchida por produto — FEITO 2026-07-04 (`1a59aa4`).** Página de produto ganhou "Quantas caixas preciso? Calcular com este porcelanato →" (`/calculadora/?m2caixa=&produto=&nome=`); a calculadora pré-preenche o m²/caixa, mostra banner de contexto (com link de volta) e o lead entra com o produto exato no `produto`/`mensagem`. Params validados, render via textContent.
+
+### 🔎 Enxergar demanda + 📣 distribuição grátis
+
+- [x] **⭐ Busca interna no goiânia — FEITO 2026-07-04 (`a44c89d`).** Botão "Buscar" no header (criado via JS — HTML pSEO intocado, padrão MiniCart): índice estático `/busca-index.json` (30 produtos + 40 categorias + 4 guias + calculadora, 75 entradas) filtrado localmente por tokens sem acento, zero-dep. Evento himetrica `busca_interna` no clique/Enter E em busca sem resultado (= demanda sem página — mineração de keyword grátis antes mesmo do GSC miner).
+- [x] **Image sitemap — FEITO 2026-07-04 (`49fc67a`).** Extensão `image:` no sitemap: toda página de produto lista suas fotos e cada categoria as 5 primeiras da galeria (199 entradas). Porcelanato é compra visual — Google Imagens é canal grátis que nenhum player local trabalha. Audit de alt text: **já estava 100%** (cards, detalhe e thumbs com alt descritivo) — nada a corrigir.
+- [x] **Feed com `g:product_highlight` + `g:product_detail` — FEITO 2026-07-04 (`f34c09b`).** 2–4 destaques factuais por item (acabamento, m²/caixa, retificado, classe AD) + ficha técnica espelhando a attrs-table da página (paridade página↔feed). Melhora listagem grátis no Merchant Center; Meta/Pinterest herdam o mesmo feed. `check-feed` OK 30 itens.
+
+> Build goiânia verificado local: 80 páginas, `check-feed OK`, sitemap com 199 `image:loc`, busca-index 75 entradas, deep-link calculadora no HTML do produto. App: `tsc --noEmit` limpo (build real é no Docker, como sempre). IndexNow local deu 403 transiente (chave confirmada no ar via HTTP 200) — ping se repete a cada deploy e é não-fatal.
+
 ## 🚀 Fase 1 — Subir o MVP no ar (caminho crítico, em ordem)
 
 - [x] **Aplicar schema no DB.** De uma máquina que alcança `2.24.207.200`, dentro de `/app`: `npm install` → `npx prisma db push` → `npm run db:seed` (carrega as 6 cadeiras, idempotente). ⚠️ NÃO confiar no runner standalone p/ schema — fazer `db push` manual.

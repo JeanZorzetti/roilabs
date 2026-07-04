@@ -34,6 +34,7 @@ Custo: R$ 0. Dev: zero mudança de código (o feed já cumpre os campos exigidos
 6. **WhatsApp**: no WhatsApp Business (app ou API), Configurações → Empresa → Catálogo →
    conectar ao catálogo do Commerce Manager. A partir daí os produtos aparecem no perfil
    comercial e podem ser enviados como card na conversa (`5562993265713`).
+	1. Verificar numero
 
 ## Compatibilidade do feed (verificado contra o feed.xml atual)
 
