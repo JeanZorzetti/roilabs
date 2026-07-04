@@ -29,16 +29,13 @@ const AMBIENTE_POR_SLUG = {
     'https://www.biancogres.com.br/media/9488/conversions/ambiente-biancogres-chicago-grafite-satin-80x80-chicago-grafite-ext-80x80-alta-thumb_480p.jpg',
   'porcelanato-persia-beige-biancogres':
     'https://www.biancogres.com.br/media/17118/conversions/ambiente-porcelanato-pulpis-marrone-lux-60x120-persia-beige-satin-100x100-thumb_480p.jpg',
-  // Savane (ciclo 12): só 2/8 com página oficial + dimensão/acabamento batendo
-  // exato; os outros 6 foram descontinuados/renomeados no site (ver handoff).
+  // Savane (ciclo 12, 1ª leva): 2/8 achados via WebSearch (Google não indexa
+  // o resto — site não expõe listagem completa, só carrossel).
   'porcelanato-56x113cm-pietra-di-matera-natural':
     'https://www.savane.com.br/public/images/products/ambients/pietra-96eca814eb.jpg',
   'porcelanato-90x90cm-urban-branco-polido':
     'https://www.savane.com.br/public/images/products/ambients/urban-branco-f5-8504e32fd6.png',
-  // Biancogres (ciclo 12): completando os 12 que faltavam — 5 batem
-  // dimensão+acabamento exatos, os outros 7 não têm página oficial viva
-  // (descontinuados/renomeados) ou têm página mas sem foto de ambiente
-  // (Onix Bianco Lux 60x120: só fotos de textura, ver handoff).
+  // Biancogres (ciclo 12, 1ª leva): 5/12 batem dimensão+acabamento exatos.
   'porcelanato-20x120-carvalho-natural':
     'https://www.biancogres.com.br/media/11027/conversions/ambiente-biancogres-carvalho-natural-e-moove-grafite-rgb-thumb_480p.jpg',
   'porcelanato-cristallo-quartz-biancogres':
@@ -49,6 +46,30 @@ const AMBIENTE_POR_SLUG = {
     'https://www.biancogres.com.br/media/17748/conversions/ambiente-porcelanato-chicago-grigio-satin-100x100-chicago-grigio-ext-100x100-thumb_480p.jpg',
   'porcelanato-pulpis-grigio-ac-100x100cm-biancogres':
     'https://www.biancogres.com.br/media/17644/conversions/ambiente-porcelanato-pulpis-grigio-lux-100x100-pulpis-grigio-satin-100x100-thumb_480p.jpg',
+  // Ciclo 12 (2ª leva, ferramenta `media-miner`): os sites não indexam bem no
+  // Google, mas ambos têm filtro de busca interno (`?nome-produto=` na
+  // Biancogres, `?search=` na Savane) que a busca externa não alcançava —
+  // fecha o resto da Savane (8/8) e mais 4 da Biancogres.
+  'porcelanato-56x113cm-strato-marmo-bege':
+    'https://www.savane.com.br/public/images/products/ambients/8909f6ccf8711fe7741f4d275b06486b_original.jpg',
+  'porcelanato-56x113cm-strato-marmo-grigio':
+    'https://www.savane.com.br/public/images/products/ambients/2ea131e1b845fdb4524a750fa225cc34_original.jpg',
+  'porcelanato-91x91cm-perla-acetinado':
+    'https://www.savane.com.br/public/images/products/ambients/c69323c8711081c35e7f3e4a8730b4ac_original.jpg',
+  'porcelanato-56x113cm-pietra-di-trulli-natural':
+    'https://www.savane.com.br/public/images/products/ambients/5a6dbf3bbb4d0c1b336e3a678fcad8b8_original.jpg',
+  'porcelanato-terrazine-91x91cm-savane':
+    'https://www.savane.com.br/public/images/products/ambients/37d9fe42efb5f0c7bfe37fa08df99dde_original.jpg',
+  'porcelanato-rock-face-matera-savane':
+    'https://www.savane.com.br/public/images/products/ambients/3b17e7decfe658f71af4755c7ffa4ebe_original.jpg',
+  'porcelanato-legado-grigio-ac-biancogres':
+    'https://www.biancogres.com.br/media/16958/conversions/ambiente-porcelanato-legado-grigio-satin-20x120-thumb_480p.jpg',
+  'porcelanato-castilla-noce-biancogres':
+    'https://www.biancogres.com.br/media/16867/conversions/ambiente-porcelanato-castilla-noce-ext-80x80-thumb_480p.jpg',
+  'porcelanato-120x120-tivoli-biancogres':
+    'https://www.biancogres.com.br/media/17780/conversions/ambiente-travertino-tivoli-str-120x120-travertino-tivoli-ext-120x120-thumb_480p.jpg',
+  'porcelanato-grigio-externo-biancogres':
+    'https://www.biancogres.com.br/media/9754/conversions/ambiente-biancogres-persia-grigio-100x100-persia-grigio-ext-100x100-thumb_480p.jpg',
 };
 
 const catalog = JSON.parse(readFileSync(CATALOG, 'utf8'));

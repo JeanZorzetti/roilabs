@@ -70,7 +70,10 @@
       "m2_caixa": 1.7,
       "retificado": true,
       "classe_ad": 2
-    }
+    },
+    "imagensAmbiente": [
+      "/img/ambientes/porcelanato-legado-grigio-ac-biancogres.jpg"
+    ]
   },
   {
     "slug": "porcelanato-bianco-luz-polido-biancogres",
@@ -102,7 +105,10 @@
       "m2_caixa": 2.88,
       "retificado": true,
       "classe_ad": 2
-    }
+    },
+    "imagensAmbiente": [
+      "/img/ambientes/porcelanato-120x120-tivoli-biancogres.jpg"
+    ]
   },
   {
     "slug": "porcelanato-arezzo-grigrio-biancogres",
@@ -137,7 +143,10 @@
       "m2_caixa": 3,
       "retificado": true,
       "classe_ad": 4
-    }
+    },
+    "imagensAmbiente": [
+      "/img/ambientes/porcelanato-grigio-externo-biancogres.jpg"
+    ]
   },
   {
     "slug": "porcelanato-pulpis-grigio-ac-100x100cm-biancogres",
@@ -299,7 +308,10 @@
       "m2_caixa": 2.6,
       "retificado": true,
       "classe_ad": null
-    }
+    },
+    "imagensAmbiente": [
+      "/img/ambientes/porcelanato-castilla-noce-biancogres.jpg"
+    ]
   },
   {
     "slug": "porcelanato-chicago-80x80-grafite-biancogres",
@@ -354,7 +366,10 @@
       "m2_caixa": 2.5,
       "retificado": null,
       "classe_ad": null
-    }
+    },
+    "imagensAmbiente": [
+      "/img/ambientes/porcelanato-56x113cm-strato-marmo-bege.jpg"
+    ]
   },
   {
     "slug": "porcelanato-56x113cm-strato-marmo-grigio",
@@ -370,7 +385,10 @@
       "m2_caixa": 2.5,
       "retificado": true,
       "classe_ad": null
-    }
+    },
+    "imagensAmbiente": [
+      "/img/ambientes/porcelanato-56x113cm-strato-marmo-grigio.jpg"
+    ]
   },
   {
     "slug": "porcelanato-90x90cm-urban-branco-polido",
@@ -405,7 +423,10 @@
       "m2_caixa": 2.48,
       "retificado": true,
       "classe_ad": null
-    }
+    },
+    "imagensAmbiente": [
+      "/img/ambientes/porcelanato-91x91cm-perla-acetinado.jpg"
+    ]
   },
   {
     "slug": "porcelanato-56x113cm-pietra-di-matera-natural",
@@ -440,7 +461,10 @@
       "m2_caixa": 2.5,
       "retificado": true,
       "classe_ad": null
-    }
+    },
+    "imagensAmbiente": [
+      "/img/ambientes/porcelanato-56x113cm-pietra-di-trulli-natural.jpg"
+    ]
   },
   {
     "slug": "porcelanato-terrazine-91x91cm-savane",
@@ -456,7 +480,10 @@
       "m2_caixa": 2.48,
       "retificado": true,
       "classe_ad": null
-    }
+    },
+    "imagensAmbiente": [
+      "/img/ambientes/porcelanato-terrazine-91x91cm-savane.jpg"
+    ]
   },
   {
     "slug": "porcelanato-rock-face-matera-savane",
@@ -472,7 +499,10 @@
       "m2_caixa": 2.5,
       "retificado": true,
       "classe_ad": null
-    }
+    },
+    "imagensAmbiente": [
+      "/img/ambientes/porcelanato-rock-face-matera-savane.jpg"
+    ]
   },
   {
     "slug": "porcelanato-nero-polido-delta",
