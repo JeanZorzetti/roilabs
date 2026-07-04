@@ -1,0 +1,124 @@
+---
+// Lista de favoritos client-side (localStorage, sem login/DB) — porcelanato é
+// compra de inspiração, ninguém decide numa visita só. CTA final reaproveita o
+// mesmo token ?c= que o carrinho usa para abrir um orçamento pré-preenchido.
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { produtos, tituloProduto, imgDisplay } from '../data/produtos';
+
+const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
+
+// Payload mínimo do catálogo inteiro — igual ao /comparar, pra não depender de
+// saber em build-time quais slugs o visitante favoritou.
+const favData = produtos.map((p) => ({
+  slug: p.slug,
+  titulo: tituloProduto(p),
+  img: imgDisplay(p.imagens[0] ?? ''),
+  preco: p.atributos.preco,
+}));
+---
+
+<Base
+  title="Meus favoritos — Porcelanato Goiânia | ROI Labs"
+  description="Seus porcelanatos salvos para decidir com calma. Peça o orçamento dos favoritos direto no WhatsApp."
+  noindex
+>
+  <Header />
+
+  <main class="section">
+    <div class="wrap" style="max-width:1000px;">
+      <h1 style="font-size:clamp(1.8rem,4vw,2.6rem);margin-bottom:0.4rem;">Meus favoritos</h1>
+      <p style="color:var(--d-muted);margin-bottom:2rem;">
+        Salvos neste navegador — ninguém mais vê essa lista.
+      </p>
+
+      <div class="fav-empty" hidden>
+        <p>Você ainda não favoritou nenhum porcelanato.</p>
+        <a class="btn btn--primary" href="/porcelanato/">Ver catálogo</a>
+      </div>
+
+      <div class="fav-actions" hidden>
+        <button type="button" class="btn btn--primary fav-whats" data-whats={whatsapp}>
+          Pedir orçamento dos favoritos no WhatsApp
+        </button>
+      </div>
+
+      <div class="prod-grid fav-grid"></div>
+    </div>
+  </main>
+
+  <Footer />
+</Base>
+
+<script type="application/json" id="fav-data" set:html={JSON.stringify(favData)} />
+
+<style>
+  .fav-empty { text-align: center; padding: 3rem 1rem; display: grid; gap: 1.2rem; justify-items: center; }
+  .fav-actions { margin-bottom: 1.6rem; }
+</style>
+
+<style is:global>
+  /* Cards montados via JS não recebem o data-astro-cid escopado do Astro. */
+  .fav-grid .fav-rm {
+    background: none; border: 0; color: var(--l-muted); cursor: pointer;
+    font-size: 0.78rem; text-decoration: underline; padding: 0 1.1rem 1rem;
+  }
+  .fav-grid .fav-rm:hover { color: var(--hivis); }
+</style>
+
+<script>
+  import { getFavoritos, removeFavorito, FAV_EVENT } from '../lib/favoritos';
+  import { encodeItems } from '../lib/cart';
+
+  type FavProduto = { slug: string; titulo: string; img: string; preco: number };
+  const catalogo: FavProduto[] = JSON.parse(document.getElementById('fav-data')!.textContent!);
+  const bySlug = new Map(catalogo.map((p) => [p.slug, p]));
+
+  const empty = document.querySelector<HTMLElement>('.fav-empty')!;
+  const actions = document.querySelector<HTMLElement>('.fav-actions')!;
+  const grid = document.querySelector<HTMLElement>('.fav-grid')!;
+  const whatsBtn = document.querySelector<HTMLButtonElement>('.fav-whats')!;
+
+  function render() {
+    const favoritos = getFavoritos().map((slug) => bySlug.get(slug)).filter((p): p is FavProduto => !!p);
+    empty.hidden = favoritos.length > 0;
+    actions.hidden = favoritos.length === 0;
+    grid.textContent = '';
+    for (const p of favoritos) {
+      const item = document.createElement('div');
+      item.className = 'fav-item';
+      item.innerHTML = `
+        <a class="prod-card" href="/porcelanato/produto/${p.slug}/">
+          <div class="prod-card__img">${p.img ? `<img src="${p.img}" alt="${p.titulo}" loading="lazy" />` : ''}</div>
+          <div class="prod-card__body">
+            <span class="prod-card__nome">${p.titulo}</span>
+            <span class="prod-card__preco">${p.preco.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} <small>/m²</small></span>
+          </div>
+        </a>
+        <button type="button" class="fav-rm" data-rm="${p.slug}">Remover dos favoritos</button>`;
+      grid.appendChild(item);
+    }
+  }
+
+  grid.addEventListener('click', (e) => {
+    const t = e.target as HTMLElement;
+    if (t.dataset.rm) { removeFavorito(t.dataset.rm); render(); }
+  });
+
+  whatsBtn.addEventListener('click', () => {
+    const favoritos = getFavoritos().map((slug) => bySlug.get(slug)).filter((p): p is FavProduto => !!p);
+    if (favoritos.length === 0) return;
+    const token = encodeItems(favoritos.map((p) => ({ slug: p.slug, caixas: 1 })));
+    const cartUrl = `${location.origin}/carrinho?c=${token}`;
+    const nomes = favoritos.map((p) => p.titulo).join(', ');
+    const texto = `Olá! Quero um orçamento dos meus porcelanatos favoritos (${nomes}):\n${cartUrl}`;
+    const numero = whatsBtn.dataset.whats || '5562993265713';
+    (window as any).himetrica?.track('favoritos_whatsapp', { itens: favoritos.length });
+    window.open(`https://wa.me/${numero}?text=${encodeURIComponent(texto)}`, '_blank', 'noopener');
+  });
+
+  window.addEventListener(FAV_EVENT, render);
+  window.addEventListener('storage', render);
+  render();
+</script>
