@@ -14,19 +14,19 @@ dono: Jean (dev)
 > [!warning] O que NÃO é seu
 > Fechar 1º fornecedor (Gate 3), piso de take rate em R$, prospecção de players = **Maria Eduarda / campo**.
 
-## 🧭 Fora da caixa — ciclo 11 (2026-07-04) — PROPOSTO, aguardando o "vai"
+## 🧭 Fora da caixa — ciclo 11 (2026-07-04) — 4/4 itens de código EXECUTADOS (`e7978a0`)
 
 > [!note] Tema: **funil visual a partir de `/porcelanato`** (pedido do Jean: porcelanato é compra visual, o funil hoje é texto-pesado). Verificado contra o código em 2026-07-04: 30 produtos com **média 1,1 foto** cada (0 vídeos, apesar do campo `video` já existir no JSON); **34/34 imagens em hotlink de `jurunense.vteximg.com.br`** (CDN de terceiro — suspeito nº 1 do Merchant Center e ponto único de falha); hub `/porcelanato/` com 41 cards de **texto puro**; hero da malha sem imagem; galeria do produto sem zoom. **Ordem importa: o item 1 é fundação dos demais.**
 
 ### 🛡️🖼️ Fundação: donos das próprias imagens
 
-- [ ] **⭐ 1. Self-host + otimização das 34 fotos do catálogo.** Script one-shot baixa as imagens pro repo (`public/img/produtos/`), o build gera variantes responsivas (WebP + width/height explícitos = zero CLS) e site/feed/OG passam a servir do próprio domínio. Mata 3 coelhos: risco de hotlink (se a Jurunense bloquear referer, o site inteiro fica sem foto), o suspeito nº 1 de reprovação no Merchant Center e o LCP. `check-feed` passa a validar URL própria.
+- [x] **⭐ 1. Self-host + otimização das 34 fotos do catálogo — FEITO 2026-07-04 (`e7978a0`).** `fetch-images.mjs` (one-shot, idempotente) baixou as 34 fotos pra `public/img/produtos/` (2 MB), gerou variante de exibição `.webp` ≤900px (`imgDisplay` em `produtos.ts`) e reescreveu `porcelanatos.json` com caminho local — original fica pra feed/OG/zoom. Feed, image sitemap (199 locs) e Product JSON-LD emitem URL absoluta própria (`imgAbs`); **`check-feed` agora FALHA se `g:image_link` sair do domínio** (hotlink de terceiro virou regressão detectável). Gotcha corrigido de brinde: `Base.astro` só emite `og:image` 1200×630 pra imagens de social — foto de produto tem proporção própria. Zero refs `vteximg` no dist. ⏳ watch: Merchant Center vai re-crawlear o feed com URLs novas de imagem — itens podem voltar a "Em análise" por uns dias (junto do Diagnóstico ~07-05).
 
 ### 🎨 Funil visual (depende do 1)
 
-- [ ] **⭐ 2. Hub visual.** Os 41 cards da malha em `/porcelanato/` ganham foto de capa — 1º produto da categoria via `produtosDaCategoria()` (dado já computado no build); categoria sem produto mantém o card texto. É a página da âncora "porcelanato goiânia" deixando de parecer um sumário.
-- [ ] **⭐ 3. Hero visual na malha.** O `pseo-hero` das 41 páginas ganha strip de 3–4 fotos reais da categoria (linkando pra galeria abaixo). Leve: imagens otimizadas do item 1, sem carrossel/JS.
-- [ ] **4. Zoom na foto do produto.** `<dialog>` nativo full-screen no clique da foto principal — porcelanato é textura, ver grande decide compra. Zero-dep, ~30 linhas.
+- [x] **⭐ 2. Hub visual — FEITO 2026-07-04 (`e7978a0`).** 38 dos 40 cards da malha em `/porcelanato/` ganharam capa (foto do 1º produto da categoria, `loading="lazy"`, hover com zoom sutil); 2 categorias sem produto seguem como card texto (fallback por design). E2E: 38 capas renderizando no preview.
+- [x] **⭐ 3. Hero visual na malha — FEITO 2026-07-04 (`e7978a0`).** `pseo-hero__strip`: até 4 fotos reais da categoria no hero, cada uma linkando pra âncora `#catalogo` da galeria. Sem carrossel/JS — só HTML+CSS com as webp do item 1.
+- [x] **4. Zoom na foto do produto — FEITO 2026-07-04 (`e7978a0`).** Foto principal virou `<button cursor:zoom-in>` que abre `<dialog>` nativo (top-layer passa por cima do MiniCart) com o **original full-res** (`data-full`), não a webp. Bônus: thumbs agora TROCAM a foto principal (antes eram estáticas — produto com 5 fotos não tinha como ver as outras). E2E Playwright: abre com original, fecha no ✕/backdrop.
 
 ### 📸 Acervo (gate — sem isso não existe "inspiração")
 
