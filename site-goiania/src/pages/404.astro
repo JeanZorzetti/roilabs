@@ -1,0 +1,53 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { guias } from '../data/guias';
+
+const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
+
+// O funil roda em link compartilhado no WhatsApp — link quebrado/digitado errado
+// não pode morrer numa página seca. Antes deste arquivo o nginx devolvia a home
+// com HTTP 200 (soft 404); agora é 404 real (error_page no nginx.conf) com saída.
+---
+
+<Base
+  title="Página não encontrada — Porcelanato Goiânia | ROI Labs"
+  description="Essa página não existe ou mudou de endereço. Veja o catálogo de porcelanato de Goiânia, use a busca ou fale direto no WhatsApp."
+>
+  <Header />
+
+  <main>
+    <section class="section">
+      <div class="wrap" style="max-width:72ch;">
+        <span class="eyebrow">Erro 404</span>
+        <h1 style="font-size:clamp(1.8rem,3.5vw,2.6rem);margin:0.4rem 0 1rem;">
+          Essa página não existe (ou mudou de endereço)
+        </h1>
+        <p style="color:var(--d-muted);margin-bottom:2rem;">
+          O link pode ter vindo quebrado ou o endereço mudou. Use a <strong>busca</strong> no
+          topo da página, vá direto para uma das áreas abaixo — ou chame no WhatsApp que a
+          gente encontra o porcelanato certo para você.
+        </p>
+
+        <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:2.5rem;">
+          <a class="btn btn--primary" href="/porcelanato/">Ver todos os porcelanatos</a>
+          <a class="btn btn--ghost" href="/calculadora/">Calculadora de caixas</a>
+          <a
+            class="btn btn--ghost"
+            href={`https://wa.me/${whatsapp}?text=${encodeURIComponent('Olá! Caí num link quebrado no site — pode me ajudar a achar um porcelanato?')}`}
+          >Falar no WhatsApp</a>
+        </div>
+
+        <h2 style="font-size:clamp(1.15rem,2vw,1.4rem);margin:0 0 1rem;">Guias de decisão</h2>
+        <div class="related-grid">
+          {guias.map((g) => (
+            <a href={`/guia/${g.slug}/`} class="related-card">{g.titulo}</a>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Base>
