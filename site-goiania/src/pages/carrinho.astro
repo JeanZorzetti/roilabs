@@ -63,6 +63,7 @@ const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
               <p class="cart-callback__msg" aria-live="polite"></p>
             </form>
             <button type="button" class="cart-share">🔗 Salvar / compartilhar carrinho</button>
+            <button type="button" class="cart-share cart-orc">📄 Abrir como orçamento (PDF)</button>
             <p class="cart-share__msg" aria-live="polite"></p>
           </div>
         </section>
@@ -477,6 +478,13 @@ const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
     cbMsg.textContent = 'Recebido! Nosso especialista te chama em até 24h úteis.';
     (cbForm.querySelector('.cart-callback__row') as HTMLElement).hidden = true;
     (cbForm.querySelector('.cart-callback__consent') as HTMLElement).hidden = true;
+  });
+
+  // Quote view: same ?c= token on /orcamento (formal doc + print CSS → PDF).
+  $('.cart-orc').addEventListener('click', () => {
+    const msg = $('.cart-share__msg') as HTMLElement;
+    if (getCart().length === 0) { msg.textContent = 'Adicione itens antes de gerar o orçamento.'; return; }
+    window.open(`/orcamento?c=${encodeCart()}`, '_blank', 'noopener');
   });
 
   $('.cart-share').addEventListener('click', async () => {

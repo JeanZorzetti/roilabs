@@ -7,6 +7,7 @@ interface Props {
   ogType?: string;
   ogImage?: string;
   jsonLdNodes?: Record<string, unknown>[];
+  noindex?: boolean;
 }
 
 const {
@@ -15,6 +16,7 @@ const {
   ogType = 'website',
   ogImage = '/og-image.jpg',
   jsonLdNodes = [],
+  noindex = false,
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site);
@@ -65,6 +67,12 @@ const graph = {
   ],
 };
 
+// Botão flutuante de WhatsApp (todas as páginas): cai no listener delegado de
+// whatsapp_click abaixo, então já conta como conversão sem código extra.
+const waFloat = `https://wa.me/${import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713'}?text=${encodeURIComponent(
+  'Olá! Estou no site de porcelanato de Goiânia e quero uma ajuda.'
+)}`;
+
 // GA4 (mesma Google tag do institucional — fluxos da mesma propriedade). Fallback
 // hard-coded de propósito: vale sem env na EasyPanel; PUBLIC_GA_ID sobrepõe.
 const gaId = import.meta.env.PUBLIC_GA_ID ?? 'G-7JD9J2QEDJ';
@@ -80,6 +88,7 @@ const clarityId = import.meta.env.PUBLIC_CLARITY_ID ?? 'xgun692iah';
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex" />}
     <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="apple-touch-icon" href="/roilabs-icon.png" />
@@ -155,5 +164,21 @@ const clarityId = import.meta.env.PUBLIC_CLARITY_ID ?? 'xgun692iah';
   </head>
   <body>
     <slot />
+    <a class="wa-float" href={waFloat} target="_blank" rel="noopener" aria-label="Falar no WhatsApp">
+      <svg viewBox="0 0 32 32" width="30" height="30" fill="#fff" aria-hidden="true">
+        <path d="M16 3C9.4 3 4 8.3 4 14.9c0 2.6.8 5 2.3 7L4 29l7.3-2.3c1.5.8 3.1 1.2 4.7 1.2 6.6 0 12-5.3 12-11.9S22.6 3 16 3zm0 21.8c-1.5 0-3-.4-4.3-1.2l-.3-.2-4.3 1.4 1.4-4.2-.2-.3c-1.2-1.6-1.8-3.5-1.8-5.4C6.5 9.5 10.8 5.2 16 5.2s9.5 4.3 9.5 9.7-4.3 9.9-9.5 9.9zm5.3-7.3c-.3-.1-1.7-.8-2-.9-.3-.1-.5-.1-.7.1-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.2-.5-2.3-1.4-.9-.8-1.5-1.7-1.6-2-.2-.3 0-.4.1-.6l.4-.5c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.7-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.1-.3-.2-.6-.4z"/>
+      </svg>
+    </a>
+    <style>
+      .wa-float {
+        position: fixed; right: 1.1rem; bottom: 1.1rem; z-index: 50;
+        width: 56px; height: 56px; border-radius: 50%;
+        background: #25d366; display: flex; align-items: center; justify-content: center;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+        transition: transform 0.15s ease;
+      }
+      .wa-float:hover { transform: scale(1.07); }
+      @media print { .wa-float { display: none; } }
+    </style>
   </body>
 </html>

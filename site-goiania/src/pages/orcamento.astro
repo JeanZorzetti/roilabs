@@ -1,0 +1,200 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+// Orçamento formal a partir do token ?c= do carrinho (mesmo payload do link de
+// compartilhar: slug+caixas, TTL 30 dias). Snapshot de exibição — NÃO restaura o
+// carrinho do visitante; "Fechar pedido" leva o token pro /carrinho, que restaura.
+// Preço vem do catálogo do build; o servidor segue a autoridade no checkout.
+// noindex: página utilitária de query param, fora do sitemap por design.
+const appUrl = import.meta.env.PUBLIC_APP_URL ?? 'https://app.roilabs.com.br';
+const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
+---
+
+<Base
+  title="Orçamento — Porcelanato Goiânia | ROI Labs"
+  description="Orçamento de porcelanato em Goiânia: itens, metragem e valores. Pagamento online (Pix ou cartão), retirada grátis ou entrega na Grande Goiânia."
+  noindex
+>
+  <Header />
+
+  <main class="section" data-app-url={appUrl}>
+    <div class="wrap orc-wrap">
+      <!-- Estado: sem token / expirado -->
+      <div class="orc-miss" hidden>
+        <span class="eyebrow">Orçamento</span>
+        <h1 style="font-size:clamp(1.8rem,3.5vw,2.4rem);margin:0.4rem 0 1rem;">Este orçamento não está mais disponível</h1>
+        <p style="color:var(--d-muted);margin-bottom:2rem;">
+          O link pode ter expirado (orçamentos valem por 30 dias) ou vindo incompleto.
+          Monte um novo carrinho ou chame no WhatsApp que geramos outro na hora.
+        </p>
+        <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+          <a class="btn btn--primary" href="/porcelanato/">Ver porcelanatos</a>
+          <a class="btn btn--ghost" href={`https://wa.me/${whatsapp}?text=${encodeURIComponent('Olá! Meu link de orçamento expirou — pode gerar um novo?')}`}>Falar no WhatsApp</a>
+        </div>
+      </div>
+
+      <!-- Documento -->
+      <article class="orc" hidden aria-label="Orçamento">
+        <header class="orc__head">
+          <div>
+            <img src="/roilabs-icon.png" alt="ROI Labs" width="44" height="44" class="orc__logo" />
+            <div class="orc__brand">ROI Labs — Porcelanato Goiânia</div>
+            <div class="orc__contact">goiania.roilabs.com.br · parceria@roilabs.com.br · WhatsApp (62) 99326-5713</div>
+          </div>
+          <div class="orc__doc">
+            <div class="orc__doc-title">Orçamento</div>
+            <div class="orc__doc-num" data-num>—</div>
+            <div class="orc__doc-dates">
+              <span>Emitido em <strong data-emissao>—</strong></span>
+              <span>Válido até <strong data-validade>—</strong></span>
+            </div>
+          </div>
+        </header>
+
+        <table class="orc__table">
+          <thead>
+            <tr>
+              <th>Produto</th>
+              <th class="num">m²/caixa</th>
+              <th class="num">Caixas</th>
+              <th class="num">Cobre (m²)</th>
+              <th class="num">Preço/m²</th>
+              <th class="num">Subtotal</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+          <tfoot>
+            <tr>
+              <td colspan="5">Total dos produtos</td>
+              <td class="num orc__total" data-total>—</td>
+            </tr>
+          </tfoot>
+        </table>
+
+        <div class="orc__terms">
+          <p><strong>Entrega:</strong> retirada no fornecedor grátis, ou entrega na Grande Goiânia com frete por região (confirmado no fechamento do pedido). Prazo típico: 2–7 dias úteis após a confirmação.</p>
+          <p><strong>Pagamento:</strong> online via Mercado Pago (Pix ou cartão). Pedido pago entra como reserva e é confirmado pelo fornecedor em até 24h.</p>
+          <p><strong>Condições:</strong> valores por caixa fechada, sujeitos a confirmação de estoque na data do fechamento. Troca e devolução conforme o CDC — ver goiania.roilabs.com.br/devolucoes/.</p>
+        </div>
+
+        <div class="orc__actions no-print">
+          <a class="btn btn--primary" data-fechar href="/carrinho">Fechar pedido agora</a>
+          <a class="btn btn--ghost" data-whats href={`https://wa.me/${whatsapp}`}>Tirar dúvida no WhatsApp</a>
+          <button type="button" class="btn btn--ghost" data-print>Imprimir / salvar PDF</button>
+        </div>
+      </article>
+    </div>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .orc-wrap { max-width: 860px; }
+  .orc { border: 1px solid var(--d-line); border-radius: 12px; background: var(--ink-2); padding: clamp(1.2rem, 3vw, 2.2rem); }
+  .orc__head { display: flex; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; padding-bottom: 1.4rem; border-bottom: 2px solid var(--hivis); margin-bottom: 1.4rem; }
+  .orc__logo { border-radius: 8px; margin-bottom: 0.5rem; }
+  .orc__brand { font-weight: 800; font-size: 1.05rem; color: var(--d-text); }
+  .orc__contact { font-size: 0.8rem; color: var(--d-muted); margin-top: 0.25rem; }
+  .orc__doc { text-align: right; }
+  .orc__doc-title { text-transform: uppercase; letter-spacing: 0.12em; font-size: 0.75rem; color: var(--d-muted); }
+  .orc__doc-num { font-weight: 800; font-size: 1.25rem; color: var(--hivis); margin: 0.15rem 0 0.4rem; }
+  .orc__doc-dates { display: grid; gap: 0.15rem; font-size: 0.8rem; color: var(--d-muted); }
+  .orc__table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+  .orc__table th, .orc__table td { padding: 0.6rem 0.5rem; text-align: left; border-bottom: 1px solid var(--d-line); color: var(--d-text); }
+  .orc__table th { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--d-muted); }
+  .orc__table .num { text-align: right; white-space: nowrap; }
+  .orc__table tfoot td { border-bottom: 0; padding-top: 0.9rem; font-weight: 800; }
+  .orc__total { font-size: 1.15rem; color: var(--hivis); }
+  .orc__terms { margin-top: 1.4rem; padding-top: 1.2rem; border-top: 1px dashed var(--d-line-strong); display: grid; gap: 0.55rem; }
+  .orc__terms p { font-size: 0.82rem; color: var(--d-muted); margin: 0; }
+  .orc__terms strong { color: var(--d-text); }
+  .orc__actions { margin-top: 1.6rem; display: flex; gap: 0.8rem; flex-wrap: wrap; }
+  .orc__actions .btn { font: inherit; cursor: pointer; }
+  @media (max-width: 640px) {
+    .orc__doc { text-align: left; }
+    .orc__table { display: block; overflow-x: auto; }
+  }
+
+  /* Impressão: papel branco, sem chrome do site — é o PDF que vai pro cliente. */
+  @media print {
+    .orc { border: 0; border-radius: 0; background: #fff; padding: 0; }
+    .orc__brand, .orc__table th, .orc__table td, .orc__terms strong { color: #111 !important; }
+    .orc__contact, .orc__doc-title, .orc__doc-dates, .orc__terms p { color: #444 !important; }
+    .orc__doc-num, .orc__total { color: #b45309 !important; }
+    .orc__table th, .orc__table td { border-color: #ddd; }
+  }
+</style>
+
+<style is:global>
+  @media print {
+    body { background: #fff !important; }
+    .site-header, .site-footer, .no-print, .mini-cart, .mini-cart-overlay { display: none !important; }
+    main.section { padding: 0 !important; }
+  }
+</style>
+
+<script>
+  import { decodeCart } from '../lib/cart';
+  import { produtosBySlug, nomeProduto, formatPreco } from '../data/produtos';
+
+  const $ = <T extends Element>(s: string) => document.querySelector<T>(s)!;
+  const doc = $('.orc') as HTMLElement;
+  const miss = $('.orc-miss') as HTMLElement;
+
+  const token = new URLSearchParams(location.search).get('c');
+  const items = token ? decodeCart(token) : 'expired';
+
+  // Resolve contra o catálogo (mesma matemática do carrinho); slug desconhecido cai fora.
+  const lines = items === 'expired' ? [] : items.flatMap((it) => {
+    const p = produtosBySlug.get(it.slug);
+    if (!p) return [];
+    const { m2_caixa, preco, marca } = p.atributos;
+    const m2 = it.caixas * m2_caixa;
+    return [{ nome: `${marca} ${nomeProduto(p)}`, m2_caixa, caixas: it.caixas, m2, preco, subtotal: m2 * preco }];
+  });
+
+  if (!token || items === 'expired' || lines.length === 0) {
+    miss.hidden = false;
+  } else {
+    // Nº do orçamento e datas derivam do timestamp do token — reabrir o mesmo link
+    // dá o mesmo número (o token É o documento; validade = TTL de 30 dias do link).
+    const ts = JSON.parse(atob(token.replace(/-/g, '+').replace(/_/g, '/') + '='.repeat((4 - (token.length % 4)) % 4))).ts as number;
+    const fmt = (d: Date) => d.toLocaleDateString('pt-BR');
+    $('[data-num]').textContent = 'Nº ' + ts.toString(36).toUpperCase();
+    $('[data-emissao]').textContent = fmt(new Date(ts));
+    $('[data-validade]').textContent = fmt(new Date(ts + 30 * 24 * 60 * 60 * 1000));
+
+    const tbody = $('.orc__table tbody');
+    for (const l of lines) {
+      const tr = document.createElement('tr');
+      const cells = [
+        l.nome,
+        l.m2_caixa.toFixed(2).replace('.', ','),
+        String(l.caixas),
+        l.m2.toFixed(2).replace('.', ','),
+        formatPreco(l.preco),
+        formatPreco(l.subtotal),
+      ];
+      cells.forEach((c, i) => {
+        const td = document.createElement('td');
+        td.textContent = c;
+        if (i > 0) td.className = 'num';
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    }
+    const total = lines.reduce((s, l) => s + l.subtotal, 0);
+    $('[data-total]').textContent = formatPreco(total);
+
+    ($('[data-fechar]') as HTMLAnchorElement).href = `/carrinho?c=${encodeURIComponent(token)}`;
+    const whats = $('[data-whats]') as HTMLAnchorElement;
+    whats.href += `?text=${encodeURIComponent(`Olá! Tenho uma dúvida sobre o orçamento Nº ${ts.toString(36).toUpperCase()}:\n${location.origin}/orcamento?c=${token}`)}`;
+    $('[data-print]').addEventListener('click', () => window.print());
+
+    doc.hidden = false;
+    (window as any).himetrica?.track('orcamento_view', { itens: lines.length });
+  }
+</script>
