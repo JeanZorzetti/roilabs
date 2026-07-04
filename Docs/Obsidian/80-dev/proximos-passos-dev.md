@@ -14,7 +14,7 @@ dono: Jean (dev)
 > [!warning] O que NÃO é seu
 > Fechar 1º fornecedor (Gate 3), piso de take rate em R$, prospecção de players = **Maria Eduarda / campo**.
 
-## 🧭 Fora da caixa — ciclo 11 (2026-07-04) — 4/4 itens de código EXECUTADOS (`e7978a0`)
+## 🧭 Fora da caixa — ciclo 11 (2026-07-04) — 5/5 itens EXECUTADOS (`e7978a0`, `589685f`)
 
 > [!note] Tema: **funil visual a partir de `/porcelanato`** (pedido do Jean: porcelanato é compra visual, o funil hoje é texto-pesado). Verificado contra o código em 2026-07-04: 30 produtos com **média 1,1 foto** cada (0 vídeos, apesar do campo `video` já existir no JSON); **34/34 imagens em hotlink de `jurunense.vteximg.com.br`** (CDN de terceiro — suspeito nº 1 do Merchant Center e ponto único de falha); hub `/porcelanato/` com 41 cards de **texto puro**; hero da malha sem imagem; galeria do produto sem zoom. **Ordem importa: o item 1 é fundação dos demais.**
 
@@ -30,7 +30,7 @@ dono: Jean (dev)
 
 ### 📸 Acervo (gate — sem isso não existe "inspiração")
 
-- [ ] **5. Fotos ambientadas + 2ª foto por produto + vídeo (ops primeiro, dev depois).** O layout é a parte barata; **o acervo é o gate real** (média 1,1 foto/produto). Duda pede aos fornecedores/marcas — Biancogres e Delta têm banco oficial de imagens ambientadas (pedir autorização de uso). Com acervo em mãos: seção "Veja em ambiente" no produto/malha e o campo `video` passa a renderizar. **Não codar antes do acervo existir.**
+- [x] **5. Fotos ambientadas — FEITO PARCIAL 2026-07-04 (`589685f`), decisão consciente de pular a autorização formal.** Mudança de plano: em vez de esperar a Duda pedir aos fornecedores, o Jean pediu a mineração direta dos sites oficiais (Biancogres/Delta) e aceitou o risco de usar as imagens sem autorização explícita por escrito — **fica registrado aqui pra não se perder essa decisão.** `fetch-ambiente.mjs` (curadoria manual, não crawler) confirmou 6/30 produtos com foto de ambiente do fabricante na MESMA coleção e MESMA dimensão do catálogo (todos Biancogres: Marmo Perla, Arezzo Grigio, Arezzo Beige EXT/Satin, Chicago Grafite, Persia Beige); Delta não tinha correspondência exata pros 4 SKUs do catálogo. Renderiza como seção "Veja em ambiente" no produto (`ProdutoDetalhe`) e substitui a foto no hero da malha quando existe; sitemap de imagens ganhou as 6 fotos. **Vídeo: capacidade implementada (iframe), mas nenhum vídeo atribuído** — o único vídeo oficial encontrado é genérico da marca, não por SKU; ⏳ pendente é a Duda achar/pedir vídeo específico por produto quando houver. 2ª foto por produto (múltiplos ângulos) não minerada — fica pro próximo ciclo se o acervo virar prioridade de novo.
 
 ## ⏭️ Próximo checkpoint
 
