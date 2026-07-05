@@ -47,6 +47,12 @@ export const GET: APIRoute = () => {
       k: norm('comparar comparador comparacao diferenca entre porcelanatos qual melhor preco lado a lado'),
     },
     {
+      t: 'Glossário de porcelanato (PEI, retificado, calibre...)',
+      s: 'Guia',
+      u: '/glossario/',
+      k: norm('glossario termos significado o que e pei absorcao de agua esmaltado tecnico destonalizacao lote tonalidade polido acetinado natural mate antiderrapante coeficiente atrito retificado bold calibre m2 por caixa formato grande junta rejunte argamassa colante ac-i ac-ii ac-iii paginacao nivelador'),
+    },
+    {
       t: 'Como funciona — quem somos, entrega e pagamento',
       s: 'Institucional',
       u: '/sobre/',

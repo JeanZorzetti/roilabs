@@ -1,44 +1,46 @@
 ---
-status: done
+status: in_progress
 next_effort: medium
-iteration: 5
-updated_at: 2026-07-04T21:30:00.000Z
+iteration: 1
+updated_at: 2026-07-05T11:55:00.000Z
 ---
 
 ## Last completed
-Ciclo 15 completo — as 5 tarefas do `macro_plan.md` foram feitas e
-commitadas nesta branch (`claude-loop`):
+Tarefa 1 (Semana 1): criado o glossário de porcelanato em `/glossario/` no
+`site-goiania`:
+- `src/pages/glossario.astro` — 19 termos em 4 grupos (Material e qualidade,
+  Acabamento de superfície, Medidas e formato, Instalação), cada um com
+  definição BLUF de 2–4 frases, âncora estável (`#pei`, `#retificado`,
+  `#argamassa-colante`...), índice de âncoras no topo e links para os guias,
+  a malha e a calculadora. Schema `DefinedTermSet` + `DefinedTerm` (um nó por
+  termo com `url` na âncora) + `BreadcrumbList`.
+- Registrado em `sitemap.xml.ts`, `llms.txt.ts` (seção Ferramentas),
+  `busca-index.json.ts` (uma entrada com keywords de todos os termos),
+  `open-graph/[...route].ts` (OG gerado) e link "Glossário" no `Footer.astro`.
+- `astro build` verde (86 páginas); conferido em `dist/`: página, PNG do OG e
+  URL presente em sitemap/llms.txt/busca-index.
 
-1. Lista de favoritos client-side (`/favoritos`) — commit `2188f41`.
-2. Estimador de rejunte/argamassa na `/calculadora` — commit `a1fcdd5`.
-3. Mural "Inspire-se" (`/site-goiania/inspire-se`) reaproveitando fotos de
-   ambiente — encontrado já implementado (mas não commitado) no início
-   desta iteração; build verificado (87 páginas, sem erro) e commitado
-   agora em `494ed46`.
-4. Simulador de ROI para fornecedor (`/site/simulador`) — commit `47a7d34`.
-5. Auditoria básica de acessibilidade em `/site-goiania` — feita nesta
-   iteração, commit `1075477`:
-   - Inspecionei o HTML gerado (`npx astro build`, sem ferramenta paga) e
-     o source `.astro` de hub, produto, categoria, calculadora, carrinho,
-     orçamento e favoritos.
-   - Nenhum `<img>` sem `alt`. Um `alt=""` intencional revisado e mantido
-     (capa de card cuja imagem é redundante com o texto do link
-     adjacente).
-   - Corrigido: 3 inputs sem label acessível (largura/comprimento
-     dinâmicos na calculadora, campo de cupom no carrinho) — adicionado
-     `aria-label`, mecânico e seguro.
-   - Documentado (não corrigido, exige decisão de design): contraste da
-     cor `--hivis` (#ff5a1f) como texto de link sobre fundo claro
-     (~2.8:1, reprova WCAG AA de 4.5:1).
-   - Relatório completo em `Docs/Obsidian/90-medicao/a11y-audit.md`.
-   - Build re-verificado após as correções, sem erro.
-
-Não toquei em `/app`, pagamento, DB nem deploy em nenhuma das tarefas.
-Nenhuma dependência nova foi adicionada no ciclo.
+Nota: as âncoras existem para deep-link a partir de guias/produtos, mas os
+guias existentes NÃO foram editados para apontar pro glossário (fica natural
+fazer isso na tarefa 14, refresh de descoberta, se valer a pena).
 
 ## Next step
-Não há próxima tarefa — `macro_plan.md` do Ciclo 15 (semana 1, escopo
-"fora da caixa") está 100% concluído e commitado na branch `claude-loop`.
-
-Aguardar novo `macro_plan.md` do dono do projeto para a próxima semana de
-escopo. Não inventar tarefas além do que estiver escrito em um plano novo.
+Tarefa 2 do `macro_plan.md` (Semana 1): **Guia AEO
+`/guia/porcelanato-area-externa/`** no `site-goiania`.
+- Verificar antes se já existe (hoje só existem 4 guias em `src/pages/guia/`:
+  como-escolher, porcelanato-ou-ceramica, polido-ou-acetinado, quanto-custa).
+- Conteúdo: antiderrapante (coeficiente de atrito ≥0,4 NBR 13818), PEI,
+  absorção de água, formatos para área externa/garagem/piscina; tabela
+  comparativa; FAQPage; linkar produtos reais do catálogo que atendem —
+  filtrar por atributos reais em `src/data/produtos.ts`, NÃO inventar specs.
+- Registrar em `src/data/guias.ts` (isso já propaga para sitemap, llms.txt,
+  busca-index e OG automaticamente — os 4 arquivos derivam de `guias`).
+- Padrão a copiar: `src/pages/guia/porcelanato-polido-ou-acetinado.astro`
+  (Base + Header/Footer/Faq/WhatsappCta, jsonLdNodes com FAQPage +
+  BreadcrumbList, hero BLUF, tabela `comp-table`, CTA duplo, relacionados).
+- Cuidado: existe a categoria `/porcelanato/porcelanato-area-externa/` na
+  malha — o guia responde a dúvida ANTES da categoria, sem canibalizar
+  (mesma relação dos guias existentes com suas categorias). Linkar o
+  glossário novo (`/glossario/#antiderrapante`, `#pei`, `#absorcao-de-agua`).
+- URLs sempre com barra final. `astro build` verde antes de commitar
+  (deploy automático em produção no push).

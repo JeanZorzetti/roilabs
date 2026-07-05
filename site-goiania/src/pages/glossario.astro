@@ -1,0 +1,343 @@
+---
+// Glossário AEO: os termos técnicos que o comprador encontra na etiqueta/anúncio
+// e não entende. Definição BLUF de 2–4 frases por termo, âncora estável (#pei)
+// para deep-link a partir de guias e páginas de produto, e DefinedTermSet no
+// schema. Interlink: cada termo aponta para o guia/categoria onde ele decide.
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import WhatsappCta from '../components/WhatsappCta.astro';
+
+const SITE = Astro.site?.href.replace(/\/$/, '') ?? 'https://goiania.roilabs.com.br';
+const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
+
+type Termo = { id: string; nome: string; def: string; links: { href: string; label: string }[] };
+type Grupo = { titulo: string; termos: Termo[] };
+
+const grupos: Grupo[] = [
+  {
+    titulo: 'Material e qualidade',
+    termos: [
+      {
+        id: 'pei',
+        nome: 'PEI (resistência à abrasão)',
+        def: 'Escala de 1 a 5 que mede quanto a superfície esmaltada resiste ao desgaste de pisar e arrastar. PEI 3 atende quarto e sala; PEI 4 aguenta cozinha, corredor e comércio leve; PEI 5 é para tráfego intenso. Só vale para porcelanato esmaltado — o técnico não usa a escala, porque a massa é igual da superfície ao fundo.',
+        links: [
+          { href: '/guia/como-escolher-porcelanato/', label: 'Como escolher porcelanato' },
+          { href: '/porcelanato/piso-porcelanato/', label: 'Piso porcelanato' },
+        ],
+      },
+      {
+        id: 'absorcao-de-agua',
+        nome: 'Absorção de água',
+        def: 'Percentual de água que a peça absorve, medido em laboratório (NBR ISO 10545-3). Porcelanato absorve no máximo 0,5% — por isso é mais denso, mais resistente e não mancha por infiltração; cerâmica comum fica acima de 3%. É o critério técnico que separa porcelanato de cerâmica na norma.',
+        links: [{ href: '/guia/porcelanato-ou-ceramica/', label: 'Porcelanato ou cerâmica' }],
+      },
+      {
+        id: 'esmaltado',
+        nome: 'Porcelanato esmaltado',
+        def: 'Recebe uma camada de esmalte decorada sobre a massa — é onde ficam a estampa (amadeirado, marmorizado) e o acabamento. É o tipo mais comum do varejo e o que usa a escala PEI. Se o esmalte gastar num ponto de tráfego extremo, o fundo aparece; para uso residencial isso não é limitação prática.',
+        links: [
+          { href: '/porcelanato/porcelanato-amadeirado/', label: 'Porcelanato amadeirado' },
+          { href: '/porcelanato/porcelanato-marmorizado/', label: 'Porcelanato marmorizado' },
+        ],
+      },
+      {
+        id: 'tecnico',
+        nome: 'Porcelanato técnico',
+        def: 'Feito de massa única, sem camada de esmalte: a cor e o desenho atravessam a peça inteira. Desgaste não muda o visual, por isso é o padrão de shopping, aeroporto e indústria. Custa mais e tem menos variedade de estampa que o esmaltado — em casa, raramente compensa.',
+        links: [{ href: '/guia/como-escolher-porcelanato/', label: 'Como escolher porcelanato' }],
+      },
+      {
+        id: 'destonalizacao',
+        nome: 'Destonalização (V1 a V4)',
+        def: 'Variação proposital de tom e desenho entre peças da mesma caixa. V1 é praticamente uniforme; V4 muda muito de peça para peça (comum em réplicas de pedra e madeira de demolição). Não é defeito: confira a classificação na caixa antes de assentar e misture peças de caixas diferentes para o efeito ficar natural.',
+        links: [{ href: '/porcelanato/porcelanato-amadeirado/', label: 'Porcelanato amadeirado' }],
+      },
+      {
+        id: 'lote',
+        nome: 'Tonalidade e lote',
+        def: 'Peças do mesmo modelo produzidas em fornadas diferentes podem variar de tom e de calibre. A caixa traz o código de tonalidade e lote — compre tudo do mesmo lote, com folga de 10–15% para cortes e reposição futura. Faltou material no meio da obra? Outro lote pode não casar.',
+        links: [{ href: '/calculadora/', label: 'Calculadora de caixas (com folga)' }],
+      },
+    ],
+  },
+  {
+    titulo: 'Acabamento de superfície',
+    termos: [
+      {
+        id: 'polido',
+        nome: 'Polido',
+        def: 'Superfície espelhada obtida por polimento mecânico na fábrica. Reflete luz, amplia o ambiente e realça veios de marmorizado — mas fica escorregadio molhado e evidencia riscos e poeira. Indicado para sala, hall e quarto; evite em box, cozinha e área externa.',
+        links: [
+          { href: '/guia/porcelanato-polido-ou-acetinado/', label: 'Polido ou acetinado?' },
+          { href: '/porcelanato/porcelanato-polido/', label: 'Porcelanato polido' },
+        ],
+      },
+      {
+        id: 'acetinado',
+        nome: 'Acetinado',
+        def: 'Acabamento fosco de toque macio, sem espelhamento. Disfarça riscos e o uso diário, e escorrega menos que o polido quando molhado — por isso é a escolha padrão para cozinha, banheiro e lavanderia. É o acabamento mais versátil do catálogo residencial.',
+        links: [
+          { href: '/guia/porcelanato-polido-ou-acetinado/', label: 'Polido ou acetinado?' },
+          { href: '/porcelanato/porcelanato-acetinado/', label: 'Porcelanato acetinado' },
+        ],
+      },
+      {
+        id: 'natural',
+        nome: 'Natural (ou mate)',
+        def: 'A peça sai do forno sem polimento nem brilho: superfície fosca com mais atrito que a acetinada. É comum em porcelanato técnico e em linhas para área de serviço, garagem e varanda. Não confunda com antiderrapante — natural tem mais atrito, mas só o antiderrapante tem classificação para piso molhado.',
+        links: [{ href: '/porcelanato/piso-area-externa/', label: 'Piso para área externa' }],
+      },
+      {
+        id: 'antiderrapante',
+        nome: 'Antiderrapante (coeficiente de atrito)',
+        def: 'Acabamento áspero com coeficiente de atrito molhado ≥ 0,4 (NBR 13818, anexo N) — a classificação que a norma exige para rampa, calçada e borda de piscina. Quanto mais texturizado, mais seguro molhado e mais atenção pede na limpeza. É o único acabamento correto para área externa descoberta.',
+        links: [
+          { href: '/porcelanato/porcelanato-antiderrapante/', label: 'Porcelanato antiderrapante' },
+          { href: '/porcelanato/porcelanato-piscina/', label: 'Porcelanato para piscina' },
+        ],
+      },
+    ],
+  },
+  {
+    titulo: 'Medidas e formato',
+    termos: [
+      {
+        id: 'retificado',
+        nome: 'Retificado',
+        def: 'Peça que passou por corte de precisão nas bordas depois de queimada: lados retos, esquadro perfeito e todas as peças exatamente do mesmo tamanho. Permite junta mínima (1,5–2 mm) e o visual "piso contínuo". Quase todo porcelanato atual de 60x60 para cima é retificado.',
+        links: [{ href: '/porcelanato/porcelanato-retificado/', label: 'Porcelanato retificado' }],
+      },
+      {
+        id: 'bold',
+        nome: 'Bold (não retificado)',
+        def: 'Peça com borda levemente arredondada, sem o corte de precisão do retificado. As dimensões variam um pouco entre peças, então a junta precisa ser maior (3 mm ou mais) para absorver a diferença. Costuma custar menos; o visual tem juntas mais marcadas.',
+        links: [{ href: '/porcelanato/porcelanato-retificado/', label: 'Retificado × bold' }],
+      },
+      {
+        id: 'calibre',
+        nome: 'Calibre',
+        def: 'Código impresso na caixa que indica a variação dimensional real daquele lote (a queima encolhe a peça alguns milímetros, e cada fornada encolhe um pouco diferente). Misturar calibres diferentes na mesma parede ou piso desalinha as juntas. Regra prática: mesmo modelo, mesmo lote, mesmo calibre.',
+        links: [{ href: '/calculadora/', label: 'Calculadora de caixas' }],
+      },
+      {
+        id: 'm2-por-caixa',
+        nome: 'm² por caixa',
+        def: 'Porcelanato é vendido por caixa fechada, e cada formato rende uma metragem diferente (ex.: 60x60 com 4 peças = 1,44 m²; 120x60 com 2 peças = 1,44 m²; varia por fabricante). Para saber quantas caixas comprar: área do ambiente + folga de corte, dividido pelos m² da caixa, arredondando para cima. A calculadora faz essa conta.',
+        links: [
+          { href: '/calculadora/', label: 'Calculadora de caixas' },
+          { href: '/porcelanato/porcelanato-60x60/', label: 'Porcelanato 60x60' },
+        ],
+      },
+      {
+        id: 'formato-grande',
+        nome: 'Formato grande (90x90, 120x60...)',
+        def: 'Peças a partir de 80–90 cm no maior lado. Menos juntas, visual mais limpo e sensação de amplitude — em troca, exigem contrapiso bem nivelado, argamassa aplicada na peça e no piso (dupla colagem) e assentador experiente. O custo de mão de obra por m² costuma ser maior.',
+        links: [
+          { href: '/porcelanato/porcelanato-90x90/', label: 'Porcelanato 90x90' },
+          { href: '/porcelanato/porcelanato-120x60/', label: 'Porcelanato 120x60' },
+        ],
+      },
+    ],
+  },
+  {
+    titulo: 'Instalação',
+    termos: [
+      {
+        id: 'junta',
+        nome: 'Junta',
+        def: 'Espaço deixado entre uma peça e outra, definido pelo fabricante na embalagem (retificado: 1,5–2 mm; bold: 3 mm ou mais). Não existe assentamento "sem junta": a folga absorve dilatação térmica e pequenas variações de calibre. Junta menor que a especificada é causa clássica de peça estufada.',
+        links: [{ href: '/porcelanato/porcelanato-retificado/', label: 'Porcelanato retificado' }],
+      },
+      {
+        id: 'rejunte',
+        nome: 'Rejunte',
+        def: 'Massa que preenche a junta depois do assentamento. Os três tipos: cimentício (padrão, bom custo), acrílico (pronto para uso, mais flexível) e epóxi (impermeável e não mancha — ideal para box, bancada e piscina, mas exige aplicação rápida e custa mais). Cor tom-sobre-tom esconde a junta; contraste marca a paginação.',
+        links: [{ href: '/calculadora/', label: 'Estimar rejunte na calculadora' }],
+      },
+      {
+        id: 'argamassa-colante',
+        nome: 'Argamassa colante (AC-I, AC-II, AC-III)',
+        def: 'A cola do assentamento, classificada pela NBR 14081. AC-I é só para cerâmica em área interna; porcelanato pede no mínimo AC-II em ambiente interno e AC-III em área externa e fachada (maior aderência e resistência à variação térmica). Formato grande usa AC-III ou argamassa específica com dupla colagem.',
+        links: [
+          { href: '/calculadora/', label: 'Estimar argamassa na calculadora' },
+          { href: '/porcelanato/porcelanato-fachada/', label: 'Porcelanato para fachada' },
+        ],
+      },
+      {
+        id: 'paginacao',
+        nome: 'Paginação',
+        def: 'O desenho do assentamento: alinhado (junta seca), amarração (peças desencontradas), diagonal ou espinha de peixe. Em formato retangular grande, a norma dos fabricantes limita a amarração a 1/3 do comprimento da peça — desencontro de 50% acentua o abaulamento natural e cria "dente" entre peças.',
+        links: [{ href: '/porcelanato/porcelanato-120x60/', label: 'Porcelanato 120x60' }],
+      },
+      {
+        id: 'nivelador',
+        nome: 'Nivelador de piso',
+        def: 'Kit de clipe e cunha plástica que trava uma peça na altura da vizinha enquanto a argamassa cura, eliminando o desnível ("dente") entre peças. Praticamente obrigatório em formato grande e em porcelanato polido, onde qualquer degrau reflete na luz. O clipe quebra rente ao piso depois da cura.',
+        links: [{ href: '/porcelanato/porcelanato-90x90/', label: 'Porcelanato 90x90' }],
+      },
+    ],
+  },
+];
+
+const todos = grupos.flatMap((g) => g.termos);
+
+const jsonLdNodes = [
+  {
+    '@type': 'DefinedTermSet',
+    '@id': `${SITE}/glossario/#glossario`,
+    name: 'Glossário de porcelanato',
+    description:
+      'Termos técnicos de porcelanato explicados para quem vai comprar: PEI, absorção de água, retificado, calibre, destonalização, argamassa colante e mais.',
+    url: `${SITE}/glossario/`,
+    inLanguage: 'pt-BR',
+    hasDefinedTerm: todos.map((t) => ({
+      '@type': 'DefinedTerm',
+      '@id': `${SITE}/glossario/#${t.id}`,
+      name: t.nome,
+      description: t.def,
+      url: `${SITE}/glossario/#${t.id}`,
+      inDefinedTermSet: `${SITE}/glossario/#glossario`,
+    })),
+  },
+  {
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Início', item: SITE },
+      { '@type': 'ListItem', position: 2, name: 'Glossário de porcelanato', item: `${SITE}/glossario/` },
+    ],
+  },
+];
+
+const relacionados = [
+  { href: '/guia/como-escolher-porcelanato/', label: 'Como escolher porcelanato' },
+  { href: '/guia/porcelanato-polido-ou-acetinado/', label: 'Polido ou acetinado?' },
+  { href: '/guia/porcelanato-ou-ceramica/', label: 'Porcelanato ou cerâmica?' },
+  { href: '/guia/quanto-custa-porcelanato/', label: 'Quanto custa porcelanato' },
+  { href: '/calculadora/', label: 'Calculadora de caixas' },
+  { href: '/porcelanato/', label: 'Catálogo de porcelanato' },
+];
+---
+
+<Base
+  title="Glossário de porcelanato: PEI, retificado, calibre e mais — ROI Labs Goiânia"
+  description="O que significa PEI, absorção de água, retificado, destonalização, calibre, AC-II e AC-III? 19 termos de porcelanato explicados em linguagem de comprador, com links para os guias e o catálogo de Goiânia."
+  ogImage="/open-graph/glossario.png"
+  jsonLdNodes={jsonLdNodes}
+>
+  <Header />
+
+  <main>
+    <section class="pseo-hero">
+      <div class="wrap">
+        <nav class="breadcrumb" aria-label="Localização">
+          <a href="/">Início</a>
+          <span class="breadcrumb__sep" aria-hidden="true">›</span>
+          <span aria-current="page">Glossário</span>
+        </nav>
+
+        <div class="pseo-hero__eyebrow">
+          <span class="eyebrow">Goiânia · Glossário</span>
+        </div>
+        <h1>Glossário de porcelanato: o que a etiqueta quer dizer</h1>
+        <p class="pseo-hero__intro">
+          PEI 4, retificado, absorção ≤ 0,5%, AC-III, V3, calibre... A caixa de porcelanato
+          fala uma língua própria. Aqui estão os {todos.length} termos que aparecem em
+          etiqueta, anúncio e orçamento, explicados em 2–4 frases cada — com link para o
+          guia ou a categoria do catálogo onde o termo decide a compra.
+        </p>
+      </div>
+    </section>
+
+    <!-- Índice de âncoras -->
+    <section class="section section--light">
+      <div class="wrap">
+        <nav class="gloss-toc" aria-label="Termos do glossário">
+          {todos.map((t) => (
+            <a href={`#${t.id}`} class="gloss-toc__item">{t.nome}</a>
+          ))}
+        </nav>
+      </div>
+    </section>
+
+    {grupos.map((g, i) => (
+      <section class={`section${i % 2 === 1 ? ' section--light' : ''}`}>
+        <div class="wrap">
+          <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.6rem;">{g.titulo}</h2>
+          <div class="gloss-grid">
+            {g.termos.map((t) => (
+              <article class="gloss-card" id={t.id}>
+                <h3 class="gloss-card__title">
+                  <a href={`#${t.id}`} class="gloss-card__anchor" aria-label={`Link direto para ${t.nome}`}>#</a>
+                  {t.nome}
+                </h3>
+                <p class="gloss-card__def">{t.def}</p>
+                <p class="gloss-card__links">
+                  {t.links.map((l) => (
+                    <a href={l.href}>{l.label} →</a>
+                  ))}
+                </p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+    ))}
+
+    <!-- CTA -->
+    <section class="section" id="contato">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:0.8rem;">
+          Entendeu os termos? Agora compare na prática
+        </h2>
+        <p style="color:var(--d-muted);margin-bottom:2rem;max-width:54ch;">
+          O catálogo mostra acabamento, dimensão, retificado e preço por m² de cada
+          modelo em Goiânia — ou mande sua dúvida no WhatsApp que a gente traduz.
+        </p>
+        <div class="cta-block" style="display:flex;gap:1rem;flex-wrap:wrap;align-items:center;">
+          <a class="btn btn--primary" href="/porcelanato/">Ver catálogo de porcelanato</a>
+          <WhatsappCta termoAlvo="glossário de porcelanato" numero={whatsapp} />
+        </div>
+      </div>
+    </section>
+
+    <!-- Relacionados -->
+    <section class="section section--light">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.3rem,2.2vw,1.8rem);margin-bottom:1.4rem;">Veja também</h2>
+        <div class="related-grid">
+          {relacionados.map((r) => (
+            <a href={r.href} class="related-card">{r.label}</a>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .gloss-toc { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .gloss-toc__item {
+    font-family: var(--font-mono); font-size: 0.78rem;
+    padding: 0.35rem 0.7rem; border-radius: 999px;
+    border: 1px solid color-mix(in srgb, currentColor 25%, transparent);
+    text-decoration: none; color: inherit;
+  }
+  .gloss-toc__item:hover { border-color: var(--d-accent, #ff4d00); }
+  .gloss-grid { display: grid; gap: 1.2rem; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+  .gloss-card {
+    border: 1px solid color-mix(in srgb, currentColor 14%, transparent);
+    border-radius: 10px; padding: 1.2rem 1.3rem;
+    scroll-margin-top: 5.5rem; /* âncora não some atrás do header sticky */
+  }
+  .gloss-card__title { font-size: 1.05rem; margin-bottom: 0.6rem; }
+  .gloss-card__anchor { text-decoration: none; opacity: 0.4; margin-right: 0.3rem; }
+  .gloss-card__anchor:hover { opacity: 1; }
+  .gloss-card__def { font-size: 0.92rem; line-height: 1.55; margin-bottom: 0.8rem; }
+  .gloss-card__links { display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; font-size: 0.85rem; }
+  .gloss-card__links a { text-decoration: none; font-weight: 600; }
+  .gloss-card__links a:hover { text-decoration: underline; }
+</style>

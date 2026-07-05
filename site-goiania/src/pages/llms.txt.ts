@@ -29,6 +29,7 @@ export const GET: APIRoute = () => {
 - [Calculadora de porcelanato: quantos m² e caixas comprar?](${SITE}/calculadora/): informe os ambientes, a folga de corte e os m² por caixa; resultado em caixas fechadas.
 - [Comparador de porcelanatos](${SITE}/comparar/): compare 2 ou 3 modelos do catálogo lado a lado — preço por m² e por caixa, dimensão, acabamento, retificado e classe AD.
 - [Inspire-se](${SITE}/inspire-se/): mural de ambientes reais com porcelanato do catálogo, cada foto linkando pro produto.
+- [Glossário de porcelanato](${SITE}/glossario/): 19 termos técnicos (PEI, absorção de água, retificado, calibre, destonalização, argamassa AC-II/AC-III...) explicados em linguagem de comprador, com âncora por termo.
 
 ## Guias de decisão
 ${guiasDecisao.map((g) => `- [${g.titulo}](${SITE}/guia/${g.slug}/): ${g.descricao}`).join('\n')}

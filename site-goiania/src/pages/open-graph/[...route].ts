@@ -15,6 +15,10 @@ const pages: Record<string, { title: string; description: string }> = {
     title: 'Calculadora de porcelanato: quantos m² e caixas comprar?',
     description: 'Informe os ambientes, a folga de corte e os m² por caixa — resultado em caixas fechadas, na hora.',
   },
+  glossario: {
+    title: 'Glossário de porcelanato: o que a etiqueta quer dizer',
+    description: 'PEI, absorção de água, retificado, calibre, destonalização, AC-II/AC-III — 19 termos explicados em linguagem de comprador.',
+  },
   comparar: {
     title: 'Compare porcelanatos lado a lado',
     description: 'Preço por m² e por caixa, dimensão, acabamento, retificado e classe AD — 2 ou 3 modelos do catálogo de Goiânia.',
