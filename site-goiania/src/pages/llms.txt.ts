@@ -2,6 +2,7 @@ import type { APIRoute } from 'astro';
 import { pages } from '../data/porcelanato';
 import { produtos, nomeProduto } from '../data/produtos';
 import { guias as guiasDecisao } from '../data/guias';
+import { ambientes } from '../data/ambientes';
 
 const SITE = 'https://goiania.roilabs.com.br';
 
@@ -29,6 +30,7 @@ export const GET: APIRoute = () => {
 - [Calculadora de porcelanato: quantos m² e caixas comprar?](${SITE}/calculadora/): informe os ambientes, a folga de corte e os m² por caixa; resultado em caixas fechadas.
 - [Comparador de porcelanatos](${SITE}/comparar/): compare 2 ou 3 modelos do catálogo lado a lado — preço por m² e por caixa, dimensão, acabamento, retificado e classe AD.
 - [Inspire-se](${SITE}/inspire-se/): mural de ambientes reais com porcelanato do catálogo, cada foto linkando pro produto.
+${ambientes.map((a) => `- [${a.titulo}](${SITE}/inspire-se/${a.slug}/): ${a.descricao}`).join('\n')}
 - [Glossário de porcelanato](${SITE}/glossario/): 19 termos técnicos (PEI, absorção de água, retificado, calibre, destonalização, argamassa AC-II/AC-III...) explicados em linguagem de comprador, com âncora por termo.
 
 ## Guias de decisão

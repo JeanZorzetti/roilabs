@@ -2,6 +2,7 @@ import type { APIRoute } from 'astro';
 import { pages } from '../data/porcelanato';
 import { produtos, produtosDaCategoria, imgAbs } from '../data/produtos';
 import { guias } from '../data/guias';
+import { ambientes, produtosDoAmbiente } from '../data/ambientes';
 
 const SITE = 'https://goiania.roilabs.com.br';
 
@@ -23,6 +24,10 @@ export const GET: APIRoute = () => {
       loc: `${SITE}/inspire-se/`,
       imgs: produtos.flatMap((p) => p.imagensAmbiente ?? []),
     },
+    ...ambientes.map((a) => ({
+      loc: `${SITE}/inspire-se/${a.slug}/`,
+      imgs: produtosDoAmbiente(a.slug).flatMap((p) => p.imagensAmbiente ?? []),
+    })),
     { loc: `${SITE}/glossario/` },
     ...guias.map((g) => ({ loc: `${SITE}/guia/${g.slug}/` })),
     ...pages.map((p) => ({

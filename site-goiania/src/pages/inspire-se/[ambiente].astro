@@ -1,20 +1,29 @@
 ---
-// Mural "Inspire-se": reaproveita as fotos de AMBIENTE já baixadas (ciclos 11-14,
-// fetch-ambiente.mjs) — zero mineração nova. Porcelanato é compra de inspiração
-// (mesma tese do /favoritos); este mural dá o "antes de escolher, veja aplicado".
-import Base from '../layouts/Base.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
-import { produtos, tituloProduto, imgDisplay } from '../data/produtos';
-import { ambientes, produtosDoAmbiente } from '../data/ambientes';
+// Sub-página do mural "Inspire-se" filtrada por ambiente (tarefa 5, macro
+// plano 2). Curadoria manual em src/data/ambientes.ts — só ambientes com ≥4
+// fotos viram página (hoje: sala e área externa).
+import Base from '../../layouts/Base.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { tituloProduto, imgDisplay } from '../../data/produtos';
+import { ambientes, produtosDoAmbiente } from '../../data/ambientes';
 
-const fotos = produtos
-  .flatMap((p) => (p.imagensAmbiente ?? []).map((img) => ({ slug: p.slug, titulo: tituloProduto(p), img: imgDisplay(img) })));
+export function getStaticPaths() {
+  return ambientes.map((a) => ({ params: { ambiente: a.slug }, props: { amb: a } }));
+}
+
+const { amb } = Astro.props;
+const fotos = produtosDoAmbiente(amb.slug).map((p) => ({
+  slug: p.slug,
+  titulo: tituloProduto(p),
+  img: imgDisplay(p.imagensAmbiente![0]),
+}));
+const outros = ambientes.filter((a) => a.slug !== amb.slug);
 ---
 
 <Base
-  title="Inspire-se: ambientes com porcelanato real — Goiânia | ROI Labs"
-  description="Um mural de ambientes reais com porcelanato do catálogo de Goiânia. Clique na foto que combinar com sua obra e veja o produto, preço e ficha técnica."
+  title={`${amb.titulo} — Goiânia | ROI Labs`}
+  description={amb.descricao}
   ogImage="/open-graph/comparar.png"
 >
   <Header />
@@ -25,25 +34,20 @@ const fotos = produtos
         <nav class="breadcrumb" aria-label="Localização">
           <a href="/">Início</a>
           <span class="breadcrumb__sep" aria-hidden="true">›</span>
-          <span aria-current="page">Inspire-se</span>
+          <a href="/inspire-se/">Inspire-se</a>
+          <span class="breadcrumb__sep" aria-hidden="true">›</span>
+          <span aria-current="page">{amb.nome}</span>
         </nav>
 
         <div class="pseo-hero__eyebrow">
           <span class="eyebrow">Goiânia · Mural de ambientes</span>
         </div>
-        <h1>Inspire-se com porcelanato aplicado</h1>
+        <h1>{amb.titulo}</h1>
+        <p class="pseo-hero__intro">{amb.descricao}</p>
         <p class="pseo-hero__intro">
-          Fotos reais de ambientes com os porcelanatos do catálogo de Goiânia. Achou um que
-          combina com sua obra? Clique na foto e veja o produto, preço e ficha técnica.
-        </p>
-        <p class="pseo-hero__intro">
-          Ver por ambiente:
-          {ambientes.map((a, i) => (
-            <>
-              {i > 0 && ' · '}
-              <a href={`/inspire-se/${a.slug}/`}>{a.nome} ({produtosDoAmbiente(a.slug).length} fotos)</a>
-            </>
-          ))}
+          Ver também:
+          {outros.map((o) => <a href={`/inspire-se/${o.slug}/`}>{o.nome}</a>)}
+          · <a href="/inspire-se/">todos os ambientes</a>
         </p>
       </div>
     </section>
@@ -53,7 +57,7 @@ const fotos = produtos
         <div class="inspire-grid">
           {fotos.map((f) => (
             <a class="inspire-item" href={`/porcelanato/produto/${f.slug}/`}>
-              <img src={f.img} alt={`Ambiente com ${f.titulo}`} loading="lazy" />
+              <img src={f.img} alt={`${amb.nome} com ${f.titulo}`} loading="lazy" />
               <span class="inspire-item__label">{f.titulo}</span>
             </a>
           ))}

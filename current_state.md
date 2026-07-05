@@ -1,54 +1,53 @@
 ---
 status: in_progress
 next_effort: medium
-iteration: 4
-updated_at: 2026-07-05T12:15:00.000Z
+iteration: 5
+updated_at: 2026-07-05T12:25:00.000Z
 ---
 
 ## Last completed
-Tarefa 4 (Semana 1): criado o guia AEO **`/guia/porcelanato-liquido-vs-porcelanato/`**
-no `site-goiania`:
-- `src/pages/guia/porcelanato-liquido-vs-porcelanato.astro` — BLUF no hero
-  (líquido = resina epóxi autonivelante, NÃO é porcelanato; risca, amarela
-  com UV, repolimento em 5–10 anos), seção "dois produtos com nome parecido",
-  tabela comparativa de 7 critérios (custo instalado, durabilidade, sol
-  direto, juntas, aplicação, reparo, revenda), seção "quando cada um faz
-  sentido" (honesta: líquido vale em piso monolítico industrial/decorativo),
-  FAQ com 7 perguntas (FAQPage) + BreadcrumbList, CTA triplo (catálogo +
-  calculadora + WhatsApp), relacionados.
-- Faixas de preço da resina marcadas explicitamente como "faixas de mercado
-  para referência, não orçamento"; preços de porcelanato remetem ao guia
-  quanto-custa (que usa o catálogo real).
-- Links para glossário conferidos contra ids reais de `glossario.astro`:
-  `#polido`, `#absorcao-de-agua`, `#pei`, `#junta`, `#retificado`,
-  `#formato-grande`, `#lote`.
-- Registrado em `src/data/guias.ts` (sitemap, llms.txt, busca-index e OG
-  derivam automaticamente) — agora são 7 guias.
-- `astro build` verde (91 páginas); URL presente em dist/sitemap.xml,
-  dist/llms.txt e dist/busca-index.json; `node src/scripts/check-feed.mjs`
-  OK (30 itens).
-- Observação p/ tarefa 8 (mantida do ciclo anterior): a `/calculadora` já tem
-  botão "+ Adicionar ambiente" — verificar se multi-ambiente já existe antes
-  de construir.
+Tarefa 5 (Semana 1, `[plan]`): **Galeria Inspire-se por ambiente** no
+`site-goiania`. A classificação parou em pé via **curadoria manual visual**
+(olhei as 25 fotos de `imagensAmbiente` uma a uma — nome de arquivo/slug não
+carrega sinal de ambiente):
+- `src/data/ambientes.ts` — mapa curado slug→ambiente + metadados das
+  sub-páginas. Ambientes criados: **sala** (5 fotos) e **área externa**
+  (8 fotos únicas). Fora, com motivo documentado no arquivo: 5 fotos são
+  close-up de textura (strato bege/grigio, urban branco, pietra di matera,
+  rock face — não são ambiente); quarto só tem 2; banheiro tem 4 produtos mas
+  só 3 fotos únicas (lux reusa a do pulpis); arezzo-beige reusa a foto do
+  arezzo-externo (só o externo entrou).
+- `src/pages/inspire-se/[ambiente].astro` — sub-páginas `/inspire-se/sala/` e
+  `/inspire-se/area-externa/` (getStaticPaths de `ambientes.ts`), mesmo layout
+  do mural principal, breadcrumb, cross-link entre ambientes e volta pro
+  mural; alt text "Sala com X" / "Área externa com X".
+- `inspire-se.astro` — linha "Ver por ambiente: Sala (5 fotos) · Área externa
+  (8 fotos)" no hero.
+- Registro nas 3 superfícies: `sitemap.xml.ts` (com extensão `image:` das
+  fotos), `llms.txt.ts` (2 linhas em Ferramentas) e `busca-index.json.ts`
+  (categoria "Inspiração").
+- `astro build` verde (93 páginas); as 2 URLs conferidas em dist/sitemap.xml,
+  dist/llms.txt e dist/busca-index.json; sub-páginas com 5 e 8 itens no dist;
+  `node src/scripts/check-feed.mjs` OK (30 itens).
+- Cozinha não foi criada: 0 fotos claras de cozinha no acervo atual.
+- Observação p/ tarefa 8 (mantida): a `/calculadora` já tem botão
+  "+ Adicionar ambiente" — verificar se multi-ambiente já existe antes de
+  construir.
 
 ## Next step
-Tarefa 5 do `macro_plan.md` (Semana 1, `[plan]`): **Galeria Inspire-se por
-ambiente** no `site-goiania`.
-- Investigar as fotos `imagensAmbiente` do catálogo em `src/data/produtos`
-  (diretório/arquivo de dados dos 30 produtos): dá para classificar por
-  ambiente (cozinha, sala, banheiro) via heurística por nome de arquivo ou
-  nome de produto, ou por curadoria manual no data file?
-- Se sim: criar sub-páginas `/inspire-se/cozinha/`, `/inspire-se/sala/`,
-  `/inspire-se/banheiro/` — SÓ os ambientes com ≥4 fotos — linkadas da
-  galeria principal `/inspire-se/` (que já existe, ciclo anterior).
-- Se a classificação não parar em pé (nomes de arquivo opacos, sem sinal de
-  ambiente), registrar o porquê em `current_state.md` e PULAR — o plano manda
-  não forçar.
-- Página nova = registrar em sitemap, llms.txt e busca interna seguindo o
-  padrão existente (ver como `/inspire-se/` já é registrada; guias derivam de
-  `src/data/guias.ts`, outras páginas podem ter registro manual em
-  `sitemap.xml.ts`/`llms.txt.ts`/`busca-index.json.ts`).
-- URLs sempre com barra final. `astro build` verde + conferir URLs novas em
-  dist/sitemap.xml, dist/llms.txt, dist/busca-index.json e rodar
+Tarefa 6 do `macro_plan.md` (Semana 2, `[plan]`): **Filtros e ordenação no hub
+`/porcelanato/`** do `site-goiania`.
+- Client-side, sem API: filtrar por **marca** e **formato** (dimensão),
+  ordenar por **preço/m² asc/desc**.
+- Estado na query string (`?marca=&ordem=`) para link compartilhável.
+- Progressive enhancement: sem JS o hub continua renderizando TUDO (o filtro
+  só esconde/reordena o que o build já emitiu — não criar DOM via JS se der
+  para evitar).
+- Gotcha Astro: scoped styles não se aplicam a DOM criado por JS — se precisar
+  criar elementos via JS, usar `<style is:global>` (ver como
+  favoritos/comparador já lidam com isso).
+- Hub é `src/pages/porcelanato/index.astro`; dados/atributos reais em
+  `src/data/produtos.ts` (marca, dimensao, preco em `atributos`).
+- URLs sempre com barra final em qualquer link emitido. `astro build` verde +
   `node src/scripts/check-feed.mjs` antes de commitar (deploy automático em
-  produção no push).
+  produção no push). Página não é nova → sitemap/llms/busca não mudam.

@@ -2,6 +2,7 @@ import type { APIRoute } from 'astro';
 import { produtos, tituloProduto, formatPreco } from '../data/produtos';
 import { pages } from '../data/porcelanato';
 import { guias } from '../data/guias';
+import { ambientes } from '../data/ambientes';
 
 // Índice da busca interna, gerado no build a partir das mesmas fontes do
 // sitemap (produtos + categorias + guias + calculadora). O client (SiteSearch)
@@ -33,6 +34,12 @@ export const GET: APIRoute = () => {
       s: 'Guia',
       u: `/guia/${g.slug}/`,
       k: norm(`${g.titulo} ${g.slug.replace(/-/g, ' ')} guia`),
+    })),
+    ...ambientes.map((a) => ({
+      t: a.titulo,
+      s: 'Inspiração',
+      u: `/inspire-se/${a.slug}/`,
+      k: norm(`inspire-se inspiracao fotos ambientes ${a.nome} porcelanato ${a.slug.replace(/-/g, ' ')}`),
     })),
     {
       t: 'Calculadora de porcelanato (m² → caixas)',
