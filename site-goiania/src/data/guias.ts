@@ -30,6 +30,12 @@ export const guias = [
       'Coeficiente de atrito, absorção de água, classe de abrasão e formato certo para varanda, quintal, garagem e borda de piscina — com os produtos do catálogo que atendem.',
   },
   {
+    slug: 'rejunte-porcelanato',
+    titulo: 'Rejunte para porcelanato: cor, tipo e quantidade',
+    descricao:
+      'Tom-sobre-tom ou contraste, cimentício vs acrílico vs epóxi e quantos kg/m² comprar — com a calculadora que estima rejunte e argamassa junto com as caixas.',
+  },
+  {
     slug: 'quanto-custa-porcelanato',
     titulo: 'Quanto custa porcelanato em Goiânia: m², colocação e custo total',
     descricao:

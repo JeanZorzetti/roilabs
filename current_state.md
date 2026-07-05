@@ -1,49 +1,53 @@
 ---
 status: in_progress
 next_effort: medium
-iteration: 2
-updated_at: 2026-07-05T12:10:00.000Z
+iteration: 3
+updated_at: 2026-07-05T09:15:00.000Z
 ---
 
 ## Last completed
-Tarefa 2 (Semana 1): criado o guia AEO **`/guia/porcelanato-area-externa/`**
-no `site-goiania`:
-- `src/pages/guia/porcelanato-area-externa.astro` — BLUF no hero (acabamento
-  externo/rústico/strutturato, atrito ≥0,4 NBR 13818), seção dos 3 critérios
-  técnicos (atrito, absorção ≤0,5%, PEI/classe de abrasão), tabela comparativa
-  por ambiente (varanda coberta, quintal/calçada, garagem, borda de piscina,
-  rampa, fachada), seção de formato/instalação (AC-III, dupla colagem, junta
-  3mm+, dilatação, caimento, sobra 10–15% → CTA calculadora), FAQ com 7
-  perguntas (FAQPage schema) + BreadcrumbList, CTA duplo, relacionados.
-- Grade de produtos reais: filtro por `tagsDoProduto` com tag
-  `porcelanato-area-externa` ou `tipo:antiderrapante` → 6 produtos do catálogo
-  (acabamentos Externo/Rústico/Strutturato), via `ProdutoCard`. Nenhuma spec
-  inventada — classe AD citada só como "na ficha técnica de cada peça".
-- Deep-links para o glossário da tarefa 1: `#antiderrapante`, `#pei`,
-  `#absorcao-de-agua`, `#formato-grande`, `#argamassa-colante`, `#junta`
-  (todas as âncoras conferidas em `glossario.astro`).
+Tarefa 3 (Semana 1): criado o guia AEO **`/guia/rejunte-porcelanato/`** no
+`site-goiania`:
+- `src/pages/guia/rejunte-porcelanato.astro` — BLUF no hero (tom-sobre-tom
+  meio tom mais escuro como padrão; epóxi em área molhada; 0,25–0,5 kg/m²),
+  seção de cor (tom-sobre-tom vs contraste + armadilhas branco/pigmento),
+  tabela comparativa dos 3 tipos (cimentício, acrílico, epóxi — como é, onde
+  usar, custo relativo), seção de quantidade (regra kg/m² por tamanho de peça,
+  igual aos coeficientes 0,5/0,35/0,25 do estimador da `/calculadora`; área
+  instalada sem folga; espera de 72h) com CTA para a calculadora — a
+  matemática NÃO foi duplicada na página, só a regra prática citada.
+- FAQ com 7 perguntas (FAQPage schema) + BreadcrumbList; CTA duplo
+  (calculadora + WhatsApp); relacionados.
+- Deep-links do glossário conferidos em `glossario.astro`: `#junta`,
+  `#rejunte` implícito via glossário geral, `#retificado`, `#paginacao`,
+  `#calibre`, `#argamassa-colante`.
 - Registrado em `src/data/guias.ts` (sitemap, llms.txt, busca-index e OG
-  derivam automaticamente de `guias` — conferido no dist).
-- `astro build` verde (89 páginas); `node src/scripts/check-feed.mjs` OK
-  (30 itens). URL presente em sitemap.xml, llms.txt e busca-index.json.
+  derivam automaticamente).
+- `astro build` verde (90 páginas); URL presente em dist/sitemap.xml,
+  dist/llms.txt e dist/busca-index.json; `node src/scripts/check-feed.mjs`
+  OK (30 itens).
+- Observação p/ tarefa 8: a `/calculadora` já tem botão "+ Adicionar
+  ambiente" — verificar se multi-ambiente já existe antes de construir.
 
 ## Next step
-Tarefa 3 do `macro_plan.md` (Semana 1): **Guia AEO
-`/guia/rejunte-porcelanato/`** no `site-goiania`.
-- Verificar antes se já existe (hoje há 5 guias em `src/pages/guia/`:
+Tarefa 4 do `macro_plan.md` (Semana 1): **Guia AEO
+`/guia/porcelanato-liquido-vs-porcelanato/`** no `site-goiania`.
+- Verificar antes se já existe (hoje há 6 guias em `src/pages/guia/`:
   como-escolher, porcelanato-ou-ceramica, polido-ou-acetinado, quanto-custa,
-  porcelanato-area-externa).
-- Conteúdo: como escolher COR de rejunte (contraste vs tom-sobre-tom), tipos
-  (cimentício, acrílico, epóxi — prós/contras/custo relativo) e como calcular
-  a quantidade — o estimador de rejunte já existe na `/calculadora` (ciclo
-  15), linkar como CTA, não duplicar a matemática na página.
-- FAQPage + BreadcrumbList; registrar em `src/data/guias.ts` (sitemap,
-  llms.txt, busca-index e OG derivam automaticamente).
-- Padrão a copiar: `src/pages/guia/porcelanato-area-externa.astro` (mais
-  recente; Base + Header/Footer/Faq/WhatsappCta, hero BLUF, tabela
-  `comp-table`, CTA duplo, relacionados).
-- Linkar o glossário: `/glossario/#rejunte`, `#junta`, `#argamassa-colante`
-  (âncoras existem em `glossario.astro`).
+  porcelanato-area-externa, rejunte-porcelanato).
+- Conteúdo: busca de alto volume que confunde porcelanato líquido (resina
+  epóxi autonivelante aplicada no piso) com porcelanato (placa cerâmica).
+  Comparativo honesto de custo/m², durabilidade, aplicação, manutenção;
+  CTA para catálogo `/porcelanato/` e `/calculadora/`. FAQPage +
+  BreadcrumbList.
+- Padrão a copiar: `src/pages/guia/rejunte-porcelanato.astro` ou
+  `porcelanato-area-externa.astro` (Base + Header/Footer/Faq/WhatsappCta,
+  hero BLUF, tabela `comp-table`, CTA duplo, relacionados). Registrar em
+  `src/data/guias.ts` (sitemap, llms.txt, busca-index e OG derivam
+  automaticamente).
+- Glossário: âncoras existentes úteis — `/glossario/#absorcao-de-agua`,
+  `#pei`, `#esmaltado` (conferir ids em `glossario.astro` antes de linkar).
 - URLs sempre com barra final. `astro build` verde + conferir URL em
-  dist/sitemap.xml, dist/llms.txt, dist/busca-index.json antes de commitar
-  (deploy automático em produção no push).
+  dist/sitemap.xml, dist/llms.txt, dist/busca-index.json e rodar
+  `node src/scripts/check-feed.mjs` antes de commitar (deploy automático em
+  produção no push).

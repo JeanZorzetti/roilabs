@@ -1,0 +1,269 @@
+---
+// Guia de decisão AEO: "qual rejunte usar no porcelanato?" — cor (tom-sobre-tom
+// vs contraste), tipo (cimentício, acrílico, epóxi) e quantidade (CTA para o
+// estimador da /calculadora, que já faz a conta). BLUF + tabelas + FAQ
+// (FAQPage), mesmo padrão dos guias existentes.
+import Base from '../../layouts/Base.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import Faq from '../../components/Faq.astro';
+import WhatsappCta from '../../components/WhatsappCta.astro';
+import { guias } from '../../data/guias';
+
+const SITE = Astro.site?.href.replace(/\/$/, '') ?? 'https://goiania.roilabs.com.br';
+const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
+const guia = guias.find((g) => g.slug === 'rejunte-porcelanato')!;
+
+const faq = [
+  {
+    q: 'Qual cor de rejunte fica melhor em porcelanato?',
+    a: 'Depende do efeito que você quer. Tom-sobre-tom (rejunte na cor do piso, meio tom mais escuro) esconde a junta e cria o visual de piso contínuo — é a escolha padrão para porcelanato retificado de junta fina. Contraste (rejunte bem mais escuro ou mais claro que a peça) marca a paginação e vira elemento de design, comum em subway tile e assentamento espinha de peixe. Na dúvida, tom-sobre-tom meio tom mais escuro que o piso: disfarça a junta e a sujeira ao mesmo tempo.',
+  },
+  {
+    q: 'Rejunte branco no piso é má ideia?',
+    a: 'No piso de áreas de circulação, quase sempre sim. Rejunte cimentício branco escurece com o tráfego e a limpeza nunca devolve a cor original. Se o projeto pede junta clara no piso, use um cinza-claro (pérola, platina) em vez de branco puro, ou pague a diferença do epóxi, que não absorve sujeira. Em parede, o branco envelhece bem.',
+  },
+  {
+    q: 'Qual a diferença entre rejunte cimentício, acrílico e epóxi?',
+    a: 'Cimentício é o padrão: pó que se mistura com água, bom custo, precisa de impermeabilizante em área molhada. Acrílico vem pronto na bisnaga, é mais flexível e menos poroso, custo intermediário. Epóxi é resina bicomponente: impermeável, não mancha e não cria fungo — ideal para box, bancada, cozinha e piscina — mas custa 3 a 5 vezes mais e exige aplicação rápida por profissional acostumado, porque endurece na mistura.',
+  },
+  {
+    q: 'Vale a pena pagar rejunte epóxi no banheiro?',
+    a: 'No box e nas paredes da área molhada, geralmente vale: é onde o cimentício mofa e escurece primeiro, e a área é pequena — a diferença de preço total é de dezenas de reais, não centenas. No piso seco do banheiro e no resto da casa, o cimentício com bom acabamento resolve. O epóxi também dispensa a reaplicação de impermeabilizante que o cimentício pede.',
+  },
+  {
+    q: 'Quantos quilos de rejunte por m² de porcelanato?',
+    a: 'Regra prática para junta fina de porcelanato: peça grande (60×120 ou maior) consome cerca de 0,25 kg/m²; peça média (45×45 a 60×60), cerca de 0,35 kg/m²; peça pequena (até 30×30), cerca de 0,5 kg/m² — quanto menor a peça, mais metros lineares de junta por m². A calculadora do site estima rejunte e argamassa junto com as caixas, a partir da metragem e do tamanho da peça.',
+  },
+  {
+    q: 'Quanto tempo esperar para rejuntar depois de assentar o porcelanato?',
+    a: 'Em geral 72 horas após o assentamento, para a argamassa colante curar sem selar umidade sob a peça — confirme o prazo na embalagem da argamassa usada. Rejuntar cedo demais é causa comum de rejunte esbranquiçado (eflorescência) e de peça que solta.',
+  },
+  {
+    q: 'Rejunte de porcelanato retificado pode ser "junta seca", sem rejunte?',
+    a: 'Não. Mesmo o retificado exige junta mínima (1,5–2 mm) preenchida com rejunte: a folga absorve a dilatação térmica e as micro-variações de calibre entre peças. Assentamento encostado ("junta seca") é causa clássica de peça estufada e trincada — nenhum fabricante cobre garantia nesse caso.',
+  },
+];
+
+const jsonLdNodes = [
+  {
+    '@type': 'FAQPage',
+    mainEntity: faq.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  },
+  {
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Início', item: SITE },
+      { '@type': 'ListItem', position: 2, name: guia.titulo, item: `${SITE}/guia/${guia.slug}/` },
+    ],
+  },
+];
+
+const relacionados = [
+  { href: '/calculadora/', label: 'Calculadora de caixas, rejunte e argamassa' },
+  { href: '/guia/como-escolher-porcelanato/', label: 'Como escolher porcelanato' },
+  { href: '/guia/porcelanato-area-externa/', label: 'Porcelanato para área externa' },
+  { href: '/guia/porcelanato-polido-ou-acetinado/', label: 'Polido ou acetinado?' },
+  { href: '/glossario/', label: 'Glossário de porcelanato' },
+  { href: '/porcelanato/', label: 'Catálogo de porcelanato' },
+];
+---
+
+<Base
+  title={`${guia.titulo} — Goiânia | ROI Labs`}
+  description="Cor: tom-sobre-tom esconde a junta, contraste marca a paginação. Tipo: cimentício é o padrão, epóxi para área molhada. Quantidade: 0,25 a 0,5 kg/m² conforme o tamanho da peça — calcule junto com as caixas na calculadora."
+  ogImage={`/open-graph/guia/${guia.slug}.png`}
+  jsonLdNodes={jsonLdNodes}
+>
+  <Header />
+
+  <main>
+    <section class="pseo-hero">
+      <div class="wrap">
+        <nav class="breadcrumb" aria-label="Localização">
+          <a href="/">Início</a>
+          <span class="breadcrumb__sep" aria-hidden="true">›</span>
+          <span aria-current="page">Guia de decisão</span>
+        </nav>
+
+        <div class="pseo-hero__eyebrow">
+          <span class="eyebrow">Goiânia · Guia de decisão</span>
+        </div>
+        <h1>{guia.titulo}</h1>
+        <p class="pseo-hero__intro">
+          Resposta direta: para a maioria dos porcelanatos, use <strong>rejunte cimentício
+          tom-sobre-tom, meio tom mais escuro que o piso</strong> — esconde a
+          <a href="/glossario/#junta">junta</a> e disfarça sujeira. Em box, bancada e piscina,
+          o <strong>epóxi</strong> compensa (impermeável, não mancha). A quantidade vai de
+          0,25 a 0,5 kg/m² conforme o tamanho da peça — a
+          <a href="/calculadora/">calculadora</a> estima junto com as caixas. Abaixo, a
+          escolha de cor, o comparativo dos 3 tipos e a conta.
+        </p>
+      </div>
+    </section>
+
+    <!-- Cor: tom-sobre-tom vs contraste -->
+    <section class="section section--light">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.6rem;">
+          Cor do rejunte: esconder ou marcar a junta
+        </h2>
+        <ul class="guide-list">
+          <li>
+            <strong>Tom-sobre-tom (o padrão seguro).</strong> Rejunte na cor da peça, de
+            preferência <em>meio tom mais escuro</em>: a junta some, o piso lê como superfície
+            contínua e a sujeira inevitável da junta não aparece. É a escolha certa para
+            porcelanato <a href="/glossario/#retificado">retificado</a> de junta fina (1,5–2 mm)
+            e para os acabamentos <a href="/guia/porcelanato-polido-ou-acetinado/">polido e
+            acetinado</a>, onde a junta marcada quebraria o efeito espelhado.
+          </li>
+          <li>
+            <strong>Contraste (decisão de projeto).</strong> Rejunte bem mais escuro — ou mais
+            claro — que a peça transforma a <a href="/glossario/#paginacao">paginação</a> em
+            desenho: funciona em subway tile, espinha de peixe e peças pequenas de parede.
+            Exige assentamento impecável, porque a junta contrastante denuncia qualquer
+            desalinhamento de <a href="/glossario/#calibre">calibre</a> ou nivelamento.
+          </li>
+          <li>
+            <strong>Duas armadilhas de cor.</strong> Branco puro em piso de circulação escurece
+            e não volta (prefira cinza-claro); rejunte muito escuro em peça clara pode
+            "sangrar" pigmento na face da peça porosa — em porcelanato isso é raro, mas teste
+            numa peça avulsa antes de fechar a cor.
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Tipos -->
+    <section class="section">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.6rem;">
+          Cimentício, acrílico ou epóxi: comparativo
+        </h2>
+        <div class="comp-scroll">
+          <table class="comp-table">
+            <thead>
+              <tr>
+                <th scope="col">Tipo</th>
+                <th scope="col">Como é</th>
+                <th scope="col">Onde usar</th>
+                <th scope="col">Custo relativo</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Cimentício</th>
+                <td>Pó para misturar com água; o padrão de mercado</td>
+                <td>Toda área seca; área molhada com impermeabilizante reaplicado</td>
+                <td>Base (o mais barato)</td>
+              </tr>
+              <tr>
+                <th scope="row">Acrílico</th>
+                <td>Pronto para uso na bisnaga; mais flexível e menos poroso</td>
+                <td>Áreas internas, quem quer praticidade sem o preço do epóxi</td>
+                <td>~2× o cimentício</td>
+              </tr>
+              <tr>
+                <th scope="row">Epóxi</th>
+                <td>Resina bicomponente; impermeável, não mancha nem cria fungo</td>
+                <td>Box, bancada, cozinha, piscina e fachada — aplicação profissional</td>
+                <td>3–5× o cimentício</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="color:var(--d-muted);margin-top:1.2rem;max-width:66ch;">
+          Regra de bolso: cimentício na casa toda, epóxi onde a água mora (box, bancada,
+          piscina). O acrílico é o meio-termo para quem quer dispensar o impermeabilizante do
+          cimentício sem pagar epóxi. Em área externa, combine o rejunte apropriado com
+          <a href="/glossario/#argamassa-colante">argamassa AC-III</a> — o guia de
+          <a href="/guia/porcelanato-area-externa/">área externa</a> detalha o assentamento.
+        </p>
+      </div>
+    </section>
+
+    <!-- Quantidade -->
+    <section class="section section--light">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.6rem;">
+          Quanto rejunte comprar
+        </h2>
+        <ul class="guide-list">
+          <li>
+            <strong>A conta depende do tamanho da peça, não só da metragem.</strong> Peça menor
+            = mais metros lineares de junta por m². Regra prática para junta fina de
+            porcelanato: peça grande (60×120 cm ou maior) ≈ 0,25 kg/m²; peça média (45×45 a
+            60×60) ≈ 0,35 kg/m²; peça pequena (até 30×30) ≈ 0,5 kg/m².
+          </li>
+          <li>
+            <strong>Conte a área instalada, sem a folga de corte.</strong> A sobra de 10% das
+            caixas é peça cortada, não junta preenchida — rejunte se calcula sobre os m² reais
+            do ambiente.
+          </li>
+          <li>
+            <strong>Deixe a calculadora fazer a conta.</strong> A
+            <a href="/calculadora/">calculadora de caixas</a> já estima rejunte (pelo tamanho
+            da peça) e argamassa junto com o número de caixas — informe a metragem e o formato
+            e leve a lista pronta para o orçamento.
+          </li>
+          <li>
+            <strong>Espere as 72 horas.</strong> Rejuntar antes da cura da argamassa sela
+            umidade sob a peça: é a origem clássica do rejunte esbranquiçado (eflorescência) e
+            de peça solta. O prazo exato vem na embalagem da argamassa.
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.8rem;">Perguntas frequentes</h2>
+        <Faq items={faq} />
+      </div>
+    </section>
+
+    <!-- CTA duplo -->
+    <section class="section section--light" id="contato">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:0.8rem;">
+          Calcule o material da sua obra
+        </h2>
+        <p style="color:var(--d-muted);margin-bottom:2rem;max-width:54ch;">
+          Caixas, rejunte e argamassa numa conta só — ou mande a metragem no WhatsApp e
+          receba o orçamento com o material certo.
+        </p>
+        <div class="cta-block" style="display:flex;gap:1rem;flex-wrap:wrap;align-items:center;">
+          <a class="btn btn--primary" href="/calculadora/">Calcular caixas e rejunte</a>
+          <WhatsappCta termoAlvo="rejunte para porcelanato" numero={whatsapp} />
+        </div>
+      </div>
+    </section>
+
+    <!-- Relacionados -->
+    <section class="section">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.3rem,2.2vw,1.8rem);margin-bottom:1.4rem;">Veja também</h2>
+        <div class="related-grid">
+          {relacionados.map((r) => (
+            <a href={r.href} class="related-card">{r.label}</a>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .comp-scroll { overflow-x: auto; }
+  .comp-table { width: 100%; border-collapse: collapse; font-size: 0.92rem; min-width: 560px; }
+  .comp-table th, .comp-table td { text-align: left; padding: 0.8rem 0.9rem; border-bottom: 1px solid color-mix(in srgb, currentColor 18%, transparent); vertical-align: top; }
+  .comp-table thead th { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.75; }
+  .comp-table tbody th { font-weight: 700; width: 20%; }
+</style>
