@@ -26,6 +26,7 @@ export const GET: APIRoute = async () => {
 
 ## Páginas principais
 - [Home e candidatura](${SITE}/): o modelo, o mapa de cadeiras de Goiânia e o formulário de candidatura do fornecedor.
+- [Simulador de receita](${SITE}/simulador/): fornecedor candidato simula ticket médio × pedidos/mês e vê a receita projetada e o líquido após o success fee.
 - [Blog](${SITE}/blog/): como fornecedores de revestimentos e materiais de construção em Goiânia vendem pela internet.
 
 ## Artigos

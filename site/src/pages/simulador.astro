@@ -1,0 +1,106 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+// Matemática replicada de app/src/lib/success-fee.ts (calcularFaturaMensal):
+// base = soma dos pedidos elegíveis; valor da fatura = base * comissaoPct.
+// Não importamos o arquivo (é código de /app, fora do escopo do /site) — só
+// a fórmula (base * pct) é replicada aqui, client-side, com dados hipotéticos
+// do fornecedor candidato (não há transação real nem parceiro cadastrado).
+---
+
+<Base
+  title="Simulador de receita — ROI Labs"
+  description="Simule sua receita projetada como fornecedor parceiro e veja o que sobra após o success fee. Sem mensalidade: você só paga quando vende."
+>
+  <Header />
+
+  <main>
+    <section class="section section--dark" aria-labelledby="sim-title">
+      <div class="wrap">
+        <div class="section__head">
+          <span class="eyebrow">Simulador · fornecedor candidato</span>
+          <h1 id="sim-title">Quanto sobra pra você depois do success fee?</h1>
+          <p class="section__lead">
+            Informe seu ticket médio e o volume de pedidos que espera vender por
+            mês. O cálculo é o mesmo que usamos para faturar nossos parceiros
+            ativos: uma fração variável sobre o que você vendeu — nada fixo.
+          </p>
+        </div>
+
+        <div class="form-card">
+          <form class="form" id="sim-form">
+            <div class="form__row">
+              <div class="field">
+                <label for="s-ticket">Ticket médio (R$)</label>
+                <input id="s-ticket" type="number" min="0" step="1" value="450" inputmode="decimal" />
+              </div>
+              <div class="field">
+                <label for="s-pedidos">Pedidos estimados / mês</label>
+                <input id="s-pedidos" type="number" min="0" step="1" value="40" inputmode="numeric" />
+              </div>
+            </div>
+            <div class="field">
+              <label for="s-pct">Success fee negociado (%)</label>
+              <input id="s-pct" type="number" min="1" max="40" step="0.5" value="10" inputmode="decimal" />
+            </div>
+          </form>
+        </div>
+
+        <div class="readout" role="group" aria-label="Resultado da simulação" style="margin-top: 2rem;">
+          <div class="readout__bar">
+            <span class="readout__dotrow" aria-hidden="true"><span></span><span></span><span></span></span>
+            simulação — estimativa mensal
+          </div>
+          <div class="readout__body">
+            <div class="metric">
+              <div class="metric__val" id="out-receita">R$ 0<span class="unit">/mês</span></div>
+              <div class="metric__key">receita projetada (ticket × pedidos)</div>
+            </div>
+            <div class="metric">
+              <div class="metric__val" id="out-fee">R$ 0<span class="unit">/mês</span></div>
+              <div class="metric__key">success fee da ROI Labs</div>
+            </div>
+            <div class="metric">
+              <div class="metric__val" id="out-liquido">R$ 0<span class="unit">/mês</span></div>
+              <div class="metric__key">o que fica com você</div>
+            </div>
+          </div>
+        </div>
+        <p class="prova__foot">
+          Estimativa ilustrativa — não é proposta comercial. O % efetivo é
+          definido em contrato, conforme nicho, estoque e SLA de despacho.
+        </p>
+
+        <div class="close__whats" style="margin-top: 2.5rem;">
+          <a class="btn btn--primary" href="/#candidatar">Candidatar minha empresa à cadeira</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+
+  <script is:inline>
+    const money = (n) =>
+      'R$ ' + n.toLocaleString('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+
+    function calc() {
+      const ticket = Math.max(0, Number(document.getElementById('s-ticket').value) || 0);
+      const pedidos = Math.max(0, Number(document.getElementById('s-pedidos').value) || 0);
+      const pct = Math.min(100, Math.max(0, Number(document.getElementById('s-pct').value) || 0)) / 100;
+
+      const receita = ticket * pedidos;
+      const fee = receita * pct;
+      const liquido = receita - fee;
+
+      document.getElementById('out-receita').innerHTML = money(receita) + '<span class="unit">/mês</span>';
+      document.getElementById('out-fee').innerHTML = money(fee) + '<span class="unit">/mês</span>';
+      document.getElementById('out-liquido').innerHTML = money(liquido) + '<span class="unit">/mês</span>';
+    }
+
+    document.getElementById('sim-form').addEventListener('input', calc);
+    calc();
+  </script>
+</Base>
