@@ -1,0 +1,63 @@
+---
+// "Vistos recentemente": trail of the last 6 visited products (localStorage,
+// no login) — same client-side pattern as favoritos. `atual` = current product
+// slug: registered on load and excluded from the trail.
+// Embeds the minimal catalog payload (same trick as /favoritos and /comparar)
+// because the visited slugs are only known in the browser.
+import { produtos, tituloProduto, imgDisplay } from '../data/produtos';
+
+interface Props {
+  atual?: string;
+}
+const { atual = '' } = Astro.props;
+
+const vistosData = produtos.map((p) => ({
+  slug: p.slug,
+  titulo: tituloProduto(p),
+  img: imgDisplay(p.imagens[0] ?? ''),
+  preco: p.atributos.preco,
+}));
+---
+
+<section class="section vistos" data-atual={atual} hidden>
+  <div class="wrap">
+    <h2 style="font-size:clamp(1.3rem,2.2vw,1.8rem);margin-bottom:1.4rem;">Vistos recentemente</h2>
+    <div class="prod-grid vistos__grid"></div>
+  </div>
+  <script type="application/json" class="vistos__data" set:html={JSON.stringify(vistosData)} />
+</section>
+
+<script>
+  import { getVistos, registrarVisto } from '../lib/vistos';
+
+  type VistoProduto = { slug: string; titulo: string; img: string; preco: number };
+  const section = document.querySelector<HTMLElement>('.vistos')!;
+  const catalogo: VistoProduto[] = JSON.parse(section.querySelector('.vistos__data')!.textContent!);
+  const bySlug = new Map(catalogo.map((p) => [p.slug, p]));
+  const atual = section.dataset.atual || '';
+
+  if (atual && bySlug.has(atual)) registrarVisto(atual);
+
+  const vistos = getVistos()
+    .filter((s) => s !== atual)
+    .map((s) => bySlug.get(s))
+    .filter((p): p is VistoProduto => !!p);
+
+  if (vistos.length > 0) {
+    // Cards built via JS reuse the global .prod-card styles (same as /favoritos).
+    section.querySelector<HTMLElement>('.vistos__grid')!.innerHTML = vistos
+      .map(
+        (p) => `
+      <a class="prod-card" href="/porcelanato/produto/${p.slug}/">
+        <div class="prod-card__img">${p.img ? `<img src="${p.img}" alt="${p.titulo}" loading="lazy" />` : ''}</div>
+        <div class="prod-card__body">
+          <span class="prod-card__nome">${p.titulo}</span>
+          <span class="prod-card__preco">${p.preco.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} <small>/m²</small></span>
+        </div>
+      </a>`
+      )
+      .join('');
+    section.hidden = false;
+    section.addEventListener('click', () => (window as any).himetrica?.track('vistos_click', {}));
+  }
+</script>

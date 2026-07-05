@@ -5,6 +5,7 @@ import Footer from '../../../components/Footer.astro';
 import LeadForm from '../../../components/LeadForm.astro';
 import ProdutoCard from '../../../components/ProdutoCard.astro';
 import ProdutoDetalhe from '../../../components/ProdutoDetalhe.astro';
+import VistosRecentemente from '../../../components/VistosRecentemente.astro';
 import {
   produtos,
   tituloProduto,
@@ -160,6 +161,8 @@ const jsonLdNodes = [
         </div>
       </section>
     )}
+
+    <VistosRecentemente atual={produto.slug} />
   </main>
 
   <Footer />

@@ -1,46 +1,55 @@
 ---
 status: in_progress
 next_effort: medium
-iteration: 7
-updated_at: 2026-07-05T12:35:00.000Z
+iteration: 8
+updated_at: 2026-07-05T12:45:00.000Z
 ---
 
 ## Last completed
-Tarefa 7 (Semana 2, `[build]`): **Favoritos ↔ comparador** no `site-goiania`.
-- `src/pages/favoritos.astro` — botão "Comparar favoritos lado a lado"
-  (`.fav-cmp`) nas ações da página: aparece com ≥2 favoritos e monta o
-  deep-link `/comparar/?p=slug1,slug2,slug3` com os 3 primeiros (o comparador
-  aceita 2–3). Parte deste diff já estava no working tree de iteração anterior
-  (não commitado); verificado e mantido.
-- `src/pages/comparar.astro` — botão de favoritar por coluna (`.cmp__fav`,
-  "♡ Favoritar" / "♥ Favoritado", `aria-pressed`) na linha de links da tabela,
-  usando a mesma lib `src/lib/favoritos.ts` do FavToggle (mesmo localStorage
-  `roi_fav_v1`). Sync via `FAV_EVENT` + `storage`; clique delegado no
-  `.cmp__table-wrap`; track `comparador_favorito`. Estilo em `<style is:global>`
-  porque a tabela é DOM criado por JS (gotcha dos scoped styles).
+Tarefa 8 (Semana 2, `[build]`) **pulada (já existia)** + Tarefa 9 (Semana 2,
+`[build]`): **"Vistos recentemente" via localStorage** no `site-goiania`.
+
+- Tarefa 8 (calculadora multi-ambiente): verificado
+  `src/pages/calculadora.astro` — o multi-ambiente já estava completo e
+  funcional (botão "+ Adicionar ambiente" / `addRoom()`, remover linha, soma
+  de áreas, folga clampada 5–20%, rejunte/argamassa sobre área instalada,
+  prefill `?m2caixa=&produto=&nome=` e lead POST `/api/leads-consumidor`
+  intactos). Matemática conferida manualmente com 3 casos via
+  `m2ParaCaixas` de `src/lib/cart.ts` (ex.: 35+12=47 m² +10% = 51,7 →
+  21 caixas de 2,5 m²; ceil + mínimo 1 caixa). Nenhum código alterado.
+- Tarefa 9 implementada:
+  - `src/lib/vistos.ts` — nova lib no padrão de `favoritos.ts`: localStorage
+    `roi_vistos_v1`, só slugs, mais recente primeiro, cap 6
+    (`getVistos()` / `registrarVisto(slug)`).
+  - `src/components/VistosRecentemente.astro` — novo componente: seção
+    `hidden` que embute payload mínimo do catálogo em
+    `<script type="application/json" class="vistos__data">` (mesmo truque de
+    /favoritos e /comparar), renderiza cards `.prod-card` via JS (estilos
+    globais, sem is:global extra necessário) e some se a trilha estiver
+    vazia. Prop `atual` (slug do produto atual): registra a visita e exclui
+    o próprio produto da trilha. Track `vistos_click` no clique.
+  - Plugado em `src/pages/index.astro` (home), `src/pages/porcelanato/index.astro`
+    (hub) e `src/pages/porcelanato/produto/[slug].astro`
+    (`atual={produto.slug}`), sempre como última seção do `<main>`.
 - Verificação: `astro build` verde (93 páginas);
-  `node src/scripts/check-feed.mjs` OK (30 itens); `.fav-cmp` presente em
-  `dist/favoritos/index.html`, `.cmp__fav` no CSS e `cmpFav` no bundle JS do
-  comparar. Páginas não são novas → sitemap/llms.txt/busca inalterados.
-- Observação p/ tarefa 8 (mantida): a `/calculadora` já tem botão
-  "+ Adicionar ambiente" — verificar se multi-ambiente já existe antes de
-  construir.
+  `node src/scripts/check-feed.mjs` OK (30 itens); classe `vistos` presente em
+  `dist/index.html`, `dist/porcelanato/index.html` e páginas de produto;
+  `data-atual` correto no produto; `roi_vistos_v1` no JS embutido. Páginas não
+  são novas → sitemap/llms.txt/busca inalterados.
 
 ## Next step
-Tarefa 8 do `macro_plan.md` (Semana 2, `[build]`): **Calculadora
-multi-ambiente** no `site-goiania`.
-- Objetivo: permitir somar cômodos (ex.: sala 35m² + cozinha 12m²) antes do
-  cálculo de caixas/rejunte/argamassa, client-side.
-- **Verificar ANTES**: `src/pages/calculadora.astro` — iterações anteriores
-  observaram que já existe um botão "+ Adicionar ambiente"; se o
-  multi-ambiente já estiver completo e funcional, registrar "pulado (já
-  existia)" e ir para a tarefa 9 (Vistos recentemente via localStorage).
-- Manter compatibilidade com o pré-preenchimento
-  `?m2caixa=&produto=&nome=` e com o fluxo de lead existente
-  (POST `/api/leads-consumidor`, mesmo padrão do comparador).
-- Conferir a matemática com 2–3 casos manuais (m² total → caixas por
-  m²/caixa com folga, rejunte, argamassa).
-- Gotcha: DOM criado por JS não recebe scoped styles → `<style is:global>`.
-- `astro build` verde + `node src/scripts/check-feed.mjs` antes de commitar
-  (push = deploy em produção). Página não é nova → sitemap/llms/busca não
-  mudam.
+Tarefa 10 do `macro_plan.md` (Semana 2, `[build]`): **Follow-up do a11y-audit
+(ciclo 15)** no `site-goiania`.
+- Ler `Docs/Obsidian/90-medicao/a11y-audit.md` (na raiz do repo ROI Labs, não
+  dentro de site-goiania): aplicar o que ficou documentado lá e é seguro sem
+  decisão de design.
+- Re-inspecionar as páginas novas das semanas 1–2: guias AEO
+  (`src/pages/guia/*`), glossário (`src/pages/glossario.astro`), filtros do hub
+  (`src/pages/porcelanato/index.astro`), e também as novidades client-side
+  (favoritos↔comparador, seção "Vistos recentemente" em
+  `src/components/VistosRecentemente.astro`) — corrigir alt/label/contraste
+  óbvios.
+- Atualizar o arquivo `a11y-audit.md` com o que foi aplicado/pendente.
+- Verificação padrão antes de commitar (push = deploy em produção):
+  `npx astro build` verde + `node src/scripts/check-feed.mjs` em
+  `site-goiania/`. Sem páginas novas → sitemap/llms.txt/busca não mudam.
