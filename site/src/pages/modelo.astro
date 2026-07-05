@@ -1,0 +1,357 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
+const whatsHref = `https://wa.me/${whatsapp}?text=${encodeURIComponent(
+  'Quero entender o modelo Growth Partner da ROI Labs'
+)}`;
+
+// Exemplo numérico = mesma fórmula do /simulador (fee = ticket × pedidos × pct).
+const exemplo = { ticket: 450, pedidos: 40, pct: 0.1 };
+const receita = exemplo.ticket * exemplo.pedidos; // 18.000
+const fee = receita * exemplo.pct; // 1.800
+const liquido = receita - fee; // 16.200
+const brl = (n: number) => 'R$ ' + n.toLocaleString('pt-BR');
+
+const faq = [
+  {
+    q: 'Como o percentual do success fee é definido?',
+    a: 'Em contrato, caso a caso, conforme nicho, margem do produto e SLA de estoque e despacho que você consegue sustentar. É uma fração da venda concretizada — sem mensalidade, sem setup, sem piso mínimo. Se não vendeu, a fatura é zero.',
+  },
+  {
+    q: 'Quem é dono do site e das páginas que a ROI Labs constrói?',
+    a: 'A infraestrutura (domínio do polo, páginas, calculadoras, feed de produtos) é da ROI Labs — é o nosso investimento e o nosso risco. O seu catálogo, sua marca e seus clientes são seus. Se a parceria termina, você sai sem dívida e sem amarra técnica no seu próprio site.',
+  },
+  {
+    q: 'Preciso abandonar meu site ou meus canais atuais?',
+    a: 'Não. A operação da cadeira é uma camada adicional de captação de alta intenção — centenas de páginas de cauda longa que o seu site institucional não cobre. Seus canais atuais continuam funcionando normalmente.',
+  },
+  {
+    q: 'Como funciona o pedido e o repasse do dinheiro?',
+    a: 'O cliente compra na operação do polo e você fatura a venda: o dinheiro da venda é seu. A ROI Labs fatura do parceiro apenas o success fee sobre os pedidos concretizados do período, com relatório detalhado pedido a pedido.',
+  },
+  {
+    q: 'O que a exclusividade exige de mim na prática?',
+    a: 'Manter o SLA acordado: estoque consistente dos produtos anunciados e despacho no prazo. É o que protege a reputação da operação — e a sua cadeira. Em troca, nenhum concorrente do seu nicho entra no polo enquanto o contrato vigorar.',
+  },
+  {
+    q: 'E se a ROI Labs não entregar resultado?',
+    a: 'Você não paga nada — a remuneração é 100% variável — e pode sair na renovação. O contrato de cadeira é anual, renovável por desempenho dos dois lados: nós entregamos demanda, você entrega estoque e despacho.',
+  },
+  {
+    q: 'Quanto tempo leva da candidatura ao contrato?',
+    a: 'A triagem responde em até 48h úteis. Com os documentos e a validação do catálogo em mãos, a proposta e o contrato saem em poucas semanas. O que leva mais tempo é a maturação do SEO depois do go-live: de 3 a 6 meses até o volume orgânico estabilizar.',
+  },
+];
+
+const howtoSteps = [
+  {
+    name: 'Candidatura',
+    text: 'Preencha o formulário na home (leva 1 minuto) ou chame no WhatsApp. Sem custo e sem compromisso — é só o ponto de partida da curadoria.',
+  },
+  {
+    name: 'Triagem e conversa de curadoria',
+    text: 'Respondemos em até 48h úteis. Uma conversa direta para entender catálogo, capacidade de estoque, logística de despacho e o que você já vende online.',
+  },
+  {
+    name: 'Validação do Gate 3',
+    text: 'Os dois primeiros gates (demanda medida e brecha na busca) já foram validados antes da cadeira abrir. O terceiro é você: catálogo próprio e amplo, pronta-entrega real e capacidade de acompanhar o salto de demanda.',
+  },
+  {
+    name: 'Proposta: percentual e termos',
+    text: 'Definimos juntos o percentual do success fee e o SLA de estoque e despacho. Tudo em números claros — a mesma fórmula do simulador público: fee = receita × percentual.',
+  },
+  {
+    name: 'Contrato e onboarding do catálogo',
+    text: 'Assinatura do contrato anual de exclusividade e integração do catálogo à operação do polo: produtos, preços, fotos, prazos de entrega.',
+  },
+  {
+    name: 'Go-live e travessia',
+    text: 'A operação entra no ar e o SEO começa a maturar — de 3 a 6 meses até o volume orgânico estabilizar. Você acompanha cada fase com transparência total, pagando apenas sobre o que vender.',
+  },
+];
+
+const jsonLdNodes = [
+  {
+    '@type': 'WebPage',
+    '@id': 'https://roilabs.com.br/modelo/#webpage',
+    url: 'https://roilabs.com.br/modelo/',
+    name: 'O modelo Growth Partner — como funciona a cadeira exclusiva',
+    isPartOf: { '@id': 'https://roilabs.com.br/#website' },
+    about: { '@id': 'https://roilabs.com.br/#service' },
+    inLanguage: 'pt-BR',
+  },
+  {
+    '@type': 'Service',
+    '@id': 'https://roilabs.com.br/#service',
+    name: 'Growth Partner — operação de vendas online pago pelo sucesso',
+    serviceType: 'Operação de vendas online (SEO programático de alta intenção)',
+    provider: { '@id': 'https://roilabs.com.br/#org' },
+    areaServed: { '@type': 'City', name: 'Goiânia' },
+  },
+  {
+    '@type': 'FAQPage',
+    '@id': 'https://roilabs.com.br/modelo/#faq',
+    mainEntity: faq.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  },
+  {
+    '@type': 'HowTo',
+    '@id': 'https://roilabs.com.br/modelo/#howto',
+    name: 'Da candidatura ao contrato: como ocupar uma cadeira ROI Labs',
+    step: howtoSteps.map((s, i) => ({
+      '@type': 'HowToStep',
+      position: i + 1,
+      name: s.name,
+      text: s.text,
+    })),
+  },
+];
+---
+
+<Base
+  title="O modelo Growth Partner — como funciona a cadeira | ROI Labs"
+  description="Gates de validação, success fee 100% variável, exclusividade de cadeira e o passo a passo da candidatura ao contrato. O modelo ROI Labs explicado com números."
+  jsonLdNodes={jsonLdNodes}
+>
+  <Header />
+
+  <main>
+    <!-- BLUF -->
+    <section class="section section--dark" aria-labelledby="modelo-title">
+      <div class="wrap">
+        <div class="section__head">
+          <span class="eyebrow">O modelo · em profundidade</span>
+          <h1 id="modelo-title">Growth Partner: sócio de performance, não agência.</h1>
+          <p class="section__lead">
+            O modelo em uma frase: a ROI Labs constrói e opera a venda online de
+            <strong>um único fornecedor por nicho, por polo</strong> — bancando
+            tecnologia e tráfego — e é remunerada por uma
+            <strong>fração variável da venda concretizada</strong>. Sem
+            mensalidade, sem setup, sem piso. Esta página detalha cada peça:
+            os gates, a conta do success fee, a exclusividade e o caminho da
+            candidatura ao contrato.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- GATES -->
+    <section class="section section--light" id="gates" aria-labelledby="gates-title">
+      <div class="wrap">
+        <div class="section__head">
+          <span class="eyebrow">Peça 1 · os três gates</span>
+          <h2 id="gates-title">Nenhuma cadeira abre no escuro.</h2>
+          <p class="section__lead">
+            Antes de existir uma cadeira, o nicho passa por três validações em
+            sequência. Se qualquer uma falhar, a cadeira não abre — é o que
+            impede o modelo de virar aposta.
+          </p>
+        </div>
+
+        <div class="steps">
+          <article class="step">
+            <span class="step__num">Gate 01</span>
+            <h3>Demanda comprovada</h3>
+            <p>
+              Volume real de busca local, medido no Keyword Planner antes de
+              qualquer investimento. Em Goiânia: 1.900 buscas/mês por
+              "porcelanato" só na cidade. Sem volume medido, não há cadeira.
+            </p>
+            <span class="step__tag">Dados, não intuição</span>
+          </article>
+          <article class="step">
+            <span class="step__num">Gate 02</span>
+            <h3>Brecha na busca</h3>
+            <p>
+              A SERP local precisa estar fraca: se só marketplace genérico
+              ranqueia, há espaço para uma operação local dominar. Concorrência
+              orgânica forte demais? A conta não fecha e o nicho fica em estudo.
+            </p>
+            <span class="step__tag">Espaço para dominar</span>
+          </article>
+          <article class="step">
+            <span class="step__num">Gate 03</span>
+            <h3>Fornecedor A-Player</h3>
+            <p>
+              A peça humana: catálogo próprio e amplo, pronta-entrega de
+              verdade e capacidade de acompanhar o salto de demanda. É o gate
+              que a curadoria valida na candidatura — e o único que depende de
+              você.
+            </p>
+            <span class="step__tag">Curadoria aberta</span>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- SUCCESS FEE -->
+    <section class="section section--dark" id="success-fee" aria-labelledby="fee-title">
+      <div class="wrap">
+        <div class="section__head">
+          <span class="eyebrow">Peça 2 · a conta</span>
+          <h2 id="fee-title">Success fee: a fórmula é pública.</h2>
+          <p class="section__lead">
+            Não há tabela escondida. O fee é uma fração percentual da receita
+            que a operação gerou para você no mês:
+            <strong>fee = ticket médio × pedidos × percentual</strong>. O
+            percentual é definido em contrato, conforme nicho, margem e SLA.
+          </p>
+        </div>
+
+        <div class="readout" role="group" aria-label="Exemplo de cálculo do success fee">
+          <div class="readout__bar">
+            <span class="readout__dotrow" aria-hidden="true"><span></span><span></span><span></span></span>
+            exemplo — ticket {brl(exemplo.ticket)} × {exemplo.pedidos} pedidos × {exemplo.pct * 100}%
+          </div>
+          <div class="readout__body">
+            <div class="metric">
+              <div class="metric__val">{brl(receita)}<span class="unit">/mês</span></div>
+              <div class="metric__key">receita projetada (ticket × pedidos)</div>
+            </div>
+            <div class="metric">
+              <div class="metric__val">{brl(fee)}<span class="unit">/mês</span></div>
+              <div class="metric__key">success fee da ROI Labs</div>
+            </div>
+            <div class="metric">
+              <div class="metric__val">{brl(liquido)}<span class="unit">/mês</span></div>
+              <div class="metric__key">o que fica com você</div>
+            </div>
+          </div>
+        </div>
+        <p class="prova__foot">
+          Vendeu zero? Fatura zero. O alinhamento é estrutural: o nosso lucro é
+          uma parte do seu. Faça a conta com os seus números no
+          <a href="/simulador/" style="color:inherit">simulador de receita →</a>
+        </p>
+      </div>
+    </section>
+
+    <!-- EXCLUSIVIDADE + PAPÉIS -->
+    <section class="section section--light" id="exclusividade" aria-labelledby="excl-title">
+      <div class="wrap">
+        <div class="section__head">
+          <span class="eyebrow">Peça 3 · exclusividade e papéis</span>
+          <h2 id="excl-title">Uma cadeira, dois compromissos.</h2>
+          <p class="section__lead">
+            A exclusividade é anual e renovável por desempenho — dos dois
+            lados. Cada parte tem um papel claro; é isso que o contrato
+            formaliza.
+          </p>
+        </div>
+
+        <div class="fit">
+          <div class="fit__col fit__col--yes">
+            <div class="fit__title">O que a ROI Labs banca</div>
+            <p class="fit__item"><span class="fit__mark" aria-hidden="true">✓</span> Tecnologia inteira: site do polo, catálogo, calculadoras, comparador, feed.</p>
+            <p class="fit__item"><span class="fit__mark" aria-hidden="true">✓</span> Tráfego orgânico: centenas de páginas de alta intenção, sem mídia paga.</p>
+            <p class="fit__item"><span class="fit__mark" aria-hidden="true">✓</span> Captação e qualificação do lead até o pedido.</p>
+            <p class="fit__item"><span class="fit__mark" aria-hidden="true">✓</span> Transparência: relatório pedido a pedido na fatura do fee.</p>
+          </div>
+          <div class="fit__col fit__col--no">
+            <div class="fit__title">O que o parceiro sustenta</div>
+            <p class="fit__item"><span class="fit__mark" aria-hidden="true">✓</span> Catálogo próprio e amplo, com preço e foto atualizados.</p>
+            <p class="fit__item"><span class="fit__mark" aria-hidden="true">✓</span> Estoque consistente dos produtos anunciados (SLA).</p>
+            <p class="fit__item"><span class="fit__mark" aria-hidden="true">✓</span> Despacho no prazo — pronta-entrega de verdade.</p>
+            <p class="fit__item"><span class="fit__mark" aria-hidden="true">✓</span> O success fee sobre o que vendeu. Só isso.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOWTO: CANDIDATURA AO CONTRATO -->
+    <section class="section section--dark" id="etapas" aria-labelledby="etapas-title">
+      <div class="wrap">
+        <div class="section__head">
+          <span class="eyebrow">Peça 4 · o caminho</span>
+          <h2 id="etapas-title">Da candidatura ao contrato, em 6 etapas.</h2>
+        </div>
+
+        <ol class="howto" role="list">
+          {howtoSteps.map((s, i) => (
+            <li class="howto__step">
+              <span class="howto__num">{String(i + 1).padStart(2, '0')}</span>
+              <div>
+                <h3 class="howto__name">{s.name}</h3>
+                <p class="howto__text">{s.text}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+
+        <div class="close__whats" style="margin-top: 2.5rem;">
+          <a class="btn btn--primary" href="/#candidatar">Começar a etapa 1 agora</a>
+          <a class="btn btn--whats" href={whatsHref} target="_blank" rel="noopener" style="margin-left: .75rem;">Chamar no WhatsApp</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section section--light" id="faq" aria-labelledby="faq-title">
+      <div class="wrap">
+        <div class="section__head">
+          <span class="eyebrow">Detalhes do contrato</span>
+          <h2 id="faq-title">O que todo candidato pergunta antes de assinar.</h2>
+        </div>
+
+        <div class="faq">
+          {faq.map((f) => (
+            <details class="faq__item">
+              <summary>{f.q}</summary>
+              <p class="faq__a">{f.a}</p>
+            </details>
+          ))}
+        </div>
+
+        <p class="prova__foot" style="margin-top: 2rem;">
+          Quer ver o modelo aplicado? Leia
+          <a href="/blog/growth-partner-vs-agencia-revestimentos/" style="color:inherit">a conta real: pago pelo sucesso vs agência</a>
+          e
+          <a href="/blog/exclusividade-de-cadeira-uma-loja-por-nicho-goiania/" style="color:inherit">por que só existe uma cadeira por nicho</a>.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  /* HowTo list — único bloco novo; o resto reusa as classes globais da home. */
+  .howto {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 1rem;
+  }
+  .howto__step {
+    display: flex;
+    gap: 1.25rem;
+    align-items: baseline;
+    border: 1px solid var(--d-line-strong);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+  }
+  .howto__num {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--hivis);
+    flex: 0 0 auto;
+  }
+  .howto__name {
+    font-size: 1.05rem;
+    margin: 0 0 0.35rem;
+  }
+  .howto__text {
+    margin: 0;
+    font-size: 0.95rem;
+    opacity: 0.85;
+    line-height: 1.6;
+  }
+</style>

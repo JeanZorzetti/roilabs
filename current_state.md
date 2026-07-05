@@ -1,48 +1,54 @@
 ---
 status: in_progress
 next_effort: medium
-iteration: 10
-updated_at: 2026-07-05T12:45:00.000Z
+iteration: 11
+updated_at: 2026-07-05T12:50:00.000Z
 ---
 
 ## Last completed
-Tarefa 11 (Semana 3, `[plan]`): **2 artigos AEO no blog do `/site`** —
-**parcialmente pulado (já existiam)** + complemento do que faltava.
+Tarefa 12 (Semana 3, `[build]`): **Página `/modelo/` no `/site`** — criada
+(a home só explica o modelo em resumo: hero, 3 fases, gates, FAQ curto; não
+havia HowTo nem aprofundamento — logo, a página se justificava).
 
-- Os dois artigos pedidos JÁ EXISTIAM no blog (`site/src/content/blog/`):
-  - (a) → `growth-partner-vs-agencia-revestimentos.md` (pubDate 2026-06-29);
-  - (b) → `exclusividade-de-cadeira-uma-loja-por-nicho-goiania.md` (2026-07-01).
-  Ambos já com BLUF, FAQ (5 perguntas), tabela e interlink. NÃO recriados
-  (duplicar conteúdo seria pior para SEO).
-- O que a tarefa pedia e FALTAVA foi adicionado aos dois:
-  - Artigo (a): nova seção "A conta real: quanto custa cada modelo por mês?"
-    com a fórmula do simulador (`fee = ticket × pedidos × pct`, exemplo
-    450 × 40 × 10% → receita 18.000 / fee 1.800 / líquido 16.200) em tabela
-    comparativa vs agência; CTA para `/simulador/` e `/#candidatar` no fecho.
-  - Artigo (b): parágrafo final com CTA para `/simulador/` e `/#candidatar`.
-  - `updatedDate: 2026-07-05` no frontmatter dos dois (layout `Article.astro`
-    já emite `dateModified` no schema + "Atualizado em" visível).
-  - Barra final adicionada nos interlinks `/blog/...` que faltavam nos dois
-    arquivos (gotcha nginx).
-- Sem página nova → sitemap/llms.txt/busca inalterados (artigos já
-  registrados). `npx astro build` em `site/` verde (11 páginas).
+- Novo `site/src/pages/modelo.astro`: BLUF + 4 seções (3 gates aprofundados,
+  success fee com a fórmula pública e exemplo 450×40×10% em `readout`,
+  exclusividade/papéis nas colunas `fit`, HowTo visual de 6 etapas da
+  candidatura ao contrato) + FAQ com 7 perguntas NOVAS (não duplica as da
+  home: % do fee, propriedade do site, canais atuais, repasse do dinheiro,
+  SLA na prática, saída sem resultado, prazo até contrato).
+- Schema via `jsonLdNodes` do `Base`: `WebPage` + `FAQPage` (7 Q&A) +
+  `HowTo` (6 steps) + nó `Service` `#service` (mesmo `@id` da home, emitido
+  1× — verificado no dist que não há duplicata no @graph).
+- Descoberta: `/modelo/` adicionada em `sitemap.xml.ts` e `llms.txt.ts`
+  (não são 100% dinâmicos para páginas .astro — entradas estáticas).
+- Links: Header (nav "Modelo" no lugar de "/#mecanica" — a página cobre a
+  mecânica em profundidade), Footer ("Como funciona o modelo"), e CTA final
+  dos 2 artigos da tarefa 11 agora linkam `/modelo/`.
+- CSS: reuso das classes globais (section/steps/fit/faq/readout); único
+  bloco novo é `.howto*` scoped no próprio modelo.astro. URLs com barra
+  final. `npx astro build` verde (12 páginas, `/modelo/index.html` gerado).
 
 ## Next step
-Tarefa 12 do `macro_plan.md` (Semana 3, `[build]`): **Página `/modelo/` no
-`/site`** (site institucional B2B, `site/`, Astro).
+Tarefa 13 do `macro_plan.md` (Semana 3, `[build]`): **Case vivo do Polo 1 no
+`/site`** — página "Polo Goiânia — porcelanato" mostrando o que a cadeira
+ocupada recebe, com FATOS verificáveis no repo, **sem inventar métricas de
+venda/tráfego**.
 
-- PRIMEIRO verificar o que a home (`site/src/pages/index.astro`) já explica
-  sobre o modelo (gates, success fee, exclusividade, papel do parceiro):
-  - Se só existe resumido → criar página própria aprofundada em `/modelo/`
-    com FAQPage + HowTo (etapas da candidatura ao contrato), linkada do
-    menu/footer (`Header.astro`/`Footer.astro`) e dos 2 artigos da tarefa 11
-    (`growth-partner-vs-agencia-revestimentos.md` e
-    `exclusividade-de-cadeira-uma-loja-por-nicho-goiania.md`).
-  - Se a home já cobre em profundidade → pular ("pulado, já existia") e
-    registrar aqui.
-- Página nova em Astro = registrar em sitemap (`sitemap.xml.ts`), `llms.txt`
-  (`llms.txt.ts`) e busca interna do `/site` se houver, seguindo o padrão
-  existente. Conferir se sitemap/llms são dinâmicos (podem já pegar a rota).
-- Schema: não duplicar entidade que o `@graph` do layout já emite.
-- URLs sempre com barra final. Push = deploy: `npx astro build` verde dentro
-  de `site/` antes de commitar.
+- Fatos a levantar no próprio repo antes de escrever: nº de páginas da
+  malha/guias no build do `site-goiania` (rodar `npx astro build` lá e
+  contar), catálogo de 30 produtos (`site-goiania/src/data/produtos*`),
+  calculadora (`/calculadora/`), comparador (`/comparar/`), feed Merchant
+  Center (script `check-feed`), favoritos, galeria Inspire-se, glossário,
+  guias — citar só o que existir de verdade.
+- Página nova em `site/src/pages/` (ex. `polo-goiania.astro` →
+  `/polo-goiania/`), padrão da `/modelo/` recém-criada: classes globais,
+  `jsonLdNodes` sem duplicar entidades do `@graph` do `Base`
+  (Organization/WebSite; nó `Service #service` já é emitido por home e
+  `/modelo/` — se usar, mesmo `@id`).
+- CTA duplo: candidatura (`/#candidatar`) + simulador (`/simulador/`).
+- Linkar dos 2 artigos da tarefa 11 e do Footer
+  (`site/src/components/Footer.astro` — hoje o link "Polo 1 no ar" aponta
+  direto para goiania.roilabs.com.br; avaliar apontar para a página nova).
+- Registrar em `sitemap.xml.ts` e `llms.txt.ts` (entradas estáticas, como
+  feito para `/modelo/`). URLs sempre com barra final. `npx astro build`
+  verde em `site/` antes de commitar (push = deploy).

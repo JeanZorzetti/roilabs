@@ -72,4 +72,4 @@ A escolha depende do apetite a risco: se você tem produto e logística fortes, 
 
 Para entender como a captação orgânica de alta intenção é construída na prática, veja [como vender porcelanato pela internet em Goiânia](/blog/vender-porcelanato-internet-goiania/). Para dimensionar o investimento, veja [quanto custa colocar uma loja de materiais de construção no Google em Goiânia](/blog/quanto-custa-loja-materiais-construcao-google-goiania/).
 
-Quer ver a conta com os seus números? Rode o [simulador de receita](/simulador/) e, se fizer sentido, [candidate sua empresa à cadeira](/#candidatar).
+Quer ver a conta com os seus números? Rode o [simulador de receita](/simulador/), entenda [o modelo em profundidade — gates, success fee e contrato](/modelo/) e, se fizer sentido, [candidate sua empresa à cadeira](/#candidatar).

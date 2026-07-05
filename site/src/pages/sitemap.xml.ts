@@ -10,6 +10,7 @@ export const GET: APIRoute = async () => {
   // GSC 2026-07-03) e o Googlebot queima crawl em redirect.
   const urls = [
     { loc: `${SITE}/` },
+    { loc: `${SITE}/modelo/` },
     { loc: `${SITE}/blog/` },
     { loc: `${SITE}/simulador/` },
     { loc: `${SITE}/obrigado/` },
