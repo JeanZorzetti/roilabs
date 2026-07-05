@@ -3,6 +3,7 @@ title: "Growth Partner, agência ou e-commerce: o que traz venda de revestimento
 description: Para uma loja de revestimentos, agência de mídia paga cobra fixo e transfere o risco para você; e-commerce próprio é caro e mal adaptado ao produto; um Growth Partner banca a infraestrutura e cobra só quando você vende. Veja o comparativo dos três modelos de aquisição online.
 eyebrow: Comparativo · Aquisição online
 pubDate: 2026-06-29
+updatedDate: 2026-07-05
 author: Equipe ROI Labs
 faq:
   - q: 'Qual a diferença entre agência de marketing e Growth Partner?'
@@ -50,8 +51,25 @@ A comparação direta entre mensalidade, risco e prazo evidencia o trade-off de 
 | Exclusividade | Não | Não | Uma cadeira por nicho/polo |
 | Remuneração do parceiro | Fixa, independe da venda | — | Variável, atrelada à venda |
 
+## A conta real: quanto custa cada modelo por mês?
+
+A conta do Growth Partner é uma multiplicação simples: **success fee = receita gerada × percentual negociado**, e o que fica com você é a receita menos esse fee. É exatamente essa fórmula que usamos para faturar parceiros ativos — e a mesma que roda no nosso [simulador de receita](/simulador/). Um exemplo com números redondos de uma loja de revestimentos: ticket médio de R$ 450 e 40 pedidos/mês gerados pelo canal.
+
+| Conta mensal | Agência de mídia | Growth Partner (fee de 10%) |
+| :-- | :-- | :-- |
+| Receita gerada pelo canal | R$ 18.000 (se a mídia performar) | R$ 18.000 (450 × 40) |
+| Custo fixo (fee de gestão) | R$ 2.000 a R$ 5.000 | R$ 0 |
+| Verba de mídia | R$ 3.000 a R$ 10.000 | R$ 0 |
+| Custo variável (success fee) | R$ 0 | R$ 1.800 (18.000 × 10%) |
+| Desembolso num mês sem venda | R$ 5.000 a R$ 15.000 | R$ 0 |
+| O que fica com você (mês bom) | R$ 3.000 a R$ 13.000 | R$ 16.200 |
+
+Os valores de agência são faixas típicas de mercado para gestão + verba mínima viável em um nicho de CPC alto; o lado Growth Partner é a fórmula contratual aplicada ao exemplo. O ponto da tabela não é o valor absoluto — é a assimetria no pior cenário: no mês em que nada vende, a agência custa a mesma coisa e o Growth Partner custa zero. Coloque o seu ticket e o seu volume no [simulador](/simulador/) para ver a sua conta.
+
 ## Qual modelo escolher para uma loja de material de construção em Goiânia?
 
 A escolha depende do apetite a risco: se você tem produto e logística fortes, mas presença online fraca, o Growth Partner é o caminho de menor risco porque alinha custo ao resultado. Agência faz sentido quando há caixa para sustentar mídia paga e desejo de controle total da operação. E-commerce próprio só se justifica quando vender online é o núcleo do negócio, não um canal complementar.
 
-Para entender como a captação orgânica de alta intenção é construída na prática, veja [como vender porcelanato pela internet em Goiânia](/blog/vender-porcelanato-internet-goiania). Para dimensionar o investimento, veja [quanto custa colocar uma loja de materiais de construção no Google em Goiânia](/blog/quanto-custa-loja-materiais-construcao-google-goiania).
+Para entender como a captação orgânica de alta intenção é construída na prática, veja [como vender porcelanato pela internet em Goiânia](/blog/vender-porcelanato-internet-goiania/). Para dimensionar o investimento, veja [quanto custa colocar uma loja de materiais de construção no Google em Goiânia](/blog/quanto-custa-loja-materiais-construcao-google-goiania/).
+
+Quer ver a conta com os seus números? Rode o [simulador de receita](/simulador/) e, se fizer sentido, [candidate sua empresa à cadeira](/#candidatar).

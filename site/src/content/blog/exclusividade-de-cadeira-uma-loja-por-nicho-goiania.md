@@ -3,6 +3,7 @@ title: "Exclusividade de cadeira: por que a ROI Labs trabalha com só uma loja p
 description: A ROI Labs opera com uma única cadeira por nicho, por polo — em Goiânia, uma só loja de revestimentos. É um modelo de escassez programada, inspirado no BNI, que protege o fornecedor da concorrência direta e concentra todo o esforço de aquisição em um parceiro por vez. Veja como funciona, o que é o SLA de estoque e o que acontece com os concorrentes.
 eyebrow: Modelo · Exclusividade
 pubDate: 2026-07-01
+updatedDate: 2026-07-05
 author: Equipe ROI Labs
 faq:
   - q: 'O que é a exclusividade de cadeira da ROI Labs?'
@@ -54,4 +55,6 @@ O quadro abaixo resume quem ganha o quê nesse arranjo:
 
 Não: a exclusividade faz parte do modelo Growth Partner e não tem custo fixo nem mensalidade. A ROI Labs banca a tecnologia e o tráfego com capital próprio e é remunerada por uma fração variável atrelada à venda — se não vendeu, não cobra. A cadeira exclusiva não é um plano premium; é a estrutura padrão que alinha o interesse das duas partes.
 
-Esse alinhamento é o que torna a exclusividade sustentável: a ROI Labs concentra todo o esforço em um parceiro porque só cresce se esse parceiro crescer. Para entender como esse modelo se compara a contratar agência ou montar e-commerce, veja [Growth Partner, agência ou e-commerce: o que traz venda de revestimentos](/blog/growth-partner-vs-agencia-revestimentos). E para ver como o tráfego de alta intenção é construído na prática, leia [o que é SEO programático (pSEO) e como ele vende revestimento](/blog/o-que-e-seo-programatico-pseo-revestimentos).
+Esse alinhamento é o que torna a exclusividade sustentável: a ROI Labs concentra todo o esforço em um parceiro porque só cresce se esse parceiro crescer. Para entender como esse modelo se compara a contratar agência ou montar e-commerce, veja [Growth Partner, agência ou e-commerce: o que traz venda de revestimentos](/blog/growth-partner-vs-agencia-revestimentos/). E para ver como o tráfego de alta intenção é construído na prática, leia [o que é SEO programático (pSEO) e como ele vende revestimento](/blog/o-que-e-seo-programatico-pseo-revestimentos/).
+
+A cadeira de revestimentos de Goiânia hoje tem candidatura aberta. Rode o [simulador de receita](/simulador/) com o seu ticket e volume para ver quanto sobra depois do success fee — e, se a conta fechar, [candidate sua empresa à cadeira](/#candidatar).

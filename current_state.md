@@ -1,47 +1,48 @@
 ---
 status: in_progress
 next_effort: medium
-iteration: 9
-updated_at: 2026-07-05T13:10:00.000Z
+iteration: 10
+updated_at: 2026-07-05T12:45:00.000Z
 ---
 
 ## Last completed
-Tarefa 10 (Semana 2, `[build]`): **Follow-up do a11y-audit** — re-inspeção
-concluída, **nenhuma correção de código necessária**.
+Tarefa 11 (Semana 3, `[plan]`): **2 artigos AEO no blog do `/site`** —
+**parcialmente pulado (já existiam)** + complemento do que faltava.
 
-- Auditoria original (ciclo 15) já tinha aplicado os itens mecânicos
-  (aria-labels em calculadora/carrinho); nada pendente lá além do achado de
-  contraste `--hivis`, que segue como decisão de design do dono.
-- Re-inspecionado o source de todas as páginas novas das semanas 1–2:
-  - Guias novos (`guia/porcelanato-area-externa`, `guia/rejunte-porcelanato`,
-    `guia/porcelanato-liquido-vs-porcelanato`): conteúdo puro, sem
-    img/input/button. OK.
-  - `glossario.astro`: âncoras "#" com `aria-label`. OK.
-  - Filtros do hub (`porcelanato/index.astro`): selects dentro de `<label>`,
-    contador `role="status"` + `aria-live`, botão com texto. OK.
-  - Favoritos↔comparador (`favoritos.astro`, `comparar.astro`): botões com
-    texto/`aria-label`/`aria-pressed`, imgs JS com alt. OK.
-  - `VistosRecentemente.astro` e `inspire-se/[ambiente].astro`: alts
-    descritivos. OK.
-- `Docs/Obsidian/90-medicao/a11y-audit.md` atualizado com a seção
-  "Follow-up — páginas novas das semanas 1–2 (2026-07-05)".
-- Sem mudança de código em site-goiania → build não necessário nesta
-  iteração (só docs).
+- Os dois artigos pedidos JÁ EXISTIAM no blog (`site/src/content/blog/`):
+  - (a) → `growth-partner-vs-agencia-revestimentos.md` (pubDate 2026-06-29);
+  - (b) → `exclusividade-de-cadeira-uma-loja-por-nicho-goiania.md` (2026-07-01).
+  Ambos já com BLUF, FAQ (5 perguntas), tabela e interlink. NÃO recriados
+  (duplicar conteúdo seria pior para SEO).
+- O que a tarefa pedia e FALTAVA foi adicionado aos dois:
+  - Artigo (a): nova seção "A conta real: quanto custa cada modelo por mês?"
+    com a fórmula do simulador (`fee = ticket × pedidos × pct`, exemplo
+    450 × 40 × 10% → receita 18.000 / fee 1.800 / líquido 16.200) em tabela
+    comparativa vs agência; CTA para `/simulador/` e `/#candidatar` no fecho.
+  - Artigo (b): parágrafo final com CTA para `/simulador/` e `/#candidatar`.
+  - `updatedDate: 2026-07-05` no frontmatter dos dois (layout `Article.astro`
+    já emite `dateModified` no schema + "Atualizado em" visível).
+  - Barra final adicionada nos interlinks `/blog/...` que faltavam nos dois
+    arquivos (gotcha nginx).
+- Sem página nova → sitemap/llms.txt/busca inalterados (artigos já
+  registrados). `npx astro build` em `site/` verde (11 páginas).
 
 ## Next step
-Tarefa 11 do `macro_plan.md` (Semana 3, `[plan]`): **2 artigos AEO no blog do
-`/site`** (o site institucional B2B da ROI Labs, em `site/`, Astro), mirando o
-fornecedor candidato:
-- (a) "Pago pelo sucesso vs agência de marketing: a conta real para quem vende
-  material de construção";
-- (b) "Exclusividade de nicho: por que só existe uma cadeira de porcelanato em
-  Goiânia".
-- Padrão: BLUF, FAQPage schema, números honestos — usar a fórmula do success
-  fee que o simulador `/simulador` do `/site` (ciclo 15) já replica (ler o
-  código do simulador para extrair a fórmula, não inventar números).
-- CTA para `/simulador/` e para o form de candidatura.
-- Verificar antes como o blog do `/site` está estruturado (coleção/paths dos
-  posts existentes) e seguir o mesmo padrão de registro; páginas novas entram
-  em sitemap, `llms.txt` e busca interna do `/site`, conforme padrão existente.
-- URLs sempre com barra final. Verificação antes de commitar (push = deploy):
-  `npx astro build` verde dentro de `site/`.
+Tarefa 12 do `macro_plan.md` (Semana 3, `[build]`): **Página `/modelo/` no
+`/site`** (site institucional B2B, `site/`, Astro).
+
+- PRIMEIRO verificar o que a home (`site/src/pages/index.astro`) já explica
+  sobre o modelo (gates, success fee, exclusividade, papel do parceiro):
+  - Se só existe resumido → criar página própria aprofundada em `/modelo/`
+    com FAQPage + HowTo (etapas da candidatura ao contrato), linkada do
+    menu/footer (`Header.astro`/`Footer.astro`) e dos 2 artigos da tarefa 11
+    (`growth-partner-vs-agencia-revestimentos.md` e
+    `exclusividade-de-cadeira-uma-loja-por-nicho-goiania.md`).
+  - Se a home já cobre em profundidade → pular ("pulado, já existia") e
+    registrar aqui.
+- Página nova em Astro = registrar em sitemap (`sitemap.xml.ts`), `llms.txt`
+  (`llms.txt.ts`) e busca interna do `/site` se houver, seguindo o padrão
+  existente. Conferir se sitemap/llms são dinâmicos (podem já pegar a rota).
+- Schema: não duplicar entidade que o `@graph` do layout já emite.
+- URLs sempre com barra final. Push = deploy: `npx astro build` verde dentro
+  de `site/` antes de commitar.
