@@ -1,8 +1,8 @@
 ---
-status: blocked
+status: in_progress
 next_effort: high
 iteration: 14
-updated_at: 2026-07-05T16:32:09.000Z
+updated_at: 2026-07-05T17:05:00.000Z
 ---
 
 ## Last completed
@@ -22,13 +22,12 @@ de contexto obrigatório da tarefa 15 — está untracked, ou seja, o próprio
 insumo da tarefa está em estado não commitado/em fluxo pelo dono.
 
 ## Next step
-**BLOQUEADO — precisa de ação humana antes de retomar.**
+**Desbloqueado pelo dono em 2026-07-05:** working tree do SplitJud resolvido
+(GEO-HANDOFF.md e PLANO-MACRO-GEO.md commitados; `docs/Notebook/` e
+`apps/site/.astro/` agora no `.gitignore` — repo é público, o Notebook tem PDF
+de terceiro e fica local). `main` limpo, commit `4373b4e` pushado.
 
-O dono precisa resolver o working tree do SplitJud (commitar ou descartar as
-mudanças em `docs/` listadas acima; `apps/site/.astro/` é cache de build e
-poderia entrar no `.gitignore`). Quando `git -C
-"C:\Users\jeanz\OneDrive\Desktop\ROI Labs\splitjud" status` mostrar `main`
-limpo, retomar a **tarefa 15 do macro_plan.md** exatamente como estava:
+Executar a **tarefa 15 do macro_plan.md**:
 
 1. Ler `docs/GEO-HANDOFF.md` e `docs/PLANO-MACRO-GEO.md` no SplitJud.
 2. Escrever os 3 artigos GEO restantes do cluster F3 em `apps/site`:
