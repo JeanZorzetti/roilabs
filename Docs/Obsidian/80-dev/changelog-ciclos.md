@@ -324,3 +324,24 @@ dono: Jean (dev)
 ## 👤 Não-dev (Maria Eduarda / campo)
 
 - Movidos para [[backlog-pendencias]] (Gate 3, piso de take rate, legal/fiscal).
+
+---
+
+## 🚜 Macro plan 2 — mês 2 do loop autônomo (2026-07-05)
+
+> [!success] 19/19 tarefas concluídas (0 bloqueios finais), commits `aaee78f`→`d54a23b` aqui + `98caf14`→`2719f9b` no repo splitjud. Todos os builds verdes no fechamento (splitjud 15 págs, /site 13, /site-goiania 93).
+
+**Semana 1 — AEO site-goiania:** glossário `/glossario/` (19 termos, DefinedTermSet, âncoras `#termo`); guias `/guia/porcelanato-area-externa/`, `/guia/rejunte-porcelanato/`, `/guia/porcelanato-liquido-vs-porcelanato/` (FAQPage, produtos reais do catálogo); sub-páginas Inspire-se por ambiente via curadoria manual.
+
+**Semana 2 — conversão/UX site-goiania:** filtros+ordenação client-side no hub `/porcelanato/` (estado na query string, progressive enhancement); favoritos ↔ comparador (deep-link `?p=`); "vistos recentemente" via localStorage (tarefa 8, calculadora multi-ambiente, **pulada — já existia**); follow-up a11y-audit (nada mecânico pendente).
+
+**Semana 3 — B2B /site:** 2 artigos AEO reforçados com a matemática do success fee + CTAs (já existiam em rascunho); página `/modelo/` (FAQPage + HowTo); case vivo `/polo-goiania/` com fatos verificáveis do build; refresh de descoberta (sitemap/llms.txt/busca conferidos, contagem do glossário corrigida).
+
+**Semana 4 — SplitJud (repo `..\splitjud`, só `apps/site`):** 3 artigos GEO restantes do F3 (tabela OAB, finanças de escritório, repasse entre correspondentes); recência `datePublished`/`updatedAt` nos 3 artigos originais; calculadora pública `/calculadora/` (lead magnet, matemática replicada do app sem importar nada); interlink 6 artigos ↔ home ↔ calculadora + llms.txt.
+
+**Gotchas novos do mês:**
+- Working tree do splitjud estava sujo na 1ª tentativa da tarefa 15 (docs não commitados) → loop bloqueou corretamente, dono resolveu, loop retomou. O pré-check `git status` cross-repo funciona.
+- No splitjud o runner NÃO pusha — push manual `git -C ...\splitjud push origin main` a cada tarefa (feito nas 5).
+- `[PLACEHOLDER_*]` de `apps/site/src/lib/schema.ts` (sameAs/Person do Aldo) seguem intocados — T002 pendente de dono.
+
+**Pendências de ops que seguem abertas:** as mesmas do backlog (secrets PSI/GSC/SERPER/Resend/Asaas, Clarity envs, ntfy topic) — nada novo surgiu que exija ação imediata.

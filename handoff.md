@@ -23,6 +23,22 @@ nicho âncora = **revestimentos/porcelanato**.
 - **Fluxo:** site (estático) → `POST app.roilabs.com.br/api/candidaturas` (urlencoded, sem preflight) → DB → kanban `/admin`.
 
 ## Feito
+- **Macro plan 2 — mês 2 do loop autônomo (2026-07-05) — 19/19 tarefas** (resumo
+  completo em `Docs/Obsidian/80-dev/changelog-ciclos.md`, seção "Macro plan 2"):
+  - **site-goiania (semanas 1–2):** glossário `/glossario/` (19 termos +
+    DefinedTermSet), 3 guias AEO novos (área externa, rejunte, porcelanato
+    líquido vs porcelanato), Inspire-se por ambiente, filtros/ordenação no hub
+    `/porcelanato/`, favoritos↔comparador, "vistos recentemente" (localStorage).
+    Calculadora multi-ambiente pulada (já existia).
+  - **/site (semana 3):** artigos B2B com a conta do success fee + CTAs, página
+    `/modelo/` (FAQPage+HowTo), case `/polo-goiania/`, refresh de descoberta
+    (sitemap/llms.txt/busca conferidos nos 2 sites).
+  - **SplitJud (semana 4, repo `..\splitjud`):** 6 artigos GEO (3 novos F3 +
+    recência nos 3 antigos), calculadora pública `/calculadora/`, interlink +
+    llms.txt. Push manual lá a cada tarefa (runner não pusha aquele repo).
+  - **Gotcha novo:** pré-check de working tree cross-repo bloqueou 1x (splitjud
+    sujo) e retomou após o dono resolver — o mecanismo funciona. Placeholders
+    `[PLACEHOLDER_*]` do schema do splitjud seguem aguardando o Aldo (T002).
 - **Ciclo 8 "fora da caixa" (2026-07-04) — 4/4 itens, custo zero:**
   - **`/sobre` (Como funciona) no goiânia** — quem vende, 4 passos da compra (MP, entrega 2–7 dias, CDC), FAQPage schema; em sitemap/llms.txt/footer/busca.
   - **404 real + página útil** — nginx devolvia a home com 200 pra URL desconhecida (soft 404); agora `error_page 404` + `404.astro` com CTA catálogo/calculadora/WhatsApp + guias.

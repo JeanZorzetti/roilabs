@@ -1,42 +1,34 @@
 ---
-status: in_progress
+status: done
 next_effort: medium
-iteration: 18
-updated_at: 2026-07-05T19:25:00.000Z
+iteration: 20
+updated_at: 2026-07-05T22:30:00.000Z
 ---
 
 ## Last completed
-**Tarefa 18 (Semana 4, `[build]`, SplitJud) concluída.** Interlink + descoberta
-no SplitJud. Pré-check ok (`main` limpo). Commit `2719f9b` pushado em
-`github.com/JeanZorzetti/splitjud` main.
+**Iteração 20 — housekeeping: commit dos arquivos de fechamento da tarefa 19
+(`handoff.md`, `changelog-ciclos.md`, `current_state.md`) que ficaram pendentes
+na working tree. Nenhum código novo.**
 
-- Link contextual para `/calculadora` adicionado nos 6 artigos de
-  `apps/site/src/content/blog/` (um por artigo, em ponto onde a simulação faz
-  sentido — exemplo de cálculo, cláusula de percentual, regra de rateio).
-- Home (`index.astro`): parágrafo com link para a calculadora na seção
-  "Como o SplitJud calcula" (features grid).
-- `public/llms.txt`: nova seção "Artigos do blog" listando os 6 artigos com
-  descrição; calculadora já estava listada (tarefa 17).
-- Sitemap: automático via @astrojs/sitemap, já cobre artigos + calculadora.
-- `@graph` conferido: artigos emitem `Article` referenciando `PERSON_ID`/
-  `ORG_ID` por `@id` (grafo único, sem duplicar entidades); `[PLACEHOLDER_*]`
-  de `schema.ts` intocados.
-- `npm run build` verde em `apps/site` (15 páginas); verificado no `dist/` que
-  7 páginas (6 artigos + home) renderizam `href="/calculadora"`.
+**Tarefa 19 (Semana 4, `[build]`) concluída — fechamento do macro plan 2.
+TODAS as 19 tarefas do macro_plan.md estão feitas (ou puladas com registro).**
+
+- Builds finais todos verdes: `npm run build` no splitjud `apps/site`
+  (15 páginas), `astro build` em `site/` (13 páginas) e `site-goiania/`
+  (93 páginas).
+- `handoff.md` deste repo: bloco "Macro plan 2 — mês 2" adicionado no topo de
+  "## Feito" (entregas por semana, gotcha do pré-check cross-repo,
+  placeholders T002 do splitjud seguem com o dono).
+- `handoff.md` do splitjud: seção de status GEO 2026-07-05 no topo (6 artigos
+  F3, recência, calculadora `/calculadora/`, interlink/llms.txt, e o que segue
+  fora do escopo autônomo). Commitado e pushado manualmente em
+  `github.com/JeanZorzetti/splitjud` main.
+- `Docs/Obsidian/80-dev/changelog-ciclos.md`: seção "🚜 Macro plan 2 — mês 2 do
+  loop autônomo (2026-07-05)" com o resumo do mês (19/19, gotchas, pendências).
 
 ## Next step
-Executar a **tarefa 19 do macro_plan.md** (`[build]`): **Fechamento do mês**.
-
-1. Rodar `npm run build` em
-   `C:\Users\jeanz\OneDrive\Desktop\ROI Labs\splitjud\apps\site` e
-   `astro build` nos 2 sites deste repo (`site/` e `site-goiania/`) uma última
-   vez — todos precisam passar.
-2. Atualizar o `handoff.md` de CADA repo (raiz deste repo E raiz do splitjud)
-   com: o que o macro plan 2 entregou (19 tarefas, semanas 1–4), pendências de
-   ops que surgiram e gotchas novos descobertos no mês.
-3. Registrar o resumo do mês em `Docs/Obsidian/80-dev/changelog-ciclos.md`
-   (seguir o formato das entradas existentes).
-4. SplitJud: pré-check `git -C "...\splitjud" status` (main limpo; sujo →
-   blocked). Commit + push manual do handoff.md de lá
-   (`git -C "...\splitjud" push origin main`).
-5. Ao final, como é a última tarefa, marcar `status: done` neste arquivo.
+Nenhum — o macro plan 2 está completo (`status: done`). Um próximo ciclo exige
+um novo `macro_plan.md` escrito pelo dono. Pendências que ficaram para o dono
+estão em `handoff.md` (seção Macro plan 2) e no `backlog-pendencias` do vault:
+secrets (PSI/GSC/SERPER/Resend/Asaas), Clarity envs, ntfy topic, e no SplitJud
+os `[PLACEHOLDER_*]` do schema (T002/Aldo) + deploy/GA4/WAF/F4.
