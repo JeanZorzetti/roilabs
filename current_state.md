@@ -1,56 +1,52 @@
 ---
 status: in_progress
-next_effort: medium
-iteration: 12
-updated_at: 2026-07-05T12:50:00.000Z
+next_effort: high
+iteration: 13
+updated_at: 2026-07-05T12:48:00.000Z
 ---
 
 ## Last completed
-Tarefa 13 (Semana 3, `[build]`): **Case vivo do Polo 1 no `/site`** — página
-`/polo-goiania/` criada. (Uma iteração anterior interrompida deixou o arquivo
-com um `</invoke>` órfão no final — corrigido e concluído.)
+Tarefa 14 (Semana 3, `[build]`): **Refresh de descoberta nos 2 sites** —
+auditoria, quase tudo já estava em paridade porque sitemap/llms.txt/busca-index
+são gerados das mesmas fontes de dados (`guias.ts`, `ambientes.ts`,
+`porcelanato.ts`, `produtos.ts`).
 
-- `site/src/pages/polo-goiania.astro`: BLUF + `readout` com 4 números
-  VERIFICADOS no build real do site-goiania de hoje (93 páginas totais,
-  40 páginas de intenção na malha /porcelanato/ [41 − hub], 30 produtos de
-  3 marcas Biancogres/Delta/Savane, 7 guias) + grid de 8 ativos clicáveis
-  (malha, catálogo, feed Merchant Center, calculadora, comparador/favoritos,
-  guias + glossário de 20 termos, Inspire-se, descoberta) + CTA duplo
-  (`/#candidatar` + `/simulador/`). Zero métrica de venda/tráfego.
-- Schema `jsonLdNodes`: `WebPage` + nó `Service` com o MESMO
-  `@id` `https://roilabs.com.br/#service` que home/modelo (verificado no
-  dist: 1 só `@type: Service` no @graph da página).
-- Descoberta: entradas estáticas em `sitemap.xml.ts` e `llms.txt.ts`
-  (confirmadas no dist).
-- Links: Footer ("Polo 1 no ar" agora aponta `/polo-goiania/` em vez do
-  domínio do polo direto) + CTA final dos 2 artigos da tarefa 11
-  (`exclusividade-de-cadeira-...` e `growth-partner-vs-agencia-...`).
-- CSS: classes globais + único bloco novo `.ativos/.ativo*` scoped.
-- `npx astro build` verde em `site/` (13 páginas) e em `site-goiania/`
-  (93 páginas, rodado para verificar os números citados).
+- **site-goiania**: confirmado no dist que glossário, os 3 guias novos
+  (`porcelanato-area-externa`, `rejunte-porcelanato`,
+  `porcelanato-liquido-vs-porcelanato`) e as sub-páginas Inspire-se
+  (`/inspire-se/sala/`, `/inspire-se/area-externa/`) aparecem em
+  `sitemap.xml`, `llms.txt` e `busca-index.json` (83 entradas). Única
+  correção: llms.txt dizia "19 termos técnicos" no glossário — são 20
+  (contados os `id:` em `glossario.astro`), corrigido em `llms.txt.ts`.
+- **site**: `/modelo/` e `/polo-goiania/` confirmados no dist em
+  `sitemap.xml` e `llms.txt` (já registrados nas tarefas 12–13).
+- **Builds verdes**: `npm run build` no site-goiania (93 páginas, prebuild
+  check-matrix OK) e `npx astro build` no site (13 páginas).
+- **check-feed**: OK — 30 itens em `dist/feed.xml`, imagens no domínio próprio.
+- **IndexNow**: postbuild listou as 88 URLs do sitemap (incluindo as novas),
+  mas a API respondeu **HTTP 403** mesmo com o key file válido e servido em
+  produção (curl 200, conteúdo bate). Provável rate-limit/bloqueio da API para
+  pings repetidos desta origem local; o script é não-fatal por design e roda
+  de novo no build de deploy. Observação, não bloqueio — nada a corrigir no
+  repo.
 
 ## Next step
-Tarefa 14 do `macro_plan.md` (Semana 3, `[build]`): **Refresh de descoberta
-nos 2 sites.** Conferir que TUDO das semanas 1–3 está em sitemap, `llms.txt`
-e busca interna; rodar os builds e confirmar que `check-feed` continua
-passando e que o IndexNow postbuild lista as URLs novas. Corrigir o que faltar.
+Tarefa 15 do `macro_plan.md` (Semana 4, `[plan]`): **3 artigos GEO restantes
+do F3 no SplitJud** — repo DIFERENTE em
+`C:\Users\jeanz\OneDrive\Desktop\ROI Labs\splitjud` (monorepo; trabalhar SÓ em
+`apps/site` e `docs/`).
 
-- Semanas 1–2 (site-goiania): glossário `/glossario/`, guias novos
-  (`/guia/porcelanato-area-externa/`, `/guia/rejunte-porcelanato/`,
-  `/guia/porcelanato-liquido-vs-porcelanato/`), sub-páginas Inspire-se
-  (`/inspire-se/*` — verificar quais existem em `src/pages/inspire-se/`),
-  filtros do hub (sem página nova), `/favoritos/`, calculadora
-  multi-ambiente (sem página nova). Conferir em
-  `site-goiania/src/pages/sitemap.xml.ts`, `llms.txt.ts` e
-  `busca-index.json.ts` que todas as páginas novas aparecem.
-- Semana 3 (site): `/modelo/` e `/polo-goiania/` já registrados em
-  sitemap + llms.txt (feito nas tarefas 12–13); conferir de novo no dist
-  mesmo assim.
-- `check-feed`: procurar o script em `site-goiania/` (`package.json` /
-  `scripts/check-feed.mjs`) e rodá-lo; verificar que imagens estão no
-  domínio próprio.
-- IndexNow: rodar o build e verificar que o postbuild lista as URLs novas
-  (não postar manualmente se depender de secret — só conferir o que o
-  build já faz sozinho).
-- Builds: `npx astro build` verde nos 2 sites antes de commitar
-  (push = deploy). URLs sempre com barra final.
+Antes de qualquer coisa (Mecânica cross-repo do macro_plan.md):
+1. `git -C "...\splitjud" status` — precisa estar em `main` com working tree
+   limpo; sujo/outra branch → `status: blocked`, não arrumar sozinho.
+2. Ler `docs/GEO-HANDOFF.md` e `docs/PLANO-MACRO-GEO.md` no SplitJud.
+
+A tarefa: escrever os 3 artigos que faltam do cluster F3 — (a) tabela de
+honorários OAB, (b) gestão financeira de escritório de advocacia, (c) repasse
+de honorários entre correspondentes — no mesmo padrão dos 3 existentes (BLUF,
+FAQ, interlink), **com `datePublished` visível na página e no schema desde
+já**. Não tocar em `apps/app`, `prisma/`, `.env*`, nem nos `[PLACEHOLDER_*]`
+de `apps/site/src/lib/schema.ts`. `npm run build` em `apps/site` deve passar
+antes de commitar. Push do SplitJud é manual
+(`git -C "...\splitjud" push origin main`); o `current_state.md` continua
+aqui neste repo e é commitado aqui.
