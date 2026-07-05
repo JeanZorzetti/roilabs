@@ -1,0 +1,24 @@
+---
+// Header favorites link with a live count badge — same pattern as CartCount.
+---
+<a class="cart-link fav-link" href="/favoritos/" aria-label="Favoritos">
+  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+    <path d="M12 21s-6.7-4.35-9.33-8.2C.86 10.1 1.4 6.6 4.2 5.1a5.5 5.5 0 0 1 7.3 1.6 5.5 5.5 0 0 1 7.3-1.6c2.8 1.5 3.34 5 1.53 7.7C18.7 16.65 12 21 12 21z" />
+  </svg>
+  <span class="cart-link__badge fav-link__badge" hidden>0</span>
+</a>
+
+<script>
+  import { countFavoritos, FAV_EVENT } from '../lib/favoritos';
+
+  const badge = document.querySelector<HTMLElement>('.fav-link__badge');
+  function update() {
+    if (!badge) return;
+    const n = countFavoritos();
+    badge.textContent = String(n);
+    badge.hidden = n === 0;
+  }
+  update();
+  window.addEventListener(FAV_EVENT, update);
+  window.addEventListener('storage', update);
+</script>

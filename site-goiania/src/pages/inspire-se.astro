@@ -1,0 +1,100 @@
+---
+// Mural "Inspire-se": reaproveita as fotos de AMBIENTE já baixadas (ciclos 11-14,
+// fetch-ambiente.mjs) — zero mineração nova. Porcelanato é compra de inspiração
+// (mesma tese do /favoritos); este mural dá o "antes de escolher, veja aplicado".
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { produtos, tituloProduto, imgDisplay } from '../data/produtos';
+
+const fotos = produtos
+  .flatMap((p) => (p.imagensAmbiente ?? []).map((img) => ({ slug: p.slug, titulo: tituloProduto(p), img: imgDisplay(img) })));
+---
+
+<Base
+  title="Inspire-se: ambientes com porcelanato real — Goiânia | ROI Labs"
+  description="Um mural de ambientes reais com porcelanato do catálogo de Goiânia. Clique na foto que combinar com sua obra e veja o produto, preço e ficha técnica."
+  ogImage="/open-graph/comparar.png"
+>
+  <Header />
+
+  <main>
+    <section class="pseo-hero">
+      <div class="wrap">
+        <nav class="breadcrumb" aria-label="Localização">
+          <a href="/">Início</a>
+          <span class="breadcrumb__sep" aria-hidden="true">›</span>
+          <span aria-current="page">Inspire-se</span>
+        </nav>
+
+        <div class="pseo-hero__eyebrow">
+          <span class="eyebrow">Goiânia · Mural de ambientes</span>
+        </div>
+        <h1>Inspire-se com porcelanato aplicado</h1>
+        <p class="pseo-hero__intro">
+          Fotos reais de ambientes com os porcelanatos do catálogo de Goiânia. Achou um que
+          combina com sua obra? Clique na foto e veja o produto, preço e ficha técnica.
+        </p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <div class="inspire-grid">
+          {fotos.map((f) => (
+            <a class="inspire-item" href={`/porcelanato/produto/${f.slug}/`}>
+              <img src={f.img} alt={`Ambiente com ${f.titulo}`} loading="lazy" />
+              <span class="inspire-item__label">{f.titulo}</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--light" id="contato">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:0.8rem;">
+          Achou o ambiente ideal?
+        </h2>
+        <p style="color:var(--d-muted);margin-bottom:2rem;max-width:54ch;">
+          Veja o catálogo completo com preço por m² e pronta-entrega no polo de Goiânia.
+        </p>
+        <a class="btn btn--primary" href="/porcelanato/">Ver catálogo de porcelanato</a>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .inspire-grid {
+    columns: 4 260px;
+    column-gap: 1rem;
+  }
+  .inspire-item {
+    display: block;
+    break-inside: avoid;
+    margin-bottom: 1rem;
+    border-radius: 12px;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+  }
+  .inspire-item img {
+    width: 100%;
+    display: block;
+  }
+  .inspire-item__label {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 0.6rem 0.7rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.75), transparent);
+  }
+</style>

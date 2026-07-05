@@ -1,6 +1,7 @@
 ---
 // Header do site Goiânia. Links internos do polo.
 import CartCount from './CartCount.astro';
+import FavCount from './FavCount.astro';
 import MiniCart from './MiniCart.astro';
 import SiteSearch from './SiteSearch.astro';
 ---
@@ -12,6 +13,7 @@ import SiteSearch from './SiteSearch.astro';
     <nav class="nav" aria-label="Principal">
       <a class="nav__link" href="/porcelanato/">Porcelanato</a>
       <a class="nav__link" href="https://roilabs.com.br" target="_blank" rel="noopener">ROI Labs</a>
+      <FavCount />
       <CartCount />
     </nav>
   </div>

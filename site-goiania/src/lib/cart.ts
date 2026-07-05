@@ -165,10 +165,14 @@ const b64urlEncode = (s: string) =>
 const b64urlDecode = (s: string) =>
   atob(s.replace(/-/g, '+').replace(/_/g, '/') + '='.repeat((4 - (s.length % 4)) % 4));
 
+/** Encodes arbitrary {slug,caixas} lines into a shareable token (`/carrinho?c=<token>`). */
+export function encodeItems(items: { slug: string; caixas: number }[]): string {
+  return b64urlEncode(JSON.stringify({ v: 1, ts: Date.now(), items }));
+}
+
 /** Encodes the current cart into a shareable token (`/carrinho?c=<token>`). */
 export function encodeCart(): string {
-  const items = getCart().map((i) => ({ slug: i.slug, caixas: i.caixas }));
-  return b64urlEncode(JSON.stringify({ v: 1, ts: Date.now(), items }));
+  return encodeItems(getCart().map((i) => ({ slug: i.slug, caixas: i.caixas })));
 }
 
 /** Decodes a share token → cart items, or `'expired'` (older than 30 days or malformed). */

@@ -1,6 +1,7 @@
 ---
 import type { Produto } from '../data/produtos';
 import { nomeProduto, formatPreco, imgDisplay } from '../data/produtos';
+import FavToggle from './FavToggle.astro';
 
 interface Props {
   produto: Produto;
@@ -13,6 +14,7 @@ const a = produto.atributos;
   <div class="prod-card__img">
     <img src={imgDisplay(produto.imagens[0])} alt={`${a.marca} ${nome}`} loading="lazy" />
     {a.retificado && <span class="prod-card__badge">Retificado</span>}
+    <FavToggle slug={produto.slug} nome={`${a.marca} ${nome}`} />
   </div>
   <div class="prod-card__body">
     <span class="prod-card__marca">{a.marca}</span>
