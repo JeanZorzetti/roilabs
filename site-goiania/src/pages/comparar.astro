@@ -230,11 +230,19 @@ const jsonLdNodes = [
   .cmp__table img { width: 110px; height: 110px; object-fit: cover; border-radius: 8px; display: block; }
   .cmp__best { display: inline-block; margin-left: 0.4rem; padding: 0.1rem 0.45rem; border-radius: 999px; background: var(--hivis); color: #14171d; font-size: 0.68rem; font-weight: 700; vertical-align: middle; white-space: nowrap; }
   .cmp__table a { color: var(--hivis-deep); }
+  .cmp__fav {
+    background: none; border: 1px solid color-mix(in srgb, currentColor 28%, transparent);
+    border-radius: 999px; padding: 0.25rem 0.7rem; font: inherit; font-size: 0.8rem;
+    cursor: pointer; color: inherit; white-space: nowrap;
+  }
+  .cmp__fav[aria-pressed="true"] { color: var(--hivis); border-color: var(--hivis); }
 </style>
 
 <script>
   // Não importar de data/produtos aqui: puxaria o porcelanatos.json inteiro pro
   // bundle do client — os dados já vêm embutidos no #cmp-data.
+  import { isFavorito, toggleFavorito, FAV_EVENT } from '../lib/favoritos';
+
   const formatPreco = (v: number) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
   type Cmp = {
@@ -283,6 +291,11 @@ const jsonLdNodes = [
       ['Retificado', (p) => [p.retificado === null ? '—' : p.retificado ? 'Sim' : 'Não']],
       ['Classe AD', (p) => [p.classeAd === null ? '—' : String(p.classeAd)]],
       ['', (p) => {
+        const fav = document.createElement('button');
+        fav.type = 'button'; fav.className = 'cmp__fav';
+        fav.dataset.cmpFav = p.slug;
+        fav.setAttribute('aria-label', `Favoritar ${p.titulo}`);
+        syncFav(fav);
         const ver = document.createElement('a');
         ver.href = `/porcelanato/produto/${p.slug}/`; ver.textContent = 'ver produto →';
         const calc = document.createElement('a');
@@ -290,7 +303,7 @@ const jsonLdNodes = [
         calc.textContent = 'calcular caixas →';
         const sep = document.createElement('span');
         sep.textContent = ' · ';
-        return [ver, sep, calc];
+        return [fav, sep.cloneNode(true), ver, sep, calc];
       }],
     ];
 
@@ -321,6 +334,24 @@ const jsonLdNodes = [
     leadForm.hidden = false; // revelado, fica — não some enquanto o usuário troca a seleção
     (window as any).himetrica?.track('comparador', { produtos: atuais.map((p) => p.slug).join(',') });
   }
+
+  // Favoritar direto da coluna: mesmo localStorage do FavToggle das outras páginas.
+  function syncFav(btn: HTMLButtonElement) {
+    const on = isFavorito(btn.dataset.cmpFav!);
+    btn.setAttribute('aria-pressed', String(on));
+    btn.textContent = on ? '♥ Favoritado' : '♡ Favoritar';
+  }
+  function syncFavAll() {
+    wrap.querySelectorAll<HTMLButtonElement>('[data-cmp-fav]').forEach(syncFav);
+  }
+  wrap.addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-cmp-fav]');
+    if (!btn) return;
+    toggleFavorito(btn.dataset.cmpFav!);
+    (window as any).himetrica?.track('comparador_favorito', { produto: btn.dataset.cmpFav });
+  });
+  window.addEventListener(FAV_EVENT, syncFavAll);
+  window.addEventListener('storage', syncFavAll);
 
   selects.forEach((s) => s.addEventListener('change', render));
 

@@ -42,6 +42,7 @@ const favData = produtos.map((p) => ({
         <button type="button" class="btn btn--primary fav-whats" data-whats={whatsapp}>
           Pedir orçamento dos favoritos no WhatsApp
         </button>
+        <a class="btn btn--ghost fav-cmp" href="/comparar/" hidden>Comparar favoritos lado a lado</a>
       </div>
 
       <div class="prod-grid fav-grid"></div>
@@ -55,7 +56,7 @@ const favData = produtos.map((p) => ({
 
 <style>
   .fav-empty { text-align: center; padding: 3rem 1rem; display: grid; gap: 1.2rem; justify-items: center; }
-  .fav-actions { margin-bottom: 1.6rem; }
+  .fav-actions { margin-bottom: 1.6rem; display: flex; gap: 0.8rem; flex-wrap: wrap; align-items: center; }
 </style>
 
 <style is:global>
@@ -79,11 +80,15 @@ const favData = produtos.map((p) => ({
   const actions = document.querySelector<HTMLElement>('.fav-actions')!;
   const grid = document.querySelector<HTMLElement>('.fav-grid')!;
   const whatsBtn = document.querySelector<HTMLButtonElement>('.fav-whats')!;
+  const cmpBtn = document.querySelector<HTMLAnchorElement>('.fav-cmp')!;
 
   function render() {
     const favoritos = getFavoritos().map((slug) => bySlug.get(slug)).filter((p): p is FavProduto => !!p);
     empty.hidden = favoritos.length > 0;
     actions.hidden = favoritos.length === 0;
+    // Comparador aceita 2–3 produtos → deep-link com os 3 primeiros favoritos.
+    cmpBtn.hidden = favoritos.length < 2;
+    cmpBtn.href = `/comparar/?p=${favoritos.slice(0, 3).map((p) => p.slug).join(',')}`;
     grid.textContent = '';
     for (const p of favoritos) {
       const item = document.createElement('div');
