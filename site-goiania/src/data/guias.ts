@@ -24,6 +24,12 @@ export const guias = [
       'Do ambiente ao lote: acabamento, tamanho, retificado, PEI, estética e quantidade de caixas — com links para os guias e produtos de cada perfil.',
   },
   {
+    slug: 'porcelanato-area-externa',
+    titulo: 'Porcelanato para área externa: antiderrapante, PEI e formatos',
+    descricao:
+      'Coeficiente de atrito, absorção de água, classe de abrasão e formato certo para varanda, quintal, garagem e borda de piscina — com os produtos do catálogo que atendem.',
+  },
+  {
     slug: 'quanto-custa-porcelanato',
     titulo: 'Quanto custa porcelanato em Goiânia: m², colocação e custo total',
     descricao:

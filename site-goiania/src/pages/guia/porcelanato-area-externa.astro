@@ -1,0 +1,308 @@
+---
+// Guia de decisão AEO: "qual porcelanato usar em área externa?" — a dúvida que
+// vem ANTES da categoria /porcelanato/porcelanato-area-externa. BLUF + tabela
+// por ambiente + produtos reais do catálogo (acabamento Externo/Rústico/
+// Strutturato) + FAQ (FAQPage), mesmo padrão dos guias existentes.
+import Base from '../../layouts/Base.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import Faq from '../../components/Faq.astro';
+import WhatsappCta from '../../components/WhatsappCta.astro';
+import ProdutoCard from '../../components/ProdutoCard.astro';
+import { guias } from '../../data/guias';
+import { produtos, tagsDoProduto } from '../../data/produtos';
+
+const SITE = Astro.site?.href.replace(/\/$/, '') ?? 'https://goiania.roilabs.com.br';
+const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
+const guia = guias.find((g) => g.slug === 'porcelanato-area-externa')!;
+
+// Produtos do catálogo aptos a área externa: acabamento antiderrapante real
+// (Externo/Rústico/Strutturato) — atributo do fabricante, sem inventar spec.
+const externos = produtos.filter((p) => {
+  const t = tagsDoProduto(p);
+  return t.has('porcelanato-area-externa') || t.has('tipo:antiderrapante');
+});
+
+const faq = [
+  {
+    q: 'Pode usar porcelanato polido ou acetinado em área externa?',
+    a: 'Em área descoberta que pega chuva, não. O polido molhado é escorregadio a ponto de ser perigoso, e o acetinado, embora seguro dentro de casa, não foi feito para piso externo aberto. A exceção é a varanda coberta e protegida da chuva, onde o acetinado funciona bem. Para quintal, calçada, rampa e borda de piscina, use acabamento externo, rústico ou strutturato.',
+  },
+  {
+    q: 'O que significa coeficiente de atrito e qual o mínimo para área externa?',
+    a: 'É a medida de quanto o piso "segura" o pé, definida pela norma NBR 13818. Pisos com coeficiente de atrito ≥ 0,4 no ensaio molhado são classificados como antiderrapantes e recomendados para áreas externas, rampas e ambientes que molham. Os acabamentos vendidos como Externo ou Rústico atendem esse critério — é isso que os diferencia do acetinado.',
+  },
+  {
+    q: 'Porcelanato em área externa esquenta muito no sol?',
+    a: 'Esquenta como qualquer piso escuro ao sol de Goiânia. A cor pesa mais que o material: tons claros (bege, cinza claro) absorvem menos calor que grafite ou preto. Para borda de piscina e áreas onde se anda descalço, prefira cores claras com acabamento externo.',
+  },
+  {
+    q: 'Qual porcelanato aguenta carro na garagem?',
+    a: 'Porcelanato técnico ou esmaltado com classe de abrasão alta (AD 4 ou PEI 4–5) aguenta o tráfego de carro de passeio sem problema — a placa resiste mais que o contrapiso. O ponto crítico é o assentamento: argamassa AC-III, dupla colagem e juntas respeitadas, para a placa não soltar com o peso concentrado das rodas. Formatos médios (60×60 a 90×90) distribuem melhor a carga que placas gigantes.',
+  },
+  {
+    q: 'Porcelanato antiderrapante é difícil de limpar?',
+    a: 'Dá um pouco mais de trabalho que o liso, porque a textura segura sujeira. O método que funciona: água com detergente neutro e vassoura de cerdas médias, enxaguando bem. Em área externa isso raramente é problema — a limpeza já é feita com água corrente. Evite cera (cria película escorregadia e anula o antiderrapante) e ácidos.',
+  },
+  {
+    q: 'Qual junta e argamassa usar em piso externo?',
+    a: 'Área externa exige argamassa AC-III (resiste a variação de temperatura e umidade) e junta um pouco maior que a interna — siga a indicação da embalagem do porcelanato, em geral 3 mm ou mais para permitir a dilatação térmica. Use rejunte apropriado para área externa e preveja juntas de dilatação a cada 4 m em áreas grandes expostas ao sol.',
+  },
+  {
+    q: 'Porcelanato retificado pode em área externa?',
+    a: 'Pode, desde que o acabamento seja antiderrapante — retificado diz respeito à borda (corte reto que permite junta fina), não à superfície. Vários produtos externos do catálogo são retificados. Só mantenha a junta mínima indicada pelo fabricante: externa nunca é junta "seca", por causa da dilatação.',
+  },
+];
+
+const jsonLdNodes = [
+  {
+    '@type': 'FAQPage',
+    mainEntity: faq.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  },
+  {
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Início', item: SITE },
+      { '@type': 'ListItem', position: 2, name: guia.titulo, item: `${SITE}/guia/${guia.slug}/` },
+    ],
+  },
+];
+
+const relacionados = [
+  { href: '/porcelanato/porcelanato-area-externa/', label: 'Porcelanato para área externa' },
+  { href: '/porcelanato/porcelanato-antiderrapante/', label: 'Porcelanato antiderrapante' },
+  { href: '/porcelanato/porcelanato-fachada/', label: 'Porcelanato para fachada' },
+  { href: '/guia/porcelanato-polido-ou-acetinado/', label: 'Polido ou acetinado?' },
+  { href: '/glossario/', label: 'Glossário de porcelanato' },
+  { href: '/calculadora/', label: 'Calculadora de caixas' },
+];
+---
+
+<Base
+  title={`${guia.titulo} — Goiânia | ROI Labs`}
+  description="Área externa pede acabamento antiderrapante (atrito ≥ 0,4 NBR 13818), baixa absorção e argamassa AC-III. Veja o formato certo para varanda, quintal, garagem e piscina — e os produtos do catálogo que atendem."
+  ogImage={`/open-graph/guia/${guia.slug}.png`}
+  jsonLdNodes={jsonLdNodes}
+>
+  <Header />
+
+  <main>
+    <section class="pseo-hero">
+      <div class="wrap">
+        <nav class="breadcrumb" aria-label="Localização">
+          <a href="/">Início</a>
+          <span class="breadcrumb__sep" aria-hidden="true">›</span>
+          <span aria-current="page">Guia de decisão</span>
+        </nav>
+
+        <div class="pseo-hero__eyebrow">
+          <span class="eyebrow">Goiânia · Guia de decisão</span>
+        </div>
+        <h1>{guia.titulo}</h1>
+        <p class="pseo-hero__intro">
+          Resposta direta: para área externa descoberta, escolha porcelanato com acabamento
+          <strong>externo, rústico ou strutturato</strong> — são os
+          <a href="/glossario/#antiderrapante">antiderrapantes</a>, com coeficiente de atrito
+          ≥ 0,4 no ensaio molhado (NBR 13818). Varanda coberta aceita acetinado; garagem pede
+          classe de abrasão alta e assentamento reforçado; borda de piscina, antiderrapante em
+          cor clara. Polido em área externa aberta, nunca. Abaixo, a escolha por ambiente e os
+          produtos do catálogo que atendem.
+        </p>
+      </div>
+    </section>
+
+    <!-- Os 3 critérios técnicos -->
+    <section class="section section--light">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.6rem;">
+          Os 3 critérios que importam em área externa
+        </h2>
+        <ul class="guide-list">
+          <li>
+            <strong>Coeficiente de atrito (antiderrapância).</strong> A NBR 13818 classifica
+            como antiderrapante o piso com atrito ≥ 0,4 quando molhado. Na prática do catálogo,
+            isso corresponde aos acabamentos <em>Externo</em>, <em>Rústico</em> e
+            <em>Strutturato</em> — a textura da superfície segura o pé mesmo com água. Detalhe
+            no <a href="/glossario/#antiderrapante">glossário</a>.
+          </li>
+          <li>
+            <strong>Absorção de água.</strong> Porcelanato absorve ≤ 0,5% de água (cerâmica
+            comum chega a 10%) — por isso ele não trinca com chuva e sol alternados nem mancha
+            com umidade do contrapiso. É o motivo de porcelanato ser a escolha padrão para
+            fora de casa; entenda a medida no
+            <a href="/glossario/#absorcao-de-agua">glossário</a>.
+          </li>
+          <li>
+            <strong>Resistência ao desgaste (PEI / classe de abrasão).</strong> Área externa é
+            área de tráfego com areia e terra — abrasivos naturais. Para quintal e calçada,
+            <a href="/glossario/#pei">PEI</a> 4 ou classe AD 3–4 dá folga; para garagem, fique
+            no topo da escala. Nos produtos do catálogo a classe de abrasão aparece na ficha
+            técnica de cada peça.
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Tabela por ambiente -->
+    <section class="section">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.6rem;">
+          Qual acabamento em cada área externa
+        </h2>
+        <div class="comp-scroll">
+          <table class="comp-table">
+            <thead>
+              <tr>
+                <th scope="col">Ambiente</th>
+                <th scope="col">Acabamento recomendado</th>
+                <th scope="col">Atenção a</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Varanda coberta</th>
+                <td>Acetinado ou natural — não pega chuva direta</td>
+                <td>Se chove dentro (vento), trate como descoberta</td>
+              </tr>
+              <tr>
+                <th scope="row">Quintal e calçada</th>
+                <td>Externo ou rústico (antiderrapante)</td>
+                <td>PEI 4+ pelo tráfego com areia; caimento para escoar água</td>
+              </tr>
+              <tr>
+                <th scope="row">Garagem descoberta</th>
+                <td>Externo, classe de abrasão alta (AD 4 / PEI 4–5)</td>
+                <td>Argamassa AC-III com dupla colagem; formato 60×60 a 90×90</td>
+              </tr>
+              <tr>
+                <th scope="row">Borda de piscina</th>
+                <td>Antiderrapante em cor clara (bege, cinza claro)</td>
+                <td>Cor escura esquenta demais para pé descalço</td>
+              </tr>
+              <tr>
+                <th scope="row">Rampa de acesso</th>
+                <td>Strutturato ou externo — maior atrito da linha</td>
+                <td>Nunca liso, nem coberto: rampa molha por respingo</td>
+              </tr>
+              <tr>
+                <th scope="row">Fachada (parede)</th>
+                <td>Qualquer acabamento — não se pisa</td>
+                <td>Fixação com AC-III e tela/inserto conforme altura</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Formato e instalação -->
+    <section class="section section--light">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.6rem;">
+          Formato e instalação: onde área externa difere da interna
+        </h2>
+        <ul class="guide-list">
+          <li>
+            <strong>Formato médio distribui carga.</strong> Para garagem e áreas de tráfego
+            pesado, 60×60 a 90×90 cm é o ponto de equilíbrio: menos juntas que o formato
+            pequeno, mas sem o risco de carga concentrada quebrar uma placa gigante mal
+            assentada. Os <a href="/glossario/#formato-grande">formatos grandes</a> (100×100,
+            120×120) funcionam em quintal e varanda com contrapiso bem nivelado.
+          </li>
+          <li>
+            <strong>Argamassa é AC-III, sempre.</strong> Sol e chuva dilatam e contraem o piso
+            todos os dias; a <a href="/glossario/#argamassa-colante">AC-III</a> é a classe
+            feita para isso. Em placa a partir de 60×60, dupla colagem (cola no piso e no
+            verso da placa).
+          </li>
+          <li>
+            <strong>Junta maior e juntas de dilatação.</strong> Externa pede
+            <a href="/glossario/#junta">junta</a> de 3 mm ou mais (siga a embalagem) e juntas
+            de dilatação a cada ~4 m em áreas grandes expostas ao sol — é o que impede o piso
+            de "estufar" no calor.
+          </li>
+          <li>
+            <strong>Caimento de 1–2% para escoar.</strong> Água parada anula qualquer
+            antiderrapante e mancha rejunte. O contrapiso externo deve escoar para longe da
+            casa.
+          </li>
+          <li>
+            <strong>Quantas caixas?</strong> Em área externa a perda de recorte costuma ser
+            maior (recortes de borda, ralos, pilares): calcule com 10–15% de sobra na
+            <a href="/calculadora/">calculadora de caixas</a>, que também estima rejunte e
+            argamassa.
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Produtos do catálogo -->
+    {externos.length > 0 && (
+      <section class="section">
+        <div class="wrap">
+          <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:0.8rem;">
+            Porcelanatos para área externa no catálogo
+          </h2>
+          <p style="color:var(--d-muted);margin-bottom:2rem;max-width:60ch;">
+            Peças com acabamento externo, rústico ou strutturato disponíveis no polo de
+            Goiânia — preço real por m², pronta-entrega.
+          </p>
+          <div class="prod-grid">
+            {externos.map((prod) => <ProdutoCard produto={prod} />)}
+          </div>
+        </div>
+      </section>
+    )}
+
+    <!-- FAQ -->
+    <section class="section section--light">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.8rem;">Perguntas frequentes</h2>
+        <Faq items={faq} />
+      </div>
+    </section>
+
+    <!-- CTA duplo -->
+    <section class="section" id="contato">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:0.8rem;">
+          Definiu a área? Veja preço real em Goiânia
+        </h2>
+        <p style="color:var(--d-muted);margin-bottom:2rem;max-width:54ch;">
+          Compare os antiderrapantes do catálogo por preço de m² — ou mande a foto da sua
+          área externa no WhatsApp e receba a indicação certa.
+        </p>
+        <div class="cta-block" style="display:flex;gap:1rem;flex-wrap:wrap;align-items:center;">
+          <a class="btn btn--primary" href="/porcelanato/porcelanato-area-externa/">Ver porcelanatos para área externa</a>
+          <WhatsappCta termoAlvo="porcelanato para área externa" numero={whatsapp} />
+        </div>
+      </div>
+    </section>
+
+    <!-- Relacionados -->
+    <section class="section section--light">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.3rem,2.2vw,1.8rem);margin-bottom:1.4rem;">Veja também</h2>
+        <div class="related-grid">
+          {relacionados.map((r) => (
+            <a href={r.href} class="related-card">{r.label}</a>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .comp-scroll { overflow-x: auto; }
+  .comp-table { width: 100%; border-collapse: collapse; font-size: 0.92rem; min-width: 560px; }
+  .comp-table th, .comp-table td { text-align: left; padding: 0.8rem 0.9rem; border-bottom: 1px solid color-mix(in srgb, currentColor 18%, transparent); vertical-align: top; }
+  .comp-table thead th { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.75; }
+  .comp-table tbody th { font-weight: 700; width: 24%; }
+</style>
