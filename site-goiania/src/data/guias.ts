@@ -36,6 +36,12 @@ export const guias = [
       'Tom-sobre-tom ou contraste, cimentício vs acrílico vs epóxi e quantos kg/m² comprar — com a calculadora que estima rejunte e argamassa junto com as caixas.',
   },
   {
+    slug: 'porcelanato-liquido-vs-porcelanato',
+    titulo: 'Porcelanato líquido vs porcelanato: qual a diferença real?',
+    descricao:
+      'Porcelanato líquido é resina epóxi, não cerâmica — comparativo honesto de custo por m², durabilidade, manutenção e revenda entre a resina autonivelante e a placa de porcelanato.',
+  },
+  {
     slug: 'quanto-custa-porcelanato',
     titulo: 'Quanto custa porcelanato em Goiânia: m², colocação e custo total',
     descricao:

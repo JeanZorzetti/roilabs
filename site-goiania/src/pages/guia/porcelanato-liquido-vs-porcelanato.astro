@@ -1,0 +1,286 @@
+---
+// Guia de decisão AEO: "porcelanato líquido ou porcelanato?" — busca de alto
+// volume que confunde dois produtos diferentes (resina epóxi autonivelante vs
+// placa cerâmica). Comparativo honesto de custo/m², durabilidade, aplicação e
+// manutenção. BLUF + tabela + FAQ (FAQPage), mesmo padrão dos guias existentes.
+import Base from '../../layouts/Base.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import Faq from '../../components/Faq.astro';
+import WhatsappCta from '../../components/WhatsappCta.astro';
+import { guias } from '../../data/guias';
+
+const SITE = Astro.site?.href.replace(/\/$/, '') ?? 'https://goiania.roilabs.com.br';
+const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
+const guia = guias.find((g) => g.slug === 'porcelanato-liquido-vs-porcelanato')!;
+
+const faq = [
+  {
+    q: 'Porcelanato líquido é porcelanato?',
+    a: 'Não. Apesar do nome, porcelanato líquido não tem nada de porcelanato: é um revestimento de resina epóxi (ou poliuretano) autonivelante, aplicado em camada líquida sobre o contrapiso ou sobre um piso existente. O porcelanato é placa cerâmica prensada e queimada acima de 1.200 °C. O nome "líquido" pegou no Brasil por marketing — o efeito espelhado lembra o porcelanato polido, mas o material, a durabilidade e a manutenção são completamente diferentes.',
+  },
+  {
+    q: 'Qual é mais barato: porcelanato líquido ou porcelanato?',
+    a: 'Instalados, os dois ficam em faixas parecidas — e o líquido frequentemente sai mais caro. O porcelanato líquido simples (cor única) custa a partir de uns R$ 100–150/m² aplicado; com efeito 3D, imagem impressa ou metalizado, passa fácil de R$ 250–400/m². O porcelanato tradicional custa de R$ 40 a R$ 150/m² a peça, mais R$ 40–70/m² de assentamento. A diferença é que o porcelanato dura décadas sem retoque; o líquido costuma pedir repolimento ou reaplicação em 5–10 anos.',
+  },
+  {
+    q: 'Porcelanato líquido risca e amarela?',
+    a: 'Sim, e esses são os dois pontos fracos clássicos. A resina epóxi é mais macia que a cerâmica: arrasta móvel, areia na sola do sapato e pata de cachorro marcam a superfície com o tempo — o brilho se recupera com repolimento, que é custo recorrente. E o epóxi comum amarela com radiação UV: em ambiente com sol direto (porta de vidro, varanda), a mudança de cor é visível em poucos anos. Existem vernizes alifáticos que retardam o amarelamento, mas encarecem a obra.',
+  },
+  {
+    q: 'Onde o porcelanato líquido vale a pena?',
+    a: 'Onde a ausência de juntas é requisito ou o efeito visual é o objetivo: cozinhas industriais, hospitais, laboratórios e indústrias usam piso monolítico epóxi/PU há décadas por higiene (nada de junta para acumular sujeira). Em residência, faz sentido como piso decorativo de um ambiente específico (efeito 3D, cor sólida contínua) para quem aceita o custo de manutenção. Como piso geral da casa, o porcelanato tradicional entrega mais durabilidade por real gasto.',
+  },
+  {
+    q: 'Pode aplicar porcelanato líquido em cima de porcelanato?',
+    a: 'Tecnicamente sim — a resina adere sobre piso existente firme, limpo e lixado, e essa é uma das propagandas do produto ("reforma sem quebradeira"). Mas o resultado depende inteiramente da preparação: peça oca, junta que trabalha ou umidade sob o piso antigo viram bolha e descolamento na resina. E o caminho inverso também existe: porcelanato novo pode ser assentado sobre piso antigo nivelado com argamassa adequada, também sem demolição.',
+  },
+  {
+    q: 'Porcelanato líquido escorrega quando molhado?',
+    a: 'O acabamento padrão é liso e de alto brilho — molhado, escorrega tanto quanto (ou mais que) um porcelanato polido. Existem aditivos antiderrapantes para a resina, que reduzem o brilho. No porcelanato tradicional, a solução é escolher acabamento natural ou antiderrapante externo, com coeficiente de atrito certificado pelo fabricante — o guia de área externa detalha isso.',
+  },
+  {
+    q: 'O que valoriza mais o imóvel: porcelanato líquido ou porcelanato?',
+    a: 'Porcelanato tradicional. É material consolidado, com norma técnica (ABNT NBR ISO 10545), vida útil de décadas e aceitação universal de mercado — qualquer comprador e qualquer avaliador reconhecem o valor. O porcelanato líquido é percebido como acabamento de nicho: gosto pessoal forte (efeito 3D, cores sólidas) e histórico de manutenção pesam contra na revenda.',
+  },
+];
+
+const jsonLdNodes = [
+  {
+    '@type': 'FAQPage',
+    mainEntity: faq.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  },
+  {
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Início', item: SITE },
+      { '@type': 'ListItem', position: 2, name: guia.titulo, item: `${SITE}/guia/${guia.slug}/` },
+    ],
+  },
+];
+
+const relacionados = [
+  { href: '/porcelanato/', label: 'Catálogo de porcelanato' },
+  { href: '/calculadora/', label: 'Calculadora de caixas, rejunte e argamassa' },
+  { href: '/guia/porcelanato-ou-ceramica/', label: 'Porcelanato ou cerâmica?' },
+  { href: '/guia/porcelanato-polido-ou-acetinado/', label: 'Polido ou acetinado?' },
+  { href: '/guia/quanto-custa-porcelanato/', label: 'Quanto custa porcelanato em Goiânia' },
+  { href: '/glossario/', label: 'Glossário de porcelanato' },
+];
+---
+
+<Base
+  title={`${guia.titulo} — Goiânia | ROI Labs`}
+  description="Porcelanato líquido é resina epóxi aplicada no piso — não é porcelanato. Comparativo honesto de custo por m², durabilidade, manutenção e aplicação entre a resina autonivelante e a placa cerâmica, e onde cada um faz sentido."
+  ogImage={`/open-graph/guia/${guia.slug}.png`}
+  jsonLdNodes={jsonLdNodes}
+>
+  <Header />
+
+  <main>
+    <section class="pseo-hero">
+      <div class="wrap">
+        <nav class="breadcrumb" aria-label="Localização">
+          <a href="/">Início</a>
+          <span class="breadcrumb__sep" aria-hidden="true">›</span>
+          <span aria-current="page">Guia de decisão</span>
+        </nav>
+
+        <div class="pseo-hero__eyebrow">
+          <span class="eyebrow">Goiânia · Guia de decisão</span>
+        </div>
+        <h1>{guia.titulo}</h1>
+        <p class="pseo-hero__intro">
+          Resposta direta: <strong>porcelanato líquido não é porcelanato</strong> — é resina
+          epóxi autonivelante aplicada em camada líquida sobre o piso. O porcelanato é placa
+          cerâmica queimada acima de 1.200 °C, com norma técnica, dureza superior e vida útil
+          de décadas. O líquido entrega piso sem juntas e efeitos visuais (3D, cor contínua),
+          mas <strong>risca, amarela com sol e pede repolimento em 5–10 anos</strong>. Para
+          piso de casa, o porcelanato tradicional costuma entregar mais durabilidade por real
+          gasto. Abaixo, o comparativo honesto.
+        </p>
+      </div>
+    </section>
+
+    <!-- O que é cada um -->
+    <section class="section section--light">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.6rem;">
+          Dois produtos diferentes com nome parecido
+        </h2>
+        <ul class="guide-list">
+          <li>
+            <strong>Porcelanato líquido = resina no piso.</strong> Epóxi (ou poliuretano)
+            bicomponente, despejado e espalhado até autonivelar numa película contínua de 2–4 mm,
+            sem juntas. O nome vem do efeito espelhado que lembra o
+            <a href="/glossario/#polido">porcelanato polido</a> — mas o material é plástico
+            termofixo, não cerâmica. Variações: cor sólida, efeito 3D com imagem impressa sob a
+            resina, metalizado.
+          </li>
+          <li>
+            <strong>Porcelanato = placa cerâmica.</strong> Massa prensada e queimada acima de
+            1.200 °C, com <a href="/glossario/#absorcao-de-agua">absorção de água</a> ≤ 0,5%,
+            classificação de abrasão <a href="/glossario/#pei">PEI</a> e norma ABNT. Vem em
+            peças (60×60, 60×120, 80×80...) assentadas com argamassa e
+            <a href="/guia/rejunte-porcelanato/">rejunte</a> na
+            <a href="/glossario/#junta">junta</a>.
+          </li>
+          <li>
+            <strong>Por que a confusão existe.</strong> "Porcelanato líquido" é nome comercial
+            criado no Brasil para vender resina epóxi decorativa pegando carona na reputação do
+            porcelanato. A busca é alta justamente porque o comprador acha que é uma versão
+            "moderna" do mesmo produto — não é.
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Comparativo -->
+    <section class="section">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.6rem;">
+          Comparativo: resina epóxi vs placa cerâmica
+        </h2>
+        <div class="comp-scroll">
+          <table class="comp-table">
+            <thead>
+              <tr>
+                <th scope="col">Critério</th>
+                <th scope="col">Porcelanato líquido (resina)</th>
+                <th scope="col">Porcelanato (placa cerâmica)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Custo instalado</th>
+                <td>R$ 100–150/m² cor única; R$ 250–400/m² com efeito 3D/metalizado</td>
+                <td>Peça R$ 40–150/m² + assentamento R$ 40–70/m²</td>
+              </tr>
+              <tr>
+                <th scope="row">Durabilidade</th>
+                <td>Risca com areia e arrasto; repolimento/reaplicação em 5–10 anos</td>
+                <td>Décadas sem retoque; dureza e abrasão certificadas (PEI)</td>
+              </tr>
+              <tr>
+                <th scope="row">Sol direto</th>
+                <td>Epóxi comum amarela com UV; verniz alifático encarece</td>
+                <td>Cor estável — a queima é justamente o que fixa o esmalte</td>
+              </tr>
+              <tr>
+                <th scope="row">Juntas</th>
+                <td>Nenhuma — piso monolítico contínuo</td>
+                <td>Junta mínima de 1,5–2 mm com rejunte (retificado)</td>
+              </tr>
+              <tr>
+                <th scope="row">Aplicação</th>
+                <td>Aplicador especializado; sensível a umidade e preparo do contrapiso</td>
+                <td>Qualquer assentador qualificado; processo consolidado</td>
+              </tr>
+              <tr>
+                <th scope="row">Reparo</th>
+                <td>Dano local exige repolir/reaplicar o ambiente inteiro</td>
+                <td>Troca-se a peça danificada (guarde peças do <a href="/glossario/#lote">lote</a>)</td>
+              </tr>
+              <tr>
+                <th scope="row">Revenda do imóvel</th>
+                <td>Acabamento de nicho; gosto pessoal pesa contra</td>
+                <td>Material consolidado, aceito por qualquer comprador</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="color:var(--d-muted);margin-top:1.2rem;max-width:66ch;">
+          Preços de resina variam muito por praça e por efeito — os valores acima são faixas de
+          mercado para referência, não orçamento. Para o porcelanato, as faixas reais do
+          catálogo do polo estão no guia
+          <a href="/guia/quanto-custa-porcelanato/">quanto custa porcelanato em Goiânia</a>.
+        </p>
+      </div>
+    </section>
+
+    <!-- Quando cada um faz sentido -->
+    <section class="section section--light">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.6rem;">
+          Quando cada um faz sentido
+        </h2>
+        <ul class="guide-list">
+          <li>
+            <strong>Escolha o líquido se</strong> o projeto exige piso sem nenhuma junta
+            (cozinha industrial, laboratório, hospital) ou se o efeito visual — 3D, cor sólida
+            contínua, metalizado — é o objetivo do ambiente e o custo de repolimento periódico
+            está no orçamento.
+          </li>
+          <li>
+            <strong>Escolha o porcelanato se</strong> a prioridade é durabilidade sem
+            manutenção, custo previsível por décadas e valor de revenda. Para o efeito
+            espelhado que motiva muita busca por "líquido", o
+            <a href="/guia/porcelanato-polido-ou-acetinado/">polido</a> entrega o mesmo brilho
+            com a dureza da cerâmica; para junta discreta, peça
+            <a href="/glossario/#retificado">retificada</a> de
+            <a href="/glossario/#formato-grande">formato grande</a> reduz as juntas a linhas de
+            1,5 mm.
+          </li>
+          <li>
+            <strong>Cuidado com a promessa de "reforma sem quebradeira".</strong> Os dois
+            aceitam aplicação sobre piso existente firme e nivelado — isso não é exclusividade
+            da resina. E nos dois casos, piso antigo com peça oca ou umidade condena o
+            resultado.
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.8rem;">Perguntas frequentes</h2>
+        <Faq items={faq} />
+      </div>
+    </section>
+
+    <!-- CTA duplo -->
+    <section class="section section--light" id="contato">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:0.8rem;">
+          Prefere a durabilidade da placa cerâmica?
+        </h2>
+        <p style="color:var(--d-muted);margin-bottom:2rem;max-width:54ch;">
+          Veja os porcelanatos do polo — polidos, acetinados e naturais — e calcule caixas,
+          rejunte e argamassa para a sua metragem.
+        </p>
+        <div class="cta-block" style="display:flex;gap:1rem;flex-wrap:wrap;align-items:center;">
+          <a class="btn btn--primary" href="/porcelanato/">Ver catálogo de porcelanato</a>
+          <a class="btn" href="/calculadora/">Calcular material</a>
+          <WhatsappCta termoAlvo="porcelanato" numero={whatsapp} />
+        </div>
+      </div>
+    </section>
+
+    <!-- Relacionados -->
+    <section class="section">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.3rem,2.2vw,1.8rem);margin-bottom:1.4rem;">Veja também</h2>
+        <div class="related-grid">
+          {relacionados.map((r) => (
+            <a href={r.href} class="related-card">{r.label}</a>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .comp-scroll { overflow-x: auto; }
+  .comp-table { width: 100%; border-collapse: collapse; font-size: 0.92rem; min-width: 560px; }
+  .comp-table th, .comp-table td { text-align: left; padding: 0.8rem 0.9rem; border-bottom: 1px solid color-mix(in srgb, currentColor 18%, transparent); vertical-align: top; }
+  .comp-table thead th { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.75; }
+  .comp-table tbody th { font-weight: 700; width: 20%; }
+</style>

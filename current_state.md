@@ -1,53 +1,54 @@
 ---
 status: in_progress
 next_effort: medium
-iteration: 3
-updated_at: 2026-07-05T09:15:00.000Z
+iteration: 4
+updated_at: 2026-07-05T12:15:00.000Z
 ---
 
 ## Last completed
-Tarefa 3 (Semana 1): criado o guia AEO **`/guia/rejunte-porcelanato/`** no
-`site-goiania`:
-- `src/pages/guia/rejunte-porcelanato.astro` — BLUF no hero (tom-sobre-tom
-  meio tom mais escuro como padrão; epóxi em área molhada; 0,25–0,5 kg/m²),
-  seção de cor (tom-sobre-tom vs contraste + armadilhas branco/pigmento),
-  tabela comparativa dos 3 tipos (cimentício, acrílico, epóxi — como é, onde
-  usar, custo relativo), seção de quantidade (regra kg/m² por tamanho de peça,
-  igual aos coeficientes 0,5/0,35/0,25 do estimador da `/calculadora`; área
-  instalada sem folga; espera de 72h) com CTA para a calculadora — a
-  matemática NÃO foi duplicada na página, só a regra prática citada.
-- FAQ com 7 perguntas (FAQPage schema) + BreadcrumbList; CTA duplo
-  (calculadora + WhatsApp); relacionados.
-- Deep-links do glossário conferidos em `glossario.astro`: `#junta`,
-  `#rejunte` implícito via glossário geral, `#retificado`, `#paginacao`,
-  `#calibre`, `#argamassa-colante`.
+Tarefa 4 (Semana 1): criado o guia AEO **`/guia/porcelanato-liquido-vs-porcelanato/`**
+no `site-goiania`:
+- `src/pages/guia/porcelanato-liquido-vs-porcelanato.astro` — BLUF no hero
+  (líquido = resina epóxi autonivelante, NÃO é porcelanato; risca, amarela
+  com UV, repolimento em 5–10 anos), seção "dois produtos com nome parecido",
+  tabela comparativa de 7 critérios (custo instalado, durabilidade, sol
+  direto, juntas, aplicação, reparo, revenda), seção "quando cada um faz
+  sentido" (honesta: líquido vale em piso monolítico industrial/decorativo),
+  FAQ com 7 perguntas (FAQPage) + BreadcrumbList, CTA triplo (catálogo +
+  calculadora + WhatsApp), relacionados.
+- Faixas de preço da resina marcadas explicitamente como "faixas de mercado
+  para referência, não orçamento"; preços de porcelanato remetem ao guia
+  quanto-custa (que usa o catálogo real).
+- Links para glossário conferidos contra ids reais de `glossario.astro`:
+  `#polido`, `#absorcao-de-agua`, `#pei`, `#junta`, `#retificado`,
+  `#formato-grande`, `#lote`.
 - Registrado em `src/data/guias.ts` (sitemap, llms.txt, busca-index e OG
-  derivam automaticamente).
-- `astro build` verde (90 páginas); URL presente em dist/sitemap.xml,
+  derivam automaticamente) — agora são 7 guias.
+- `astro build` verde (91 páginas); URL presente em dist/sitemap.xml,
   dist/llms.txt e dist/busca-index.json; `node src/scripts/check-feed.mjs`
   OK (30 itens).
-- Observação p/ tarefa 8: a `/calculadora` já tem botão "+ Adicionar
-  ambiente" — verificar se multi-ambiente já existe antes de construir.
+- Observação p/ tarefa 8 (mantida do ciclo anterior): a `/calculadora` já tem
+  botão "+ Adicionar ambiente" — verificar se multi-ambiente já existe antes
+  de construir.
 
 ## Next step
-Tarefa 4 do `macro_plan.md` (Semana 1): **Guia AEO
-`/guia/porcelanato-liquido-vs-porcelanato/`** no `site-goiania`.
-- Verificar antes se já existe (hoje há 6 guias em `src/pages/guia/`:
-  como-escolher, porcelanato-ou-ceramica, polido-ou-acetinado, quanto-custa,
-  porcelanato-area-externa, rejunte-porcelanato).
-- Conteúdo: busca de alto volume que confunde porcelanato líquido (resina
-  epóxi autonivelante aplicada no piso) com porcelanato (placa cerâmica).
-  Comparativo honesto de custo/m², durabilidade, aplicação, manutenção;
-  CTA para catálogo `/porcelanato/` e `/calculadora/`. FAQPage +
-  BreadcrumbList.
-- Padrão a copiar: `src/pages/guia/rejunte-porcelanato.astro` ou
-  `porcelanato-area-externa.astro` (Base + Header/Footer/Faq/WhatsappCta,
-  hero BLUF, tabela `comp-table`, CTA duplo, relacionados). Registrar em
-  `src/data/guias.ts` (sitemap, llms.txt, busca-index e OG derivam
-  automaticamente).
-- Glossário: âncoras existentes úteis — `/glossario/#absorcao-de-agua`,
-  `#pei`, `#esmaltado` (conferir ids em `glossario.astro` antes de linkar).
-- URLs sempre com barra final. `astro build` verde + conferir URL em
+Tarefa 5 do `macro_plan.md` (Semana 1, `[plan]`): **Galeria Inspire-se por
+ambiente** no `site-goiania`.
+- Investigar as fotos `imagensAmbiente` do catálogo em `src/data/produtos`
+  (diretório/arquivo de dados dos 30 produtos): dá para classificar por
+  ambiente (cozinha, sala, banheiro) via heurística por nome de arquivo ou
+  nome de produto, ou por curadoria manual no data file?
+- Se sim: criar sub-páginas `/inspire-se/cozinha/`, `/inspire-se/sala/`,
+  `/inspire-se/banheiro/` — SÓ os ambientes com ≥4 fotos — linkadas da
+  galeria principal `/inspire-se/` (que já existe, ciclo anterior).
+- Se a classificação não parar em pé (nomes de arquivo opacos, sem sinal de
+  ambiente), registrar o porquê em `current_state.md` e PULAR — o plano manda
+  não forçar.
+- Página nova = registrar em sitemap, llms.txt e busca interna seguindo o
+  padrão existente (ver como `/inspire-se/` já é registrada; guias derivam de
+  `src/data/guias.ts`, outras páginas podem ter registro manual em
+  `sitemap.xml.ts`/`llms.txt.ts`/`busca-index.json.ts`).
+- URLs sempre com barra final. `astro build` verde + conferir URLs novas em
   dist/sitemap.xml, dist/llms.txt, dist/busca-index.json e rodar
   `node src/scripts/check-feed.mjs` antes de commitar (deploy automático em
   produção no push).
