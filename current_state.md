@@ -1,48 +1,53 @@
 ---
 status: in_progress
 next_effort: medium
-iteration: 16
-updated_at: 2026-07-05T19:10:53.000Z
+iteration: 17
+updated_at: 2026-07-05T19:20:00.000Z
 ---
 
 ## Last completed
-**Tarefa 16 (Semana 4, `[build]`, SplitJud) concluída.** Recência nos 3 artigos
-antigos de `apps/site/src/content/blog/`. Pré-check ok (`main` limpo). O git
-log confirmou 2026-06-28 como data real do primeiro commit dos 3 arquivos —
-`publishedAt` já estava correto, não mudou.
+**Tarefa 17 (Semana 4, `[plan]`, SplitJud) concluída.** Calculadora pública de
+divisão de honorários em `apps/site/src/pages/calculadora.astro`
+(`/calculadora`). Pré-check ok (`main` limpo). Commit `bff4f53` pushado em
+`github.com/JeanZorzetti/splitjud` main.
 
-Feito (commit `62a9f22` pushado em `github.com/JeanZorzetti/splitjud` main):
-- `updatedAt: 2026-07-05` no frontmatter dos 3 artigos antigos
-  (divisao-de-honorarios-advocaticios, contrato-de-parceria-entre-advogados,
-  honorarios-sucumbencia-vs-contratuais), justificado por retoque real:
-  interlinks novos de cada um para os 3 artigos do F3 (tarefa 15).
-- `blog/[slug].astro`: exibe "Atualizado em <data>" quando `updatedAt` existe;
-  schema já emitia `dateModified` via `updatedAt ?? publishedAt` (verificado
-  no HTML: `dateModified: 2026-07-05`).
-- Bugfix bônus: datas visíveis renderizavam 1 dia a menos (meia-noite UTC
-  formatada no fuso local UTC-3) — adicionado `timeZone: 'UTC'` nos 4
-  `toLocaleDateString` de `blog/[slug].astro`, `blog/categoria/[slug].astro`
-  e `blog/index.astro`. Verificado: "28 de junho" e "05 de julho" corretos.
-- `npm run build` verde (14 páginas).
+- Matemática replicada de `apps/app/src/hooks/useSplitsView.ts` (SÓ a lógica,
+  nada importado): percentual = `total × pct / 100`, fixo = valor pactuado,
+  restante fica com o escritório. Verificado com asserts em Node (10000 → 30%
+  = 3000, fixo 500, resto 6500).
+- Client-side puro (vanilla JS no `<script>` do Astro): valor total +
+  linhas de participantes (nome, modo %/fixo, valor), adicionar/remover,
+  tabela de resultado com "Restante (escritório)" e aviso quando repasses
+  excedem o total. Nada é enviado a servidor.
+- AEO: BLUF, seção "Como a conta é feita" com exemplo, 5 FAQs visíveis +
+  `FAQPage` e `WebPage` no `@graph` (base ORG/WEBSITE/PERSON via `buildGraph`,
+  sem duplicar entidades — 1 só `Organization` no HTML; `[PLACEHOLDER_*]`
+  intocados). CTA para `https://app.splitjud.com.br/auth`. Interlinks para os
+  3 artigos principais do blog.
+- Descoberta: link "Calculadora" no Header (nav), "Calculadora de honorários"
+  no Footer, entrada no `public/llms.txt`; sitemap automático
+  (@astrojs/sitemap) já inclui `/calculadora` (conferido no `sitemap-0.xml`).
+- `npm run build` verde em `apps/site` (15 páginas).
 
 ## Next step
-Executar a **tarefa 17 do macro_plan.md** (`[plan]`, SplitJud): **calculadora
-pública de divisão de honorários** em `apps/site` (ex. `/calculadora/`).
+Executar a **tarefa 18 do macro_plan.md** (`[build]`, SplitJud): **interlink +
+descoberta no SplitJud**.
 
 1. Repo: `C:\Users\jeanz\OneDrive\Desktop\ROI Labs\splitjud` (confirmar `main`
-   limpo antes; sujo → `status: blocked`).
-2. Página client-side: advogado informa o valor recebido e os percentuais dos
-   envolvidos e vê a divisão calculada. Replicar SÓ a matemática — LER o código
-   de rateio em `apps/app` para conferir a fórmula, mas NÃO importar nem
-   modificar nada de lá.
-3. Padrão AEO: BLUF, FAQPage no `@graph` (sem duplicar entidades do grafo
-   único de `apps/site/src/lib/schema.ts`; não tocar nos `[PLACEHOLDER_*]`),
-   CTA para o app (https://app.splitjud.com.br/auth). Referência de UX: a
-   calculadora do site-goiania (lead magnet AEO).
-4. Registrar a página nova em sitemap (é automático via @astrojs/sitemap) e no
-   `llms.txt` se existir em `apps/site/public/`; interlink pesado fica para a
-   tarefa 18, mas linkar a calculadora dos lugares óbvios já ajuda.
-5. Restrições: só `apps/site` e `docs/`; nada de `apps/app`, `prisma/`,
-   `.env*`. `npm run build` verde em `apps/site` antes de commitar; push
-   manual (`git -C "...\splitjud" push origin main`). `current_state.md`
-   continua neste repo (ROI Labs).
+   limpo antes; sujo → `status: blocked`). Trabalhar SÓ em `apps/site` e
+   `docs/`.
+2. Ligar artigos ↔ landing ↔ calculadora: links contextuais nos 6 artigos de
+   `apps/site/src/content/blog/` apontando para `/calculadora` (e entre si
+   onde fizer sentido), e da home (`index.astro`) para a calculadora. A
+   calculadora já linka 3 artigos; Header/Footer/llms.txt já a listam
+   (feito na tarefa 17).
+3. Conferir `llms.txt` e sitemap com TODAS as páginas novas do mês (6 artigos
+   + calculadora) — sitemap é automático via @astrojs/sitemap, llms.txt é
+   manual em `apps/site/public/llms.txt` (hoje só lista páginas principais;
+   avaliar listar os artigos do blog).
+4. Conferir que o `@graph` das páginas novas integra o grafo único de
+   `apps/site/src/lib/schema.ts` sem duplicar entidades e SEM tocar nos
+   `[PLACEHOLDER_*]`.
+5. `npm run build` verde em `apps/site` antes de commitar; push manual
+   (`git -C "...\splitjud" push origin main`). `current_state.md` continua
+   neste repo (ROI Labs).
