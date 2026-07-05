@@ -42,6 +42,11 @@ for (const p of pages) {
 }
 const capaDe = (slug: string) => capas.get(slug);
 
+// Filtros do catálogo (tarefa 6): opções computadas no build a partir dos
+// atributos reais; o JS só esconde/reordena os cards já emitidos.
+const marcas = [...new Set(produtos.map((p) => p.atributos.marca))].sort();
+const formatos = [...new Set(produtos.map((p) => p.atributos.dimensao))].sort();
+
 // Hub: breadcrumb + ItemList das páginas de categoria da malha + Product com
 // AggregateOffer do catálogo inteiro (faixa real de R$/m² computada no build,
 // mesma mecânica do guia quanto-custa) — é a página que disputa a âncora
@@ -164,9 +169,39 @@ const jsonLdNodes = [
               Modelos reais de fornecedores do polo — com dimensão, acabamento e preço de referência.
             </p>
           </div>
-          <div class="prod-grid">
+          <form class="prod-filtros" id="prod-filtros" aria-label="Filtrar e ordenar catálogo">
+            <label>
+              <span>Marca</span>
+              <select name="marca">
+                <option value="">Todas</option>
+                {marcas.map((m) => <option value={m}>{m}</option>)}
+              </select>
+            </label>
+            <label>
+              <span>Formato</span>
+              <select name="formato">
+                <option value="">Todos</option>
+                {formatos.map((f) => <option value={f}>{f}</option>)}
+              </select>
+            </label>
+            <label>
+              <span>Ordenar</span>
+              <select name="ordem">
+                <option value="">Padrão</option>
+                <option value="preco-asc">Menor preço/m²</option>
+                <option value="preco-desc">Maior preço/m²</option>
+              </select>
+            </label>
+            <span class="prod-filtros__count" id="prod-count" role="status" aria-live="polite"></span>
+            <button type="button" id="prod-limpar" hidden>Limpar filtros</button>
+          </form>
+          <div class="prod-grid" id="prod-grid">
             {produtos.map((prod) => <ProdutoCard produto={prod} />)}
           </div>
+          <p class="prod-vazio" id="prod-vazio" hidden>
+            Nenhum produto com essa combinação de marca e formato.
+            <a href="/porcelanato/">Limpar filtros</a> ou fale com a gente pelo WhatsApp.
+          </p>
         </div>
       </section>
     )}
@@ -174,3 +209,110 @@ const jsonLdNodes = [
 
   <Footer />
 </Base>
+
+<style>
+  .prod-filtros {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: 1rem;
+    margin-bottom: 1.4rem;
+  }
+  .prod-filtros label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+  .prod-filtros select {
+    padding: 0.5rem 0.7rem;
+    border: 1px solid rgba(0, 0, 0, 0.18);
+    border-radius: 8px;
+    background: #fff;
+    font: inherit;
+    font-size: 0.9rem;
+  }
+  .prod-filtros__count {
+    font-size: 0.85rem;
+    opacity: 0.75;
+    margin-left: auto;
+  }
+  .prod-filtros button {
+    padding: 0.5rem 0.9rem;
+    border: 1px solid rgba(0, 0, 0, 0.18);
+    border-radius: 8px;
+    background: #fff;
+    font: inherit;
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+  .prod-vazio {
+    margin-top: 1rem;
+    font-size: 0.95rem;
+  }
+</style>
+
+<script>
+  // Progressive enhancement: sem JS o grid inteiro já está renderizado e os
+  // selects não fazem nada. O JS só esconde (display) e reordena (CSS order)
+  // cards existentes — nenhum DOM criado, sem gotcha de scoped styles.
+  const form = document.getElementById('prod-filtros') as HTMLFormElement | null;
+  const grid = document.getElementById('prod-grid');
+  if (form && grid) {
+    const cards = [...grid.querySelectorAll<HTMLElement>('.prod-card')];
+    const total = cards.length;
+    const count = document.getElementById('prod-count')!;
+    const vazio = document.getElementById('prod-vazio')!;
+    const limpar = document.getElementById('prod-limpar')!;
+
+    const aplicar = () => {
+      const marca = (form.elements.namedItem('marca') as HTMLSelectElement).value;
+      const formato = (form.elements.namedItem('formato') as HTMLSelectElement).value;
+      const ordem = (form.elements.namedItem('ordem') as HTMLSelectElement).value;
+
+      let visiveis = 0;
+      for (const c of cards) {
+        const ok =
+          (!marca || c.dataset.marca === marca) && (!formato || c.dataset.dim === formato);
+        c.style.display = ok ? '' : 'none';
+        if (ok) visiveis++;
+      }
+
+      if (ordem) {
+        const dir = ordem === 'preco-desc' ? -1 : 1;
+        [...cards]
+          .sort((a, b) => dir * (Number(a.dataset.preco) - Number(b.dataset.preco)))
+          .forEach((c, i) => (c.style.order = String(i)));
+      } else {
+        cards.forEach((c) => (c.style.order = ''));
+      }
+
+      const ativo = Boolean(marca || formato || ordem);
+      count.textContent = ativo ? `${visiveis} de ${total} produtos` : '';
+      (limpar as HTMLElement).hidden = !ativo;
+      (vazio as HTMLElement).hidden = visiveis > 0;
+
+      const qs = new URLSearchParams();
+      if (marca) qs.set('marca', marca);
+      if (formato) qs.set('formato', formato);
+      if (ordem) qs.set('ordem', ordem);
+      history.replaceState(null, '', qs.size ? `?${qs}` : location.pathname);
+    };
+
+    // Estado inicial vindo da query string (link compartilhável)
+    const qs = new URLSearchParams(location.search);
+    for (const nome of ['marca', 'formato', 'ordem']) {
+      const sel = form.elements.namedItem(nome) as HTMLSelectElement;
+      const v = qs.get(nome);
+      if (v && [...sel.options].some((o) => o.value === v)) sel.value = v;
+    }
+    aplicar();
+
+    form.addEventListener('change', aplicar);
+    limpar.addEventListener('click', () => {
+      form.reset();
+      aplicar();
+    });
+  }
+</script>

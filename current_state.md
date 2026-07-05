@@ -1,53 +1,47 @@
 ---
 status: in_progress
 next_effort: medium
-iteration: 5
-updated_at: 2026-07-05T12:25:00.000Z
+iteration: 6
+updated_at: 2026-07-05T12:40:00.000Z
 ---
 
 ## Last completed
-Tarefa 5 (Semana 1, `[plan]`): **Galeria Inspire-se por ambiente** no
-`site-goiania`. A classificação parou em pé via **curadoria manual visual**
-(olhei as 25 fotos de `imagensAmbiente` uma a uma — nome de arquivo/slug não
-carrega sinal de ambiente):
-- `src/data/ambientes.ts` — mapa curado slug→ambiente + metadados das
-  sub-páginas. Ambientes criados: **sala** (5 fotos) e **área externa**
-  (8 fotos únicas). Fora, com motivo documentado no arquivo: 5 fotos são
-  close-up de textura (strato bege/grigio, urban branco, pietra di matera,
-  rock face — não são ambiente); quarto só tem 2; banheiro tem 4 produtos mas
-  só 3 fotos únicas (lux reusa a do pulpis); arezzo-beige reusa a foto do
-  arezzo-externo (só o externo entrou).
-- `src/pages/inspire-se/[ambiente].astro` — sub-páginas `/inspire-se/sala/` e
-  `/inspire-se/area-externa/` (getStaticPaths de `ambientes.ts`), mesmo layout
-  do mural principal, breadcrumb, cross-link entre ambientes e volta pro
-  mural; alt text "Sala com X" / "Área externa com X".
-- `inspire-se.astro` — linha "Ver por ambiente: Sala (5 fotos) · Área externa
-  (8 fotos)" no hero.
-- Registro nas 3 superfícies: `sitemap.xml.ts` (com extensão `image:` das
-  fotos), `llms.txt.ts` (2 linhas em Ferramentas) e `busca-index.json.ts`
-  (categoria "Inspiração").
-- `astro build` verde (93 páginas); as 2 URLs conferidas em dist/sitemap.xml,
-  dist/llms.txt e dist/busca-index.json; sub-páginas com 5 e 8 itens no dist;
-  `node src/scripts/check-feed.mjs` OK (30 itens).
-- Cozinha não foi criada: 0 fotos claras de cozinha no acervo atual.
+Tarefa 6 (Semana 2, `[plan]`): **Filtros e ordenação no hub `/porcelanato/`**
+do `site-goiania`. Client-side puro, sem API, progressive enhancement:
+- `src/components/ProdutoCard.astro` — o `<a class="prod-card">` agora emite
+  `data-marca`, `data-dim` e `data-preco` (inofensivo nas outras páginas que
+  usam o card; evitou wrapper div no grid).
+- `src/pages/porcelanato/index.astro` — `<form class="prod-filtros">` acima do
+  `.prod-grid` do catálogo: selects de **marca** e **formato** (opções
+  computadas no build de `produtos.ts`), ordenação **preço/m² asc/desc**,
+  contador "N de 30 produtos" (aria-live), botão "Limpar filtros" e mensagem
+  de estado vazio. Script inline: filtra via `style.display`, reordena via
+  CSS `order` (grid item) — **nenhum DOM criado por JS**, então os estilos
+  novos ficaram scoped normalmente (gotcha evitado na raiz). Estado sincroniza
+  com `?marca=&formato=&ordem=` via `history.replaceState` e é lido no load
+  (valores validados contra as options antes de aplicar).
+- Sem JS: grid inteiro renderizado (o build emite tudo), selects inertes.
+- Verificação: `astro build` verde (93 páginas), 30 cards com `data-preco` no
+  dist, form presente; `node src/scripts/check-feed.mjs` OK (30 itens).
+  Página não é nova → sitemap/llms.txt/busca inalterados.
 - Observação p/ tarefa 8 (mantida): a `/calculadora` já tem botão
   "+ Adicionar ambiente" — verificar se multi-ambiente já existe antes de
   construir.
 
 ## Next step
-Tarefa 6 do `macro_plan.md` (Semana 2, `[plan]`): **Filtros e ordenação no hub
-`/porcelanato/`** do `site-goiania`.
-- Client-side, sem API: filtrar por **marca** e **formato** (dimensão),
-  ordenar por **preço/m² asc/desc**.
-- Estado na query string (`?marca=&ordem=`) para link compartilhável.
-- Progressive enhancement: sem JS o hub continua renderizando TUDO (o filtro
-  só esconde/reordena o que o build já emitiu — não criar DOM via JS se der
-  para evitar).
-- Gotcha Astro: scoped styles não se aplicam a DOM criado por JS — se precisar
-  criar elementos via JS, usar `<style is:global>` (ver como
-  favoritos/comparador já lidam com isso).
-- Hub é `src/pages/porcelanato/index.astro`; dados/atributos reais em
-  `src/data/produtos.ts` (marca, dimensao, preco em `atributos`).
-- URLs sempre com barra final em qualquer link emitido. `astro build` verde +
-  `node src/scripts/check-feed.mjs` antes de commitar (deploy automático em
-  produção no push). Página não é nova → sitemap/llms/busca não mudam.
+Tarefa 7 do `macro_plan.md` (Semana 2, `[build]`): **Favoritos ↔ comparador**
+no `site-goiania`.
+- Na página `/favoritos` (feita no ciclo 15): botão "Comparar favoritos" que
+  monta o deep-link `?p=slug1,slug2,slug3` do `/comparar` com até 3 favoritos.
+- No `/comparar`: botão de favoritar em cada coluna de produto.
+- **Verificar ANTES o que já existe**: ler `src/pages/favoritos.astro`,
+  `src/pages/comparar.astro` e `src/components/FavToggle.astro` — o ciclo 15
+  pode já ter deixado parte pronta (se tudo existir, registrar "pulado (já
+  existia)" e ir para a tarefa 8).
+- Padrão localStorage dos favoritos já existe (`FavToggle.astro`); comparador
+  usa `?p=` e `history.replaceState` (ver `comparar.astro:263,328`).
+- Gotcha: DOM criado por JS não recebe scoped styles → `<style is:global>` se
+  precisar criar elementos.
+- URLs sempre com barra final. `astro build` verde +
+  `node src/scripts/check-feed.mjs` antes de commitar (push = deploy em
+  produção). Páginas não são novas → sitemap/llms/busca não mudam.
