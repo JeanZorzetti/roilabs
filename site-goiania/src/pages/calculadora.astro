@@ -299,9 +299,9 @@ const jsonLdNodes = [
     const row = document.createElement('div');
     row.className = 'calc__room';
     row.innerHTML = `
-      <input class="r-l" type="number" inputmode="decimal" min="0.1" step="0.1" placeholder="largura" />
+      <input class="r-l" type="number" inputmode="decimal" min="0.1" step="0.1" placeholder="largura" aria-label="Largura do ambiente (m)" />
       <span>×</span>
-      <input class="r-c" type="number" inputmode="decimal" min="0.1" step="0.1" placeholder="compr." />
+      <input class="r-c" type="number" inputmode="decimal" min="0.1" step="0.1" placeholder="compr." aria-label="Comprimento do ambiente (m)" />
       <span>m</span>
       <button type="button" class="r-rm" aria-label="Remover ambiente">&times;</button>`;
     rooms.appendChild(row);
