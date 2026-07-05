@@ -1,51 +1,48 @@
 ---
 status: in_progress
 next_effort: medium
-iteration: 15
-updated_at: 2026-07-05T19:15:00.000Z
+iteration: 16
+updated_at: 2026-07-05T19:10:53.000Z
 ---
 
 ## Last completed
-**Tarefa 15 (Semana 4, `[plan]`, SplitJud) concluída.** Pré-check da Mecânica
-cross-repo passou (`main` limpo em `..\splitjud`). Escritos os 3 artigos GEO
-restantes do cluster F3 em `apps/site/src/content/blog/`:
+**Tarefa 16 (Semana 4, `[build]`, SplitJud) concluída.** Recência nos 3 artigos
+antigos de `apps/site/src/content/blog/`. Pré-check ok (`main` limpo). O git
+log confirmou 2026-06-28 como data real do primeiro commit dos 3 arquivos —
+`publishedAt` já estava correto, não mudou.
 
-- `tabela-de-honorarios-oab.md` (categoria honorarios)
-- `gestao-financeira-escritorio-de-advocacia.md` (categoria gestao-juridica)
-- `repasse-de-honorarios-correspondentes.md` (categoria honorarios)
-
-Mesmo padrão dos 3 existentes: BLUF, H2 em formato de pergunta, tabelas,
-interlinks (entre si + para os 3 artigos antigos + /funcionalidades), CTA
-SplitJud com preços reais (R$ 47/mês, anual 10x R$ 19,70). `publishedAt:
-2026-07-05` no frontmatter — o template `blog/[slug].astro` já emite a data
-visível (`<time>`) e `datePublished`/`dateModified` no `Article` do `@graph`,
-verificado no HTML gerado. `npm run build` verde (14 páginas), 3 URLs novas no
-sitemap automático. Commit `98caf14` pushado manualmente em
-`github.com/JeanZorzetti/splitjud` (main).
-
-Nota: nenhum template foi alterado — o schema/data já eram suportados; os
-artigos antigos continuam sem retoque (recência deles é a tarefa 16).
+Feito (commit `62a9f22` pushado em `github.com/JeanZorzetti/splitjud` main):
+- `updatedAt: 2026-07-05` no frontmatter dos 3 artigos antigos
+  (divisao-de-honorarios-advocaticios, contrato-de-parceria-entre-advogados,
+  honorarios-sucumbencia-vs-contratuais), justificado por retoque real:
+  interlinks novos de cada um para os 3 artigos do F3 (tarefa 15).
+- `blog/[slug].astro`: exibe "Atualizado em <data>" quando `updatedAt` existe;
+  schema já emitia `dateModified` via `updatedAt ?? publishedAt` (verificado
+  no HTML: `dateModified: 2026-07-05`).
+- Bugfix bônus: datas visíveis renderizavam 1 dia a menos (meia-noite UTC
+  formatada no fuso local UTC-3) — adicionado `timeZone: 'UTC'` nos 4
+  `toLocaleDateString` de `blog/[slug].astro`, `blog/categoria/[slug].astro`
+  e `blog/index.astro`. Verificado: "28 de junho" e "05 de julho" corretos.
+- `npm run build` verde (14 páginas).
 
 ## Next step
-Executar a **tarefa 16 do macro_plan.md** (`[build]`, SplitJud): **recência nos
-3 artigos antigos**.
+Executar a **tarefa 17 do macro_plan.md** (`[plan]`, SplitJud): **calculadora
+pública de divisão de honorários** em `apps/site` (ex. `/calculadora/`).
 
 1. Repo: `C:\Users\jeanz\OneDrive\Desktop\ROI Labs\splitjud` (confirmar `main`
    limpo antes; sujo → `status: blocked`).
-2. Arquivos: `apps/site/src/content/blog/divisao-de-honorarios-advocaticios.md`,
-   `contrato-de-parceria-entre-advogados.md`,
-   `honorarios-sucumbencia-vs-contratuais.md`. Todos têm
-   `publishedAt: 2026-06-28` no frontmatter — conferir com
-   `git log --follow --format=%as -- <arquivo>` a data real do primeiro commit
-   e usar essa como `publishedAt` (datePublished).
-3. O schema do content (`content.config.ts`) já tem `updatedAt` opcional, e o
-   template `blog/[slug].astro` já usa `updatedAt ?? publishedAt` como
-   `dateModified` no schema. Adicionar `updatedAt` (hoje) SÓ se houver retoque
-   real no conteúdo; a data visível na página hoje mostra apenas publishedAt —
-   avaliar exibir "Atualizado em" quando `updatedAt` existir (mudança pequena
-   no `[slug].astro`).
-4. Restrições: só `apps/site` e `docs/`; não tocar em `apps/app`, `prisma/`,
-   `.env*`, nem nos `[PLACEHOLDER_*]` de `apps/site/src/lib/schema.ts`.
-5. `npm run build` em `apps/site` verde antes de commitar; push manual
-   (`git -C "...\splitjud" push origin main`). `current_state.md` continua
-   neste repo (ROI Labs).
+2. Página client-side: advogado informa o valor recebido e os percentuais dos
+   envolvidos e vê a divisão calculada. Replicar SÓ a matemática — LER o código
+   de rateio em `apps/app` para conferir a fórmula, mas NÃO importar nem
+   modificar nada de lá.
+3. Padrão AEO: BLUF, FAQPage no `@graph` (sem duplicar entidades do grafo
+   único de `apps/site/src/lib/schema.ts`; não tocar nos `[PLACEHOLDER_*]`),
+   CTA para o app (https://app.splitjud.com.br/auth). Referência de UX: a
+   calculadora do site-goiania (lead magnet AEO).
+4. Registrar a página nova em sitemap (é automático via @astrojs/sitemap) e no
+   `llms.txt` se existir em `apps/site/public/`; interlink pesado fica para a
+   tarefa 18, mas linkar a calculadora dos lugares óbvios já ajuda.
+5. Restrições: só `apps/site` e `docs/`; nada de `apps/app`, `prisma/`,
+   `.env*`. `npm run build` verde em `apps/site` antes de commitar; push
+   manual (`git -C "...\splitjud" push origin main`). `current_state.md`
+   continua neste repo (ROI Labs).
