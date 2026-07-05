@@ -60,6 +60,31 @@ formulário próprio).
   atual como cor de botão/ícone sobre fundo escuro ou como acento visual
   grande não tem o mesmo problema de contraste de texto pequeno).
 
+## Follow-up — páginas novas das semanas 1–2 (2026-07-05, macro plan 2 tarefa 10)
+
+Re-inspeção manual do source das páginas criadas depois da auditoria original:
+
+- **Guias AEO novos** (`guia/porcelanato-area-externa`, `guia/rejunte-porcelanato`,
+  `guia/porcelanato-liquido-vs-porcelanato`): conteúdo puro — nenhum `<img>`,
+  `<input>` ou `<button>` no source. Nada a corrigir.
+- **Glossário** (`glossario.astro`): âncora "#" por termo tem
+  `aria-label="Link direto para {termo}"`. OK.
+- **Filtros do hub** (`porcelanato/index.astro`): os 3 `<select>` estão dentro
+  de `<label>` com texto visível; contador usa `role="status"` +
+  `aria-live="polite"`; botão "Limpar filtros" tem texto. OK.
+- **Favoritos ↔ comparador**: botão de favoritar no comparador tem
+  `aria-label`, `aria-pressed` sincronizado e texto visível ("♥ Favoritado" /
+  "♡ Favoritar"); botão "Remover dos favoritos" em `/favoritos` tem texto;
+  imgs dos cards JS têm `alt` com o nome do produto. OK.
+- **Vistos recentemente** (`VistosRecentemente.astro`): cards JS com `alt` no
+  produto; seção some (`hidden`) quando vazia. OK.
+- **Inspire-se por ambiente** (`inspire-se/[ambiente].astro`): `alt`
+  descritivo ("{ambiente} com {produto}"). OK.
+
+Nenhum problema mecânico novo encontrado; nenhuma mudança de código.
+O achado de contraste do `--hivis` (abaixo) segue pendente de decisão de
+design e vale também para qualquer link laranja nas páginas novas.
+
 ## Resumo
 
 - 2 problemas mecânicos corrigidos diretamente (aria-label em 3 inputs).
