@@ -27,6 +27,7 @@ export const GET: APIRoute = async () => {
 ## Páginas principais
 - [Home e candidatura](${SITE}/): o modelo, o mapa de cadeiras de Goiânia e o formulário de candidatura do fornecedor.
 - [O modelo Growth Partner](${SITE}/modelo/): os três gates de validação, a fórmula pública do success fee, a exclusividade de cadeira e as 6 etapas da candidatura ao contrato.
+- [Polo Goiânia — case vivo](${SITE}/polo-goiania/): o que a cadeira ocupada recebe na prática — 93 páginas no ar, malha de intenção de 40 páginas, catálogo de 30 produtos, calculadora, comparador e feed Merchant Center, tudo verificável no site público.
 - [Simulador de receita](${SITE}/simulador/): fornecedor candidato simula ticket médio × pedidos/mês e vê a receita projetada e o líquido após o success fee.
 - [Blog](${SITE}/blog/): como fornecedores de revestimentos e materiais de construção em Goiânia vendem pela internet.
 

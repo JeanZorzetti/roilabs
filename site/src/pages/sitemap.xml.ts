@@ -11,6 +11,7 @@ export const GET: APIRoute = async () => {
   const urls = [
     { loc: `${SITE}/` },
     { loc: `${SITE}/modelo/` },
+    { loc: `${SITE}/polo-goiania/` },
     { loc: `${SITE}/blog/` },
     { loc: `${SITE}/simulador/` },
     { loc: `${SITE}/obrigado/` },

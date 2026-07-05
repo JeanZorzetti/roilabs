@@ -1,54 +1,56 @@
 ---
 status: in_progress
 next_effort: medium
-iteration: 11
+iteration: 12
 updated_at: 2026-07-05T12:50:00.000Z
 ---
 
 ## Last completed
-Tarefa 12 (Semana 3, `[build]`): **Página `/modelo/` no `/site`** — criada
-(a home só explica o modelo em resumo: hero, 3 fases, gates, FAQ curto; não
-havia HowTo nem aprofundamento — logo, a página se justificava).
+Tarefa 13 (Semana 3, `[build]`): **Case vivo do Polo 1 no `/site`** — página
+`/polo-goiania/` criada. (Uma iteração anterior interrompida deixou o arquivo
+com um `</invoke>` órfão no final — corrigido e concluído.)
 
-- Novo `site/src/pages/modelo.astro`: BLUF + 4 seções (3 gates aprofundados,
-  success fee com a fórmula pública e exemplo 450×40×10% em `readout`,
-  exclusividade/papéis nas colunas `fit`, HowTo visual de 6 etapas da
-  candidatura ao contrato) + FAQ com 7 perguntas NOVAS (não duplica as da
-  home: % do fee, propriedade do site, canais atuais, repasse do dinheiro,
-  SLA na prática, saída sem resultado, prazo até contrato).
-- Schema via `jsonLdNodes` do `Base`: `WebPage` + `FAQPage` (7 Q&A) +
-  `HowTo` (6 steps) + nó `Service` `#service` (mesmo `@id` da home, emitido
-  1× — verificado no dist que não há duplicata no @graph).
-- Descoberta: `/modelo/` adicionada em `sitemap.xml.ts` e `llms.txt.ts`
-  (não são 100% dinâmicos para páginas .astro — entradas estáticas).
-- Links: Header (nav "Modelo" no lugar de "/#mecanica" — a página cobre a
-  mecânica em profundidade), Footer ("Como funciona o modelo"), e CTA final
-  dos 2 artigos da tarefa 11 agora linkam `/modelo/`.
-- CSS: reuso das classes globais (section/steps/fit/faq/readout); único
-  bloco novo é `.howto*` scoped no próprio modelo.astro. URLs com barra
-  final. `npx astro build` verde (12 páginas, `/modelo/index.html` gerado).
+- `site/src/pages/polo-goiania.astro`: BLUF + `readout` com 4 números
+  VERIFICADOS no build real do site-goiania de hoje (93 páginas totais,
+  40 páginas de intenção na malha /porcelanato/ [41 − hub], 30 produtos de
+  3 marcas Biancogres/Delta/Savane, 7 guias) + grid de 8 ativos clicáveis
+  (malha, catálogo, feed Merchant Center, calculadora, comparador/favoritos,
+  guias + glossário de 20 termos, Inspire-se, descoberta) + CTA duplo
+  (`/#candidatar` + `/simulador/`). Zero métrica de venda/tráfego.
+- Schema `jsonLdNodes`: `WebPage` + nó `Service` com o MESMO
+  `@id` `https://roilabs.com.br/#service` que home/modelo (verificado no
+  dist: 1 só `@type: Service` no @graph da página).
+- Descoberta: entradas estáticas em `sitemap.xml.ts` e `llms.txt.ts`
+  (confirmadas no dist).
+- Links: Footer ("Polo 1 no ar" agora aponta `/polo-goiania/` em vez do
+  domínio do polo direto) + CTA final dos 2 artigos da tarefa 11
+  (`exclusividade-de-cadeira-...` e `growth-partner-vs-agencia-...`).
+- CSS: classes globais + único bloco novo `.ativos/.ativo*` scoped.
+- `npx astro build` verde em `site/` (13 páginas) e em `site-goiania/`
+  (93 páginas, rodado para verificar os números citados).
 
 ## Next step
-Tarefa 13 do `macro_plan.md` (Semana 3, `[build]`): **Case vivo do Polo 1 no
-`/site`** — página "Polo Goiânia — porcelanato" mostrando o que a cadeira
-ocupada recebe, com FATOS verificáveis no repo, **sem inventar métricas de
-venda/tráfego**.
+Tarefa 14 do `macro_plan.md` (Semana 3, `[build]`): **Refresh de descoberta
+nos 2 sites.** Conferir que TUDO das semanas 1–3 está em sitemap, `llms.txt`
+e busca interna; rodar os builds e confirmar que `check-feed` continua
+passando e que o IndexNow postbuild lista as URLs novas. Corrigir o que faltar.
 
-- Fatos a levantar no próprio repo antes de escrever: nº de páginas da
-  malha/guias no build do `site-goiania` (rodar `npx astro build` lá e
-  contar), catálogo de 30 produtos (`site-goiania/src/data/produtos*`),
-  calculadora (`/calculadora/`), comparador (`/comparar/`), feed Merchant
-  Center (script `check-feed`), favoritos, galeria Inspire-se, glossário,
-  guias — citar só o que existir de verdade.
-- Página nova em `site/src/pages/` (ex. `polo-goiania.astro` →
-  `/polo-goiania/`), padrão da `/modelo/` recém-criada: classes globais,
-  `jsonLdNodes` sem duplicar entidades do `@graph` do `Base`
-  (Organization/WebSite; nó `Service #service` já é emitido por home e
-  `/modelo/` — se usar, mesmo `@id`).
-- CTA duplo: candidatura (`/#candidatar`) + simulador (`/simulador/`).
-- Linkar dos 2 artigos da tarefa 11 e do Footer
-  (`site/src/components/Footer.astro` — hoje o link "Polo 1 no ar" aponta
-  direto para goiania.roilabs.com.br; avaliar apontar para a página nova).
-- Registrar em `sitemap.xml.ts` e `llms.txt.ts` (entradas estáticas, como
-  feito para `/modelo/`). URLs sempre com barra final. `npx astro build`
-  verde em `site/` antes de commitar (push = deploy).
+- Semanas 1–2 (site-goiania): glossário `/glossario/`, guias novos
+  (`/guia/porcelanato-area-externa/`, `/guia/rejunte-porcelanato/`,
+  `/guia/porcelanato-liquido-vs-porcelanato/`), sub-páginas Inspire-se
+  (`/inspire-se/*` — verificar quais existem em `src/pages/inspire-se/`),
+  filtros do hub (sem página nova), `/favoritos/`, calculadora
+  multi-ambiente (sem página nova). Conferir em
+  `site-goiania/src/pages/sitemap.xml.ts`, `llms.txt.ts` e
+  `busca-index.json.ts` que todas as páginas novas aparecem.
+- Semana 3 (site): `/modelo/` e `/polo-goiania/` já registrados em
+  sitemap + llms.txt (feito nas tarefas 12–13); conferir de novo no dist
+  mesmo assim.
+- `check-feed`: procurar o script em `site-goiania/` (`package.json` /
+  `scripts/check-feed.mjs`) e rodá-lo; verificar que imagens estão no
+  domínio próprio.
+- IndexNow: rodar o build e verificar que o postbuild lista as URLs novas
+  (não postar manualmente se depender de secret — só conferir o que o
+  build já faz sozinho).
+- Builds: `npx astro build` verde nos 2 sites antes de commitar
+  (push = deploy). URLs sempre com barra final.

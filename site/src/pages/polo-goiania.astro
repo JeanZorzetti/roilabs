@@ -1,0 +1,204 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+const POLO = 'https://goiania.roilabs.com.br';
+
+// Fatos verificáveis no build do polo (astro build de 2026-07-05, 93 páginas).
+// Sem métrica de venda/tráfego — só o que existe no repositório e no ar.
+const numeros = [
+  { val: '93', key: 'páginas no ar no build atual do polo' },
+  { val: '40', key: 'páginas de intenção na malha /porcelanato/ (formato × acabamento × ambiente × loja)' },
+  { val: '30', key: 'produtos no catálogo, de 3 marcas (Biancogres, Delta, Savane)' },
+  { val: '7', key: 'guias de compra AEO com FAQ e schema' },
+];
+
+const ativos = [
+  {
+    nome: 'Malha de intenção local',
+    desc: '40 páginas que respondem à busca exata do comprador — "porcelanato 120x60", "piso antiderrapante", "porcelanato acetinado banheiro", "loja de porcelanato em Goiânia" — cada uma linkando os produtos do catálogo que atendem.',
+    href: `${POLO}/porcelanato/`,
+  },
+  {
+    nome: 'Catálogo com página por produto',
+    desc: '30 produtos com ficha técnica real (dimensão, acabamento, m²/caixa, retificado, classe de abrasão), preço por m² e CTA de orçamento por WhatsApp.',
+    href: `${POLO}/porcelanato/`,
+  },
+  {
+    nome: 'Feed Google Merchant Center',
+    desc: 'Feed RSS gerado do mesmo dado da página — título, descrição, preço e imagem em paridade página↔feed, como o Google exige — com validação automática a cada build.',
+    href: `${POLO}/feed.xml`,
+  },
+  {
+    nome: 'Calculadora de caixas, rejunte e argamassa',
+    desc: 'O comprador soma os cômodos, calcula quantas caixas precisa (com margem de recorte) e vira lead qualificado — já sabendo produto e metragem.',
+    href: `${POLO}/calculadora/`,
+  },
+  {
+    nome: 'Comparador e favoritos',
+    desc: 'Compara até 3 produtos lado a lado com link compartilhável; favoritos persistem no navegador e viram lista de orçamento.',
+    href: `${POLO}/comparar/`,
+  },
+  {
+    nome: 'Guias de compra + glossário',
+    desc: '7 guias AEO (área externa, rejunte, polido × acetinado, porcelanato × cerâmica, custo, como escolher, porcelanato líquido) e um glossário com 20 termos técnicos — o conteúdo que responde a dúvida antes do concorrente.',
+    href: `${POLO}/guia/como-escolher-porcelanato/`,
+  },
+  {
+    nome: 'Galeria Inspire-se por ambiente',
+    desc: 'Fotos de ambiente do fabricante organizadas por cozinha, sala, banheiro e área externa, cada foto linkando o produto aplicado.',
+    href: `${POLO}/inspire-se/`,
+  },
+  {
+    nome: 'Descoberta para buscadores e IAs',
+    desc: 'Sitemap, llms.txt, busca interna e ping IndexNow a cada deploy — as páginas novas entram no índice sem espera.',
+    href: `${POLO}/llms.txt`,
+  },
+];
+
+const jsonLdNodes = [
+  {
+    '@type': 'WebPage',
+    '@id': 'https://roilabs.com.br/polo-goiania/#webpage',
+    url: 'https://roilabs.com.br/polo-goiania/',
+    name: 'Polo Goiânia — porcelanato: o que a cadeira ocupada recebe',
+    isPartOf: { '@id': 'https://roilabs.com.br/#website' },
+    about: { '@id': 'https://roilabs.com.br/#service' },
+    inLanguage: 'pt-BR',
+  },
+  {
+    '@type': 'Service',
+    '@id': 'https://roilabs.com.br/#service',
+    name: 'Growth Partner — operação de vendas online pago pelo sucesso',
+    serviceType: 'Operação de vendas online (SEO programático de alta intenção)',
+    provider: { '@id': 'https://roilabs.com.br/#org' },
+    areaServed: { '@type': 'City', name: 'Goiânia' },
+  },
+];
+---
+
+<Base
+  title="Polo Goiânia — porcelanato: o case vivo | ROI Labs"
+  description="O que a cadeira ocupada recebe na prática: 93 páginas no ar, malha de intenção local, catálogo de 30 produtos, calculadora, comparador e feed Merchant Center. Fatos do build, sem promessa."
+  jsonLdNodes={jsonLdNodes}
+>
+  <Header />
+
+  <main>
+    <!-- BLUF -->
+    <section class="section section--dark" aria-labelledby="polo-title">
+      <div class="wrap">
+        <div class="section__head">
+          <span class="eyebrow">Polo 1 · case vivo</span>
+          <h1 id="polo-title">Polo Goiânia — porcelanato: o que a cadeira recebe.</h1>
+          <p class="section__lead">
+            A cadeira de porcelanato de Goiânia está ocupada e a operação está
+            no ar em <a href={POLO + '/'} target="_blank" rel="noopener" style="color:inherit">goiania.roilabs.com.br</a>.
+            Esta página lista <strong>o que existe de verdade no build de hoje</strong>
+            — páginas, catálogo, ferramentas — sem métrica inventada de venda ou
+            tráfego. É a infraestrutura que a ROI Labs banca e que o próximo
+            parceiro, de outro nicho, recebe pronta.
+          </p>
+        </div>
+
+        <div class="readout" role="group" aria-label="Números do build atual do polo">
+          <div class="readout__bar">
+            <span class="readout__dotrow" aria-hidden="true"><span></span><span></span><span></span></span>
+            astro build — polo goiânia, jul/2026
+          </div>
+          <div class="readout__body">
+            {numeros.map((n) => (
+              <div class="metric">
+                <div class="metric__val">{n.val}</div>
+                <div class="metric__key">{n.key}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <p class="prova__foot">
+          Todo número acima é contável no site público — nenhum é projeção.
+        </p>
+      </div>
+    </section>
+
+    <!-- ATIVOS -->
+    <section class="section section--light" id="ativos" aria-labelledby="ativos-title">
+      <div class="wrap">
+        <div class="section__head">
+          <span class="eyebrow">O inventário</span>
+          <h2 id="ativos-title">8 ativos que a cadeira ocupada recebe.</h2>
+          <p class="section__lead">
+            Cada item abaixo está no ar e é clicável. É o pacote de tecnologia
+            que o parceiro não paga para construir — o custo é 100% da ROI Labs,
+            remunerado só pelo success fee sobre a venda concretizada.
+          </p>
+        </div>
+
+        <div class="ativos" role="list">
+          {ativos.map((a) => (
+            <article class="ativo" role="listitem">
+              <h3 class="ativo__nome">{a.nome}</h3>
+              <p class="ativo__desc">{a.desc}</p>
+              <a class="ativo__link" href={a.href} target="_blank" rel="noopener">ver no ar →</a>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA DUPLO -->
+    <section class="section section--dark" id="proximo" aria-labelledby="proximo-title">
+      <div class="wrap">
+        <div class="section__head">
+          <span class="eyebrow">A próxima cadeira</span>
+          <h2 id="proximo-title">Isso, no seu nicho, sem custo fixo.</h2>
+          <p class="section__lead">
+            O porcelanato ocupou a primeira cadeira de Goiânia. As demais —
+            outros nichos de material de alto padrão — seguem em curadoria.
+            Entenda <a href="/modelo/" style="color:inherit">o modelo em profundidade</a>
+            ou faça a conta com os seus números.
+          </p>
+        </div>
+        <div class="close__whats">
+          <a class="btn btn--primary" href="/#candidatar">Candidatar minha empresa</a>
+          <a class="btn btn--whats" href="/simulador/" style="margin-left: .75rem;">Simular minha receita</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  /* Grid de ativos — único bloco novo; o resto reusa as classes globais. */
+  .ativos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+  .ativo {
+    border: 1px solid var(--l-line, rgba(0, 0, 0, 0.12));
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+  }
+  .ativo__nome {
+    font-size: 1.05rem;
+    margin: 0 0 0.4rem;
+  }
+  .ativo__desc {
+    margin: 0 0 0.75rem;
+    font-size: 0.95rem;
+    opacity: 0.85;
+    line-height: 1.6;
+    flex: 1;
+  }
+  .ativo__link {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.82rem;
+    color: inherit;
+  }
+</style>
