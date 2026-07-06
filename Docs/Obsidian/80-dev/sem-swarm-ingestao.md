@@ -36,6 +36,13 @@ python -m agents.synthesizer --query "qual porcelanato tem menor preço por m²?
 
 - **⚠️ NÃO rodar Scout (ingestão --files) e Filter daemon AO MESMO TEMPO no notebook**: os dois disputam o mesmo phi4-mini e a fila do Ollama serializa — as chamadas estouram timeout. Sequência certa: ingerir primeiro, depois ligar o filter. (Descoberto na primeira carga 2026-07-06; o ingest agora tem timeout 480s + retry por chunk, e o filter tolera falha por observação, mas a serialização continua sendo o caminho rápido.)
 - **Observação presa em `processing`** (crash/kill do filter no meio do lote): recuperar com `python -m agents.filter --reprocess-stuck` (com o daemon parado).
+- **NuExtract devolve campos vazios em ~1/3 das obs de catálogo** (determinístico — retry não resolve): o filter agora cai automaticamente pro phi4-mini com JSON schema (fix `b864e81`). Se ainda assim vier vazio, a obs fica `processing` (nunca rejeição com motivo em branco).
+- **Synthesizer local**: exportar `OLLAMA_REASONING_MODEL=phi4-mini` antes de rodar — o `.env` pede `qwen3:8b`, que não está puxado no notebook (dá 404 no /api/generate).
+- **Typos nos fatos** ("Goiçana" em vez de Goiânia): gap 5 conhecido do NuExtract na formulação do clean_fact; os números saem fiéis (fidelidade 1.0 no benchmark).
+
+## Validação E2E (2026-07-06)
+
+Pergunta: *"Quanto custa o m² do Persia Beige e quais outros 100x100cm existem?"* → Synthesizer respondeu fundamentado nos fatos verificados: Persia Beige R$ 120,99/m² ✓, Pulpis Grigio R$ 120,99 ✓, 60x120 Polido R$ 137,99 ✓, Strutturato R$ 139,99 ✓ — zero número inventado.
 
 - **Re-rodar ingestão duplica observações de propósito**: o Filter detecta similaridade ≥0.95 e **corrobora** o fato existente (aumenta confiança) em vez de duplicar — é o mecanismo de consenso funcionando.
 - **Tempos** (notebook i7-1255U): Filter ~2,5 min/obs; Scout ~1,5–2 min/chunk. Carga completa = horas; deixar o daemon rodando.
