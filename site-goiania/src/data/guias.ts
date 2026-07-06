@@ -59,6 +59,12 @@ export const guias = [
     descricao:
       'As etapas reais do assentamento — contrapiso, argamassa AC-II/AC-III, dupla colagem em formato grande, junta mínima com nivelador e rejunte após a cura — e quando vale contratar um assentador profissional.',
   },
+  {
+    slug: 'erros-ao-comprar-porcelanato',
+    titulo: 'Erros ao comprar porcelanato: os 10 mais caros e como evitar',
+    descricao:
+      'Comprar sem folga de 10–15%, ignorar o PEI, misturar lotes e calibres, polido em área molhada, esquecer frete e m²/caixa — cada erro com o guia ou a ferramenta que o evita antes do pedido.',
+  },
 ] as const;
 
 export type Guia = (typeof guias)[number];

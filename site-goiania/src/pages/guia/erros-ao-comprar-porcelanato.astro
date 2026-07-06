@@ -1,0 +1,280 @@
+---
+// Guia AEO pré-compra: "erros ao comprar porcelanato" — 10 erros reais e como
+// evitar cada um, sempre linkando a ferramenta/guia que resolve (calculadora,
+// comparador, glossário, guias). BLUF + lista numerada + FAQPage, mesmo padrão
+// dos guias existentes.
+import Base from '../../layouts/Base.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import Faq from '../../components/Faq.astro';
+import WhatsappCta from '../../components/WhatsappCta.astro';
+import { guias } from '../../data/guias';
+
+const SITE = Astro.site?.href.replace(/\/$/, '') ?? 'https://goiania.roilabs.com.br';
+const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
+const guia = guias.find((g) => g.slug === 'erros-ao-comprar-porcelanato')!;
+
+const erros = [
+  {
+    id: 'erro-1',
+    titulo: '1. Comprar a metragem exata, sem folga',
+    texto:
+      'Todo assentamento tem perda: recortes de canto, peças que quebram no transporte e no corte, e a reserva para reparos futuros — quando a linha sai do mercado, não existe reposição. A folga mínima é de 10% em paginação reta e 15% em diagonal ou ambiente cheio de recortes; 5% só serve para ambiente retangular simples com peça pequena.',
+    solucao: {
+      href: '/calculadora/',
+      label: 'A calculadora já aplica a folga por tipo de paginação e converte em caixas fechadas.',
+    },
+  },
+  {
+    id: 'erro-2',
+    titulo: '2. Ignorar o PEI do ambiente',
+    texto:
+      'O PEI mede resistência à abrasão da superfície esmaltada. Um porcelanato lindo de PEI 2 no corredor da entrada fica fosco e riscado em poucos anos; já pagar por PEI 5 num quarto de casal é dinheiro jogado fora. Ambiente de tráfego alto (entrada, cozinha, comércio) pede PEI 4+; dormitório vive bem com PEI 3.',
+    solucao: {
+      href: '/glossario/#pei',
+      label: 'Veja a escala completa de PEI no glossário e a indicação por ambiente.',
+    },
+  },
+  {
+    id: 'erro-3',
+    titulo: '3. Misturar lotes, calibres ou tonalidades diferentes',
+    texto:
+      'Duas caixas do "mesmo" porcelanato podem sair de fornadas diferentes — e aí mudam tom (lote), tamanho real (calibre) e padrão de veios. Assentadas lado a lado, a diferença aparece e não tem conserto sem arrancar peça. Na entrega, confira na etiqueta de TODAS as caixas se lote e calibre são idênticos, antes de o assentador abrir a primeira.',
+    solucao: {
+      href: '/glossario/#lote',
+      label: 'Lote, calibre e destonalização explicados no glossário.',
+    },
+  },
+  {
+    id: 'erro-4',
+    titulo: '4. Polido em área molhada ou externa',
+    texto:
+      'O brilho espelhado do polido é lindo na sala — e um tobogã no box, na varanda descoberta e na borda da piscina. Área que molha pede acabamento acetinado (interno) ou antiderrapante/técnico (externo), com coeficiente de atrito adequado. Escorregão é o tipo de erro que não se descobre na loja, só no primeiro banho.',
+    solucao: {
+      href: '/guia/porcelanato-area-externa/',
+      label: 'O guia de área externa detalha atrito, PEI e formatos para cada área molhada.',
+    },
+  },
+  {
+    id: 'erro-5',
+    titulo: '5. Escolher só pela foto, sem comparar as opções lado a lado',
+    texto:
+      'Foto de site não mostra tamanho real do veio, brilho sob a luz da sua casa nem a diferença de preço por m² entre duas linhas parecidas. Compare as candidatas em uma tela só — acabamento, formato, PEI, preço — antes de decidir, e peça amostra física quando estiver entre duas finalistas.',
+    solucao: {
+      href: '/comparar/',
+      label: 'O comparador coloca até 4 porcelanatos lado a lado, característica por característica.',
+    },
+  },
+  {
+    id: 'erro-6',
+    titulo: '6. Esquecer frete e prazo de entrega na conta',
+    texto:
+      'Porcelanato é pesado: 60 m² passam de 1,2 tonelada. Frete de outra cidade pode comer a economia da "promoção", e prazo de entrega errado para obra com assentador agendado vira diária de pedreiro parado. Feche preço COM frete e com data de entrega antes de comparar com a loja local.',
+    solucao: {
+      href: '/guia/quanto-custa-porcelanato/',
+      label: 'O guia de custo mostra a conta completa: peça + frete + assentamento.',
+    },
+  },
+  {
+    id: 'erro-7',
+    titulo: '7. Não conferir os m² por caixa antes de fechar o pedido',
+    texto:
+      'Cada formato rende uma metragem diferente por caixa (e o mesmo formato varia entre marcas). Quem pede "20 caixas" sem conferir o rendimento compra sobra cara ou falta — e falta significa caçar o mesmo lote semanas depois, quase sempre sem sucesso. O pedido certo nasce da metragem com folga, convertida em caixas pelo m²/caixa daquela linha específica.',
+    solucao: {
+      href: '/glossario/#m2-por-caixa',
+      label: 'Entenda o m² por caixa no glossário — a calculadora faz a conversão sozinha.',
+    },
+  },
+  {
+    id: 'erro-8',
+    titulo: '8. Escolher a cor do rejunte de qualquer jeito (ou deixar para o pedreiro)',
+    texto:
+      'O rejunte ocupa pouco espaço visual mas define o resultado: contraste forte quadricula o piso e denuncia qualquer junta torta; tom-sobre-tom amplia o ambiente e esconde imperfeição. Cor errada só se corrige raspando a junta inteira. Decida a cor junto com o porcelanato, não na manhã do rejuntamento.',
+    solucao: {
+      href: '/guia/rejunte-porcelanato/',
+      label: 'O guia de rejunte compara cor, tipo (cimentício, acrílico, epóxi) e quantidade.',
+    },
+  },
+  {
+    id: 'erro-9',
+    titulo: '9. Comprar formato grande sem checar o custo do assentamento',
+    texto:
+      'Placas de 80×80 em diante exigem dupla colagem, argamassa específica, nivelador e assentador experiente — a mão de obra por m² sobe e nem todo pedreiro aceita o serviço. O formato grande continua valendo em muitos projetos, mas a decisão precisa incluir o custo total instalado, não só o preço da peça.',
+    solucao: {
+      href: '/guia/como-assentar-porcelanato/',
+      label: 'O guia de assentamento explica dupla colagem, junta mínima e quando contratar profissional.',
+    },
+  },
+  {
+    id: 'erro-10',
+    titulo: '10. Confundir retificado com bold — e a junta que cada um pede',
+    texto:
+      'Porcelanato retificado tem borda cortada em esquadro e aceita junta mínima (1,5–2 mm); o bold tem borda arredondada e pede junta maior. Comprar bold esperando o visual "sem junta" do retificado — ou assentar retificado com junta de bold — muda completamente o resultado estético que você viu no showroom.',
+    solucao: {
+      href: '/glossario/#retificado',
+      label: 'Retificado, bold e junta explicados no glossário.',
+    },
+  },
+];
+
+const faq = [
+  {
+    q: 'Quantos por cento a mais de porcelanato devo comprar?',
+    a: 'Regra prática: 10% de folga para paginação reta e 15% para paginação diagonal ou ambientes com muitos recortes (bancadas, colunas, nichos). Os 5% que algumas lojas sugerem só bastam em ambiente retangular simples com peça pequena. A folga cobre recortes, quebras e — importante — a reserva para reparos futuros, porque linhas de porcelanato saem de mercado e o mesmo lote nunca mais volta.',
+  },
+  {
+    q: 'O que conferir na entrega do porcelanato?',
+    a: 'Três coisas, caixa por caixa, antes de assinar o recebimento: (1) lote e calibre idênticos em todas as etiquetas; (2) referência e tonalidade iguais às da compra; (3) estado das peças — abra ao menos uma caixa por palete e olhe quebras e lascas de transporte. Reclamação de caixa divergente depois do assentamento começado raramente é aceita.',
+  },
+  {
+    q: 'Pode usar porcelanato polido no banheiro?',
+    a: 'Na área seca do banheiro (em frente à bancada), pode — com tapete antiderrapante na saída do box. Dentro do box e em qualquer piso que fica molhado com frequência, não é recomendado: o polido molhado fica muito escorregadio. A combinação usual é acetinado no piso do banheiro inteiro e o polido reservado para salas e quartos.',
+  },
+  {
+    q: 'Qual a diferença entre lote e calibre?',
+    a: 'Lote é a fornada de produção: define a tonalidade exata da peça. Calibre é o tamanho real da peça depois da queima, que varia milímetros entre fornadas. Misturar lotes muda o tom no meio do piso; misturar calibres cria juntas desalinhadas que nivelador nenhum corrige. Por isso a regra é comprar tudo de uma vez e conferir as etiquetas na entrega.',
+  },
+  {
+    q: 'Comprar porcelanato pela internet é seguro?',
+    a: 'É, desde que você trave os pontos onde a compra a distância costuma falhar: preço final com frete incluído, prazo de entrega compatível com a agenda do assentador, política de troca para caixas excedentes fechadas e garantia de lote único no pedido inteiro. Foto não substitui amostra: entre duas finalistas, vale pedir uma peça física antes de fechar a metragem toda.',
+  },
+  {
+    q: 'Sobrou porcelanato: devolvo ou guardo?',
+    a: 'Guarde ao menos uma caixa fechada como reserva técnica. Reparo futuro (vazamento, peça quebrada por impacto) exige peça do MESMO lote — e lote antigo não existe mais no mercado. Devolver toda a sobra economiza pouco hoje e pode custar o piso da sala inteira num reparo daqui a três anos.',
+  },
+  {
+    q: 'Qual o erro mais caro ao comprar porcelanato?',
+    a: 'Comprar sem folga (ou sem conferir o m² por caixa) e descobrir a falta com o piso pela metade. A peça que falta quase nunca existe no mesmo lote, e as saídas são todas ruins: arrancar o assentado, aceitar mancha de tom visível ou refazer o ambiente com outro produto. É um erro de dezenas de reais na prevenção que vira milhares na correção.',
+  },
+  {
+    q: 'Preciso contratar arquiteto para escolher porcelanato?',
+    a: 'Para a maioria das obras residenciais, não — o caminho técnico é objetivo: ambiente define PEI e acabamento, tráfego define resistência, tamanho do ambiente sugere o formato, e o orçamento fecha a escolha. Arquiteto agrega quando há projeto de interiores completo, paginações especiais (diagonal, espinha de peixe) ou integração de revestimentos entre ambientes.',
+  },
+];
+
+const jsonLdNodes = [
+  {
+    '@type': 'FAQPage',
+    mainEntity: faq.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  },
+  {
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Início', item: SITE },
+      { '@type': 'ListItem', position: 2, name: guia.titulo, item: `${SITE}/guia/${guia.slug}/` },
+    ],
+  },
+];
+
+const relacionados = [
+  { href: '/guia/como-escolher-porcelanato/', label: 'Como escolher porcelanato' },
+  { href: '/guia/quanto-custa-porcelanato/', label: 'Quanto custa porcelanato' },
+  { href: '/guia/como-assentar-porcelanato/', label: 'Como assentar porcelanato' },
+  { href: '/guia/rejunte-porcelanato/', label: 'Rejunte: cor, tipo e quantidade' },
+  { href: '/comparar/', label: 'Comparador de porcelanatos' },
+  { href: '/glossario/', label: 'Glossário de porcelanato' },
+];
+---
+
+<Base
+  title={`${guia.titulo} — Goiânia | ROI Labs`}
+  description="Os 10 erros mais caros: comprar sem folga de 10–15%, ignorar o PEI, misturar lotes e calibres, polido em área molhada, esquecer frete, errar a cor do rejunte. Cada erro com o guia ou a ferramenta que evita — calculadora, comparador e glossário."
+  ogImage={`/open-graph/guia/${guia.slug}.png`}
+  jsonLdNodes={jsonLdNodes}
+>
+  <Header />
+
+  <main>
+    <section class="pseo-hero">
+      <div class="wrap">
+        <nav class="breadcrumb" aria-label="Localização">
+          <a href="/">Início</a>
+          <span class="breadcrumb__sep" aria-hidden="true">›</span>
+          <span aria-current="page">Guia de decisão</span>
+        </nav>
+
+        <div class="pseo-hero__eyebrow">
+          <span class="eyebrow">Goiânia · Guia de decisão</span>
+        </div>
+        <h1>{guia.titulo}</h1>
+        <p class="pseo-hero__intro">
+          Resposta direta: os erros que mais custam caro são <strong>comprar a metragem
+          exata sem folga de 10–15%</strong>, <strong>misturar
+          <a href="/glossario/#lote">lotes</a> e <a href="/glossario/#calibre">calibres</a></strong>
+          e <strong>colocar <a href="/glossario/#polido">polido</a> em área molhada</strong> —
+          todos irreversíveis depois do piso assentado. Abaixo, os 10 erros reais na ordem em
+          que aparecem na compra, cada um com o guia ou a ferramenta que o evita.
+        </p>
+      </div>
+    </section>
+
+    <!-- Lista de erros -->
+    <section class="section section--light">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.6rem;">
+          Os 10 erros, do orçamento à entrega
+        </h2>
+        <ul class="guide-list">
+          {erros.map((e) => (
+            <li id={e.id}>
+              <strong>{e.titulo}.</strong> {e.texto}
+              <br />
+              <em>Como evitar:</em> <a href={e.solucao.href}>{e.solucao.label}</a>
+            </li>
+          ))}
+        </ul>
+        <p style="color:var(--d-muted);margin-top:1.6rem;max-width:66ch;">
+          O fio comum: quase todo erro de compra é barato de prevenir e caro (ou impossível)
+          de corrigir com o piso assentado. Se ainda está no começo da escolha, o
+          <a href="/guia/como-escolher-porcelanato/">guia de escolha em 7 passos</a> percorre
+          o caminho na ordem certa — e a <a href="/calculadora/">calculadora</a> fecha a
+          metragem, as caixas, a <a href="/glossario/#argamassa-colante">argamassa</a> e o
+          <a href="/glossario/#rejunte">rejunte</a> numa conta só.
+        </p>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.8rem;">Perguntas frequentes</h2>
+        <Faq items={faq} />
+      </div>
+    </section>
+
+    <!-- CTA duplo -->
+    <section class="section section--light" id="contato">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:0.8rem;">
+          Pronto para comprar sem errar?
+        </h2>
+        <p style="color:var(--d-muted);margin-bottom:2rem;max-width:54ch;">
+          Calcule a metragem com folga e as caixas fechadas, ou compare as linhas do polo de
+          Goiânia lado a lado antes de fechar o pedido.
+        </p>
+        <div class="cta-block" style="display:flex;gap:1rem;flex-wrap:wrap;align-items:center;">
+          <a class="btn btn--primary" href="/calculadora/">Calcular caixas com folga</a>
+          <WhatsappCta termoAlvo="porcelanato" numero={whatsapp} />
+        </div>
+      </div>
+    </section>
+
+    <!-- Relacionados -->
+    <section class="section">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.3rem,2.2vw,1.8rem);margin-bottom:1.4rem;">Veja também</h2>
+        <div class="related-grid">
+          {relacionados.map((r) => (
+            <a href={r.href} class="related-card">{r.label}</a>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Base>
