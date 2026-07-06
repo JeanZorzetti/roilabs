@@ -5,19 +5,19 @@ import Footer from '../components/Footer.astro';
 
 const POLO = 'https://goiania.roilabs.com.br';
 
-// Fatos verificáveis no build do polo (astro build de 2026-07-05, 93 páginas).
+// Fatos verificáveis no build do polo (astro build de 2026-07-06, 98 páginas).
 // Sem métrica de venda/tráfego — só o que existe no repositório e no ar.
 const numeros = [
-  { val: '93', key: 'páginas no ar no build atual do polo' },
-  { val: '40', key: 'páginas de intenção na malha /porcelanato/ (formato × acabamento × ambiente × loja)' },
+  { val: '98', key: 'páginas no ar no build atual do polo' },
+  { val: '41', key: 'páginas de intenção na malha /porcelanato/ (formato × acabamento × ambiente × loja)' },
   { val: '30', key: 'produtos no catálogo, de 3 marcas (Biancogres, Delta, Savane)' },
-  { val: '7', key: 'guias de compra AEO com FAQ e schema' },
+  { val: '11', key: 'guias de compra AEO com FAQ e schema, num hub /guia/ próprio' },
 ];
 
 const ativos = [
   {
     nome: 'Malha de intenção local',
-    desc: '40 páginas que respondem à busca exata do comprador — "porcelanato 120x60", "piso antiderrapante", "porcelanato acetinado banheiro", "loja de porcelanato em Goiânia" — cada uma linkando os produtos do catálogo que atendem.',
+    desc: '41 páginas que respondem à busca exata do comprador — "porcelanato 120x60", "piso antiderrapante", "porcelanato acetinado banheiro", "loja de porcelanato em Goiânia" — cada uma linkando os produtos do catálogo que atendem.',
     href: `${POLO}/porcelanato/`,
   },
   {
@@ -42,8 +42,8 @@ const ativos = [
   },
   {
     nome: 'Guias de compra + glossário',
-    desc: '7 guias AEO (área externa, rejunte, polido × acetinado, porcelanato × cerâmica, custo, como escolher, porcelanato líquido) e um glossário com 20 termos técnicos — o conteúdo que responde a dúvida antes do concorrente.',
-    href: `${POLO}/guia/como-escolher-porcelanato/`,
+    desc: '11 guias AEO num hub /guia/ organizado por intenção — de como escolher e comparar (vinílico, líquido, cerâmica) a como assentar, limpar e evitar erros na compra — e um glossário com 19 termos técnicos: o conteúdo que responde a dúvida antes do concorrente.',
+    href: `${POLO}/guia/`,
   },
   {
     nome: 'Galeria Inspire-se por ambiente',
@@ -52,7 +52,7 @@ const ativos = [
   },
   {
     nome: 'Descoberta para buscadores e IAs',
-    desc: 'Sitemap, llms.txt, busca interna e ping IndexNow a cada deploy — as páginas novas entram no índice sem espera.',
+    desc: 'Sitemap, llms.txt, feed RSS dos guias, busca interna e ping IndexNow a cada deploy — as páginas novas entram no índice sem espera.',
     href: `${POLO}/llms.txt`,
   },
 ];
@@ -66,6 +66,7 @@ const jsonLdNodes = [
     isPartOf: { '@id': 'https://roilabs.com.br/#website' },
     about: { '@id': 'https://roilabs.com.br/#service' },
     inLanguage: 'pt-BR',
+    dateModified: '2026-07-06',
   },
   {
     '@type': 'Service',
@@ -80,7 +81,7 @@ const jsonLdNodes = [
 
 <Base
   title="Polo Goiânia — porcelanato: o case vivo | ROI Labs"
-  description="O que a cadeira ocupada recebe na prática: 93 páginas no ar, malha de intenção local, catálogo de 30 produtos, calculadora, comparador e feed Merchant Center. Fatos do build, sem promessa."
+  description="O que a cadeira ocupada recebe na prática: 98 páginas no ar, malha de intenção local, catálogo de 30 produtos, calculadora, comparador e feed Merchant Center. Fatos do build, sem promessa."
   jsonLdNodes={jsonLdNodes}
 >
   <Header />
@@ -95,7 +96,7 @@ const jsonLdNodes = [
           <p class="section__lead">
             A cadeira de porcelanato de Goiânia está ocupada e a operação está
             no ar em <a href={POLO + '/'} target="_blank" rel="noopener" style="color:inherit">goiania.roilabs.com.br</a>.
-            Esta página lista <strong>o que existe de verdade no build de hoje</strong>
+            Esta página lista <strong>o que existe de verdade no build de jul/2026</strong>
             — páginas, catálogo, ferramentas — sem métrica inventada de venda ou
             tráfego. É a infraestrutura que a ROI Labs banca e que o próximo
             parceiro, de outro nicho, recebe pronta.
