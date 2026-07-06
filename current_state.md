@@ -1,38 +1,42 @@
 ---
 status: in_progress
-next_effort: medium
-iteration: 3
-updated_at: 2026-07-06T08:50:00.000Z
+next_effort: high
+iteration: 4
+updated_at: 2026-07-06T08:55:00.000Z
 ---
 
 ## Last completed
-Tarefa 3 (Semana 1, Macro plan 3): guia AEO `/guia/erros-ao-comprar-porcelanato/`
-no site-goiania. Criado `src/pages/guia/erros-ao-comprar-porcelanato.astro` no
-padrão dos guias existentes (modelo: como-limpar-porcelanato.astro): BLUF no
-hero, lista numerada de 10 erros (sem folga 10–15%, ignorar PEI, misturar
-lote/calibre/tonalidade, polido em área molhada, escolher só pela foto,
-esquecer frete/prazo, não conferir m²/caixa, cor de rejunte errada, formato
-grande sem custo de assentamento, retificado vs bold) com ids `#erro-N`; cada
-erro linka a ferramenta/guia que o resolve ("Como evitar:" → calculadora,
-comparador, glossário via âncoras #pei/#lote/#m2-por-caixa/#retificado, guias
-area-externa/quanto-custa/como-assentar/rejunte/como-escolher). JSON-LD com
-FAQPage (8 perguntas) + BreadcrumbList. Registrado em `src/data/guias.ts`
-(alimenta sitemap/llms.txt/busca/OG sozinho). `astro build` verde (96 páginas);
-conferido que a URL aparece em dist/sitemap.xml, dist/llms.txt e
-dist/busca-index.json e que o HTML emite FAQPage + BreadcrumbList.
+Tarefa 4 (Semana 1, Macro plan 3): guia AEO `/guia/piso-vinilico-vs-porcelanato/`
+no site-goiania. Criado `src/pages/guia/piso-vinilico-vs-porcelanato.astro` no
+mesmo padrão do `porcelanato-liquido-vs-porcelanato.astro`: BLUF no hero, seção
+"o que é cada um" (LVT colado vs SPC click vs placa cerâmica), tabela
+comparativa de 8 critérios (custo instalado com o custo escondido de
+regularização do contrapiso, durabilidade/capa de uso, umidade, conforto
+térmico/acústico, sol direto, instalação em reforma, reparo, revenda), seção
+"quando cada um faz sentido" (incluindo o cenário híbrido porcelanato+vinílico
+com o gotcha da transição de nível), FAQ com 8 perguntas. JSON-LD com FAQPage +
+BreadcrumbList. Interlinks: glossário via âncoras (#pei, #absorcao-de-agua,
+#argamassa-colante, #rejunte, #junta, #lote), guias (como-assentar,
+como-escolher, quanto-custa, area-externa, liquido-vs-porcelanato,
+porcelanato-ou-ceramica), calculadora e catálogo; CTAs duplos. Registrado em
+`src/data/guias.ts`. `astro build` verde (97 páginas); conferido que a URL
+aparece em dist/sitemap.xml, dist/llms.txt e dist/busca-index.json, que o HTML
+emite FAQPage + BreadcrumbList e que o OG
+`dist/open-graph/guia/piso-vinilico-vs-porcelanato.png` foi gerado.
 
 ## Next step
-Tarefa 4 do `macro_plan.md` (Semana 1): guia AEO
-`/guia/piso-vinilico-vs-porcelanato/` no site-goiania. Mesmo padrão do guia
-existente `porcelanato-liquido-vs-porcelanato` (comparação com material
-concorrente): comparativo honesto de custo/m² instalado, durabilidade,
-resistência à umidade, conforto térmico/acústico e valor de revenda. Tabela
-comparativa + FAQPage + BreadcrumbList no JSON-LD + CTA para
-catálogo/calculadora. Seguir o padrão dos guias existentes (modelos:
-`src/pages/guia/como-limpar-porcelanato.astro` e
-`erros-ao-comprar-porcelanato.astro`), registrar o slug em `src/data/guias.ts`
-(alimenta sitemap/llms/busca/OG sozinho), interlinkar glossário via âncoras
-`#termo` (ids em `src/pages/glossario.astro`: pei, absorcao-de-agua, polido,
-acetinado, retificado...), URLs sempre com barra final, `astro build` verde no
-site-goiania antes do commit, conferir URL nova em dist/sitemap.xml,
-dist/llms.txt e dist/busca-index.json.
+Tarefa 5 do `macro_plan.md` (Semana 1, `[high]`): **glossário ida-e-volta** no
+site-goiania. O glossário `/glossario/` (19 termos com âncoras `#termo` em
+`src/pages/glossario.astro` — ids: pei, absorcao-de-agua, esmaltado, tecnico,
+destonalizacao, lote, polido, acetinado, natural, antiderrapante, retificado,
+bold, calibre, m2-por-caixa, formato-grande, junta, rejunte, argamassa-colante,
+paginacao, nivelador) já linka guias/produtos na IDA. Auditar a VOLTA: varrer
+os 11 guias em `src/pages/guia/*.astro` e as páginas/templates de produto
+(malha `/porcelanato/` — ver template em `src/pages/porcelanato/`) que citam
+termos técnicos e linkar o 1º uso de cada termo por página para a âncora
+`#termo` de `/glossario/`. Regras: máx. 1 link por termo por página, não
+quebrar layout (conferir com `astro build` verde no site-goiania antes do
+commit). Os guias mais novos (como-limpar, como-assentar, erros-ao-comprar,
+piso-vinilico-vs) já interlinkam bastante — se a volta já existir de forma
+geral, registrar "pulado (já existia)" e seguir para a tarefa 6 ([low], hub
+/guia/).

@@ -65,6 +65,12 @@ export const guias = [
     descricao:
       'Comprar sem folga de 10–15%, ignorar o PEI, misturar lotes e calibres, polido em área molhada, esquecer frete e m²/caixa — cada erro com o guia ou a ferramenta que o evita antes do pedido.',
   },
+  {
+    slug: 'piso-vinilico-vs-porcelanato',
+    titulo: 'Piso vinílico vs porcelanato: qual escolher para cada ambiente?',
+    descricao:
+      'LVT/SPC ou placa cerâmica — comparativo honesto de custo por m² instalado, durabilidade da capa de uso, resistência à umidade, conforto térmico/acústico e valor de revenda, com o ambiente certo para cada um.',
+  },
 ] as const;
 
 export type Guia = (typeof guias)[number];

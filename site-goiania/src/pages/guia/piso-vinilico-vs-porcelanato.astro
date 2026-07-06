@@ -1,0 +1,296 @@
+---
+// Guia de decisão AEO: "piso vinílico ou porcelanato?" — comparação com o
+// concorrente direto do porcelanato em reforma residencial (LVT/SPC).
+// Comparativo honesto de custo/m² instalado, durabilidade, umidade, conforto
+// térmico/acústico e revenda. BLUF + tabela + FAQ (FAQPage), mesmo padrão do
+// guia porcelanato-liquido-vs-porcelanato.
+import Base from '../../layouts/Base.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import Faq from '../../components/Faq.astro';
+import WhatsappCta from '../../components/WhatsappCta.astro';
+import { guias } from '../../data/guias';
+
+const SITE = Astro.site?.href.replace(/\/$/, '') ?? 'https://goiania.roilabs.com.br';
+const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
+const guia = guias.find((g) => g.slug === 'piso-vinilico-vs-porcelanato')!;
+
+const faq = [
+  {
+    q: 'Piso vinílico ou porcelanato: qual é mais barato instalado?',
+    a: 'Depende da faixa de cada um, porque as duas se sobrepõem. O vinílico colado (LVT) parte de uns R$ 60–120/m² de material + R$ 25–45/m² de instalação; o SPC click fica em R$ 90–180/m² + instalação parecida, mas os dois exigem contrapiso muito bem nivelado — e a regularização (autonivelante) pode adicionar R$ 20–50/m² que quase nunca entra no orçamento inicial. O porcelanato custa R$ 40–150/m² a peça + R$ 40–70/m² de assentamento, sem exigir nivelamento tão fino. Instalados e com a preparação contada, os dois costumam cair na mesma faixa; a diferença real aparece na vida útil.',
+  },
+  {
+    q: 'Qual dura mais: vinílico ou porcelanato?',
+    a: 'Porcelanato, com folga. A capa de uso do vinílico residencial tem 0,3–0,5 mm (comercial chega a 0,7 mm) e é ela que define a vida útil: 10–20 anos em uso doméstico bem cuidado, menos com cadeira de rodinha, pata de cachorro e areia. O porcelanato é queimado acima de 1.200 °C, tem dureza de superfície muito maior e classificação de abrasão certificada — dura décadas sem trocar. Riscos profundos no vinílico não têm reparo além de trocar a régua; no porcelanato, risco é raro e a peça danificada se troca individualmente.',
+  },
+  {
+    q: 'Piso vinílico pode molhar? Serve para banheiro e cozinha?',
+    a: 'Água de limpeza e respingo, sim — o vinil em si não absorve água. O problema é água parada e infiltração: no click, a água que entra pelas emendas fica presa entre o piso e o contrapiso e vira mofo; no colado, umidade de baixo descola a manta. Por isso fabricantes restringem ou negam garantia em box, área de chuveiro e áreas externas. O porcelanato tem absorção de água ≤ 0,5% e rejunte nas juntas: é o padrão consolidado para banheiro, cozinha e área de serviço.',
+  },
+  {
+    q: 'Vinílico é mais confortável que porcelanato?',
+    a: 'Sim, e essa é a vantagem honesta dele. O vinil é mais macio ao pisar, mais quente ao pé descalço e absorve melhor o som de passos — em quarto e home office, a diferença é perceptível, e em apartamento o ganho acústico para o vizinho de baixo é real. O porcelanato é mais frio e duro; em clima quente como o de Goiânia isso costuma ser ponto a favor, e o conforto térmico se resolve com tapete onde importa.',
+  },
+  {
+    q: 'Pode instalar piso vinílico sobre porcelanato existente?',
+    a: 'Sim — essa é uma das maiores forças do vinílico em reforma. Sobre piso firme, plano e sem peças ocas, o click assenta direto e o colado pede só regularizar as juntas do piso antigo. Não tem quebradeira, não tem entulho, e a obra de um apartamento sai em dias. O caminho inverso também existe (porcelanato sobre piso antigo com argamassa adequada), mas soma altura e peso maiores.',
+  },
+  {
+    q: 'Sol direto estraga o piso vinílico?',
+    a: 'Desbota e pode deformar. Vinil exposto a sol direto por porta de vidro ou janela ampla desbota de forma desigual e, no click, o calor dilata as réguas — fabricantes limitam a temperatura de superfície e pedem proteção (cortina, insulfilm). Em varanda fechada com sol da tarde, é risco real. O porcelanato tem cor estável (o esmalte é fixado na queima) e não deforma com calor.',
+  },
+  {
+    q: 'O que valoriza mais o imóvel na revenda?',
+    a: 'Porcelanato. É percebido como acabamento definitivo: material com norma ABNT, vida útil de décadas e aceitação universal — o comprador não desconta nada por ele. O vinílico é visto como acabamento de médio prazo: um comprador atento pergunta a idade da capa de uso e já precifica a troca futura. Em imóvel para morar muitos anos, o conforto do vinílico pode compensar; em imóvel para vender ou alugar, o porcelanato protege melhor o valor.',
+  },
+  {
+    q: 'Vinílico e porcelanato podem conviver na mesma casa?',
+    a: 'Podem, e é uma combinação comum: porcelanato nas áreas molhadas e de tráfego pesado (cozinha, banheiros, área de serviço, sala) e vinílico nos quartos, onde o conforto térmico e acústico pesa mais. O ponto de atenção é a transição: as alturas finais são diferentes (vinílico 4–8 mm, porcelanato + argamassa 15–20 mm), então o encontro entre os dois pede planejamento de nível ou perfil de transição.',
+  },
+];
+
+const jsonLdNodes = [
+  {
+    '@type': 'FAQPage',
+    mainEntity: faq.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  },
+  {
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Início', item: SITE },
+      { '@type': 'ListItem', position: 2, name: guia.titulo, item: `${SITE}/guia/${guia.slug}/` },
+    ],
+  },
+];
+
+const relacionados = [
+  { href: '/porcelanato/', label: 'Catálogo de porcelanato' },
+  { href: '/calculadora/', label: 'Calculadora de caixas, rejunte e argamassa' },
+  { href: '/guia/porcelanato-ou-ceramica/', label: 'Porcelanato ou cerâmica?' },
+  { href: '/guia/porcelanato-liquido-vs-porcelanato/', label: 'Porcelanato líquido vs porcelanato' },
+  { href: '/guia/quanto-custa-porcelanato/', label: 'Quanto custa porcelanato em Goiânia' },
+  { href: '/guia/como-assentar-porcelanato/', label: 'Como assentar porcelanato' },
+];
+---
+
+<Base
+  title={`${guia.titulo} — Goiânia | ROI Labs`}
+  description="Piso vinílico (LVT/SPC) vs porcelanato: comparativo honesto de custo por m² instalado, durabilidade da capa de uso, resistência à umidade, conforto térmico e acústico e valor de revenda — e onde cada um faz sentido na casa."
+  ogImage={`/open-graph/guia/${guia.slug}.png`}
+  jsonLdNodes={jsonLdNodes}
+>
+  <Header />
+
+  <main>
+    <section class="pseo-hero">
+      <div class="wrap">
+        <nav class="breadcrumb" aria-label="Localização">
+          <a href="/">Início</a>
+          <span class="breadcrumb__sep" aria-hidden="true">›</span>
+          <span aria-current="page">Guia de decisão</span>
+        </nav>
+
+        <div class="pseo-hero__eyebrow">
+          <span class="eyebrow">Goiânia · Guia de decisão</span>
+        </div>
+        <h1>{guia.titulo}</h1>
+        <p class="pseo-hero__intro">
+          Resposta direta: <strong>o porcelanato dura mais e resiste melhor à água; o
+          vinílico é mais confortável e mais rápido de instalar em reforma</strong>. O
+          vinílico (LVT/SPC) é piso de PVC com capa de uso de 0,3–0,7 mm — macio, quente ao
+          pé e silencioso, mas com vida útil de 10–20 anos e restrições em área molhada e sol
+          direto. O porcelanato é placa cerâmica com dureza certificada e vida útil de
+          décadas, padrão consolidado para cozinha, banheiro e revenda. Instalados, os custos
+          se sobrepõem — a diferença real está na durabilidade e no ambiente. Abaixo, o
+          comparativo honesto.
+        </p>
+      </div>
+    </section>
+
+    <!-- O que é cada um -->
+    <section class="section section--light">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.6rem;">
+          Dois materiais diferentes para o mesmo lugar da casa
+        </h2>
+        <ul class="guide-list">
+          <li>
+            <strong>Piso vinílico = PVC em réguas ou mantas.</strong> Camadas de PVC com uma
+            capa de uso transparente por cima (0,3–0,5 mm no residencial) que define a vida
+            útil. Vem em duas famílias: <strong>colado (LVT)</strong>, réguas de 2–5 mm fixadas
+            com cola sobre contrapiso regularizado, e <strong>click (SPC/rígido)</strong>,
+            réguas de 4–8 mm com núcleo de pedra-plástico que encaixam flutuando, sem cola. A
+            estampa imita madeira ou pedra por impressão.
+          </li>
+          <li>
+            <strong>Porcelanato = placa cerâmica.</strong> Massa prensada e queimada acima de
+            1.200 °C, com <a href="/glossario/#absorcao-de-agua">absorção de água</a> ≤ 0,5%,
+            resistência à abrasão classificada por <a href="/glossario/#pei">PEI</a> e norma
+            ABNT. Assentado com <a href="/glossario/#argamassa-colante">argamassa colante</a> e
+            <a href="/glossario/#rejunte">rejunte</a> na <a href="/glossario/#junta">junta</a> —
+            o processo completo está no guia
+            <a href="/guia/como-assentar-porcelanato/">como assentar porcelanato</a>.
+          </li>
+          <li>
+            <strong>Por que a comparação faz sentido.</strong> Ao contrário do
+            <a href="/guia/porcelanato-liquido-vs-porcelanato/">"porcelanato líquido"</a> (que
+            é resina de nicho), o vinílico disputa exatamente os mesmos ambientes internos que
+            o porcelanato — sala, quartos, corredor — e é hoje a alternativa mais comum em
+            reforma de apartamento justamente por instalar sobre o piso existente.
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Comparativo -->
+    <section class="section">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.6rem;">
+          Comparativo: vinílico (LVT/SPC) vs porcelanato
+        </h2>
+        <div class="comp-scroll">
+          <table class="comp-table">
+            <thead>
+              <tr>
+                <th scope="col">Critério</th>
+                <th scope="col">Piso vinílico (LVT/SPC)</th>
+                <th scope="col">Porcelanato</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Custo instalado</th>
+                <td>Material R$ 60–180/m² + instalação R$ 25–45/m² + regularização do contrapiso quando precisa (R$ 20–50/m²)</td>
+                <td>Peça R$ 40–150/m² + assentamento R$ 40–70/m²</td>
+              </tr>
+              <tr>
+                <th scope="row">Durabilidade</th>
+                <td>10–20 anos; capa de uso de 0,3–0,7 mm sofre com areia, rodinhas e pets</td>
+                <td>Décadas; dureza e abrasão certificadas (<a href="/glossario/#pei">PEI</a>)</td>
+              </tr>
+              <tr>
+                <th scope="row">Umidade</th>
+                <td>Vinil não absorve, mas água nas emendas do click vira mofo; garantia restrita em box e área externa</td>
+                <td>Absorção ≤ 0,5%; padrão para banheiro, cozinha e <a href="/guia/porcelanato-area-externa/">área externa</a></td>
+              </tr>
+              <tr>
+                <th scope="row">Conforto térmico/acústico</th>
+                <td>Macio, quente ao pé e silencioso — vantagem real em quarto e apartamento</td>
+                <td>Frio e duro; ponto a favor no calor, tapete resolve onde importa</td>
+              </tr>
+              <tr>
+                <th scope="row">Sol direto</th>
+                <td>Desbota e pode dilatar/deformar; fabricantes pedem proteção</td>
+                <td>Cor estável — o esmalte é fixado na queima</td>
+              </tr>
+              <tr>
+                <th scope="row">Instalação em reforma</th>
+                <td>Sobre o piso existente, sem quebradeira; obra em dias, mas exige base muito plana</td>
+                <td>Sobre piso antigo também é possível, com mais altura, peso e prazo</td>
+              </tr>
+              <tr>
+                <th scope="row">Reparo</th>
+                <td>Click: troca-se a régua (desmontando até ela); colado: remendo aparece</td>
+                <td>Troca-se a peça danificada (guarde peças do <a href="/glossario/#lote">lote</a>)</td>
+              </tr>
+              <tr>
+                <th scope="row">Revenda do imóvel</th>
+                <td>Acabamento de médio prazo; comprador precifica a troca futura</td>
+                <td>Acabamento definitivo, aceito por qualquer comprador</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="color:var(--d-muted);margin-top:1.2rem;max-width:66ch;">
+          Preços de vinílico variam por marca, espessura e capa de uso — os valores acima são
+          faixas de mercado para referência, não orçamento. Para o porcelanato, as faixas
+          reais do catálogo do polo estão no guia
+          <a href="/guia/quanto-custa-porcelanato/">quanto custa porcelanato em Goiânia</a>.
+        </p>
+      </div>
+    </section>
+
+    <!-- Quando cada um faz sentido -->
+    <section class="section section--light">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.6rem;">
+          Quando cada um faz sentido
+        </h2>
+        <ul class="guide-list">
+          <li>
+            <strong>Escolha o vinílico se</strong> a obra é reforma rápida de área seca
+            (quartos, home office, sala sem porta para o sol), o conforto ao pisar e o
+            silêncio pesam — apartamento com vizinho embaixo é o caso clássico — e você aceita
+            trocar o piso de novo em 10–20 anos.
+          </li>
+          <li>
+            <strong>Escolha o porcelanato se</strong> o ambiente molha (cozinha, banheiro,
+            área de serviço, varanda), recebe sol direto ou tráfego pesado, ou se a prioridade
+            é acabamento definitivo com valor de revenda. Para escolher acabamento, formato e
+            <a href="/glossario/#pei">PEI</a> certos, o passo a passo está no guia
+            <a href="/guia/como-escolher-porcelanato/">como escolher porcelanato</a>.
+          </li>
+          <li>
+            <strong>Combine os dois</strong> quando fizer sentido: porcelanato nas áreas
+            molhadas e sociais, vinílico nos quartos. Só planeje a transição de nível — as
+            alturas finais diferem em ~1 cm — e compre o porcelanato com folga usando a
+            <a href="/calculadora/">calculadora de caixas, rejunte e argamassa</a>.
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.8rem;">Perguntas frequentes</h2>
+        <Faq items={faq} />
+      </div>
+    </section>
+
+    <!-- CTA duplo -->
+    <section class="section section--light" id="contato">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:0.8rem;">
+          Decidiu pelo acabamento definitivo?
+        </h2>
+        <p style="color:var(--d-muted);margin-bottom:2rem;max-width:54ch;">
+          Veja os porcelanatos do polo — polidos, acetinados e naturais — e calcule caixas,
+          rejunte e argamassa para a sua metragem.
+        </p>
+        <div class="cta-block" style="display:flex;gap:1rem;flex-wrap:wrap;align-items:center;">
+          <a class="btn btn--primary" href="/porcelanato/">Ver catálogo de porcelanato</a>
+          <a class="btn" href="/calculadora/">Calcular material</a>
+          <WhatsappCta termoAlvo="porcelanato" numero={whatsapp} />
+        </div>
+      </div>
+    </section>
+
+    <!-- Relacionados -->
+    <section class="section">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.3rem,2.2vw,1.8rem);margin-bottom:1.4rem;">Veja também</h2>
+        <div class="related-grid">
+          {relacionados.map((r) => (
+            <a href={r.href} class="related-card">{r.label}</a>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .comp-scroll { overflow-x: auto; }
+  .comp-table { width: 100%; border-collapse: collapse; font-size: 0.92rem; min-width: 560px; }
+  .comp-table th, .comp-table td { text-align: left; padding: 0.8rem 0.9rem; border-bottom: 1px solid color-mix(in srgb, currentColor 18%, transparent); vertical-align: top; }
+  .comp-table thead th { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.75; }
+  .comp-table tbody th { font-weight: 700; width: 20%; }
+</style>
