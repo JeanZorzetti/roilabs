@@ -15,12 +15,24 @@ const fotos = await Promise.all(
     .flatMap((p) => (p.imagensAmbiente ?? []).map((img) => ({ slug: p.slug, titulo: tituloProduto(p), img: imgDisplay(img) })))
     .map(async (f) => ({ ...f, ...(await imgDims(f.img)) }))
 );
+
+const SITE = Astro.site?.href.replace(/\/$/, '') ?? 'https://goiania.roilabs.com.br';
+const jsonLdNodes = [
+  {
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Início', item: SITE },
+      { '@type': 'ListItem', position: 2, name: 'Inspire-se', item: `${SITE}/inspire-se/` },
+    ],
+  },
+];
 ---
 
 <Base
   title="Inspire-se: ambientes com porcelanato real — Goiânia | ROI Labs"
   description="Um mural de ambientes reais com porcelanato do catálogo de Goiânia. Clique na foto que combinar com sua obra e veja o produto, preço e ficha técnica."
   ogImage="/open-graph/comparar.png"
+  jsonLdNodes={jsonLdNodes}
 >
   <Header />
 

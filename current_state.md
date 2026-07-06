@@ -1,47 +1,46 @@
 ---
 status: in_progress
-next_effort: high
-iteration: 10
-updated_at: 2026-07-06T12:10:00.000Z
+next_effort: medium
+iteration: 11
+updated_at: 2026-07-06T13:35:00.000Z
 ---
 
 ## Last completed
-Tarefa 10 (Semana 2, Macro plan 3): **Passada CLS/perf verificável no build.**
-Auditoria de todas as `<img>` dos 2 sites; a maioria já estava coberta
-(containers com `aspect-ratio` no global.css, logos com width/height, fontes
-com preconnect + display=swap). Corrigido o que faltava — tudo em
-`site-goiania`:
-- **Masonry do Inspire-se** (`inspire-se.astro` + `inspire-se/[ambiente].astro`):
-  única fonte real de CLS — imagens de altura variável sem dimensão intrínseca.
-  Novo helper `src/data/img-dims.ts` (sharp, dep transitiva do Astro, lê
-  width/height em build) + atributos `width`/`height` nas `<img>` +
-  `height: auto` no CSS.
-- **LCP das páginas de produto**: `fetchpriority="high"` na imagem principal
-  do `ProdutoDetalhe.astro` (sem lazy, como já estava).
-- `decoding="async"` em todas as imagens lazy (ProdutoCard, thumbs/ambiente do
-  ProdutoDetalhe, inspire-se, capas do hub, templates JS de
-  favoritos/VistosRecentemente, strip do `[slug].astro`); thumbs ganharam
-  `width/height=64`.
-- Scripts client conferidos no dist: maior é cart 14,7 KB; comparar 3,9 KB,
-  calculadora 3,9 KB, favoritos 1,9 KB — nada a cortar.
-- `/site`: nada a corrigir (única `<img>` é o logo do Header, já com dims; sem
-  imagens em conteúdo). `astro build` do site-goiania verde (98 páginas);
-  atributos confirmados no HTML do dist. Lighthouse local não usado, conforme
-  o plano.
+Tarefa 11 (Semana 2, Macro plan 3): **Auditoria schema + breadcrumb** no
+site-goiania. Script throwaway (`audit-schema.mjs`, deletado após uso) varreu
+as 98 páginas do dist: JSON.parse de todo `<script type="application/ld+json">`,
+presença de `BreadcrumbList` e duplicatas de `@id`/`@type` no `@graph`.
+Resultado:
+- **0 erros de parse e 0 entidades duplicadas** em todo o site.
+- Guias (11), hub `/guia/`, `/glossario/`, `/comparar/`, `/calculadora/`,
+  `/sobre/` e páginas de produto/malha já tinham `BreadcrumbList` coerente.
+- **4 páginas corrigidas** (jsonLdNodes com `BreadcrumbList` via Base, padrão
+  do `sobre.astro`): `/inspire-se/` (Início → Inspire-se),
+  `/inspire-se/sala/` e `/inspire-se/area-externa/` (3 níveis, via
+  `[ambiente].astro`), `/devolucoes/` (indexada e sem breadcrumb).
+- Sem breadcrumb de propósito, não corrigidas: home (não precisa),
+  `/favoritos/`, `/orcamento/`, `/pedido/` (noindex — schema seria peso
+  morto), `/carrinho/` e `/obrigado/` (transacionais, fora do escopo da
+  tarefa).
+`astro build` verde (98 páginas), atributos confirmados no dist.
 
 ## Next step
-Tarefa 11 do `macro_plan.md` (Semana 2, `[high]`): **Auditoria schema +
-breadcrumb** no site-goiania. Varrer as páginas criadas nos meses 1–2 e na
-semana 1 deste plano — guias de `/guia/` (11, registrados em
-`src/data/guias.ts`), `/glossario/`, `/comparar/`, `/favoritos/`,
-`/inspire-se/` e sub-páginas por ambiente, `/sobre/`, hub `/guia/` (índice) —
-e conferir em cada uma:
-- `BreadcrumbList` presente e coerente com a hierarquia real;
-- JSON-LD que parseia no build (validar os `<script type="application/ld+json">`
-  do dist com JSON.parse);
-- nenhuma entidade duplicada no `@graph` da página.
-Corrigir as faltas, rodar `astro build` do site-goiania (verde antes de
-commitar — push deploya direto em produção) e registrar o resultado
-(páginas auditadas × corrigidas) no `current_state.md`. Lembrete: `npm
-install`/`tsc` locais não-confiáveis (OneDrive, errno -4094); `astro build`
-funciona.
+Tarefa 12 do `macro_plan.md` (Semana 3, `[medium]`): **2 artigos B2B novos no
+blog do `/site`** (Astro institucional da ROI Labs, pasta `site/`). Antes de
+escrever, conferir os 6 slugs existentes da content collection do blog
+(aparecer-chatgpt-perplexity, exclusividade-de-cadeira,
+growth-partner-vs-agencia, o-que-e-pseo, quanto-custa-google,
+vender-porcelanato-internet) para não repetir ângulo. Criar:
+(a) **"Google Shopping para loja de material de construção"** — experiência
+real do polo (feed.xml de 30 itens, Merchant Center, exigências do Google:
+imagem própria, política de devolução, frete), sem inventar métricas;
+(b) **"E-commerce próprio vs entrar num polo pronto: a conta real"** —
+CAPEX/OPEX de montar sozinho vs pago-pelo-sucesso, usando a fórmula do
+success fee que o `/simulador` do próprio site já replica (ler o simulador
+para reusar a fórmula).
+Padrão dos artigos existentes: BLUF, FAQPage, `datePublished`/data visível,
+CTA para `/simulador` e candidatura, interlink com `/modelo/` e
+`/polo-goiania/`. Artigo novo entra automaticamente no llms.txt/sitemap via
+content collection (conferir). Rodar `astro build` do `/site` verde antes de
+commitar (push deploya direto). Lembrete: `npm install`/`tsc` locais
+não-confiáveis (OneDrive, errno -4094); `astro build` funciona.

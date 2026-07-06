@@ -4,11 +4,23 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 
 const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
+
+const SITE = Astro.site?.href.replace(/\/$/, '') ?? 'https://goiania.roilabs.com.br';
+const jsonLdNodes = [
+  {
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Início', item: SITE },
+      { '@type': 'ListItem', position: 2, name: 'Devoluções e trocas', item: `${SITE}/devolucoes/` },
+    ],
+  },
+];
 ---
 
 <Base
   title="Política de Devolução e Troca — ROI Labs Goiânia"
   description="Como funcionam devoluções, trocas e reembolsos de porcelanato comprado em goiania.roilabs.com.br: arrependimento em 7 dias (CDC art. 49), defeito em até 90 dias e regras práticas de lote e tonalidade."
+  jsonLdNodes={jsonLdNodes}
 >
   <Header />
 
