@@ -1,31 +1,31 @@
 ---
 status: in_progress
-next_effort: high
-iteration: 8
-updated_at: 2026-07-06T15:30:00.000Z
+next_effort: medium
+iteration: 9
+updated_at: 2026-07-06T16:00:00.000Z
 ---
 
 ## Last completed
-Tarefa 8 (Semana 2, Macro plan 3): **Striking distance — pulado (sem dado)**,
-conforme a válvula prevista na própria tarefa. Lidos
-`Docs/Obsidian/90-medicao/rank-tracking.csv` e `rank-tracking.md`: as duas
-coletas (2026-07-03 e 2026-07-06) têm 0 posições em 40 keywords — o md de
-07-06 classifica as 40 como **"erros de consulta"** (coleta falhou, não é
-"fora do top 100"). Zero termos em posição 8–40 → nenhum reforço de página
-feito, nenhum build necessário. Snapshot honesto registrado em
-`Docs/Obsidian/90-medicao/striking-distance.md`, incluindo 3 sinais
-operacionais para o dono: (1) coleta de 07-06 falhou inteira — checar cron
-`rank-tracking.mjs` e credencial/saldo do provedor SERP; (2) divergência de
-fonte (plano diz serper.dev, md diz DataForSEO); (3) CSV com bloco de 07-03
-duplicado 4×.
+Tarefa 9 (Semana 2, Macro plan 3): **Expansão da malha — pulado (sem dado GSC
+ainda)**, conforme a válvula prevista na própria tarefa.
+`Docs/Obsidian/90-medicao/gsc-miner.md` não existe (verificado por glob no
+diretório: só a11y-audit.md, rank-tracking.csv/md e striking-distance.md).
+O arquivo depende do secret `GSC_SA_KEY`, previsto ~07-15. Nenhuma página de
+malha criada — a disciplina do piso de volume segue valendo. Nenhum código
+tocado, nenhum build necessário.
 
 ## Next step
-Tarefa 9 do `macro_plan.md` (Semana 2, `[high]`): **Expansão da malha SÓ se
-houver dado do GSC.** Verificar se `Docs/Obsidian/90-medicao/gsc-miner.md`
-existe com candidatas (depende do secret `GSC_SA_KEY`, previsto ~07-15). Se
-existir com candidata de demanda real: criar até 2 páginas de malha novas em
-`site-goiania` seguindo o padrão existente das 41 páginas de `/porcelanato/`
-(dados curados reais + `tagsDoProduto` + gate `check-matrix`), com `astro
-build` verde antes do commit. Se o arquivo não existir (cenário provável antes
-de 07-15) ou não houver candidata com demanda real: registrar "pulado (sem
-dado GSC ainda)" e seguir — NÃO expandir malha por especulação.
+Tarefa 10 do `macro_plan.md` (Semana 2, `[medium]`): **Passada CLS/perf
+verificável no build**, nos 2 sites deste repo (`/site` e `/site-goiania`,
+ambos Astro estático):
+- `width`/`height` (ou `aspect-ratio`) em toda `<img>` que não tiver;
+- `loading="lazy"` + `decoding="async"` onde faltar — **NUNCA** na imagem
+  LCP/hero de cada página;
+- conferir `preload` de fonte/imagem de hero onde fizer sentido;
+- conferir o tamanho dos scripts client das páginas interativas do goiânia
+  (comparar, filtros do hub `/porcelanato/`, favoritos).
+Verificar via `astro build` de cada site + preview/Playwright. **NÃO usar
+Lighthouse local** (não-confiável nesta máquina). Commitar só com os 2 builds
+verdes (cada push deploya direto em produção). Lembrete geral: `npm install`/
+`tsc` locais são não-confiáveis (OneDrive, errno -4094), mas `astro build`
+funciona.
