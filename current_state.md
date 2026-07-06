@@ -1,53 +1,52 @@
 ---
 status: in_progress
 next_effort: low
-iteration: 17
-updated_at: 2026-07-06T22:00:00.000Z
+iteration: 18
+updated_at: 2026-07-06T22:05:00.000Z
 ---
 
 ## Last completed
-**Tarefa 16 concluída** (Semana 4, SplitJud): 3 artigos novos do cluster
-honorários no repo SplitJud (`apps/site`), commit `b4417d3` pushado
-manualmente para `JeanZorzetti/splitjud` main. Entregue:
-- `blog/advogado-associado-divisao-de-honorarios` — contrato de associação
-  (Regulamento Geral OAB, averbação), tabela sócio × associado × empregado,
-  cláusulas mínimas, exemplo de cálculo, riscos trabalhistas, FAQ.
-- `blog/saida-de-socio-honorarios-casos-em-andamento` — apuração de haveres,
-  tabela de tratamento dos créditos em formação, cláusulas de saída
-  (proporcionalidade + pagamento condicionado ao recebimento), cliente que
-  acompanha o sócio, FAQ.
-- `blog/divisao-honorarios-sucumbencia-varios-advogados` — direito autônomo
-  (Lei 8.906), troca de advogado no meio do processo, substabelecimento
-  com/sem reserva, termo de divisão + destaque, FAQ.
-- Padrão dos existentes: BLUF, H2 em pergunta, tabelas, FAQ, interlink com os
-  6 artigos antigos + `/calculadora` + âncoras `#termo` do `/glossario`
-  (8+ por artigo), CTA SplitJud com preços reais do repo. **`datePublished`
-  visível e no schema** — o campo `publishedAt` já existia no content config
-  e o template `[slug].astro` já renderiza `<time>` + Article JSON-LD
-  (verificado no HTML buildado: `2026-07-06T00:00:00.000Z` nas 3 páginas).
-- 3 entradas novas na seção "Artigos do blog" do `public/llms.txt`.
-- `npm run build` verde (19 páginas; sitemap automático inclui os artigos).
-  Working tree do SplitJud limpo após push.
+**Tarefa 17 concluída** (Semana 4, SplitJud, `[low]`): FAQ + breadcrumbs no
+repo SplitJud (`apps/site`), commit `4f585a5` pushado manualmente para
+`JeanZorzetti/splitjud` main. Resultado:
+- `/faq` **já emitia `FAQPage`** schema (via `data/faqs` + prop `jsonLd`) —
+  registrado como "pulado (já existia)".
+- `BreadcrumbList` JSON-LD **não existia** fora do `/glossario`. Fix na raiz:
+  `PublicLayout.astro` agora anexa um node `BreadcrumbList` ao `@graph`
+  (via `buildGraph` do BaseLayout) sempre que `showBreadcrumb`+
+  `breadcrumbLabel` são passados — cobriu calculadora, funcionalidades,
+  preços, depoimentos, faq, `/blog` e categorias de blog de uma vez.
+- `blog/[slug].astro` (usa BaseLayout direto) ganhou trilha completa
+  Início > Blog > Categoria > Post no `@graph` junto do Article.
+- `/glossario` teve seu node `BreadcrumbList` próprio removido (o layout
+  passou a emitir o equivalente — evita duplicata).
+- Validação: `npm run build` verde (19 páginas) + script Node varrendo o
+  `dist/`: 18 páginas com `BreadcrumbList`, JSON-LD parseia em todas,
+  **zero `@id` duplicado** em qualquer `@graph`. (`/auth` e `/setup` são
+  redirects sem JSON-LD; home sem breadcrumb, correto.)
+- `[PLACEHOLDER_*]` de `schema.ts` intocados; working tree do SplitJud limpo
+  após push.
 
 ## Next step
-**Tarefa 17** do `macro_plan.md` (Semana 4, `[low]`, repo SplitJud em
+**Tarefa 18** do `macro_plan.md` (Semana 4, `[low]`, repo SplitJud em
 `C:\Users\jeanz\OneDrive\Desktop\ROI Labs\splitjud`, só `apps/site`):
-**FAQ + breadcrumbs.** Passos:
-1. Pré-check: `git -C "...\splitjud" status` — precisa estar em `main` limpo.
-2. `apps/site/src/pages/faq.astro`: verificar se emite schema `FAQPage`; se
-   não, adicionar a partir das perguntas REAIS já na página, integrando via
-   prop `jsonLd` do layout no `@graph` único (mesmo mecanismo usado pelo
-   `/glossario`), sem duplicar entidades e sem tocar `[PLACEHOLDER_*]` de
-   `apps/site/src/lib/schema.ts`.
-3. Conferir `BreadcrumbList` (JSON-LD, não só o nav visual) nos artigos do
-   blog (`pages/blog/[slug].astro` — hoje tem breadcrumb visual mas conferir
-   se emite BreadcrumbList no schema), no índice `/blog`, categorias,
-   `/calculadora`, `/funcionalidades`, `/precos`, `/depoimentos`, `/faq`.
-   `/glossario` já tem (tarefa 15). Adicionar onde faltar, sempre no `@graph`.
-4. `npm run build` verde em `apps/site`; validar que o JSON-LD parseia no HTML
-   buildado e não há `@id` duplicado; commit e **push manual**
-   (`git -C "...\splitjud" push origin main` — o runner só pusha este repo).
-5. `current_state.md` continua aqui neste repo (atualizar frontmatter:
-   iteration 18, next_effort low — tarefa 18 é `[low]`). NÃO tocar
-   `apps/app`, `prisma/`, `.env*`. Convenção de URL do SplitJud: SEM barra
-   final.
+**RSS + descoberta.** Passos:
+1. Pré-check: `git -C "...\splitjud" status` — `main` limpo obrigatório;
+   sujo/outra branch → `status: blocked`.
+2. Criar `/rss.xml` como endpoint `.ts` em `apps/site/src/pages/rss.xml.ts`,
+   gerando XML na mão a partir da content collection `blog`
+   (`getCollection('blog')`, filtrar `publishedAt !== null`, ordenar por data
+   desc) — mesma fonte do `llms.txt`. Sem dependência nova (padrão da tarefa 7
+   deste plano, já feita nos sites deste repo — ver `site/src/pages/rss.xml.ts`
+   como referência de formato).
+3. `<link rel="alternate" type="application/rss+xml" href="/rss.xml">` no
+   `<head>` de `apps/site/src/layouts/BaseLayout.astro`.
+4. Conferir `public/llms.txt`: glossário e os 3 artigos novos já estão
+   (tarefas 15–16); adicionar referência ao `/rss.xml`. Sitemap é automático
+   (@astrojs/sitemap). Conferir interlink glossário ↔ artigos ↔ calculadora ↔
+   home (tarefas 15–16 já interlinkaram; só verificar, não refazer).
+5. `npm run build` verde; commit + **push manual**
+   (`git -C "...\splitjud" push origin main`).
+6. Atualizar este arquivo aqui neste repo (iteration 19, next_effort medium —
+   tarefa 19 é `[medium]`) e commitar aqui. NÃO tocar `apps/app`, `prisma/`,
+   `.env*`, `[PLACEHOLDER_*]`. URLs SplitJud SEM barra final.
