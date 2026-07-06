@@ -35,6 +35,7 @@ ${ambientes.map((a) => `- [${a.titulo}](${SITE}/inspire-se/${a.slug}/): ${a.desc
 
 ## Guias de decisão
 - [Índice dos guias (jornada: escolher → comparar → orçar → instalar → manter)](${SITE}/guia/)
+- [Feed RSS dos guias](${SITE}/rss.xml)
 ${guiasDecisao.map((g) => `- [${g.titulo}](${SITE}/guia/${g.slug}/): ${g.descricao}`).join('\n')}
 
 ## Guias de porcelanato

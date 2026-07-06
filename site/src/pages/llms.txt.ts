@@ -30,6 +30,7 @@ export const GET: APIRoute = async () => {
 - [Polo Goiânia — case vivo](${SITE}/polo-goiania/): o que a cadeira ocupada recebe na prática — 93 páginas no ar, malha de intenção de 40 páginas, catálogo de 30 produtos, calculadora, comparador e feed Merchant Center, tudo verificável no site público.
 - [Simulador de receita](${SITE}/simulador/): fornecedor candidato simula ticket médio × pedidos/mês e vê a receita projetada e o líquido após o success fee.
 - [Blog](${SITE}/blog/): como fornecedores de revestimentos e materiais de construção em Goiânia vendem pela internet.
+- [Feed RSS do blog](${SITE}/rss.xml)
 
 ## Artigos
 ${artigos}
