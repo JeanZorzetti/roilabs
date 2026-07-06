@@ -34,6 +34,7 @@ ${ambientes.map((a) => `- [${a.titulo}](${SITE}/inspire-se/${a.slug}/): ${a.desc
 - [Glossário de porcelanato](${SITE}/glossario/): 20 termos técnicos (PEI, absorção de água, retificado, calibre, destonalização, argamassa AC-II/AC-III...) explicados em linguagem de comprador, com âncora por termo.
 
 ## Guias de decisão
+- [Índice dos guias (jornada: escolher → comparar → orçar → instalar → manter)](${SITE}/guia/)
 ${guiasDecisao.map((g) => `- [${g.titulo}](${SITE}/guia/${g.slug}/): ${g.descricao}`).join('\n')}
 
 ## Guias de porcelanato

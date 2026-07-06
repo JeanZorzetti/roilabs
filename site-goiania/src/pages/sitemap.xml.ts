@@ -29,6 +29,7 @@ export const GET: APIRoute = () => {
       imgs: produtosDoAmbiente(a.slug).flatMap((p) => p.imagensAmbiente ?? []),
     })),
     { loc: `${SITE}/glossario/` },
+    { loc: `${SITE}/guia/` },
     ...guias.map((g) => ({ loc: `${SITE}/guia/${g.slug}/` })),
     ...pages.map((p) => ({
       loc: `${SITE}/porcelanato/${p.slug}/`,

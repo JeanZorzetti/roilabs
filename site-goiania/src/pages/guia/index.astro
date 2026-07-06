@@ -1,0 +1,206 @@
+---
+// Hub /guia/: índice dos guias de decisão agrupados pela jornada do comprador
+// (escolher → comparar → orçar → instalar → manter). Fonte única: src/data/guias.ts.
+// O build quebra se um guia novo não for classificado aqui (guard abaixo).
+import Base from '../../layouts/Base.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import WhatsappCta from '../../components/WhatsappCta.astro';
+import { guias } from '../../data/guias';
+
+const SITE = Astro.site?.href.replace(/\/$/, '') ?? 'https://goiania.roilabs.com.br';
+const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
+
+const porSlug = (slug: string) => {
+  const g = guias.find((x) => x.slug === slug);
+  if (!g) throw new Error(`Hub /guia/: slug "${slug}" não existe em guias.ts`);
+  return g;
+};
+
+const etapas = [
+  {
+    titulo: '1. Escolher o porcelanato certo',
+    intro: 'Acabamento, PEI, formato e o que a etiqueta quer dizer — antes de olhar preço.',
+    slugs: ['como-escolher-porcelanato', 'porcelanato-polido-ou-acetinado', 'porcelanato-area-externa'],
+  },
+  {
+    titulo: '2. Comparar com as alternativas',
+    intro: 'Porcelanato contra cerâmica, vinílico e porcelanato líquido — comparativos honestos, com os pontos onde o porcelanato perde.',
+    slugs: ['porcelanato-ou-ceramica', 'piso-vinilico-vs-porcelanato', 'porcelanato-liquido-vs-porcelanato'],
+  },
+  {
+    titulo: '3. Orçar sem surpresa',
+    intro: 'O custo total (peça + assentamento) e os erros de compra que mais custam caro.',
+    slugs: ['quanto-custa-porcelanato', 'erros-ao-comprar-porcelanato'],
+  },
+  {
+    titulo: '4. Instalar do jeito certo',
+    intro: 'Assentamento passo a passo e a escolha de rejunte — o que combinar com o assentador.',
+    slugs: ['como-assentar-porcelanato', 'rejunte-porcelanato'],
+  },
+  {
+    titulo: '5. Manter bonito por anos',
+    intro: 'Rotina de limpeza por acabamento e o que nunca usar no piso.',
+    slugs: ['como-limpar-porcelanato'],
+  },
+].map((e) => ({ ...e, guias: e.slugs.map(porSlug) }));
+
+// Guard: todo guia do registro precisa aparecer em exatamente 1 etapa.
+const classificados = new Set(etapas.flatMap((e) => e.slugs));
+const faltando = guias.filter((g) => !classificados.has(g.slug));
+if (faltando.length || classificados.size !== etapas.flatMap((e) => e.slugs).length) {
+  throw new Error(
+    `Hub /guia/: guias sem etapa ou duplicados: ${faltando.map((g) => g.slug).join(', ')}`
+  );
+}
+
+const ferramentas = [
+  {
+    href: '/glossario/',
+    titulo: 'Glossário de porcelanato',
+    desc: 'PEI, retificado, calibre, destonalização, AC-III... os termos da etiqueta explicados em 2–4 frases, com âncora por termo.',
+  },
+  {
+    href: '/calculadora/',
+    titulo: 'Calculadora de caixas',
+    desc: 'Informe os ambientes e os m² por caixa: resultado em caixas fechadas, com estimativa de rejunte e argamassa.',
+  },
+  {
+    href: '/comparar/',
+    titulo: 'Comparador de modelos',
+    desc: 'Compare 2 ou 3 porcelanatos do catálogo lado a lado — preço por m² e por caixa, dimensão, acabamento e retificado.',
+  },
+];
+
+const jsonLdNodes = [
+  {
+    '@type': 'CollectionPage',
+    '@id': `${SITE}/guia/#pagina`,
+    name: 'Guias de porcelanato: escolher, comparar, orçar, instalar e manter',
+    description:
+      'Índice dos guias de decisão de porcelanato, organizados pela jornada de compra: como escolher, comparativos com cerâmica e vinílico, custo real, assentamento, rejunte e limpeza.',
+    url: `${SITE}/guia/`,
+    inLanguage: 'pt-BR',
+    mainEntity: {
+      '@type': 'ItemList',
+      itemListElement: guias.map((g, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: g.titulo,
+        url: `${SITE}/guia/${g.slug}/`,
+      })),
+    },
+  },
+  {
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Início', item: SITE },
+      { '@type': 'ListItem', position: 2, name: 'Guias de porcelanato', item: `${SITE}/guia/` },
+    ],
+  },
+];
+---
+
+<Base
+  title="Guias de porcelanato: escolher, comparar, orçar, instalar e manter — ROI Labs Goiânia"
+  description={`${guias.length} guias de decisão de porcelanato organizados pela jornada de compra: como escolher acabamento e PEI, comparativos com cerâmica e vinílico, quanto custa, como assentar, rejunte e limpeza — com calculadora, comparador e glossário.`}
+  jsonLdNodes={jsonLdNodes}
+>
+  <Header />
+
+  <main>
+    <section class="pseo-hero">
+      <div class="wrap">
+        <nav class="breadcrumb" aria-label="Localização">
+          <a href="/">Início</a>
+          <span class="breadcrumb__sep" aria-hidden="true">›</span>
+          <span aria-current="page">Guias</span>
+        </nav>
+
+        <div class="pseo-hero__eyebrow">
+          <span class="eyebrow">Goiânia · Guias</span>
+        </div>
+        <h1>Guias de porcelanato, na ordem em que as dúvidas aparecem</h1>
+        <p class="pseo-hero__intro">
+          São {guias.length} guias que seguem a jornada real da compra: primeiro escolher o
+          porcelanato certo, depois comparar com as alternativas, fechar a conta sem surpresa,
+          instalar do jeito certo e manter bonito por anos. Cada um responde a dúvida direto,
+          com tabela, FAQ e os produtos do catálogo de Goiânia que resolvem o caso.
+        </p>
+      </div>
+    </section>
+
+    {etapas.map((e, i) => (
+      <section class={`section${i % 2 === 0 ? ' section--light' : ''}`}>
+        <div class="wrap">
+          <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:0.5rem;">{e.titulo}</h2>
+          <p style="color:var(--d-muted);margin-bottom:1.6rem;max-width:64ch;">{e.intro}</p>
+          <div class="hub-grid">
+            {e.guias.map((g) => (
+              <a href={`/guia/${g.slug}/`} class="hub-card">
+                <h3 class="hub-card__title">{g.titulo}</h3>
+                <p class="hub-card__desc">{g.descricao}</p>
+                <span class="hub-card__cta">Ler o guia →</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+    ))}
+
+    <!-- Ferramentas -->
+    <section class="section">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:0.5rem;">
+          Ferramentas para decidir na prática
+        </h2>
+        <p style="color:var(--d-muted);margin-bottom:1.6rem;max-width:64ch;">
+          Os guias explicam; estas ferramentas fazem a conta e a comparação com os
+          modelos reais do catálogo.
+        </p>
+        <div class="hub-grid">
+          {ferramentas.map((f) => (
+            <a href={f.href} class="hub-card">
+              <h3 class="hub-card__title">{f.titulo}</h3>
+              <p class="hub-card__desc">{f.desc}</p>
+              <span class="hub-card__cta">Abrir →</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section section--light" id="contato">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:0.8rem;">
+          Ficou alguma dúvida que os guias não cobrem?
+        </h2>
+        <p style="color:var(--d-muted);margin-bottom:2rem;max-width:54ch;">
+          Manda no WhatsApp: a gente responde com os modelos do catálogo de Goiânia
+          que servem pro seu caso.
+        </p>
+        <div class="cta-block" style="display:flex;gap:1rem;flex-wrap:wrap;align-items:center;">
+          <a class="btn btn--primary" href="/porcelanato/">Ver catálogo de porcelanato</a>
+          <WhatsappCta termoAlvo="guias de porcelanato" numero={whatsapp} />
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .hub-grid { display: grid; gap: 1.2rem; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+  .hub-card {
+    display: flex; flex-direction: column; gap: 0.6rem;
+    border: 1px solid color-mix(in srgb, currentColor 14%, transparent);
+    border-radius: 10px; padding: 1.2rem 1.3rem;
+    text-decoration: none; color: inherit;
+  }
+  .hub-card:hover { border-color: var(--d-accent, #ff4d00); }
+  .hub-card__title { font-size: 1.05rem; }
+  .hub-card__desc { font-size: 0.92rem; line-height: 1.55; color: var(--d-muted); flex: 1; }
+  .hub-card__cta { font-size: 0.85rem; font-weight: 600; }
+</style>

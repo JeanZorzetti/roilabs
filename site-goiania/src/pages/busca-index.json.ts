@@ -42,6 +42,12 @@ export const GET: APIRoute = () => {
       k: norm(`inspire-se inspiracao fotos ambientes ${a.nome} porcelanato ${a.slug.replace(/-/g, ' ')}`),
     })),
     {
+      t: 'Guias de porcelanato (índice: escolher, comparar, orçar, instalar, manter)',
+      s: 'Guia',
+      u: '/guia/',
+      k: norm('guias indice como escolher comparar orcar instalar manter limpar assentar dicas passo a passo porcelanato'),
+    },
+    {
       t: 'Calculadora de porcelanato (m² → caixas)',
       s: 'Ferramenta',
       u: '/calculadora/',
