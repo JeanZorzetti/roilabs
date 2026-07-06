@@ -1,0 +1,318 @@
+---
+// Guia AEO técnico: "como assentar porcelanato?" — etapas reais (contrapiso,
+// argamassa AC-II/AC-III, dupla colagem em formato grande, junta mínima,
+// nivelador, rejunte após cura) com schema HowTo + FAQPage. Honesto: recomenda
+// profissional para grandes formatos. Mesmo padrão dos guias existentes.
+import Base from '../../layouts/Base.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import Faq from '../../components/Faq.astro';
+import WhatsappCta from '../../components/WhatsappCta.astro';
+import { guias } from '../../data/guias';
+
+const SITE = Astro.site?.href.replace(/\/$/, '') ?? 'https://goiania.roilabs.com.br';
+const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
+const guia = guias.find((g) => g.slug === 'como-assentar-porcelanato')!;
+
+const passos = [
+  {
+    nome: 'Confira o material antes de abrir as caixas',
+    texto:
+      'Verifique se todas as caixas têm o mesmo lote, calibre e tonalidade — misturar lotes é a causa nº 1 de piso "manchado" depois de pronto. Confirme que você comprou com folga de 10–15% para cortes e quebras e defina a paginação (o desenho de assentamento) antes de misturar qualquer argamassa.',
+  },
+  {
+    nome: 'Prepare o contrapiso',
+    texto:
+      'O contrapiso precisa estar curado (idealmente 14+ dias), nivelado, firme e limpo — sem poeira, óleo ou restos de massa. Desníveis acima de alguns milímetros se corrigem no contrapiso, nunca com "calço" de argamassa sob a peça. Em área molhada, garanta o caimento em direção ao ralo antes de assentar.',
+  },
+  {
+    nome: 'Escolha a argamassa certa (AC-II ou AC-III)',
+    texto:
+      'Porcelanato tem absorção de água quase nula, então argamassa comum (AC-I) não segura: use AC-II em piso interno e AC-III em área externa, fachada, sobreposição sobre piso existente e formatos grandes. Argamassa errada é a principal causa de peça oca e desplacamento.',
+  },
+  {
+    nome: 'Marque o esquadro e o ponto de partida',
+    texto:
+      'Estique linhas de referência em esquadro a partir da parede mais visível do ambiente e simule a paginação a seco: os recortes devem cair nos cantos menos aparentes. Começar "de qualquer canto" é o jeito mais rápido de terminar com uma tira fina de peça na entrada do ambiente.',
+  },
+  {
+    nome: 'Aplique a argamassa com desempenadeira dentada',
+    texto:
+      'Espalhe a argamassa no contrapiso e penteie com o lado dentado da desempenadeira, formando cordões paralelos — sempre numa área que você consiga cobrir dentro do tempo em aberto do produto (indicado na embalagem, tipicamente ~15–20 min). Argamassa que formou película na superfície perde aderência: descarte e aplique nova.',
+  },
+  {
+    nome: 'Formato grande: faça dupla colagem',
+    texto:
+      'Em peças com lado a partir de ~60 cm, aplique argamassa também no verso da peça (camada fina, pente no mesmo sentido dos cordões do piso) — a chamada dupla colagem. Ela garante contato pleno e evita vazios que viram peça oca ou trinca. Em formato grande o assentamento exige ventosa, nivelador e experiência: aqui vale contratar um profissional.',
+  },
+  {
+    nome: 'Assente com junta mínima e niveladores',
+    texto:
+      'Bata cada peça com martelo de borracha, confira o alinhamento e use espaçador: mesmo porcelanato retificado precisa de junta — 1,5 a 2 mm no interno, maior no externo. Junta "zero" não existe: sem espaço para dilatação o piso estufa. Niveladores de cunha entre as peças eliminam o degrau entre bordas (destonalização de altura).',
+  },
+  {
+    nome: 'Rejunte após a cura e libere o piso aos poucos',
+    texto:
+      'Espere a cura da argamassa (em geral 72 h) antes de rejuntar as juntas — rejuntar cedo prende umidade e mancha. Após rejuntar, limpe o excesso ainda fresco com esponja úmida, espere a cura do rejunte e só então faça a limpeza pós-obra. Tráfego leve após ~72 h; móveis pesados, só com tudo curado.',
+  },
+];
+
+const faq = [
+  {
+    q: 'Qual argamassa usar para assentar porcelanato: AC-I, AC-II ou AC-III?',
+    a: 'Nunca AC-I — ela é para cerâmica comum em área interna e não adere bem ao porcelanato, que tem absorção de água quase nula. Use AC-II em piso interno residencial e AC-III em área externa, fachada, ambientes com variação de temperatura, sobreposição sobre piso existente e formatos grandes. Na dúvida entre as duas, AC-III é a escolha segura: a diferença de preço por m² é pequena perto do custo de refazer um piso desplacado.',
+  },
+  {
+    q: 'O que é dupla colagem e quando ela é obrigatória?',
+    a: 'É aplicar argamassa nos dois lados: no contrapiso (cordões com desempenadeira dentada) e no verso da peça (camada fina penteada no mesmo sentido). Ela garante contato pleno entre peça e base, evitando vazios que viram som oco e trinca. É recomendada a partir de peças com lado de ~60 cm e indispensável em formatos grandes (80×80, 60×120 e maiores) e em qualquer peça de área externa.',
+  },
+  {
+    q: 'Pode assentar porcelanato com junta zero?',
+    a: 'Não. Mesmo porcelanato retificado, de bordas perfeitamente retas, precisa de junta mínima — em geral 1,5 a 2 mm no interno e mais no externo, seguindo a indicação do fabricante na embalagem. A junta absorve a dilatação térmica das peças e as pequenas variações de calibre; sem ela, o piso pode estufar e desplacar. O visual "contínuo" se obtém com junta mínima + rejunte tom-sobre-tom, não com junta zero.',
+  },
+  {
+    q: 'Pode assentar porcelanato sobre o piso antigo?',
+    a: 'Pode, se o piso existente estiver firme (sem peças ocas ou soltas), nivelado e limpo — a sobreposição exige argamassa AC-III, própria para aderir sobre superfície de baixa absorção. Lembre que o nível do piso sobe cerca de 1,5 a 2 cm, o que afeta portas, rodapés e o degrau com ambientes vizinhos. Peça oca no piso antigo é veto: remove ou não sobrepõe.',
+  },
+  {
+    q: 'Quanto tempo esperar para rejuntar e pisar no porcelanato?',
+    a: 'A prática usual é rejuntar após ~72 horas da colocação (confirme o prazo da argamassa usada na embalagem) — rejuntar cedo demais prende a umidade da argamassa e pode manchar a junta. Tráfego leve de pessoas, em geral, também a partir de ~72 h; arrastar móveis pesados ou liberar o ambiente de vez, só com argamassa e rejunte totalmente curados.',
+  },
+  {
+    q: 'Dá para eu mesmo assentar porcelanato ou preciso de profissional?',
+    a: 'Peças até 60×60 em ambiente interno regular estão ao alcance de quem tem paciência, as ferramentas certas (desempenadeira dentada, martelo de borracha, espaçadores, cortadora) e segue as etapas deste guia. Formato grande (80×80, 60×120 e maiores), área externa, fachada e box de banheiro pedem assentador profissional: exigem dupla colagem bem-feita, ventosa, corte preciso e experiência — o custo da mão de obra é menor que o de refazer. O guia de quanto custa porcelanato traz faixas de preço de assentamento em Goiânia.',
+  },
+  {
+    q: 'Como cortar porcelanato sem lascar?',
+    a: 'Cortes retos saem bem em cortadora manual de bancada com riscador de vídea, riscando uma vez só, com firmeza. Recortes (caixa de tomada, ralo, canto em L) pedem esmerilhadeira com disco diamantado contínuo — corte lento, sem forçar, de preferência com o disco úmido para não superaquecer. Peças polidas lascam mais fácil: corte com a face para cima na cortadora e proteja a superfície ao apoiar.',
+  },
+  {
+    q: 'Quanta argamassa e rejunte preciso comprar?',
+    a: 'Regra de bolso: argamassa colante rende cerca de 4–5 kg/m² em colagem simples e o dobro (8–10 kg/m²) com dupla colagem; o consumo de rejunte depende do formato da peça e da largura da junta — peças grandes com junta fina consomem pouco, peças pequenas consomem mais. A calculadora do site estima caixas, argamassa e rejunte de uma vez a partir da metragem de cada ambiente.',
+  },
+];
+
+const jsonLdNodes = [
+  {
+    '@type': 'HowTo',
+    name: 'Como assentar porcelanato',
+    description:
+      'Passo a passo do assentamento de porcelanato: conferência de lote e calibre, preparo do contrapiso, argamassa AC-II/AC-III, dupla colagem em formato grande, junta mínima com nivelador e rejunte após a cura.',
+    step: passos.map((p, i) => ({
+      '@type': 'HowToStep',
+      position: i + 1,
+      name: p.nome,
+      text: p.texto,
+      url: `${SITE}/guia/${guia.slug}/#passo-${i + 1}`,
+    })),
+  },
+  {
+    '@type': 'FAQPage',
+    mainEntity: faq.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  },
+  {
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Início', item: SITE },
+      { '@type': 'ListItem', position: 2, name: guia.titulo, item: `${SITE}/guia/${guia.slug}/` },
+    ],
+  },
+];
+
+const relacionados = [
+  { href: '/guia/rejunte-porcelanato/', label: 'Rejunte: cor, tipo e quantidade' },
+  { href: '/guia/como-limpar-porcelanato/', label: 'Como limpar porcelanato (e o pós-obra)' },
+  { href: '/guia/quanto-custa-porcelanato/', label: 'Quanto custa porcelanato + colocação' },
+  { href: '/guia/como-escolher-porcelanato/', label: 'Como escolher porcelanato' },
+  { href: '/glossario/', label: 'Glossário de porcelanato' },
+  { href: '/calculadora/', label: 'Calculadora de caixas, argamassa e rejunte' },
+];
+---
+
+<Base
+  title={`${guia.titulo} — Goiânia | ROI Labs`}
+  description="Passo a passo real: contrapiso curado e nivelado, argamassa AC-II (interno) ou AC-III (externo, sobreposição e formato grande), dupla colagem a partir de 60 cm, junta mínima de 1,5–2 mm com nivelador e rejunte só após ~72 h de cura."
+  ogImage={`/open-graph/guia/${guia.slug}.png`}
+  jsonLdNodes={jsonLdNodes}
+>
+  <Header />
+
+  <main>
+    <section class="pseo-hero">
+      <div class="wrap">
+        <nav class="breadcrumb" aria-label="Localização">
+          <a href="/">Início</a>
+          <span class="breadcrumb__sep" aria-hidden="true">›</span>
+          <span aria-current="page">Guia de decisão</span>
+        </nav>
+
+        <div class="pseo-hero__eyebrow">
+          <span class="eyebrow">Goiânia · Guia de decisão</span>
+        </div>
+        <h1>{guia.titulo}</h1>
+        <p class="pseo-hero__intro">
+          Resposta direta: porcelanato se assenta sobre <strong>contrapiso curado e
+          nivelado</strong>, com <strong><a href="/glossario/#argamassa-colante">argamassa
+          colante</a> AC-II (interno) ou AC-III</strong> (externo, sobreposição e
+          <a href="/glossario/#formato-grande">formato grande</a>), <strong>dupla colagem</strong>
+          a partir de peças de ~60 cm, <a href="/glossario/#junta">junta</a> mínima de
+          1,5–2 mm com <a href="/glossario/#nivelador">nivelador</a> — e
+          <a href="/glossario/#rejunte">rejunte</a> só depois de ~72 h de cura. Formato
+          grande, área externa e box: <strong>contrate um assentador profissional</strong> —
+          refazer custa mais que a mão de obra.
+        </p>
+      </div>
+    </section>
+
+    <!-- Tabela de argamassa -->
+    <section class="section section--light">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.6rem;">
+          Qual argamassa usar: AC-I, AC-II ou AC-III
+        </h2>
+        <div class="comp-scroll">
+          <table class="comp-table">
+            <thead>
+              <tr>
+                <th scope="col">Classe</th>
+                <th scope="col">Onde usar</th>
+                <th scope="col">Serve para porcelanato?</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">AC-I</th>
+                <td>Cerâmica comum em área interna</td>
+                <td><strong>Não.</strong> Não adere ao porcelanato, cuja <a href="/glossario/#absorcao-de-agua">absorção de água</a> é quase nula — risco alto de peça oca e desplacamento</td>
+              </tr>
+              <tr>
+                <th scope="row">AC-II</th>
+                <td>Piso interno residencial</td>
+                <td>Sim, para porcelanato interno em formatos até médios, em colagem sobre contrapiso</td>
+              </tr>
+              <tr>
+                <th scope="row">AC-III</th>
+                <td>Área externa, fachada, sobreposição sobre piso antigo, formatos grandes</td>
+                <td>Sim — a mais aderente e flexível; é a escolha segura na dúvida e a obrigatória fora de casa</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="color:var(--d-muted);margin-top:1.2rem;max-width:66ch;">
+          A embalagem da argamassa indica rendimento e tempo em aberto — respeite os dois. A
+          <a href="/calculadora/">calculadora</a> estima quantos kg de argamassa (e de
+          rejunte) a sua metragem consome, junto com o número de caixas.
+        </p>
+      </div>
+    </section>
+
+    <!-- Passo a passo (HowTo) -->
+    <section class="section">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.6rem;">
+          Passo a passo do assentamento
+        </h2>
+        <ol class="guide-list" style="list-style:none;padding-left:0;">
+          {passos.map((p, i) => (
+            <li id={`passo-${i + 1}`}>
+              <strong>{i + 1}. {p.nome}.</strong> {p.texto}
+            </li>
+          ))}
+        </ol>
+        <p style="color:var(--d-muted);margin-top:1.2rem;max-width:66ch;">
+          Terminou a obra? O <a href="/guia/como-limpar-porcelanato/">guia de limpeza</a>
+          mostra a ordem certa do pós-obra — sujeira grossa a seco, lavagem neutra e
+          removedor de véu de cimento só com o rejunte curado. E o
+          <a href="/guia/rejunte-porcelanato/">guia de rejunte</a> ajuda a escolher cor e
+          tipo antes da etapa final.
+        </p>
+      </div>
+    </section>
+
+    <!-- Quando chamar profissional -->
+    <section class="section section--light">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.6rem;">
+          Quando contratar um assentador profissional
+        </h2>
+        <ul class="guide-list">
+          <li>
+            <strong><a href="/glossario/#formato-grande">Formato grande</a> (80×80, 60×120 e
+            maiores).</strong> Peça grande exige dupla colagem impecável, ventosa para
+            manuseio, <a href="/glossario/#nivelador">nivelador</a> em todas as bordas e
+            contrapiso muito bem nivelado. Erro aqui não se disfarça: fica oco, trinca ou
+            forma degrau entre peças.
+          </li>
+          <li>
+            <strong>Área externa e fachada.</strong> Além da AC-III obrigatória, envolvem
+            caimento para escoamento, junta de dilatação e exposição ao sol — o
+            <a href="/guia/porcelanato-area-externa/">guia de área externa</a> explica os
+            requisitos da peça; a execução pede experiência.
+          </li>
+          <li>
+            <strong>Box, cozinha e áreas com caimento.</strong> Ralo no lugar certo e piso
+            que escoa sem empoçar são geometria de contrapiso, não sorte. Refazer um box
+            que empoça significa demolir.
+          </li>
+          <li>
+            <strong>A conta honesta.</strong> A mão de obra de assentamento em Goiânia custa
+            uma fração do material — o <a href="/guia/quanto-custa-porcelanato/">guia de
+            custo</a> traz as faixas por m². Um assentamento ruim compromete peças que não
+            se reaproveitam: economizar aqui é o erro mais caro da obra.
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.8rem;">Perguntas frequentes</h2>
+        <Faq items={faq} />
+      </div>
+    </section>
+
+    <!-- CTA duplo -->
+    <section class="section section--light" id="contato">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:0.8rem;">
+          Calcule o material antes de comprar
+        </h2>
+        <p style="color:var(--d-muted);margin-bottom:2rem;max-width:54ch;">
+          Caixas com folga, kg de argamassa e de rejunte numa conta só, por ambiente — e o
+          catálogo do polo em Goiânia para escolher a peça.
+        </p>
+        <div class="cta-block" style="display:flex;gap:1rem;flex-wrap:wrap;align-items:center;">
+          <a class="btn btn--primary" href="/calculadora/">Calcular caixas, argamassa e rejunte</a>
+          <WhatsappCta termoAlvo="porcelanato" numero={whatsapp} />
+        </div>
+      </div>
+    </section>
+
+    <!-- Relacionados -->
+    <section class="section">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.3rem,2.2vw,1.8rem);margin-bottom:1.4rem;">Veja também</h2>
+        <div class="related-grid">
+          {relacionados.map((r) => (
+            <a href={r.href} class="related-card">{r.label}</a>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .comp-scroll { overflow-x: auto; }
+  .comp-table { width: 100%; border-collapse: collapse; font-size: 0.92rem; min-width: 560px; }
+  .comp-table th, .comp-table td { text-align: left; padding: 0.8rem 0.9rem; border-bottom: 1px solid color-mix(in srgb, currentColor 18%, transparent); vertical-align: top; }
+  .comp-table thead th { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.75; }
+  .comp-table tbody th { font-weight: 700; width: 14%; }
+</style>

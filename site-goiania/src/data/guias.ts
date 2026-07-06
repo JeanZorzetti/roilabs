@@ -53,6 +53,12 @@ export const guias = [
     descricao:
       'Limpeza diária e pesada para polido, acetinado, natural/técnico e área externa — o que nunca usar (ácido, cera, abrasivo), como tirar manchas comuns e a limpeza pós-obra sem estragar o piso.',
   },
+  {
+    slug: 'como-assentar-porcelanato',
+    titulo: 'Como assentar porcelanato: passo a passo, argamassa e junta',
+    descricao:
+      'As etapas reais do assentamento — contrapiso, argamassa AC-II/AC-III, dupla colagem em formato grande, junta mínima com nivelador e rejunte após a cura — e quando vale contratar um assentador profissional.',
+  },
 ] as const;
 
 export type Guia = (typeof guias)[number];
