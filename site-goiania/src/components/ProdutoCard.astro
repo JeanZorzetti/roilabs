@@ -18,7 +18,7 @@ const a = produto.atributos;
   data-preco={a.preco}
 >
   <div class="prod-card__img">
-    <img src={imgDisplay(produto.imagens[0])} alt={`${a.marca} ${nome}`} loading="lazy" />
+    <img src={imgDisplay(produto.imagens[0])} alt={`${a.marca} ${nome}`} loading="lazy" decoding="async" />
     {a.retificado && <span class="prod-card__badge">Retificado</span>}
     <FavToggle slug={produto.slug} nome={`${a.marca} ${nome}`} />
   </div>

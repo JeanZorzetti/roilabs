@@ -49,7 +49,7 @@ const vistosData = produtos.map((p) => ({
       .map(
         (p) => `
       <a class="prod-card" href="/porcelanato/produto/${p.slug}/">
-        <div class="prod-card__img">${p.img ? `<img src="${p.img}" alt="${p.titulo}" loading="lazy" />` : ''}</div>
+        <div class="prod-card__img">${p.img ? `<img src="${p.img}" alt="${p.titulo}" loading="lazy" decoding="async" />` : ''}</div>
         <div class="prod-card__body">
           <span class="prod-card__nome">${p.titulo}</span>
           <span class="prod-card__preco">${p.preco.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} <small>/m²</small></span>

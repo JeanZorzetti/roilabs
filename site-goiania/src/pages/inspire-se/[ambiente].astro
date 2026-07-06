@@ -7,17 +7,20 @@ import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import { tituloProduto, imgDisplay } from '../../data/produtos';
 import { ambientes, produtosDoAmbiente } from '../../data/ambientes';
+import { imgDims } from '../../data/img-dims';
 
 export function getStaticPaths() {
   return ambientes.map((a) => ({ params: { ambiente: a.slug }, props: { amb: a } }));
 }
 
 const { amb } = Astro.props;
-const fotos = produtosDoAmbiente(amb.slug).map((p) => ({
-  slug: p.slug,
-  titulo: tituloProduto(p),
-  img: imgDisplay(p.imagensAmbiente![0]),
-}));
+// width/height intrínsecos: o masonry tem altura variável — sem eles é CLS.
+const fotos = await Promise.all(
+  produtosDoAmbiente(amb.slug).map(async (p) => {
+    const img = imgDisplay(p.imagensAmbiente![0]);
+    return { slug: p.slug, titulo: tituloProduto(p), img, ...(await imgDims(img)) };
+  })
+);
 const outros = ambientes.filter((a) => a.slug !== amb.slug);
 ---
 
@@ -57,7 +60,7 @@ const outros = ambientes.filter((a) => a.slug !== amb.slug);
         <div class="inspire-grid">
           {fotos.map((f) => (
             <a class="inspire-item" href={`/porcelanato/produto/${f.slug}/`}>
-              <img src={f.img} alt={`${amb.nome} com ${f.titulo}`} loading="lazy" />
+              <img src={f.img} alt={`${amb.nome} com ${f.titulo}`} width={f.width} height={f.height} loading="lazy" decoding="async" />
               <span class="inspire-item__label">{f.titulo}</span>
             </a>
           ))}
@@ -98,6 +101,7 @@ const outros = ambientes.filter((a) => a.slug !== amb.slug);
   }
   .inspire-item img {
     width: 100%;
+    height: auto; /* attrs width/height só dão o aspect-ratio intrínseco */
     display: block;
   }
   .inspire-item__label {

@@ -20,12 +20,12 @@ const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
   <!-- Galeria (exibição em .webp; data-full guarda o original pro zoom/lupa) -->
   <div class:list={['prod-detail__gallery', produto.imagens.length > 1 && 'has-thumbs']}>
     <button class="prod-detail__main" type="button" aria-label={`Ampliar foto de ${tituloProduto}`}>
-      <img src={imgDisplay(produto.imagens[0])} data-full={produto.imagens[0]} alt={tituloProduto} />
+      <img src={imgDisplay(produto.imagens[0])} data-full={produto.imagens[0]} alt={tituloProduto} fetchpriority="high" />
     </button>
     {produto.imagens.length > 1 && (
       <div class="prod-detail__thumbs">
         {produto.imagens.slice(0, 5).map((src, i) => (
-          <img src={imgDisplay(src)} data-full={src} alt={`${tituloProduto} — foto ${i + 1}`} loading="lazy" />
+          <img src={imgDisplay(src)} data-full={src} alt={`${tituloProduto} — foto ${i + 1}`} width="64" height="64" loading="lazy" decoding="async" />
         ))}
       </div>
     )}
@@ -135,7 +135,7 @@ const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
   <div class="prod-ambiente">
     {produto.imagensAmbiente?.[0] && (
       <figure class="prod-ambiente__foto">
-        <img src={imgDisplay(produto.imagensAmbiente[0])} alt={`${tituloProduto} aplicado em ambiente`} loading="lazy" />
+        <img src={imgDisplay(produto.imagensAmbiente[0])} alt={`${tituloProduto} aplicado em ambiente`} loading="lazy" decoding="async" />
         <figcaption>Veja em ambiente — foto do fabricante</figcaption>
       </figure>
     )}

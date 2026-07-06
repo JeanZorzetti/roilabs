@@ -143,7 +143,7 @@ const jsonLdNodes = [
               <a href={`/porcelanato/${p.slug}/`} class={`pseo-index-card${capa ? ' pseo-index-card--img' : ''}`}>
                 {capa && (
                   <div class="pseo-index-card__cover">
-                    <img src={imgDisplay(capa)} alt="" loading="lazy" />
+                    <img src={imgDisplay(capa)} alt="" loading="lazy" decoding="async" />
                   </div>
                 )}
                 <div class="pseo-index-card__body">

@@ -63,7 +63,7 @@ const tipo = page.tipo.charAt(0).toUpperCase() + page.tipo.slice(1);
           <div class="pseo-hero__strip">
             {produtosRel.slice(0, 4).map((prod) => (
               <a href="#catalogo" aria-label={`Ver ${nomeProduto(prod)} no catálogo`}>
-                <img src={imgDisplay(prod.imagensAmbiente?.[0] ?? prod.imagens[0])} alt={nomeProduto(prod)} />
+                <img src={imgDisplay(prod.imagensAmbiente?.[0] ?? prod.imagens[0])} alt={nomeProduto(prod)} decoding="async" />
               </a>
             ))}
           </div>

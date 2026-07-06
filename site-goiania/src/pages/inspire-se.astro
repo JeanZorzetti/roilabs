@@ -7,9 +7,14 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { produtos, tituloProduto, imgDisplay } from '../data/produtos';
 import { ambientes, produtosDoAmbiente } from '../data/ambientes';
+import { imgDims } from '../data/img-dims';
 
-const fotos = produtos
-  .flatMap((p) => (p.imagensAmbiente ?? []).map((img) => ({ slug: p.slug, titulo: tituloProduto(p), img: imgDisplay(img) })));
+// width/height intrínsecos: o masonry tem altura variável — sem eles é CLS.
+const fotos = await Promise.all(
+  produtos
+    .flatMap((p) => (p.imagensAmbiente ?? []).map((img) => ({ slug: p.slug, titulo: tituloProduto(p), img: imgDisplay(img) })))
+    .map(async (f) => ({ ...f, ...(await imgDims(f.img)) }))
+);
 ---
 
 <Base
@@ -53,7 +58,7 @@ const fotos = produtos
         <div class="inspire-grid">
           {fotos.map((f) => (
             <a class="inspire-item" href={`/porcelanato/produto/${f.slug}/`}>
-              <img src={f.img} alt={`Ambiente com ${f.titulo}`} loading="lazy" />
+              <img src={f.img} alt={`Ambiente com ${f.titulo}`} width={f.width} height={f.height} loading="lazy" decoding="async" />
               <span class="inspire-item__label">{f.titulo}</span>
             </a>
           ))}
@@ -94,6 +99,7 @@ const fotos = produtos
   }
   .inspire-item img {
     width: 100%;
+    height: auto; /* attrs width/height só dão o aspect-ratio intrínseco */
     display: block;
   }
   .inspire-item__label {
