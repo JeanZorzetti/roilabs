@@ -1,0 +1,322 @@
+---
+// Guia AEO pós-venda: "como limpar porcelanato?" — rotina diária vs pesada por
+// acabamento (polido, acetinado, natural/técnico, externo), o que NUNCA usar,
+// manchas comuns e limpeza pós-obra. BLUF + tabela por acabamento + FAQPage,
+// mesmo padrão dos guias existentes.
+import Base from '../../layouts/Base.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import Faq from '../../components/Faq.astro';
+import WhatsappCta from '../../components/WhatsappCta.astro';
+import { guias } from '../../data/guias';
+
+const SITE = Astro.site?.href.replace(/\/$/, '') ?? 'https://goiania.roilabs.com.br';
+const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
+const guia = guias.find((g) => g.slug === 'como-limpar-porcelanato')!;
+
+const faq = [
+  {
+    q: 'Qual o melhor produto para limpar porcelanato no dia a dia?',
+    a: 'Água e detergente neutro diluído, aplicados com mop ou pano de microfibra bem torcido — para qualquer acabamento. O porcelanato tem absorção de água baixíssima, então a sujeira fica na superfície e sai sem produto agressivo. Seque com pano limpo no polido para não ficar marca d\'água. Produtos "multiuso" perfumados costumam deixar película que acumula sujeira e tira o brilho com o tempo.',
+  },
+  {
+    q: 'Pode passar vinagre ou água sanitária no porcelanato?',
+    a: 'No porcelanato em si, vinagre diluído e água sanitária diluída não danificam a peça — o problema é o rejunte: ácidos (vinagre, limão, removedores de ferrugem) corroem rejunte cimentício e desbotam a cor. Se precisar desinfetar, use água sanitária diluída (1:10), enxágue bem e evite deixar agir sobre a junta. Ácido muriático, nunca: ataca rejunte, ralos metálicos e pode fosquear o brilho do polido.',
+  },
+  {
+    q: 'O que nunca usar em porcelanato polido?',
+    a: 'Esponja abrasiva (lado verde), palha de aço, sapólio em pó e qualquer abrasivo — riscam o brilho espelhado, que é polimento físico da massa e não volta com produto. Também evite cera: o porcelanato não precisa e a cera cria película que amarela, mancha e deixa o piso escorregadio. Ácido muriático fosqueia o polimento de forma irreversível.',
+  },
+  {
+    q: 'Como tirar mancha de rejunte (véu de cimento) do porcelanato?',
+    a: 'O véu esbranquiçado que fica depois de rejuntar sai com removedor pós-obra específico para porcelanato (à base de ácido tamponado), aplicado conforme o rótulo, com o rejunte já curado — em geral 7 dias após a aplicação. Molhe o piso antes, para o produto não ser sugado pela junta, aplique, esfregue com fibra branca (não abrasiva) e enxágue bem. No acabamento polido, teste primeiro numa peça de sobra ou num canto escondido.',
+  },
+  {
+    q: 'Como tirar mancha de ferrugem, tinta ou caneta do porcelanato?',
+    a: 'Ferrugem (pé de móvel, esponja de aço esquecida): removedor de ferrugem específico para piso cerâmico, nunca ácido muriático. Tinta látex fresca sai com pano úmido; seca, amoleça com água morna e detergente e raspe com espátula plástica. Tinta óleo/esmalte: solvente (aguarrás) localizado, enxaguando em seguida. Caneta e marcador: álcool ou acetona no pano, movimento circular. Em todos os casos, no polido use fibra branca e teste antes num canto.',
+  },
+  {
+    q: 'Porcelanato acetinado mancha mais que o polido?',
+    a: 'Não — a lógica é a inversa. O acetinado esconde melhor a rotina: poeira, marca d\'água e pegada aparecem menos que no polido, que denuncia tudo por causa do brilho. Em compensação, o polido tem a superfície mais fechada e solta a sujeira mais fácil na limpeza pesada. Nenhum dos dois "mancha" no sentido de absorver — a absorção de água do porcelanato é quase nula; o que existe é sujeira superficial mal removida.',
+  },
+  {
+    q: 'Como fazer a limpeza pós-obra sem estragar o porcelanato?',
+    a: 'Primeiro remova a sujeira grossa a seco (varrição, aspirador e espátula plástica para respingos de massa — nunca espátula de metal no polido). Depois lave com detergente neutro. Só então, se sobrar véu de cimento, use o removedor pós-obra específico, com o rejunte curado (≈7 dias). O erro clássico é jogar ácido no piso sujo logo de cara: o abrasivo da sujeira risca e o ácido ataca o rejunte novo.',
+  },
+  {
+    q: 'Com que frequência lavar porcelanato de área externa?',
+    a: 'Varrição semanal e lavagem mensal com água, detergente neutro e vassoura de cerdas duras resolvem na maioria das casas — o acabamento antiderrapante é mais texturizado e segura mais sujeira que o piso interno. Lavadora de alta pressão pode ser usada no piso externo técnico, com bico em leque e distância de ~30 cm, tomando cuidado com o jato direto na junta, que desgasta o rejunte. Limo e mofo saem com água sanitária diluída, enxaguando bem.',
+  },
+];
+
+const jsonLdNodes = [
+  {
+    '@type': 'FAQPage',
+    mainEntity: faq.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  },
+  {
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Início', item: SITE },
+      { '@type': 'ListItem', position: 2, name: guia.titulo, item: `${SITE}/guia/${guia.slug}/` },
+    ],
+  },
+];
+
+const relacionados = [
+  { href: '/guia/porcelanato-polido-ou-acetinado/', label: 'Polido ou acetinado?' },
+  { href: '/guia/rejunte-porcelanato/', label: 'Rejunte: cor, tipo e quantidade' },
+  { href: '/guia/porcelanato-area-externa/', label: 'Porcelanato para área externa' },
+  { href: '/guia/como-escolher-porcelanato/', label: 'Como escolher porcelanato' },
+  { href: '/glossario/', label: 'Glossário de porcelanato' },
+  { href: '/porcelanato/', label: 'Catálogo de porcelanato' },
+];
+---
+
+<Base
+  title={`${guia.titulo} — Goiânia | ROI Labs`}
+  description="Dia a dia: água e detergente neutro, pano de microfibra — em qualquer acabamento. Nunca: ácido muriático, cera e abrasivo (principalmente no polido). Tabela de limpeza por acabamento, manchas comuns e o passo a passo do pós-obra."
+  ogImage={`/open-graph/guia/${guia.slug}.png`}
+  jsonLdNodes={jsonLdNodes}
+>
+  <Header />
+
+  <main>
+    <section class="pseo-hero">
+      <div class="wrap">
+        <nav class="breadcrumb" aria-label="Localização">
+          <a href="/">Início</a>
+          <span class="breadcrumb__sep" aria-hidden="true">›</span>
+          <span aria-current="page">Guia de decisão</span>
+        </nav>
+
+        <div class="pseo-hero__eyebrow">
+          <span class="eyebrow">Goiânia · Guia de decisão</span>
+        </div>
+        <h1>{guia.titulo}</h1>
+        <p class="pseo-hero__intro">
+          Resposta direta: <strong>água e detergente neutro diluído, com mop ou pano de
+          microfibra</strong>, limpam qualquer porcelanato no dia a dia — a
+          <a href="/glossario/#absorcao-de-agua">absorção de água</a> quase nula deixa a
+          sujeira na superfície. O que estraga o piso é o resto: <strong>ácido muriático,
+          cera e esponja abrasiva</strong> (fatais no
+          <a href="/glossario/#polido">polido</a>). Abaixo, a rotina por acabamento, a lista
+          do que nunca usar, as manchas comuns e a limpeza pós-obra.
+        </p>
+      </div>
+    </section>
+
+    <!-- Tabela por acabamento -->
+    <section class="section section--light">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.6rem;">
+          Limpeza por acabamento: rotina diária e pesada
+        </h2>
+        <div class="comp-scroll">
+          <table class="comp-table">
+            <thead>
+              <tr>
+                <th scope="col">Acabamento</th>
+                <th scope="col">Rotina diária</th>
+                <th scope="col">Limpeza pesada</th>
+                <th scope="col">Cuidado extra</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row"><a href="/glossario/#polido">Polido</a></th>
+                <td>Pó com mop seco; pano úmido com detergente neutro e secagem para não marcar</td>
+                <td>Detergente neutro concentrado + fibra branca (nunca a verde)</td>
+                <td>Zero abrasivo e zero cera — o brilho é polimento físico e risco não sai</td>
+              </tr>
+              <tr>
+                <th scope="row"><a href="/glossario/#acetinado">Acetinado</a></th>
+                <td>Mop úmido com detergente neutro; dispensa secagem, não marca d'água</td>
+                <td>Detergente neutro ou limpador alcalino suave; escova de cerdas macias</td>
+                <td>O mais tolerante dos acabamentos — ainda assim, nada de ácido no rejunte</td>
+              </tr>
+              <tr>
+                <th scope="row"><a href="/glossario/#natural">Natural / técnico</a></th>
+                <td>Varrição ou aspirador + pano úmido com neutro</td>
+                <td>Limpador alcalino e escova — a superfície sem esmalte segura mais sujeira</td>
+                <td>Enxágue bem: resíduo de produto acumula na textura e escurece o piso</td>
+              </tr>
+              <tr>
+                <th scope="row"><a href="/glossario/#antiderrapante">Externo (antiderrapante)</a></th>
+                <td>Varrição semanal; lavagem mensal com neutro e vassoura de cerdas duras</td>
+                <td>Alta pressão em leque a ~30 cm; água sanitária diluída contra limo, com enxágue</td>
+                <td>Jato direto na junta desgasta o rejunte; reveja o <a href="/guia/porcelanato-area-externa/">guia de área externa</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="color:var(--d-muted);margin-top:1.2rem;max-width:66ch;">
+          A regra vale para qualquer formato e marca: quanto mais fechada a superfície
+          (polido &gt; acetinado &gt; natural), mais fácil soltar a sujeira — e mais visível
+          fica qualquer marca. Se ainda está escolhendo o acabamento, o guia
+          <a href="/guia/porcelanato-polido-ou-acetinado/">polido ou acetinado</a> compara os
+          dois no uso real.
+        </p>
+      </div>
+    </section>
+
+    <!-- O que nunca usar -->
+    <section class="section">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.6rem;">
+          O que nunca usar em porcelanato
+        </h2>
+        <ul class="guide-list">
+          <li>
+            <strong>Ácido muriático (e ácidos fortes em geral).</strong> Corrói o
+            <a href="/glossario/#rejunte">rejunte</a> cimentício, ataca ralos e metais e pode
+            fosquear o brilho do polido de forma irreversível. Vinagre e limão são versões
+            mais fracas do mesmo problema: não estragam a peça, mas desbotam e corroem a
+            junta com o uso repetido.
+          </li>
+          <li>
+            <strong>Cera — de qualquer tipo.</strong> Porcelanato não precisa de cera: a
+            superfície vitrificada não absorve. A película de cera amarela com o tempo,
+            marca pegada, segura sujeira e deixa o piso escorregadio — e remover cera velha
+            dá mais trabalho que qualquer limpeza.
+          </li>
+          <li>
+            <strong>Abrasivos no polido.</strong> Esponja verde, palha de aço, sapólio em pó
+            e espátula de metal riscam o polimento espelhado. Risco em polido não sai com
+            produto — é dano físico. Para sujeira agarrada, fibra branca (não abrasiva) e
+            paciência.
+          </li>
+          <li>
+            <strong>"Multiuso" perfumado como rotina.</strong> Não danifica, mas a maioria
+            deixa película que acumula poeira e tira o aspecto de limpo — o famoso piso que
+            "nunca parece lavado". Detergente neutro diluído faz o mesmo serviço sem
+            resíduo.
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Manchas comuns -->
+    <section class="section section--light">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.6rem;">
+          Manchas comuns e como resolver
+        </h2>
+        <ul class="guide-list">
+          <li>
+            <strong>Véu de cimento / mancha de rejunte.</strong> O esbranquiçado que sobra
+            do rejuntamento sai com removedor pós-obra específico para porcelanato, com o
+            rejunte já curado (≈7 dias). Molhe o piso antes de aplicar — protege a
+            <a href="/glossario/#junta">junta</a> — e enxágue bem. No polido, teste numa
+            sobra de peça primeiro.
+          </li>
+          <li>
+            <strong>Ferrugem.</strong> Pé de móvel e esponja de aço esquecida deixam mancha
+            alaranjada. Use removedor de ferrugem para piso cerâmico (produto específico,
+            não ácido muriático), localizado e com enxágue.
+          </li>
+          <li>
+            <strong>Tinta.</strong> Látex fresca sai com pano úmido; seca, amoleça com água
+            morna e detergente e raspe com espátula plástica. Esmalte e tinta óleo pedem
+            aguarrás no pano, só no ponto da mancha.
+          </li>
+          <li>
+            <strong>Caneta, marcador e riscos de borracha.</strong> Álcool ou acetona no
+            pano de microfibra, movimento circular. Marca de solado de borracha costuma
+            sair com borracha escolar branca antes de qualquer produto.
+          </li>
+          <li>
+            <strong>Limo e mofo (área externa e box).</strong> Água sanitária diluída 1:10,
+            deixar agir alguns minutos, escovar e enxaguar bem. Se o mofo é recorrente na
+            junta do box, o upgrade definitivo é rejunte epóxi — o
+            <a href="/guia/rejunte-porcelanato/">guia de rejunte</a> compara os tipos.
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Pós-obra -->
+    <section class="section">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.6rem;">
+          Limpeza pós-obra: a ordem certa
+        </h2>
+        <ul class="guide-list">
+          <li>
+            <strong>1. Sujeira grossa a seco.</strong> Varrição e aspirador antes de
+            qualquer água — esfregar pó de obra molhado é lixar o piso com o próprio
+            entulho. Respingos de massa saem com espátula <em>plástica</em>.
+          </li>
+          <li>
+            <strong>2. Lavagem neutra.</strong> Detergente neutro diluído e pano ou mop.
+            Boa parte do que parece mancha de obra é só sujeira e sai aqui.
+          </li>
+          <li>
+            <strong>3. Removedor pós-obra, só se sobrar véu.</strong> Produto específico
+            para porcelanato, com rejunte curado (≈7 dias), piso pré-molhado e enxágue
+            farto. Jogar ácido no piso sujo logo de cara é o erro que mais estraga piso
+            novo: o abrasivo risca e o ácido come o rejunte recém-aplicado.
+          </li>
+          <li>
+            <strong>Obra nova em planejamento?</strong> A
+            <a href="/calculadora/">calculadora</a> estima caixas,
+            <a href="/glossario/#argamassa-colante">argamassa</a> e rejunte pela metragem —
+            e o <a href="/guia/como-escolher-porcelanato/">guia de escolha</a> percorre
+            acabamento, formato e <a href="/glossario/#pei">PEI</a> antes da compra.
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section section--light">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.8rem;">Perguntas frequentes</h2>
+        <Faq items={faq} />
+      </div>
+    </section>
+
+    <!-- CTA duplo -->
+    <section class="section" id="contato">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:0.8rem;">
+          Vai trocar o piso — ou começar uma obra?
+        </h2>
+        <p style="color:var(--d-muted);margin-bottom:2rem;max-width:54ch;">
+          Veja o catálogo do polo em Goiânia ou calcule caixas, rejunte e argamassa numa
+          conta só antes de pedir o orçamento.
+        </p>
+        <div class="cta-block" style="display:flex;gap:1rem;flex-wrap:wrap;align-items:center;">
+          <a class="btn btn--primary" href="/calculadora/">Calcular material da obra</a>
+          <WhatsappCta termoAlvo="porcelanato" numero={whatsapp} />
+        </div>
+      </div>
+    </section>
+
+    <!-- Relacionados -->
+    <section class="section section--light">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.3rem,2.2vw,1.8rem);margin-bottom:1.4rem;">Veja também</h2>
+        <div class="related-grid">
+          {relacionados.map((r) => (
+            <a href={r.href} class="related-card">{r.label}</a>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .comp-scroll { overflow-x: auto; }
+  .comp-table { width: 100%; border-collapse: collapse; font-size: 0.92rem; min-width: 560px; }
+  .comp-table th, .comp-table td { text-align: left; padding: 0.8rem 0.9rem; border-bottom: 1px solid color-mix(in srgb, currentColor 18%, transparent); vertical-align: top; }
+  .comp-table thead th { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.75; }
+  .comp-table tbody th { font-weight: 700; width: 18%; }
+</style>

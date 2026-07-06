@@ -1,18 +1,35 @@
 ---
 status: in_progress
 next_effort: medium
-iteration: 0
-updated_at: 2026-07-06T00:00:00.000Z
+iteration: 1
+updated_at: 2026-07-06T08:40:00.000Z
 ---
 
 ## Last completed
-(nada ainda — macro plan 3 recém-escrito pelo dono em 2026-07-06; o macro
-plan 2 foi concluído 19/19 em 2026-07-05, resumo em `handoff.md` e em
-`Docs/Obsidian/80-dev/changelog-ciclos.md`, seção "Macro plan 2")
+Tarefa 1 (Semana 1, Macro plan 3): guia AEO `/guia/como-limpar-porcelanato/`
+no site-goiania. Criado `src/pages/guia/como-limpar-porcelanato.astro` no
+padrão dos 7 guias existentes (modelo: rejunte-porcelanato.astro): BLUF no
+hero, tabela de limpeza por acabamento (polido/acetinado/natural-técnico/
+externo, rotina diária vs pesada), seção "o que nunca usar" (ácido muriático,
+cera, abrasivo em polido), manchas comuns (véu de cimento, ferrugem, tinta,
+caneta, limo) e pós-obra em ordem. 8 FAQs com FAQPage + BreadcrumbList no
+JSON-LD, interlink com âncoras do glossário (#polido, #acetinado, #natural,
+#antiderrapante, #rejunte, #junta, #pei, #absorcao-de-agua,
+#argamassa-colante), guias irmãos e calculadora. Registrado em
+`src/data/guias.ts` (que alimenta sitemap/llms.txt/busca/OG dinâmico —
+nenhuma outra mudança necessária). `astro build` verde (94 páginas);
+conferido que a URL nova aparece em dist/sitemap.xml, dist/llms.txt e
+dist/busca-index.json e que o HTML emite FAQPage.
 
 ## Next step
-Ler `macro_plan.md` (Macro plan 3 — Mês 3) inteiro, em especial o bloco
-"Escopo (LEIA ANTES DE AGIR)" e a lista "Já existem, NÃO refaça", e executar a
-tarefa 1 (Semana 1): guia AEO `/guia/como-limpar-porcelanato/` no site-goiania
-— BLUF + tabela por acabamento + FAQPage + interlink com glossário/guias/malha,
-registro em `src/data/guias.ts`, `astro build` verde antes do commit.
+Tarefa 2 do `macro_plan.md` (Semana 1): guia AEO
+`/guia/como-assentar-porcelanato/` no site-goiania. Etapas reais (preparo do
+contrapiso, argamassa AC-II/AC-III conforme uso, dupla colagem em formato
+grande, junta mínima, nivelador, rejunte após cura) com schema **HowTo** +
+FAQPage. Ser honesto: recomendar profissional para grandes formatos. CTA para
+a `/calculadora/` (caixas + argamassa/rejunte que ela já estima). Seguir o
+padrão dos guias existentes (modelo: `src/pages/guia/rejunte-porcelanato.astro`,
+criado ontem: `como-limpar-porcelanato.astro`), registrar o slug em
+`src/data/guias.ts` (alimenta sitemap/llms/busca/OG sozinho), interlinkar
+glossário via âncoras `#termo` (ids em `src/pages/glossario.astro`), URLs
+sempre com barra final, `astro build` verde antes do commit.

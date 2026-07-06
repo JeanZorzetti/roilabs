@@ -47,6 +47,12 @@ export const guias = [
     descricao:
       'Faixas reais de preço por m² do catálogo do polo (por acabamento), estimativa de mão de obra de assentamento e a conta do custo total — com exemplo para 60 m².',
   },
+  {
+    slug: 'como-limpar-porcelanato',
+    titulo: 'Como limpar porcelanato: rotina, produtos e manchas por acabamento',
+    descricao:
+      'Limpeza diária e pesada para polido, acetinado, natural/técnico e área externa — o que nunca usar (ácido, cera, abrasivo), como tirar manchas comuns e a limpeza pós-obra sem estragar o piso.',
+  },
 ] as const;
 
 export type Guia = (typeof guias)[number];
