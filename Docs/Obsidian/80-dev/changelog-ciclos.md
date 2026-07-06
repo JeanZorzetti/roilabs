@@ -345,3 +345,23 @@ dono: Jean (dev)
 - `[PLACEHOLDER_*]` de `apps/site/src/lib/schema.ts` (sameAs/Person do Aldo) seguem intocados — T002 pendente de dono.
 
 **Pendências de ops que seguem abertas:** as mesmas do backlog (secrets PSI/GSC/SERPER/Resend/Asaas, Clarity envs, ntfy topic) — nada novo surgiu que exija ação imediata.
+
+---
+
+## 🚜 Macro plan 3 — mês 3 do loop autônomo (2026-07-06)
+
+> [!success] 19/19 tarefas concluídas (2 puladas por falta de dado, 1 bloqueio temporário resolvido pelo dono), commits `af510c0`→fechamento aqui + `aa1a68f`→`1c100d5` no repo splitjud. Builds verdes no fechamento: /site 15 págs, /site-goiania 98, splitjud 19.
+
+**Semana 1 — AEO de uso e pós-venda (site-goiania):** 4 guias novos em `/guia/` — como-limpar-porcelanato, como-assentar-porcelanato (schema **HowTo**), erros-ao-comprar-porcelanato, piso-vinilico-vs-porcelanato — todos BLUF + FAQPage + tabelas + registro em `guias.ts` (= sitemap/llms/hub/busca automáticos). Tarefa 5: auditoria "volta" do glossário — back-links dos guias e da ficha de produto para as âncoras `#termo` do `/glossario/` (1 link por termo por página).
+
+**Semana 2 — dados reais + técnica:** hub `/guia/` (índice agrupado pela jornada escolher→comparar→orçar→instalar→manter); **RSS 2.0 nos 2 sites** (`/rss.xml` gerado na mão via endpoint `.ts`, `rel=alternate` no Base, referência no llms.txt); tarefa 8 **pulada (sem dado)** — rank tracker retornou 0/40 posições no top 100, snapshot honesto em `90-medicao/striking-distance.md`; tarefa 9 **pulada (sem dado GSC)** — `gsc-miner.md` ausente, `GSC_SA_KEY` previsto ~07-15; passada CLS/perf (dimensões intrínsecas no masonry do Inspire-se, `fetchpriority` no LCP de produto, `decoding=async`); auditoria schema/breadcrumb (BreadcrumbList adicionado em inspire-se, páginas de ambiente e /devolucoes).
+
+**Semana 3 — B2B /site:** 2 artigos novos (Google Shopping para loja de material de construção — experiência real do feed/Merchant Center; e-commerce próprio vs polo — a conta do success fee do /simulador); refresh de fatos do case `/polo-goiania/` e da `/modelo/` (98 págs, malha 41, 11 guias, glossário 19 termos, RSS) + `dateModified`; refresh de descoberta verificado (tudo em sitemap/llms/busca/RSS, check-feed e IndexNow ok, nada a corrigir).
+
+**Semana 4 — SplitJud (repo `..\splitjud`, só `apps/site`):** glossário de honorários `/glossario/` (18 termos, DefinedTermSet, âncoras `#termo`, integrado ao `@graph` único); 3 artigos novos do cluster honorários (advogado associado, saída de sócio, sucumbência com múltiplos advogados) com `datePublished` desde o dia 1; BreadcrumbList sitewide via PublicLayout (FAQPage do /faq já existia — pulado); RSS `/rss.xml` da collection (9 itens) + `rel=alternate` + llms.txt.
+
+**Gotchas novos do mês:**
+- Tarefa 15 bloqueou 1x de novo: working tree do splitjud sujo (`handoff.md` do fechamento do mês 2 não commitado). Dono commitou/pushou, loop retomou. Padrão recorrente: **fechamento de mês N deixa o handoff do splitjud sujo para o mês N+1** — no fechamento, commitar e pushar o splitjud sempre.
+- Rank tracking ainda 0 no top 100 (baseline 07-03 mantida em 07-06) — striking distance e expansão de malha seguem gateadas em dado real, disciplina mantida.
+
+**Pendências de ops que seguem abertas:** `GSC_SA_KEY` (~07-15, destrava tarefa-9-equivalente no próximo plano), `PSI_API_KEY` (série CWV), SERPER (rank tracking já roda), placeholders T002 do splitjud (sameAs/Person do Aldo). Nada novo além dessas.

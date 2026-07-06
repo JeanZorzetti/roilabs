@@ -23,6 +23,28 @@ nicho âncora = **revestimentos/porcelanato**.
 - **Fluxo:** site (estático) → `POST app.roilabs.com.br/api/candidaturas` (urlencoded, sem preflight) → DB → kanban `/admin`.
 
 ## Feito
+- **Macro plan 3 — mês 3 do loop autônomo (2026-07-06) — 19/19 tarefas** (resumo
+  completo em `Docs/Obsidian/80-dev/changelog-ciclos.md`, seção "Macro plan 3"):
+  - **site-goiania (semanas 1–2):** 4 guias AEO novos (como-limpar,
+    como-assentar com HowTo, erros-ao-comprar, piso-vinilico-vs-porcelanato),
+    back-links de guias/produto para as âncoras do glossário, hub `/guia/`
+    (índice pela jornada), RSS `/rss.xml`, passada CLS/perf, auditoria
+    schema/breadcrumb. Build: 98 páginas.
+  - **/site (semana 3):** RSS `/rss.xml`; 2 artigos B2B novos (Google Shopping
+    p/ material de construção; e-commerce próprio vs polo, com a conta do
+    success fee); refresh de fatos + `dateModified` em `/polo-goiania/` e
+    `/modelo/`; descoberta conferida. Build: 15 páginas.
+  - **SplitJud (semana 4, repo `..\splitjud`, commits `aa1a68f`→`1c100d5`):**
+    glossário de honorários `/glossario/` (18 termos, DefinedTermSet), 3
+    artigos novos do cluster honorários, BreadcrumbList sitewide, RSS +
+    llms.txt. Build: 19 páginas. Push manual lá a cada tarefa.
+  - **Pulados por falta de dado (disciplina mantida):** striking distance
+    (rank tracker 0/40 no top 100, snapshot em
+    `90-medicao/striking-distance.md`) e expansão de malha (sem `gsc-miner.md`;
+    `GSC_SA_KEY` previsto ~07-15).
+  - **Gotcha recorrente:** fechamento do mês N deixa o `handoff.md` do
+    splitjud sujo e bloqueia a 1ª tarefa cross-repo do mês N+1 — no
+    fechamento, sempre commitar E pushar o splitjud (feito desta vez).
 - **Macro plan 2 — mês 2 do loop autônomo (2026-07-05) — 19/19 tarefas** (resumo
   completo em `Docs/Obsidian/80-dev/changelog-ciclos.md`, seção "Macro plan 2"):
   - **site-goiania (semanas 1–2):** glossário `/glossario/` (19 termos +
