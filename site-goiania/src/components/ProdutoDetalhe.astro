@@ -100,12 +100,12 @@ const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
         <tr><th scope="row">Marca</th><td>{a.marca}</td></tr>
         <tr><th scope="row">Dimensão</th><td>{a.dimensao}</td></tr>
         <tr><th scope="row">Acabamento</th><td>{a.acabamento}</td></tr>
-        <tr><th scope="row">m² por caixa</th><td>{a.m2_caixa} m²</td></tr>
+        <tr><th scope="row"><a href="/glossario/#m2-por-caixa">m² por caixa</a></th><td>{a.m2_caixa} m²</td></tr>
         {a.classe_ad != null && (
           <tr><th scope="row">Classe de Abrasão (AD)</th><td>{a.classe_ad}</td></tr>
         )}
         {a.retificado != null && (
-          <tr><th scope="row">Retificado</th><td>{a.retificado ? 'Sim' : 'Não'}</td></tr>
+          <tr><th scope="row"><a href="/glossario/#retificado">Retificado</a></th><td>{a.retificado ? 'Sim' : 'Não'}</td></tr>
         )}
       </tbody>
     </table>
