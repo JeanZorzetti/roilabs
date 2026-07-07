@@ -10,6 +10,12 @@ dono: Jean (dev)
 > [!info] O que é este arquivo
 > Tudo que estava **não-feito** em [[proximos-passos-dev]] em 2026-07-03, estacionado aqui de propósito. Nada disso bloqueia o que está no ar. Quando algum item virar prioridade, move de volta pra lista autoritativa.
 
+## 🧾 PENDÊNCIAS AMORZAUM
+
+- [ ] **Adicionar os dados necessários na hora de finalizar a venda** para emissão da NF.
+  - Primeiro passo: adicionar uma **barra de CNPJ / CPF**.
+  - Conforme o que o site **identificar** (CNPJ ou CPF), aparecem as **outras abas necessárias** para a emissão da nota fiscal (NF).
+
 ## 🔴 Crítico quando retomar (último item do MVP)
 
 - [ ] **Configurar o Asaas (chaves + webhook)** — última pendência da feature 007. Sem isso a cobrança do success fee não roda. Integração externa, separada do Mercado Pago do checkout. Código pronto (`lib/asaas.ts`, `api/faturas`, `api/parceiros/webhook`).
