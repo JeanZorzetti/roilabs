@@ -6,10 +6,12 @@
 
 | Fonte | Caminho | Modo |
 |---|---|---|
-| Catálogo (30 porcelanatos) | `site-goiania/porcelanatos.json` | Determinístico (1 obs/produto, sem LLM) |
-| Guias AEO (7 páginas) | `site-goiania/src/pages/guia/*.astro` | Scout (phi4-mini→nuextract) por chunk |
-| Vault estratégico | `Docs/Obsidian/00-tese/`, `10-mercado/` | Scout por chunk |
-| Rank tracking | `Docs/Obsidian/90-medicao/rank-tracking.csv` | Determinístico (só linhas COM posição) |
+| Catálogo (30 porcelanatos) | `site-goiania/porcelanatos.json` | **Trusted** (obs + fato direto, sem juiz LLM) |
+| Guias AEO (7 páginas) | `site-goiania/src/pages/guia/*.astro` | Scout (phi4-mini→nuextract) por chunk → juiz |
+| Vault estratégico | `Docs/Obsidian/00-tese/`, `10-mercado/` | Scout por chunk → juiz |
+| Rank tracking | `Docs/Obsidian/90-medicao/rank-tracking.csv` | **Trusted** (só linhas COM posição) |
+
+**Trusted path** (2026-07-07, `4ac5e17`): fonte determinística é verdade por construção — o juiz phi4-mini rejeitava 20–30% do catálogo como "subjetivo" independente de prompt. `--catalog`/`--rank-csv` agora embedam + dedupam + verificam direto (confiança 1.0, segundos por obs em vez de ~2,5 min). Dedup por **slug** (fallback sim ≥0.995) — produtos irmãos ("Strato Marmo Bege" vs "Grigio") cruzam 0.95 e NÃO podem se corroborar. `--promote-pending` recupera obs confiáveis paradas.
 
 ## Como rodar (notebook, na raiz do sem-swarm)
 
@@ -52,6 +54,9 @@ Pergunta: *"Quanto custa o m² do Persia Beige e quais outros 100x100cm existem?
 - Dreaming Loop (VPS, tick a cada 3h) consolida redundâncias entre catálogo × guias automaticamente.
 
 ## Pendências / próximos passos
+
+- [ ] Resíduo conhecido: ~11 produtos têm 2 fatos ativos (versão reescrita pelo juiz em 07-06, com typos "Goiçana", + versão limpa trusted de 07-07). O Dreaming Loop consolida ≥0.96; conferir na UI depois de alguns ticks.
+- [ ] 2 fatos com corroboração espúria de produto-irmão (contadores +1 em fatos #22 e #33, do limiar 0.95 pré-fix) — inofensivo (confiança já era 1.0), sem endpoint pra reverter.
 
 - [ ] Acompanhar a primeira carga completa (fila de observações zerada, fatos na UI).
 - [ ] Re-rodar `--rank-csv` quando houver posições reais.
