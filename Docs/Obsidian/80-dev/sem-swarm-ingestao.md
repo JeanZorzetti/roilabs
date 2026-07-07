@@ -36,7 +36,8 @@ python -m agents.synthesizer --query "qual porcelanato tem menor preço por m²?
 
 - **⚠️ NÃO rodar Scout (ingestão --files) e Filter daemon AO MESMO TEMPO no notebook**: os dois disputam o mesmo phi4-mini e a fila do Ollama serializa — as chamadas estouram timeout. Sequência certa: ingerir primeiro, depois ligar o filter. (Descoberto na primeira carga 2026-07-06; o ingest agora tem timeout 480s + retry por chunk, e o filter tolera falha por observação, mas a serialização continua sendo o caminho rápido.)
 - **Observação presa em `processing`** (crash/kill do filter no meio do lote): recuperar com `python -m agents.filter --reprocess-stuck` (com o daemon parado).
-- **NuExtract devolve campos vazios em ~1/3 das obs de catálogo** (determinístico — retry não resolve): o filter agora cai automaticamente pro phi4-mini com JSON schema (fix `b864e81`). Se ainda assim vier vazio, a obs fica `processing` (nunca rejeição com motivo em branco).
+- **NuExtract devolve campos vazios em ~1/3 das obs de catálogo** (determinístico — retry não resolve): o filter agora cai automaticamente pro phi4-mini com JSON schema (fixes `b864e81`+`d5acbef`). Invariante: rejeição sem justificativa ou aprovação sem fato = inconclusivo → fallback → se persistir, fica `processing`.
+- **Variância de julgamento do phi4-mini** (temp 0.3): ocasionalmente rejeita um fato de catálogo verdadeiro como "subjetivo". Remédio: redepositar a obs (sweep idempotente via `metadata.redeposit_of`) e deixar rejulgar — na prática o rejulgamento aprova; consenso/corroboração absorve o ruído.
 - **Synthesizer local**: exportar `OLLAMA_REASONING_MODEL=phi4-mini` antes de rodar — o `.env` pede `qwen3:8b`, que não está puxado no notebook (dá 404 no /api/generate).
 - **Typos nos fatos** ("Goiçana" em vez de Goiânia): gap 5 conhecido do NuExtract na formulação do clean_fact; os números saem fiéis (fidelidade 1.0 no benchmark).
 
