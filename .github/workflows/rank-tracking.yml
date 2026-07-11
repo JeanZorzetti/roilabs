@@ -42,7 +42,8 @@ jobs:
           git config user.name "rank-tracking"
           git config user.email "actions@users.noreply.github.com"
           git add Docs/Obsidian/90-medicao/
-          git diff --cached --quiet || { git commit -m "chore: weekly rank tracking $(date -u +%F)"; git push; }
+          # pull --rebase: re-run usa checkout antigo e a main pode ter avançado (push rejeitado 11/07)
+          git diff --cached --quiet || { git commit -m "chore: weekly rank tracking $(date -u +%F)"; git pull --rebase origin main; git push; }
       # Weekly digest e-mail (leads/pedidos/GMV from the DB + this run's rank snapshot).
       # Runs even if rank tracking failed — the DB stats are still worth sending.
       - if: always()
