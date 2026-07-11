@@ -59,4 +59,5 @@ dono: Jean (dev)
 
 ## ⏭️ Próximo checkpoint
 
-- **~07-15** — GSC miner + checkpoint da malha ([[backlog-pendencias]]): a partir daí os dados (GSC, Clarity, coluna Origem, `busca_interna` com 0 resultado) escolhem o ciclo 15 — não especular antes.
+- [x] **EXECUTADO 11/07 (antecipado)** — [[checkpoint-malha-2026-07]]: **41/41 da malha indexadas** (meta ≥35), miner validado (0 candidatas acima do piso — cedo demais), fix trailing-slash confirmado vivo. **Ciclo 15 escolhido pelos dados: reforçar guias (limpeza/rejunte/polido-vs-acetinado) + interlink guia→malha.** Clarity/busca_interna/Origem ficaram pro D+30 (~28/07).
+- **~28/07 (D+30)** — reavaliar com o miner semanal rodando (secret `GSC_SA_KEY` pendente, 2 min).

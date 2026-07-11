@@ -29,6 +29,8 @@ jobs:
         run: node site-goiania/src/scripts/gsc-miner.mjs || echo "gsc-miner skipped"
         env:
           GSC_SA_KEY: ${{ secrets.GSC_SA_KEY }}
+          # SA nimblabs (roihub) enxerga a propriedade de DOMÍNIO, não a URL-prefix (403)
+          GSC_SITE: sc-domain:goiania.roilabs.com.br
       # Core Web Vitals (PageSpeed Insights, grátis) — no-op até o secret PSI_API_KEY
       # existir (anônimo dá 429; chave grátis no console do Google). Non-fatal por design.
       - if: always()

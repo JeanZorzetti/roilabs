@@ -94,7 +94,8 @@ const quaseLa = [...porQuery.values()]
   .sort((a, b) => b.impressions - a.impressions)
   .slice(0, 40);
 
-const rel = (u) => u.replace(SITE.replace(/\/$/, ''), '');
+// strip do host de qualquer forma de propriedade (URL-prefix ou sc-domain:)
+const rel = (u) => u.replace(/^https?:\/\/[^/]+/, '');
 const linha = (r) =>
   `| ${r.query} | ${rel(r.page)} | ${r.impressions} | ${r.clicks} | ${r.position.toFixed(1)} |`;
 

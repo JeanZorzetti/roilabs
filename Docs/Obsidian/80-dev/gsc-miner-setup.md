@@ -7,6 +7,13 @@ dono: Jean (dev)
 
 # ⛏️ GSC miner — setup (service account, ~10 min, 1 vez)
 
+> [!success] Atalho descoberto no checkpoint de 11/07 ([[checkpoint-malha-2026-07]])
+> O SA do roihub (`nimblabs@review-dispute-agent-498311...`) JÁ tem leitura via propriedade de
+> domínio `sc-domain:goiania.roilabs.com.br` (a URL-prefix devolve 403 pra ele). O workflow já
+> passa `GSC_SITE=sc-domain:goiania.roilabs.com.br`. Ou seja: **secret `GSC_SA_KEY` = colar o
+> mesmo JSON do `GOOGLE_SERVICE_ACCOUNT_JSON` do roihub e pronto** — os passos 1–3 abaixo
+> viram opcionais (só se quiser SA dedicado).
+
 > [!info] O que é
 > `site-goiania/src/scripts/gsc-miner.mjs` minera a Search Console API (grátis) toda segunda
 > no cron do [[rank-tracking]] (`rank-tracking.yml`) e grava duas listas em
