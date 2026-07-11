@@ -63,9 +63,17 @@ dono: Jean (dev) + Claude
 
 ## Pendências que o checkpoint deixou
 
-- [ ] **Secret `GSC_SA_KEY` (Jean, 2 min — ficou FÁCIL):** pode ser o MESMO JSON do roihub
-  (`GOOGLE_SERVICE_ACCOUNT_JSON` do `.env` de lá) — o workflow já passa
-  `GSC_SITE=sc-domain:goiania.roilabs.com.br`. SA dedicado do runbook [[gsc-miner-setup]] virou opcional.
-- [ ] `PSI_API_KEY` (CWV semanal) segue pendente.
+- [x] **Secret `GSC_SA_KEY`** — ✅ setado 11/07 (mesmo JSON do roihub, via `gh secret set`);
+  validado no run manual do workflow: gsc-miner leu 25 pares query×page da `sc-domain:`.
+- [x] `PSI_API_KEY` — ✅ criada 11/07 via API Keys API (key restrita ao PSI no projeto
+  `review-dispute-agent-498311`, a mesma SA tinha permissão) e setada no repo; cwv-psi rodou 5/5.
+  **1º baseline em [[cwv]] — ⚠️ ACHADO: CLS ~1,0 no hub `/porcelanato/` (score 48) e no template
+  da malha (score 44). Meta é ≤ 0,1 — candidato forte a próxima ação dev.**
+- [x] **Redirects:** fix trailing-slash re-confirmado vivo 11/07 (301 único hop → https com barra;
+  http → 308). Queda no share de 301 (33,6%) ainda NÃO mensurável: o export de 10/07 só cobre até
+  05/07 e a janela é dominada pelo pré-fix — **medir de verdade no export de sexta 17/07** (/infra).
 - [ ] **Não conferidos neste checkpoint (sem acesso daqui):** Clarity, `busca_interna` com 0
   resultado (painel himetrica) e coluna Origem dos leads no admin — olhar junto do D+30.
+- [ ] ⚠️ **`CRON_SECRET` não existe nos secrets do repo** (achado 11/07 no run manual): o step do
+  digest semanal termina sempre em "digest skipped" — o e-mail nunca envia. O valor está na env do
+  app em prod (EasyPanel) → copiar pra `gh secret set CRON_SECRET --repo JeanZorzetti/roilabs`.
