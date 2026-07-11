@@ -365,3 +365,37 @@ dono: Jean (dev)
 - Rank tracking ainda 0 no top 100 (baseline 07-03 mantida em 07-06) — striking distance e expansão de malha seguem gateadas em dado real, disciplina mantida.
 
 **Pendências de ops que seguem abertas:** `GSC_SA_KEY` (~07-15, destrava tarefa-9-equivalente no próximo plano), `PSI_API_KEY` (série CWV), SERPER (rank tracking já roda), placeholders T002 do splitjud (sameAs/Person do Aldo). Nada novo além dessas.
+
+## 🧭 Ciclo 15 — reforço de guias + interlink guia→malha (2026-07-11)
+
+> [!success] Escolhido pelos dados do [[checkpoint-malha-2026-07]]: os guias têm as impressões, a malha precisa dos links. Executado junto com a investigação do achado de CLS do baseline CWV.
+
+**CLS ~1,0 hub/malha (achado de 11/07): NÃO É BUG — transitório do PSI.** Re-medição no
+mesmo dia, mesmo build (nenhum commit de código desde 07-06), por 3 métodos: observer
+`layout-shift` via Playwright com throttle Lighthouse (CLS 0,005), Lighthouse local com a
+emulação do PSI (0,003) e a própria PSI API 2× (hub **0**, malha **0,002**). Suíte oficial
+`cwv-psi.mjs` re-rodada 5/5 → [[cwv]] atualizado: hub 67/CLS 0, malha 68/CLS 0. Nada a
+corrigir nos templates; o cron de segunda é o tripwire — se o ~1,0 voltar, o suspeito é
+font-swap tardio (upgrade path: self-host das fontes Google). Truque reutilizado: a
+`PSI_API_KEY` foi recuperada localmente via API Keys API (`keyString`) com a SA do roihub.
+**Bônus:** o real problema dos scores 44–48 de ontem era LCP 5,3–5,9s, não CLS — LCP segue
+~5,9s hoje (score 60–68); candidato a próxima passada de perf.
+
+**Reforço dos 3 guias com impressão (mapa = 10+ variantes de query do GSC):**
+- `/guia/como-limpar-porcelanato/` (14 impr., líder): nova seção **"Mancha por acabamento:
+  fosco, polido e acetinado"** — cobre o cluster "como tirar mancha de porcelanato
+  fosco/polido/acetinado" — + 2 FAQs novas no FAQPage ("Como tirar mancha de porcelanato
+  fosco?", "Por que o porcelanato parece manchado depois de limpar?"). 4 links de malha
+  contextuais (piso-porcelanato, polido, acetinado, amadeirado).
+- `/guia/rejunte-porcelanato/` (pos 28): sub-seção **"Regra rápida por ambiente"** com 4
+  links de malha (retificado, banheiro, cozinha, piscina).
+- `/guia/porcelanato-polido-ou-acetinado/` (pos 31): sub-seção **"O atalho por ambiente"**
+  com 4 deep-links pra malha combo (polido-sala, acetinado-banheiro, cozinha,
+  piso-area-externa).
+
+**Interlink guia→malha nos demais guias (âncora contextual, sem re-escrever):**
+como-assentar +4 (90x90, 120x60, banheiro, cozinha) · piso-vinilico-vs +3 (piso-cozinha,
+piso-banheiro, amadeirado) · liquido-vs +2 (polido, retificado) · área-externa +1 (piscina,
+na tabela) · erros-ao-comprar +2 no "Veja também" (porcelanato-preco, retificado).
+**Total: ~20 links novos guia→malha** (antes: como-limpar e rejunte tinham ZERO link de
+malha no corpo). Build verde 98 páginas, FAQPage re-sincronizado automático (array `faq`).

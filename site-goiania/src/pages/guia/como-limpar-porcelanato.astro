@@ -47,6 +47,14 @@ const faq = [
     q: 'Com que frequência lavar porcelanato de área externa?',
     a: 'Varrição semanal e lavagem mensal com água, detergente neutro e vassoura de cerdas duras resolvem na maioria das casas — o acabamento antiderrapante é mais texturizado e segura mais sujeira que o piso interno. Lavadora de alta pressão pode ser usada no piso externo técnico, com bico em leque e distância de ~30 cm, tomando cuidado com o jato direto na junta, que desgasta o rejunte. Limo e mofo saem com água sanitária diluída, enxaguando bem.',
   },
+  {
+    q: 'Como tirar mancha de porcelanato fosco?',
+    a: 'No porcelanato fosco (natural, técnico ou acetinado), a "mancha" quase sempre é resíduo preso na textura da superfície — película de produto multiuso, gordura ou sujeira mal enxaguada — e não pigmento absorvido pela peça. Lave com limpador alcalino suave (ou detergente neutro concentrado), esfregue com escova de cerdas macias ou fibra branca e enxágue com água limpa até parar de fazer espuma. Se a mancha resistir, repita com o alcalino puro agindo por 5–10 minutos antes de esfregar. O que não fazer: ácido (ataca o rejunte) e esponja abrasiva, que abre a textura e faz o piso sujar mais rápido dali em diante.',
+  },
+  {
+    q: 'Por que o porcelanato parece manchado depois de limpar?',
+    a: 'Os três culpados mais comuns: película de produto (multiuso perfumado, cera ou excesso de detergente) que seca em faixas e segura poeira; água dura secando naturalmente no polido, que deixa marca de secagem; e pano ou mop já sujo espalhando a sujeira em vez de removê-la. A correção é a mesma nos três casos: lave uma vez com detergente neutro bem diluído e água limpa, troque a água do balde durante o serviço e, no polido, seque com pano de microfibra limpo. Se o piso é novo e a mancha é esbranquiçada e uniforme, pode ser véu de cimento do rejuntamento — aí o caminho é o removedor pós-obra.',
+  },
 ];
 
 const jsonLdNodes = [
@@ -239,8 +247,53 @@ const relacionados = [
       </div>
     </section>
 
-    <!-- Pós-obra -->
+    <!-- Mancha por acabamento (ciclo 15: cluster "mancha em porcelanato fosco/polido/acetinado") -->
     <section class="section">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.6rem;">
+          Mancha por acabamento: fosco, polido e acetinado
+        </h2>
+        <p style="color:var(--d-muted);margin-bottom:1.6rem;max-width:66ch;">
+          O mesmo tipo de mancha se comporta diferente conforme o acabamento — e o produto
+          certo muda junto. O atalho por superfície:
+        </p>
+        <ul class="guide-list">
+          <li>
+            <strong>Porcelanato fosco (natural ou técnico).</strong> A textura aberta segura
+            resíduo: o que parece mancha costuma ser película de multiuso, gordura ou
+            detergente mal enxaguado. Limpador alcalino suave + escova de cerdas macias +
+            enxágue farto resolvem; para resíduo teimoso, deixe o alcalino agir 5–10 minutos
+            antes de esfregar. Nunca abrasivo — riscar a textura faz o piso segurar ainda
+            mais sujeira. É o cuidado que vale para todo
+            <a href="/porcelanato/piso-porcelanato/">piso de porcelanato</a> sem esmalte de
+            brilho.
+          </li>
+          <li>
+            <strong>Porcelanato polido.</strong> A superfície espelhada solta a sujeira
+            fácil, mas denuncia tudo: marca d'água de secagem, pegada e qualquer produto
+            que deixe filme. Mancha localizada sai com detergente neutro concentrado e fibra
+            branca; a marca de secagem, com pano de microfibra seco ao final. Risco não é
+            mancha — é dano físico e não sai com produto. Antes de qualquer removedor,
+            teste num canto escondido. Vai comprar e quer esse acabamento? Veja o
+            <a href="/porcelanato/porcelanato-polido/">porcelanato polido</a> disponível no
+            polo.
+          </li>
+          <li>
+            <strong>Porcelanato acetinado.</strong> O meio-termo que menos dá trabalho:
+            esconde marca d'água e pegada, e a superfície semifechada solta gordura de
+            cozinha com detergente neutro ou desengordurante suave. Se o piso "manchou"
+            depois da limpeza, o culpado costuma ser resíduo de produto — relave só com água
+            limpa e neutro bem diluído. É o acabamento padrão do
+            <a href="/porcelanato/porcelanato-acetinado/">porcelanato acetinado</a> e da
+            maioria dos <a href="/porcelanato/porcelanato-amadeirado/">amadeirados</a> do
+            catálogo.
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Pós-obra -->
+    <section class="section section--light">
       <div class="wrap">
         <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.6rem;">
           Limpeza pós-obra: a ordem certa
@@ -273,7 +326,7 @@ const relacionados = [
     </section>
 
     <!-- FAQ -->
-    <section class="section section--light">
+    <section class="section">
       <div class="wrap">
         <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.8rem;">Perguntas frequentes</h2>
         <Faq items={faq} />
@@ -281,7 +334,7 @@ const relacionados = [
     </section>
 
     <!-- CTA duplo -->
-    <section class="section" id="contato">
+    <section class="section section--light" id="contato">
       <div class="wrap">
         <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:0.8rem;">
           Vai trocar o piso — ou começar uma obra?
@@ -298,7 +351,7 @@ const relacionados = [
     </section>
 
     <!-- Relacionados -->
-    <section class="section section--light">
+    <section class="section">
       <div class="wrap">
         <h2 style="font-size:clamp(1.3rem,2.2vw,1.8rem);margin-bottom:1.4rem;">Veja também</h2>
         <div class="related-grid">

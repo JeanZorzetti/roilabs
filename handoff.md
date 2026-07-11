@@ -23,6 +23,18 @@ nicho âncora = **revestimentos/porcelanato**.
 - **Fluxo:** site (estático) → `POST app.roilabs.com.br/api/candidaturas` (urlencoded, sem preflight) → DB → kanban `/admin`.
 
 ## Feito
+- **Ciclo 15 + investigação CLS (2026-07-11)** — detalhe em
+  `Docs/Obsidian/80-dev/changelog-ciclos.md` § Ciclo 15:
+  - **CLS ~1,0 hub/malha do baseline CWV = transitório do PSI, não bug** (re-medido 3
+    métodos no mesmo build: hub 0, malha 0,002; `cwv.md` re-gerado 5/5). Sem fix de
+    template; tripwire = cron de segunda. Problema real dos scores é **LCP ~5,9s**
+    (próxima passada de perf). Gotcha útil: `PSI_API_KEY` recuperável localmente via
+    API Keys API (`keyString`) com a SA do roihub (JSON em `Downloads/`).
+  - **Ciclo 15 (dados do checkpoint-malha):** como-limpar ganhou seção "Mancha por
+    acabamento" + 2 FAQs (cluster de 10+ queries); rejunte ganhou "Regra rápida por
+    ambiente"; polido-ou-acetinado ganhou "O atalho por ambiente" com deep-links combo;
+    +passada de interlink nos demais guias. **~20 links novos guia→malha** (como-limpar e
+    rejunte tinham zero). Build 98 págs verde; deploy automático por push.
 - **Macro plan 3 — mês 3 do loop autônomo (2026-07-06) — 19/19 tarefas** (resumo
   completo em `Docs/Obsidian/80-dev/changelog-ciclos.md`, seção "Macro plan 3"):
   - **site-goiania (semanas 1–2):** 4 guias AEO novos (como-limpar,

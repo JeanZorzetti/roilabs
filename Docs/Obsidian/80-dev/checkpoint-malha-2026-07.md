@@ -69,6 +69,11 @@ dono: Jean (dev) + Claude
   `review-dispute-agent-498311`, a mesma SA tinha permissão) e setada no repo; cwv-psi rodou 5/5.
   **1º baseline em [[cwv]] — ⚠️ ACHADO: CLS ~1,0 no hub `/porcelanato/` (score 48) e no template
   da malha (score 44). Meta é ≤ 0,1 — candidato forte a próxima ação dev.**
+  ↳ **RESOLVIDO 11/07 (mesmo dia): falso positivo/transitório do PSI.** Re-medido no mesmo
+  build por 3 métodos (Playwright layout-shift observer, Lighthouse local, PSI API 2×):
+  hub CLS **0**, malha **0,002**. [[cwv]] re-gerado 5/5 confirmando. Nenhum fix de template
+  necessário; cron semanal é o tripwire. O problema real dos scores é **LCP ~5,9s** —
+  candidato a próxima passada de perf. Detalhe em [[changelog-ciclos]] § Ciclo 15.
 - [x] **Redirects:** fix trailing-slash re-confirmado vivo 11/07 (301 único hop → https com barra;
   http → 308). Queda no share de 301 (33,6%) ainda NÃO mensurável: o export de 10/07 só cobre até
   05/07 e a janela é dominada pelo pré-fix — **medir de verdade no export de sexta 17/07** (/infra).

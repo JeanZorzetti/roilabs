@@ -12,8 +12,8 @@ fonte: PageSpeed Insights API (Lighthouse mobile em prod)
 
 | Página | Score | LCP | CLS | TBT | CrUX LCP |
 |---|---|---|---|---|---|
-| / | 92 | 2.7s | 0.047 | 42ms | — |
-| /porcelanato/ | 48 | 5.3s | 1.027 | 93ms | — |
-| /porcelanato/porcelanato-amadeirado/ | 44 | 5.9s | 1 | 48ms | — |
-| /porcelanato/produto/porcelanato-20x120-carvalho-natural/ | 87 | 3.4s | 0.002 | 50ms | — |
-| /calculadora/ | 67 | 5.8s | 0 | 128ms | — |
+| / | 70 | 5.8s | 0.077 | 53ms | — |
+| /porcelanato/ | 67 | 5.9s | 0 | 116ms | — |
+| /porcelanato/porcelanato-amadeirado/ | 68 | 5.9s | 0 | 70ms | — |
+| /porcelanato/produto/porcelanato-20x120-carvalho-natural/ | 83 | 4.0s | 0.002 | 57ms | — |
+| /calculadora/ | 63 | 6.0s | 0 | 250ms | — |
