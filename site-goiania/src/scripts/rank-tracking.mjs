@@ -12,8 +12,11 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
-const SERPER = process.env.SERPER_API_KEY;
-const DFS = process.env.DATAFORSEO_API_KEY;
+// strip de BOM/espaço: secret colado com U+FEFF invisível quebra o header do fetch
+// (40/40 "erros de consulta" de 06/07 a 11/07 — ByteString error)
+const clean = (v) => v?.replace(/^﻿/, '').trim() || undefined;
+const SERPER = clean(process.env.SERPER_API_KEY);
+const DFS = clean(process.env.DATAFORSEO_API_KEY);
 if (!SERPER && !DFS) {
   console.error('rank-tracking: defina SERPER_API_KEY (grátis em serper.dev) ou DATAFORSEO_API_KEY');
   process.exit(1);
@@ -101,7 +104,7 @@ dono: automático (rank-tracking.mjs, cron semanal)
 # 📈 Rank tracking — ${TARGET}
 
 > [!info] Atualizado em ${hoje} — ${ranqueadas.length}/${results.length} keywords no top 50 (Google, Goiânia).
-> Histórico completo em \`rank-tracking.csv\` (mesma pasta). Fonte: DataForSEO SERP.
+> Histórico completo em \`rank-tracking.csv\` (mesma pasta). Fonte: ${SERPER ? 'serper.dev' : 'DataForSEO'} SERP.
 
 ## No top 50
 
