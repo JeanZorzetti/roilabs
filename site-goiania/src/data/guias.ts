@@ -71,6 +71,12 @@ export const guias = [
     descricao:
       'LVT/SPC ou placa cerâmica — comparativo honesto de custo por m² instalado, durabilidade da capa de uso, resistência à umidade, conforto térmico/acústico e valor de revenda, com o ambiente certo para cada um.',
   },
+  {
+    slug: 'porcelanato-retificado-ou-bold',
+    titulo: 'Porcelanato retificado ou bold: qual escolher?',
+    descricao:
+      'Retificado tem borda em esquadro e junta fina (~2 mm); bold vem com borda amaciada e pede junta de 3–5 mm que perdoa contrapiso irregular. Compare custo, mão de obra e visual — e por que "junta zero" é mito nos dois.',
+  },
 ] as const;
 
 export type Guia = (typeof guias)[number];

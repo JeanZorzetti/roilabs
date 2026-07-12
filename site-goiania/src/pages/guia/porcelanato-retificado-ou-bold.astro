@@ -1,0 +1,287 @@
+---
+// Guia de decisão AEO: "porcelanato retificado ou bold?" — a dúvida de borda/junta
+// que vem ANTES da categoria /porcelanato/porcelanato-retificado. Mesmo padrão do
+// polido × acetinado: BLUF + tabela comparativa + FAQ (FAQPage) + CTA duplo.
+import Base from '../../layouts/Base.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import Faq from '../../components/Faq.astro';
+import WhatsappCta from '../../components/WhatsappCta.astro';
+import { guias } from '../../data/guias';
+
+const SITE = Astro.site?.href.replace(/\/$/, '') ?? 'https://goiania.roilabs.com.br';
+const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
+const guia = guias.find((g) => g.slug === 'porcelanato-retificado-ou-bold')!;
+
+const faq = [
+  {
+    q: 'Porcelanato retificado pode ser assentado com junta zero?',
+    a: 'Não. "Junta zero" é um mito de vitrine — mesmo o retificado precisa de uma junta técnica mínima, na faixa de 1,5 a 2 mm, para acomodar a dilatação térmica e a leve variação de calibre entre as peças. Sem nenhuma junta, as peças "brigam" com a movimentação do piso e lascam nos cantos ou até estufam e soltam. O retificado permite junta fina, não junta ausente.',
+  },
+  {
+    q: 'Porcelanato bold é de qualidade inferior ao retificado?',
+    a: 'Não. Retificado e bold dizem respeito só ao acabamento da borda, não à qualidade nem à classe do material. Existe porcelanato bold excelente e cerâmica retificada — a qualidade real vem do PEI, da absorção de água (≤ 0,5% define porcelanato) e da uniformidade de calibre. Bold é a peça com a borda amaciada de fábrica; retificado é a peça com a borda cortada em esquadro depois de queimada.',
+  },
+  {
+    q: 'Qual é mais barato de instalar, retificado ou bold?',
+    a: 'O bold, no conjunto. A peça costuma custar um pouco menos e a mão de obra é mais simples, porque a junta maior (3 a 5 mm) perdoa pequenas variações de nível e de tamanho. O retificado pede assentador caprichoso e nivelador de piso para a junta fina não denunciar nenhum degrau, o que encarece a colocação além da peça.',
+  },
+  {
+    q: 'Dá para usar retificado em reforma, sobre piso antigo?',
+    a: 'Dá, desde que o contrapiso esteja bem nivelado (ou seja regularizado antes). Como o retificado trabalha com junta fina, ele não disfarça desnível: qualquer ondulação vira um degrau visível entre as peças. Sobre contrapiso irregular de reforma, o bold é mais seguro — a junta de 3 a 5 mm absorve a imperfeição.',
+  },
+  {
+    q: 'Como saber se o porcelanato é retificado na hora de comprar?',
+    a: 'A ficha técnica e a etiqueta da caixa trazem "retificado" ou "borda amaciada/bold". Na peça, o retificado tem a borda reta, em ângulo de 90°, e todas as peças com o mesmo tamanho exato; o bold tem um leve arredondamento na quina. Como regra prática, formatos grandes (90×90, 120×60) quase sempre são retificados.',
+  },
+  {
+    q: 'Retificado precisa de nivelador de piso?',
+    a: 'É fortemente recomendado, principalmente em formato grande. O nivelador (o conjunto de clipe e cunha) mantém as peças vizinhas no mesmo plano durante a cura da argamassa, evitando o "degrau" entre elas — o chamado lippage — que a junta fina do retificado não tem como esconder. No bold, com junta maior, ele ajuda, mas é menos crítico.',
+  },
+];
+
+const jsonLdNodes = [
+  {
+    '@type': 'FAQPage',
+    mainEntity: faq.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  },
+  {
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Início', item: SITE },
+      { '@type': 'ListItem', position: 2, name: guia.titulo, item: `${SITE}/guia/${guia.slug}/` },
+    ],
+  },
+];
+
+const relacionados = [
+  { href: '/porcelanato/porcelanato-retificado/', label: 'Porcelanato retificado' },
+  { href: '/guia/como-assentar-porcelanato/', label: 'Como assentar porcelanato' },
+  { href: '/guia/rejunte-porcelanato/', label: 'Rejunte para porcelanato' },
+  { href: '/guia/como-escolher-porcelanato/', label: 'Como escolher porcelanato' },
+  { href: '/guia/porcelanato-polido-ou-acetinado/', label: 'Polido ou acetinado?' },
+  { href: '/calculadora/', label: 'Calculadora de caixas' },
+];
+---
+
+<Base
+  title={`${guia.titulo} — Goiânia | ROI Labs`}
+  description="Retificado dá junta fina (~2 mm) e visual contínuo, mas exige contrapiso nivelado e nivelador; bold pede junta de 3–5 mm, perdoa desnível e sai mais barato. Veja qual usar — e por que junta zero não existe."
+  ogImage={`/open-graph/guia/${guia.slug}.png`}
+  jsonLdNodes={jsonLdNodes}
+>
+  <Header />
+
+  <main>
+    <section class="pseo-hero">
+      <div class="wrap">
+        <nav class="breadcrumb" aria-label="Localização">
+          <a href="/">Início</a>
+          <span class="breadcrumb__sep" aria-hidden="true">›</span>
+          <span aria-current="page">Guia de decisão</span>
+        </nav>
+
+        <div class="pseo-hero__eyebrow">
+          <span class="eyebrow">Goiânia · Guia de decisão</span>
+        </div>
+        <h1>{guia.titulo}</h1>
+        <p class="pseo-hero__intro">
+          Resposta direta: escolha o <strong>retificado</strong> quando quiser visual
+          contínuo com <a href="/glossario/#junta">junta</a> fina (~2 mm) — vale a pena em
+          <a href="/glossario/#formato-grande">formato grande</a> e ambiente amplo, desde que
+          o contrapiso esteja bem nivelado e o assentador use nivelador. Escolha o
+          <strong>bold</strong> (borda amaciada) quando o orçamento for mais enxuto ou a obra
+          for reforma sobre contrapiso irregular: a junta de 3 a 5 mm perdoa o desnível e a
+          colocação é mais simples. E, nos dois casos, <strong>junta zero não existe</strong>.
+        </p>
+      </div>
+    </section>
+
+    <!-- Tabela comparativa -->
+    <section class="section section--light">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.6rem;">
+          Retificado × bold, lado a lado
+        </h2>
+        <div class="comp-scroll">
+          <table class="comp-table">
+            <thead>
+              <tr>
+                <th scope="col">Critério</th>
+                <th scope="col"><a href="/glossario/#retificado">Retificado</a></th>
+                <th scope="col"><a href="/glossario/#bold">Bold (borda amaciada)</a></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Borda</th>
+                <td>Cortada em esquadro, ângulo de 90°</td>
+                <td>Levemente arredondada/chanfrada de fábrica</td>
+              </tr>
+              <tr>
+                <th scope="row">Junta recomendada</th>
+                <td>Fina, ~1,5 a 2 mm (nunca zero)</td>
+                <td>De 3 a 5 mm</td>
+              </tr>
+              <tr>
+                <th scope="row">Visual do piso</th>
+                <td>Contínuo, quase sem juntas aparentes</td>
+                <td>Juntas marcam a paginação — visual mais "quadriculado"</td>
+              </tr>
+              <tr>
+                <th scope="row">Contrapiso exigido</th>
+                <td>Bem nivelado — não perdoa desnível</td>
+                <td>Tolera pequenas irregularidades</td>
+              </tr>
+              <tr>
+                <th scope="row">Mão de obra</th>
+                <td>Mais cuidadosa e cara; pede nivelador</td>
+                <td>Mais simples e econômica</td>
+              </tr>
+              <tr>
+                <th scope="row"><a href="/glossario/#calibre">Calibre</a></th>
+                <td>Uniforme — peças com o mesmo tamanho exato</td>
+                <td>Pode variar levemente entre lotes</td>
+              </tr>
+              <tr>
+                <th scope="row">Preço (mesmo modelo)</th>
+                <td>Em geral um pouco maior</td>
+                <td>Em geral menor</td>
+              </tr>
+              <tr>
+                <th scope="row">Melhor para</th>
+                <td>Formato grande, ambiente amplo, obra nova</td>
+                <td>Reforma, contrapiso irregular, orçamento enxuto</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- A verdade sobre a junta zero -->
+    <section class="section">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.6rem;">
+          A verdade sobre a "junta zero"
+        </h2>
+        <p style="color:var(--d-muted);max-width:64ch;margin-bottom:1.2rem;">
+          O retificado permite <strong>junta fina</strong>, e é aí que nasce o mito de que
+          ele pode ser assentado "coladinho", sem junta. Não pode — e quem faz isso paga caro
+          depois. Toda placa cerâmica dilata e contrai com a variação de temperatura, e o
+          piso inteiro se movimenta com a estrutura da casa. A junta é o espaço que absorve
+          esse movimento.
+        </p>
+        <ul class="guide-list">
+          <li>Sem junta, as peças pressionam umas às outras na dilatação e <strong>lascam nas quinas</strong> — o defeito aparece meses depois da obra pronta.</li>
+          <li>Em piso grande ou com incidência de sol, a ausência de junta pode fazer o revestimento <strong>estufar e soltar</strong> em blocos.</li>
+          <li>Mesmo o retificado tem uma <a href="/glossario/#calibre">variação de calibre</a> mínima entre peças; a junta técnica de ~1,5 a 2 mm dá a folga para alinhar tudo.</li>
+          <li>Além da junta entre peças, a obra precisa de <strong>juntas de dilatação</strong> nas bordas (encontro com parede) e a cada poucos metros em áreas grandes — o assentador define no projeto de <a href="/glossario/#paginacao">paginação</a>.</li>
+        </ul>
+        <p style="color:var(--d-muted);max-width:64ch;margin-top:1.2rem;">
+          Ou seja: retificado é junta discreta e regularíssima; bold é junta assumida e mais
+          larga. A junta ideal e a cor certa do <a href="/glossario/#rejunte">rejunte</a> estão
+          no guia de <a href="/guia/rejunte-porcelanato/">rejunte para porcelanato</a>, e o
+          passo a passo com <a href="/glossario/#nivelador">nivelador</a> e argamassa está em
+          <a href="/guia/como-assentar-porcelanato/">como assentar porcelanato</a>.
+        </p>
+      </div>
+    </section>
+
+    <!-- Quando escolher cada um -->
+    <section class="section section--light">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.6rem;">
+          Quando escolher o retificado
+        </h2>
+        <ul class="guide-list">
+          <li>Você quer o visual contínuo e sofisticado, com o piso parecendo uma superfície única — é o efeito que valoriza salas e áreas sociais.</li>
+          <li>O projeto usa <a href="/glossario/#formato-grande">formato grande</a>: <a href="/porcelanato/porcelanato-90x90/">90×90</a> e <a href="/porcelanato/porcelanato-120x60/">120×60</a> praticamente só existem retificados e pedem junta fina para o efeito valer.</li>
+          <li>A obra é nova ou o contrapiso será regularizado — base nivelada é pré-requisito para a junta fina não virar degrau.</li>
+          <li>Você tem (ou vai contratar) um assentador que trabalha com nivelador e capricho: o retificado premia a mão de obra boa e denuncia a ruim.</li>
+        </ul>
+
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin:2.4rem 0 1.6rem;">
+          Quando escolher o bold
+        </h2>
+        <ul class="guide-list">
+          <li>Reforma sobre contrapiso ou piso antigo com pequenas ondulações: a junta de 3 a 5 mm acomoda o desnível sem obra de regularização.</li>
+          <li>Orçamento mais enxuto — a peça costuma custar menos e a instalação é mais simples e barata que a do retificado.</li>
+          <li>Áreas de serviço, garagem e ambientes rústicos, onde a junta mais larga não incomoda e ainda facilita a manutenção.</li>
+          <li>Autoconstrução ou assentador menos experiente: o bold perdoa pequenas imperfeições que o retificado não perdoaria.</li>
+        </ul>
+
+        <h3 style="font-size:clamp(1.1rem,1.8vw,1.35rem);margin:2.4rem 0 1rem;">
+          O atalho por formato
+        </h3>
+        <ul class="guide-list">
+          <li>
+            <strong>60×60:</strong> existe nas duas versões — é o <a href="/porcelanato/porcelanato-60x60/">formato mais versátil</a>,
+            tolera contrapiso de reforma no bold e entrega visual limpo no retificado.
+          </li>
+          <li>
+            <strong>90×90 e 120×60:</strong> quase sempre <a href="/porcelanato/porcelanato-retificado/">retificados</a> —
+            o formato grande só rende o efeito contínuo com junta fina e base bem nivelada.
+          </li>
+          <li>
+            <strong>Na dúvida do conjunto todo:</strong> o guia
+            <a href="/guia/como-escolher-porcelanato/">como escolher porcelanato</a> ordena
+            ambiente, acabamento, tamanho, retificado, PEI e quantidade em 7 passos.
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.8rem;">Perguntas frequentes</h2>
+        <Faq items={faq} />
+      </div>
+    </section>
+
+    <!-- CTA duplo -->
+    <section class="section section--light" id="contato">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:0.8rem;">
+          Decidiu a borda? Veja preço real em Goiânia
+        </h2>
+        <p style="color:var(--d-muted);margin-bottom:2rem;max-width:54ch;">
+          Catálogo de porcelanato retificado e bold de fornecedores do polo de Goiânia, com
+          preço por m² e pronta-entrega — ou mande o formato e o ambiente no WhatsApp e receba
+          a indicação certa.
+        </p>
+        <div class="cta-block" style="display:flex;gap:1rem;flex-wrap:wrap;align-items:center;">
+          <a class="btn btn--primary" href="/porcelanato/">Ver catálogo de porcelanato</a>
+          <WhatsappCta termoAlvo="porcelanato retificado ou bold" numero={whatsapp} />
+        </div>
+      </div>
+    </section>
+
+    <!-- Relacionados -->
+    <section class="section">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.3rem,2.2vw,1.8rem);margin-bottom:1.4rem;">Veja também</h2>
+        <div class="related-grid">
+          {relacionados.map((r) => (
+            <a href={r.href} class="related-card">{r.label}</a>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .comp-scroll { overflow-x: auto; }
+  .comp-table { width: 100%; border-collapse: collapse; font-size: 0.92rem; min-width: 560px; }
+  .comp-table th, .comp-table td { text-align: left; padding: 0.8rem 0.9rem; border-bottom: 1px solid color-mix(in srgb, currentColor 18%, transparent); vertical-align: top; }
+  .comp-table thead th { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.75; }
+  .comp-table tbody th { font-weight: 700; width: 24%; }
+</style>
