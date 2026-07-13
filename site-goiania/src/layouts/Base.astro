@@ -92,6 +92,9 @@ const clarityId = import.meta.env.PUBLIC_CLARITY_ID ?? 'xgun692iah';
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {/* Posse nativa no Bing. Sem ela o IndexNow devolve 403: a verificação importada do
+        GSC vale na UI do Webmaster, mas o IndexNow não a honra. Ver Docs/Obsidian/80-dev/bing-webmaster.md */}
+    <meta name="msvalidate.01" content="9E40520DFE09119E7EB8E15A8ED12DEB" />
     <title>{title}</title>
     <meta name="description" content={description} />
     {noindex && <meta name="robots" content="noindex" />}
