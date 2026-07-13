@@ -24,8 +24,12 @@ const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
     </button>
     {produto.imagens.length > 1 && (
       <div class="prod-detail__thumbs">
+        {/* Prioridade baixa: o src é a foto inteira (o clique promove o thumb a
+            imagem principal, então encolher o arquivo estragaria a galeria), e em
+            64px ela é pesada demais pra disputar banda com a foto do LCP logo ali
+            em cima. Baixa depois, não deixa de baixar. */}
         {produto.imagens.slice(0, 5).map((src, i) => (
-          <img src={imgDisplay(src)} data-full={src} alt={`${tituloProduto} — foto ${i + 1}`} width="64" height="64" loading="lazy" decoding="async" />
+          <img src={imgDisplay(src)} data-full={src} alt={`${tituloProduto} — foto ${i + 1}`} width="64" height="64" loading="lazy" fetchpriority="low" decoding="async" />
         ))}
       </div>
     )}
