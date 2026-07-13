@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "postbuild": "node src/scripts/indexnow.mjs",
+    "postbuild": "node src/scripts/seo-check.mjs && node src/scripts/indexnow.mjs",
+    "seo:check": "node src/scripts/seo-check.mjs",
     "preview": "astro preview",
     "indexnow:check": "node src/scripts/indexnow.mjs --check"
   },

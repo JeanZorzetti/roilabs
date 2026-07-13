@@ -14,7 +14,7 @@ export const GET: APIRoute = async () => {
     { loc: `${SITE}/polo-goiania/` },
     { loc: `${SITE}/blog/` },
     { loc: `${SITE}/simulador/` },
-    { loc: `${SITE}/obrigado/` },
+    // /obrigado/ fica fora: é noindex (destino do form), rastreá-la é crawl desperdiçado.
     ...posts.map((p) => ({
       loc: `${SITE}/blog/${p.id}/`,
       lastmod: (p.data.updatedDate ?? p.data.pubDate).toISOString().slice(0, 10),

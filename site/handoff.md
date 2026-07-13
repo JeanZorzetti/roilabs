@@ -25,3 +25,33 @@
 - `npm install` rodou em pasta OneDrive (risco de corromper `node_modules`, errno -4094). Se `dev`/`build` quebrar do nada, deletar `node_modules` + reinstalar.
 - Dados de mercado hard-coded em `index.astro` (`seats[]` + métricas + gates). Atualizar lá ao abrir novos nichos/polos.
 - O `redirect` do form aponta pra `https://roilabs.com.br/obrigado` (absoluto/prod). Em dev/preview a confirmação só funciona depois do deploy no domínio.
+
+---
+
+## Auditoria de crawl budget (13/07/2026)
+
+**Gatilho:** ROI Hub sinalizou `crawl-waste` — "40,6% OK, 6 em cada 10 hits do Googlebot desperdiçados".
+
+**Veredito: a métrica é histórica, não há bug vivo.** O export do GSC (10/07) cobre 90 dias e é dominado por um período em que o site nem existia:
+
+| Resposta | % | Origem |
+|---|---|---|
+| OK (200) | 40,60% | — |
+| Erro do DNS | 22,22% | domínio sem site publicado (08–27/jun) |
+| 301 | 20,94% | bug de trailing slash, vivo só de 29/jun a 03/jul |
+| 302 | 11,54% | placeholder/parking pré-lançamento |
+| 404 | 4,27% | idem |
+| robots.txt indisponível | 0,43% | idem |
+
+Provas: as 62 requisições com **0 bytes E 0 ms** (nunca chegaram ao servidor) param em 27/jun e batem com `Desconhecido (solicitações com falha) = 26,92%` (= DNS + 404 + robots). O `site/` nasceu em 28/jun (`84b8304`); o fix de trailing slash é de 03/jul (`02937fb`); o 404 real, de 04/jul (`13659b3`). **Só 12 das 234 requisições do export são pós-fix.**
+
+Consequência: **o 40,6% não vai melhorar até a janela de 90 dias rolar** (~fim de setembro). Não perseguir esse número; julgar pelo mix de respostas dos dias novos.
+
+**O que estava de fato vivo e foi corrigido:**
+- `www.roilabs.com.br` servia o site inteiro com **200** (A record no mesmo IP) → host duplicado. Agora 301 → apex, no `nginx.conf`.
+- `/obrigado/` estava **no sitemap e sem `noindex`** → página de agradecimento sendo rastreada e indexada. Agora noindex + fora do sitemap.
+- `redirect` do form apontava pra `/obrigado` **sem barra** → hop 301 extra. Última URL sem barra do build.
+
+**Guard:** `npm run seo:check` (roda no `postbuild`) quebra o build se qualquer URL de rota for emitida sem barra final, se `/obrigado/` voltar ao sitemap ou perder o `noindex`. Esse invariante já regrediu duas vezes (site-goiania e aqui) — agora falha alto.
+
+**Não corrigido (de propósito):** `/favicon.ico` → 404 (o site usa `favicon.png`; Googlebot não penaliza) e `/modelo///` → 200 (barras repetidas; ninguém linka assim).

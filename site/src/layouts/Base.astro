@@ -7,6 +7,7 @@ interface Props {
   ogType?: string;
   ogImage?: string;
   jsonLdNodes?: Record<string, unknown>[];
+  noindex?: boolean;
 }
 
 const {
@@ -15,6 +16,7 @@ const {
   ogType = 'website',
   ogImage = '/og-image.jpg',
   jsonLdNodes = [],
+  noindex = false,
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site);
@@ -69,6 +71,7 @@ const gaId = import.meta.env.PUBLIC_GA_ID ?? 'G-7JD9J2QEDJ';
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="apple-touch-icon" href="/roilabs-icon.png" />
     <link rel="alternate" type="application/rss+xml" title="ROI Labs — Blog" href="/rss.xml" />
