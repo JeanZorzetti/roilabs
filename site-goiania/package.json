@@ -9,7 +9,8 @@
     "build": "astro build",
     "postbuild": "node src/scripts/check-feed.mjs && node src/scripts/indexnow.mjs",
     "preview": "astro preview",
-    "check-matrix": "node src/scripts/check-matrix.mjs"
+    "check-matrix": "node src/scripts/check-matrix.mjs",
+    "indexnow:check": "node src/scripts/indexnow.mjs --check"
   },
   "dependencies": {
     "astro": "^5.6.0",

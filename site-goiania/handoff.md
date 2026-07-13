@@ -42,9 +42,11 @@ não regressão. Decidir sempre por **mediana de 5 runs**.
 
 ### Pendências que isto deixou
 
-1. **IndexNow devolve 403** (achado de passagem, virou a nova ação do card no hub). A chave está
-   correta e servida (`/e72cab81….txt` → 200), mas `api.indexnow.org` recusa. A cada build o site
-   "envia" 94 URLs que não chegam a ninguém — numa malha pSEO, é o canal de recrawl mudo.
+1. ~~**IndexNow devolve 403**~~ → **diagnosticado em 13/07, ver [[bing-webmaster]]**. Não é código
+   nem chave: a **mesma chave passa no apex (200) e o Yandex aceita o goiânia (202)** — só o Bing
+   recusa, porque **trata o subdomínio como site à parte e ainda não o conhece**. Desbloqueio =
+   importar as propriedades do GSC no Bing Webmaster (~10 min, login Microsoft — é do Jean).
+   Fechar o loop depois com `pnpm indexnow:check` (não precisa de deploy).
 2. **O mesmo logo de 170 KB está no institucional** (`site/public/roilabs-logo.png`). Mesma
    correção, 1 comando — mas é deploy do roilabs, então ficou fora daqui.
 3. O que ainda segura o LCP em 2,5s (e não 1,5s) é o **main thread**: os scripts interativos da
