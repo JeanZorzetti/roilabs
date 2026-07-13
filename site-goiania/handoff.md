@@ -1,5 +1,61 @@
 # Handoff — site-goiania
 
+## 2026-07-13 — LCP da malha: 5,9s → 2,5s
+
+> **BLUF:** LCP das páginas internas da malha caiu de **5,9s → 2,5s** (mediana de 5 runs
+> do Lighthouse mobile em prod), score **68 → 92**, CLS 0,002. Meta ≤ 2,5s batida.
+> Commits `14b4e1f` → `02080e2`, tudo no ar.
+
+**O card estava errado sobre a causa.** Ele dizia "hero image sem preload/priority". Medindo
+com `PerformanceObserver` em prod, o elemento de LCP era **TEXTO** — o parágrafo do hero
+(`p.pseo-hero__intro`, Hanken Grotesk 400). E depois de consertar o texto, o LCP **mudou de
+elemento** e virou a foto do produto. Foram duas dores em sequência, não uma. (O CLS ~1,0 do
+baseline já tinha sido descartado como transiente do PSI em `b84a0f4`.)
+
+**As 4 causas reais:**
+
+| # | Causa | Fix | Ganho |
+|---|---|---|---|
+| 1 | Fontes vinham do Google: **2 conexões em série** (googleapis CSS → gstatic woff2) antes do 1º byte de fonte | Self-hosted em `public/fonts/`, variáveis, subsetadas, com preload | FCP 3,4s → 1,5s |
+| 2 | `roilabs-logo.png` = **170 KB** (1159×220) exibido a 180×34, no header de **toda** página | Re-encode 560px palette PNG (cobre retina 3× e o gerador de OG, que lê o mesmo arquivo) | **170 KB → 13,8 KB** |
+| 3 | Foto do produto (o novo LCP) com **41% do tempo em Load Delay**; e o 1º card usava `loading="lazy"` — lazy em imagem de LCP é o anti-padrão clássico | `preloadImage` no `Base.astro` + prop `eager` no `ProdutoCard` (só o 1º card da malha opta; grades de relacionados seguem lazy, que é o certo pra elas) | Load Delay 1,56s → 0,67s |
+| 4 | `gtag.js` (**161 KB**) + Clarity baixando **durante** o carregamento, roubando banda da foto e travando o main thread que ia pintá-la | Baixam no evento `load` | −186 KB da janela crítica |
+
+Fontes: **202 KB → 82 KB** (7 estáticas → 4 arquivos). Archivo e Hanken viraram **variáveis**:
+1 arquivo cobre a faixa de pesos e custa menos que as estáticas que substitui (Archivo
+600/700/800: 79,5 KB em 3 → 26,5 KB em 1).
+
+### ⚠️ Analytics — leia antes de mexer
+
+GA4 e Clarity baixam **depois do paint**, não durante. **Nada se perde:** `dataLayer` e
+`window.clarity` são filas criadas no `<head>`, e os dois fornecedores drenam a fila quando o
+script chega. Verificado no browser: gtag.js carrega, Clarity carrega e **o beacon de pageview
+do GA4 sai**. O **himetrica continua carregando cedo de propósito** — são 4 KB e é ele que mede
+a conversão de WhatsApp. Não mova.
+
+### ⚠️ Uma run de PSI não decide nada
+
+Em 11/07 o **mesmo código** deu LCP **2711ms** e **5793ms** pra *mesma home*. Na run de 13/07
+pós-fix, `/calculadora/` tirou score **100** (LCP 1,81s) e `/produto/` **99** (LCP 1,81s),
+enquanto as 3 páginas medidas **antes delas na sequência** deram 4,9–5,5s — worker congestionado,
+não regressão. Decidir sempre por **mediana de 5 runs**.
+
+### Pendências que isto deixou
+
+1. **IndexNow devolve 403** (achado de passagem, virou a nova ação do card no hub). A chave está
+   correta e servida (`/e72cab81….txt` → 200), mas `api.indexnow.org` recusa. A cada build o site
+   "envia" 94 URLs que não chegam a ninguém — numa malha pSEO, é o canal de recrawl mudo.
+2. **O mesmo logo de 170 KB está no institucional** (`site/public/roilabs-logo.png`). Mesma
+   correção, 1 comando — mas é deploy do roilabs, então ficou fora daqui.
+3. O que ainda segura o LCP em 2,5s (e não 1,5s) é o **main thread**: os scripts interativos da
+   própria página (busca, carrinho, favoritos, zoom) somam ~677ms de script eval sob throttle 4×.
+   Adiá-los pra idle é o próximo passo — **mas o botão "Buscar" é injetado por JS no header, então
+   adiar sem cuidado reintroduz CLS** (hoje 0,002). Não valeu o risco agora.
+
+Regerar fontes: `Docs/Obsidian/80-dev/fontes.md`. **Não** subsete pelos caracteres literais do
+HTML — `text-transform: uppercase` renderiza Á/Ã/Ç a partir de texto minúsculo, e o subset
+literal quebra os títulos. Latin-1 fica inteiro.
+
 ## 2026-07-04 — Ciclo 14: capas do hub sem repetição + fachada/60x60 com foto real
 
 > Pedido direto do Jean: as 34 fotos do catálogo apareciam repetidas nos cards de `/porcelanato/`, e 2 categorias (`porcelanato-fachada`, `porcelanato-60x60`) não tinham NENHUM produto casando (zero foto, zero galeria).
