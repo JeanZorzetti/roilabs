@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { isAuthed } from '@/lib/auth';
 import { calcularFaturaMensal, type NegocioCalc } from '@/lib/success-fee';
 import { garantirCliente, criarCobranca } from '@/lib/asaas';
+import { log } from '@/lib/log';
 
 export const dynamic = 'force-dynamic';
 
@@ -105,6 +106,9 @@ export async function POST(req: NextRequest) {
     await prisma.faturaSuccessFee.update({ where: { id: fatura.id }, data: { asaasPaymentId: cobranca.id } });
     return NextResponse.json({ ok: true, id: fatura.id, valor: calc.valor }, { status: 201 });
   } catch (err) {
+    // Money path: the fatura row survives as status 'erro' but the Asaas charge never
+    // existed. The 502 body reaches whoever clicked; this is what reaches ops.
+    log.error({ err, faturaId: fatura.id, parceiroId, competencia }, 'faturas: cobrança Asaas falhou');
     await prisma.faturaSuccessFee.update({ where: { id: fatura.id }, data: { status: 'erro' } });
     return NextResponse.json({ ok: false, motivo: `fatura criada mas cobrança Asaas falhou: ${(err as Error).message}` }, { status: 502 });
   }

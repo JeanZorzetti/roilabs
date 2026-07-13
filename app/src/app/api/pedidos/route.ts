@@ -5,6 +5,7 @@ import { getProduto } from '@/lib/precos';
 import { calcFrete, type Entrega } from '@/lib/frete';
 import { validarCupom } from '@/lib/cupons';
 import { createPreference } from '@/lib/mercadopago';
+import { log } from '@/lib/log';
 
 export const dynamic = 'force-dynamic';
 
@@ -121,7 +122,9 @@ export async function POST(req: NextRequest) {
     await prisma.pedido.update({ where: { id: pedido.id }, data: { mpPreferenceId: pref.id } });
     return NextResponse.redirect(pref.initPoint, 303);
   } catch (err) {
-    console.error('checkout: MP preference failed', err);
+    // pedidoId (not the buyer) is the trace key: the order is already persisted and
+    // stays pendente, so this log is what tells you which one never reached MP.
+    log.error({ err, pedidoId: pedido.id, total }, 'checkout: MP preference falhou');
     return backTo(origin, 'pagamento'); // order stays pendente
   }
 }

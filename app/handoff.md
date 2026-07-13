@@ -31,6 +31,45 @@ o `action` do form (ver abaixo).
 - **Verificar build real no Docker** — não rodei `next build` local (gotcha OneDrive corrompe node_modules; build local não-confiável). Build limpo é no Docker.
 - Task 2: quando a variante de logo chegar, otimizar (~500px <100KB header + 1200×630 og:image) e aplicar em header do site/admin, favicon, og:image.
 
+## Logging estruturado (2026-07-13)
+`src/lib/log.ts` — JSON por linha no stdout (EasyPanel/Docker já coleta stdout). API igual à do pino
+de propósito: `log.error({ err, pedidoId }, 'msg')`.
+
+**A tarefa da agenda era "trocar os 233 console.* por pino" — a premissa estava errada.** O repo tem
+**67** `console.*` versionados, não 233 (o 233 contou `.next`/build; sem filtro dá 529). E **62 dos 67
+não deviam virar pino**: 48 são scripts CLI (`.mjs` de indexnow/gsc-miner/rank-tracking/health-check —
+querem stdout legível por humano, não JSON), 6 são `prisma/seed.ts`, 5 são testes, e 1 é
+`site-goiania/src/pages/carrinho.astro`, que roda **no browser** (pino ali bundla um logger no client).
+Só **5** rodavam no servidor. Esses 5 foram convertidos; os 62 ficaram intocados de propósito.
+
+**Por que NÃO pino** (decisão, não preguiça): Constituição III manda "recurso da plataforma antes de
+dependência", e o transport do pino usa `worker_threads`/`thread-stream`, que não é traçado de forma
+confiável no bundle `output: 'standalone'`. Como Constituição II diz que build local não prova nada,
+eu só descobriria a quebra em produção — e um logger não pode ser o que derruba o deploy. Se um dia
+precisar de transports/coletor de verdade: `import pino from 'pino'`, apagar `log.ts`, adicionar
+`serverExternalPackages: ['pino']` e **verificar no Docker**, não local.
+
+**Convertidos (5) + instrumentados (4 pontos que engoliam erro em silêncio):**
+- `lib/email.ts` (4) — Resend + ntfy. `subject` NÃO vai pro log: `sendAlert` monta ele com o nome do
+  cliente (LGPD). O `console.error` antigo vazava isso.
+- `api/pedidos` — MP preference falhou → `pedidoId` + total (pedido fica `pendente`).
+- `api/health` — **antes o erro do DB sumia** no `catch {}`. Agora dá pra saber por que o uptime ficou vermelho.
+- `api/faturas` — **antes a falha de cobrança Asaas sumia** (só ia no corpo do 502). Caminho de dinheiro.
+- `api/pagamentos/webhook` — assinatura inválida (`warn`: ou `MP_WEBHOOK_SECRET` dessincronizou do painel
+  MP e os pagamentos pararam de ser gravados, ou é forja) + pedido pago (`info`). **Controle de fluxo
+  intocado**: o webhook continua sem try/catch, porque o 500 é o que faz o MP re-tentar.
+
+**Redaction (LGPD):** `nome`/`whatsapp`/`email`/`cep`/`to` viram `[redacted]`. Rastreio é por id
+(`pedidoId`/`faturaId`), que não é redigido.
+
+**Trava anti-regressão:** `test/log.test.mjs` falha se aparecer `console.*` em `app/src/`. É teste, não
+ESLint — `next lint` foi deprecado no Next 16 e o app não tem config de ESLint; uma toolchain inteira
+pra uma regra não paga. Verificado nas duas direções (injetei um `console.log` e o teste quebrou).
+
+**Pendente:** o app tem **26 API routes e só 3 têm log**. Trocar console por logger não resolve
+observabilidade — 23 rotas seguem mudas. Próxima tarefa de agenda: instrumentar erro + latência nas
+rotas de dinheiro (`pagamentos/webhook`, `pedidos`, `cupons`, `faturas`).
+
 ## Pendências / gotchas
 - **Cadeiras ↔ site:** o admin grava cadeiras no DB, mas o site é Astro estático e ainda lê o `seats[]` hard-coded. Pra refletir ao vivo: ou rebuild a cada mudança, ou o site passa a `fetch('/api/cadeiras')` no build (acopla site↔app). Decisão de arquitetura pendente. `src/lib/seats.ts` é a fonte do seed e espelha o array do site.
 - **WhatsApp do card:** assume número BR local e prefixa `55`. Se vier número com DDI, ajustar.

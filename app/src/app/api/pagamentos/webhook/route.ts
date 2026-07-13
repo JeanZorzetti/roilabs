@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { getPayment, verifyWebhookSignature } from '@/lib/mercadopago';
 import { resolverParametros, resolverPiso, resolverModalidade, type CamadasConfig } from '@/lib/centros-custo';
 import { sendEmail, sendAlert, escapeHtml } from '@/lib/email';
+import { log } from '@/lib/log';
 
 export const dynamic = 'force-dynamic';
 
@@ -28,6 +29,9 @@ export async function POST(req: NextRequest) {
       dataId,
     })
   ) {
+    // Either MP_WEBHOOK_SECRET drifted from the MP panel (payments silently stop being
+    // recorded) or someone is forging notifications. Both are worth seeing.
+    log.warn({ dataId, type: bodyType }, 'webhook: assinatura inválida');
     return NextResponse.json({ error: 'invalid signature' }, { status: 401 });
   }
 
@@ -94,6 +98,11 @@ export async function POST(req: NextRequest) {
           });
         }),
       ]);
+
+      // The single most valuable line in the log: an order actually got paid and the
+      // snapshot committed. If MP shows a payment with no matching line here, the
+      // webhook broke between getPayment and this transaction.
+      log.info({ pedidoId: pedido.id, paymentId, total: pedido.total }, 'webhook: pedido pago');
 
       // Pós-pagamento (fire-and-forget, nunca quebra o webhook): confirmação ao
       // cliente (recibo nosso, além do MP) + alerta interno de pedido novo.

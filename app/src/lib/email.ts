@@ -1,6 +1,8 @@
 // Resend via fetch — sem SDK (é um único POST). Fire-and-forget por design:
 // e-mail nunca bloqueia nem quebra a rota que o dispara (lead/pedido é gravado antes).
 // Sem RESEND_API_KEY vira no-op — a infra é opcional até a chave existir na EasyPanel.
+import { log } from './log';
+
 const KEY = process.env.RESEND_API_KEY;
 const FROM = process.env.EMAIL_FROM ?? 'ROI Labs <onboarding@resend.dev>';
 const ALERT_TO = process.env.ALERT_EMAIL; // alerta interno (Jean/Duda), separado do cliente
@@ -15,10 +17,12 @@ export function sendEmail(to: string, subject: string, html: string): void {
     headers: { Authorization: `Bearer ${KEY}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({ from: FROM, to, subject, html }),
   })
+    // `subject` stays out of the log on purpose: sendAlert builds it from the customer
+    // name (LGPD). Status + error are enough to tell "key is wrong" from "Resend is down".
     .then((r) => {
-      if (!r.ok) console.error(`email: Resend ${r.status} (${subject})`);
+      if (!r.ok) log.error({ status: r.status }, 'email: Resend rejeitou o envio');
     })
-    .catch((e) => console.error('email:', e));
+    .catch((err) => log.error({ err }, 'email: Resend inacessível'));
 }
 
 // ntfy.sh: push grátis e sem conta — quem assinar o tópico no app ntfy recebe na hora.
@@ -44,7 +48,7 @@ export function sendAlert(subject: string, html: string): void {
     }),
   })
     .then((r) => {
-      if (!r.ok) console.error(`ntfy: HTTP ${r.status} (${subject})`);
+      if (!r.ok) log.error({ status: r.status }, 'ntfy: push rejeitado');
     })
-    .catch((e) => console.error('ntfy:', e));
+    .catch((err) => log.error({ err }, 'ntfy: inacessível'));
 }
