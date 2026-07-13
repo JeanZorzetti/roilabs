@@ -30,6 +30,11 @@ const relacionados = pages.filter((p) => relSlugs.includes(p.slug));
 const produtosRel = produtosDaCategoria(page.slug, page.tipo);
 
 const tipo = page.tipo.charAt(0).toUpperCase() + page.tipo.slice(1);
+
+// Elemento do LCP: a 1ª foto de produto. Os dois braços abaixo (ficha do produto
+// único e grade de cards) pintam a mesma `imagens[0]`, então um preload só serve
+// aos dois. Os thumbs do hero são pequenos demais pra ganhar o LCP.
+const lcpImage = produtosRel[0] ? imgDisplay(produtosRel[0].imagens[0]) : undefined;
 ---
 
 <Base
@@ -37,6 +42,7 @@ const tipo = page.tipo.charAt(0).toUpperCase() + page.tipo.slice(1);
   description={page.intro.slice(0, 155)}
   ogImage={`/open-graph/porcelanato/${page.slug}.png`}
   jsonLdNodes={jsonLdNodes}
+  preloadImage={lcpImage}
 >
   <Header />
 
@@ -63,7 +69,13 @@ const tipo = page.tipo.charAt(0).toUpperCase() + page.tipo.slice(1);
           <div class="pseo-hero__strip">
             {produtosRel.slice(0, 4).map((prod) => (
               <a href="#catalogo" aria-label={`Ver ${nomeProduto(prod)} no catálogo`}>
-                <img src={imgDisplay(prod.imagensAmbiente?.[0] ?? prod.imagens[0])} alt={nomeProduto(prod)} decoding="async" />
+                {/* Thumbs decorativos: prioridade baixa pra não disputar banda com a imagem do LCP. */}
+                <img
+                  src={imgDisplay(prod.imagensAmbiente?.[0] ?? prod.imagens[0])}
+                  alt={nomeProduto(prod)}
+                  fetchpriority="low"
+                  decoding="async"
+                />
               </a>
             ))}
           </div>
@@ -93,7 +105,7 @@ const tipo = page.tipo.charAt(0).toUpperCase() + page.tipo.slice(1);
             abrasão, preço) e solicitar orçamento.
           </p>
           <div class="prod-grid">
-            {produtosRel.slice(0, 8).map((prod) => <ProdutoCard produto={prod} />)}
+            {produtosRel.slice(0, 8).map((prod, i) => <ProdutoCard produto={prod} eager={i === 0} />)}
           </div>
         </div>
       </section>

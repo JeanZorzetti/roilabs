@@ -8,6 +8,10 @@ interface Props {
   ogImage?: string;
   jsonLdNodes?: Record<string, unknown>[];
   noindex?: boolean;
+  /** Imagem do LCP (1ª foto de produto). Sem preload o browser só a descobre ao
+   *  parsear o corpo, e ela entra na fila atrás dos scripts de analytics —
+   *  era 41% do LCP da malha (Load Delay 1,56s). Só passe se ela estiver na 1ª dobra. */
+  preloadImage?: string;
 }
 
 const {
@@ -17,6 +21,7 @@ const {
   ogImage = '/og-image.jpg',
   jsonLdNodes = [],
   noindex = false,
+  preloadImage,
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site);
@@ -118,6 +123,9 @@ const clarityId = import.meta.env.PUBLIC_CLARITY_ID ?? 'xgun692iah';
       type="font/woff2"
       crossorigin
     />
+    {preloadImage && (
+      <link rel="preload" href={preloadImage} as="image" fetchpriority="high" />
+    )}
 
     <script type="application/ld+json" set:html={JSON.stringify(graph)} />
 

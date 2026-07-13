@@ -5,8 +5,11 @@ import FavToggle from './FavToggle.astro';
 
 interface Props {
   produto: Produto;
+  /** Card na 1ª dobra (o 1º da grade). Lazy numa imagem de LCP faz o browser
+   *  adiá-la até calcular o layout — é o jeito mais rápido de estourar o LCP. */
+  eager?: boolean;
 }
-const { produto } = Astro.props;
+const { produto, eager = false } = Astro.props;
 const nome = nomeProduto(produto);
 const a = produto.atributos;
 ---
@@ -18,7 +21,13 @@ const a = produto.atributos;
   data-preco={a.preco}
 >
   <div class="prod-card__img">
-    <img src={imgDisplay(produto.imagens[0])} alt={`${a.marca} ${nome}`} loading="lazy" decoding="async" />
+    <img
+      src={imgDisplay(produto.imagens[0])}
+      alt={`${a.marca} ${nome}`}
+      loading={eager ? 'eager' : 'lazy'}
+      fetchpriority={eager ? 'high' : undefined}
+      decoding="async"
+    />
     {a.retificado && <span class="prod-card__badge">Retificado</span>}
     <FavToggle slug={produto.slug} nome={`${a.marca} ${nome}`} />
   </div>
