@@ -108,11 +108,15 @@ const clarityId = import.meta.env.PUBLIC_CLARITY_ID ?? 'xgun692iah';
     <!-- Pinterest domain claim (Catalogs) — ver Docs/Obsidian/80-dev/pinterest-catalog.md -->
     <meta name="p:domain_verify" content="3dd6026641aaefa74ec8d188c3c1a135" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Fontes self-hosted em public/fonts (@font-face em src/styles/fonts.css).
+         Hanken 400 é a fonte do elemento LCP (texto do hero), então vem por preload:
+         começa a baixar junto com o HTML, sem esperar o CSS ser parseado. -->
     <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=Hanken+Grotesk:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap"
+      rel="preload"
+      href="/fonts/hanken-grotesk-400.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
     />
 
     <script type="application/ld+json" set:html={JSON.stringify(graph)} />

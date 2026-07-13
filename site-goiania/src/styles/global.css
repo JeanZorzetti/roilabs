@@ -2,6 +2,12 @@
    grafite-arquitetura + porcelana + laranja hi-vis de obra
    display: Archivo · corpo: Hanken Grotesk · dados: Space Mono */
 
+/* Fontes self-hosted (public/fonts/). O LCP das páginas da malha é TEXTO
+   (p.pseo-hero__intro, Hanken 400) — servir a fonte pelo Google custava duas
+   conexões novas em série (googleapis → gstatic) antes do 1º byte de fonte.
+   Base.astro dá preload no Hanken 400 por isso. */
+@import './fonts.css';
+
 /* The [hidden] attribute must beat author `display` rules (e.g. .cart-grid/.cart-empty
    are display:grid). Without this, JS toggling el.hidden does nothing and hidden states
    render anyway. One rule fixes every hidden-toggled element site-wide. */
