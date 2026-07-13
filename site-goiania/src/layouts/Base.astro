@@ -114,15 +114,16 @@ const clarityId = import.meta.env.PUBLIC_CLARITY_ID ?? 'xgun692iah';
     <meta name="p:domain_verify" content="3dd6026641aaefa74ec8d188c3c1a135" />
 
     <!-- Fontes self-hosted em public/fonts (@font-face em src/styles/fonts.css).
-         Hanken é a fonte do corpo — todo texto do hero depende dela, então vem por
-         preload: começa a baixar junto com o HTML, sem esperar o CSS ser parseado. -->
-    <link
-      rel="preload"
-      href="/fonts/hanken-grotesk-var.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
+         Sem preload o browser só descobre a fonte DEPOIS de parsear o CSS (HTML → CSS
+         → fonte, em série). Hanken é o corpo e Archivo é o H1 — as duas pintam na 1ª
+         dobra, então as duas vêm por preload e começam junto com o HTML. Space Mono
+         (eyebrow) fica pra trás de propósito: é texto pequeno, aguenta o swap. -->
+    <link rel="preload" href="/fonts/hanken-grotesk-var.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/archivo-var.woff2" as="font" type="font/woff2" crossorigin />
+
+    <!-- O tracker vem do cdn e depois bate no app: sem isso o beacon abre conexão
+         nova no meio do carregamento (176ms, medidos pelo Lighthouse). -->
+    <link rel="preconnect" href="https://app.himetrica.com" />
     {preloadImage && (
       <link rel="preload" href={preloadImage} as="image" fetchpriority="high" />
     )}
