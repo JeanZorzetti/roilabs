@@ -33,21 +33,37 @@ Descartado, com evidência:
 - **Código/chave** — o **Yandex aceita a mesma chave, no mesmo arquivo, pro mesmo host** (202).
   Se a chave fosse inválida ou o arquivo inacessível, ele também recusaria.
 
-Sobra uma explicação: **o Bing trata o subdomínio como um site à parte e ainda não o conhece**.
-O apex é um domínio antigo que ele já rastreou; `goiania.` nasceu agora e o Bing nunca o viu —
-daí "*User is unauthorized to access the site*". Chave válida não basta: o host precisa existir
-pro Bing.
+## A causa raiz: ⚠️ **verificação importada do GSC não vale para o IndexNow**
 
-## O desbloqueio (Jean, ~10 min — precisa de login Microsoft)
+O site **já estava verificado** no Bing Webmaster — importado do Google Search Console — e mesmo
+assim o IndexNow devolvia 403. A posse via GSC vale na **UI** do Webmaster, mas o IndexNow **não a
+honra**. Ele exige uma prova **nativa** do Bing (`BingSiteAuth.xml`, meta `msvalidate.01` ou CNAME).
 
-1. Acessar [bing.com/webmasters](https://www.bing.com/webmasters) e logar com conta Microsoft.
-2. **"Importar do Google Search Console"** → autorizar com a conta Google que tem as
-   propriedades. Importa **verificação + sitemaps** de uma vez, sem meta tag e sem DNS:
-   - `goiania.roilabs.com.br` ← **este é o que importa**
-   - `roilabs.com.br` (institucional; já passa no IndexNow, mas vale ter)
-3. Conferir em **Sitemaps** que `https://goiania.roilabs.com.br/sitemap.xml` veio junto; se não,
-   submeter na mão.
-4. **Fechar o loop** (10 s, não precisa de build nem deploy):
+Pior: enquanto o site está marcado como importado, o BWT **se recusa a te dar** o código nativo —
+em ⋯ → *Código de verificação* ele só mostra *"importado do Google… não há necessidade de código"*.
+É preciso **excluir o site e adicioná-lo de novo à mão**, sem importar, escolhendo XML/meta tag.
+
+Confirmado por um caso idêntico (mesma assinatura: Yandex aceita, só o Bing recusa) no
+[Microsoft Q&A](https://learn.microsoft.com/en-us/answers/questions/5825616/): *"if you set up bing
+webmasters using google search it doesn't work, I recreated the account with xml verification and
+everything works now"*.
+
+> **Hipótese que eu queimei antes de achar isso** (fica registrada pra ninguém repetir): "o Bing não
+> conhece o subdomínio ainda". **Errada.** O site estava verificado e continuava 403.
+
+## O desbloqueio (feito em 13/07)
+
+1. BWT → seletor de site (canto superior esquerdo) → **⋯ → Excluir site**.
+2. ⚙️ → **Contas do console de pesquisa do Google → desconectar** (senão o BWT re-importa sozinho e
+   o site volta a ficar "importado", sem código nativo).
+3. **+ Adicionar um site** → `https://goiania.roilabs.com.br/` → **NÃO importar do GSC** → escolher
+   **XML File** / meta tag → copiar o token.
+4. Servir a prova nativa no site (já commitado — token `9E40520D…`):
+   - `site-goiania/public/BingSiteAuth.xml`
+   - `<meta name="msvalidate.01">` no `<head>` de `src/layouts/Base.astro`
+   Os dois de propósito: assim qualquer um dos botões *Verificar* do BWT funciona.
+5. Deploy sobe sozinho → clicar em **Verificar** no BWT.
+6. **Fechar o loop** (10 s, não precisa de build nem deploy):
 
    ```bash
    cd site-goiania && pnpm indexnow:check

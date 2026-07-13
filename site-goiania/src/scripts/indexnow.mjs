@@ -5,7 +5,9 @@
 // ponytail: pings on every build (including local); IndexNow dedupes, so no gate.
 import { readFileSync } from 'node:fs';
 
-const KEY = 'e72cab81d95c41fd915ce3331a10d1ad';
+// Chave EXCLUSIVA deste host. Não reutilize a do institucional: o Bing recusava o goiânia
+// (403) enquanto os dois sites pingavam com a mesma chave. Uma chave por host.
+const KEY = '71a65de2602871d836635f4e04244cb2';
 const HOST = 'goiania.roilabs.com.br';
 
 // --check: não lê o sitemap, só pergunta ao IndexNow se o host está autorizado.
