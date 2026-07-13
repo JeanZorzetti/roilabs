@@ -129,27 +129,44 @@ const clarityId = import.meta.env.PUBLIC_CLARITY_ID ?? 'xgun692iah';
 
     <script type="application/ld+json" set:html={JSON.stringify(graph)} />
 
-    {gaId && (
-      <>
-        <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}></script>
-        <script is:inline define:vars={{ gaId }}>
-          window.dataLayer = window.dataLayer || [];
-          function gtag() { dataLayer.push(arguments); }
-          gtag('js', new Date());
-          gtag('config', gaId);
-        </script>
-      </>
-    )}
+    <script is:inline define:vars={{ gaId, clarityId }}>
+      // GA4 (mesma Google tag do institucional) + Microsoft Clarity (heatmap/sessão):
+      // himetrica diz O QUE converte, Clarity mostra ONDE o funil vaza.
+      //
+      // Os dois BAIXAM depois do `load`, não durante o carregamento. Só o gtag.js são
+      // 161KB — junto com o Clarity era o que sobrava do LCP da malha, roubando banda
+      // da foto do produto (o elemento do LCP) e travando o main thread pra pintá-la.
+      // Nada se perde: dataLayer e window.clarity são filas, criadas aqui de imediato;
+      // quando os scripts chegam eles processam o que foi enfileirado (é o padrão dos
+      // dois fornecedores). O himetrica continua carregando cedo — é ele que mede a
+      // conversão de WhatsApp, e são só 4KB.
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      window.gtag = gtag;
+      window.clarity = window.clarity || function () { (window.clarity.q = window.clarity.q || []).push(arguments); };
 
-    {clarityId && (
-      <script is:inline define:vars={{ clarityId }}>
-        // Microsoft Clarity (heatmap + session recording) — himetrica diz O QUE converte,
-        // Clarity mostra ONDE o funil vaza. Sem PUBLIC_CLARITY_ID no build = no-op.
-        (function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script",clarityId);
-      </script>
-    )}
+      if (gaId) {
+        gtag('js', new Date());
+        gtag('config', gaId);
+      }
+
+      function carregarAnalytics() {
+        if (gaId) {
+          var g = document.createElement('script');
+          g.async = true;
+          g.src = 'https://www.googletagmanager.com/gtag/js?id=' + gaId;
+          document.head.appendChild(g);
+        }
+        if (clarityId) {
+          var c = document.createElement('script');
+          c.async = true;
+          c.src = 'https://www.clarity.ms/tag/' + clarityId;
+          document.head.appendChild(c);
+        }
+      }
+      if (document.readyState === 'complete') carregarAnalytics();
+      else addEventListener('load', carregarAnalytics, { once: true });
+    </script>
 
     <script is:inline defer src="https://cdn.himetrica.com/tracker.js" data-api-key="hm_ff2a6a72cb6b63d54c8799d1dad7b24e4263b1e5882f872f"></script>
     <script is:inline>
