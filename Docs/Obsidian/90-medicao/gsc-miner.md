@@ -1,13 +1,13 @@
 ---
 tipo: medição
 status: vivo
-data: 2026-07-13
+data: 2026-07-20
 dono: automático (gsc-miner.mjs, cron semanal)
 ---
 
 # ⛏️ GSC miner — candidatas de expansão da malha
 
-> [!info] 2026-06-13 → 2026-07-11 (28 dias) · 29 pares query×page · propriedade sc-domain:goiania.roilabs.com.br
+> [!info] 2026-06-20 → 2026-07-18 (28 dias) · 32 pares query×page · propriedade sc-domain:goiania.roilabs.com.br
 > Fonte grátis que substitui a mineração DataForSEO. Critério de página nova continua o
 > editorial de sempre: intenção clara + produto real no catálogo (nada de página vazia).
 
