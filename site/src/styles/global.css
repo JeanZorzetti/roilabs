@@ -962,6 +962,20 @@ a {
   color: var(--d-muted);
 }
 
+/* A FAQ herda tokens de tema ESCURO (desenhada na home, seção dark). Quando cai numa
+   seção clara (/modelo), remapeia pros tokens claros — senão a pergunta some no fundo
+   porcelana e a resposta fica sem contraste (WCAG AA). */
+.section--light .faq,
+.section--light .faq__item {
+  border-color: var(--l-line);
+}
+.section--light .faq__item summary {
+  color: var(--l-text);
+}
+.section--light .faq__a {
+  color: var(--l-muted);
+}
+
 /* ---------- close + form ---------- */
 .close {
   border-top: 1px solid var(--d-line);
