@@ -1,6 +1,8 @@
 # Handoff — 011 E-commerce de fitas adesivas Tapepro
 
-**Data**: 2026-07-22 · **Estado**: código completo, **não publicado**. Faltam 3 destravamentos de terceiro e a migração manual do banco.
+**Data**: 2026-07-22 · **Estado**: **NO AR**. Banco migrado, backfill conferido e código pushado (`2d742ec`). Restam os destravamentos de terceiro — e um deles afeta dinheiro *agora*.
+
+> ⚠️ **Publicado antes das env vars do Melhor Envio, por decisão do Jean.** Consequência viva: **todo pedido de fita cai em `frete = null` / `freteMotivo = 'falha_tecnica'`** e o alerta dispara na 3ª ocorrência. É estado previsto no design (FR-015) — o pedido fecha e cobra só o produto — mas significa **vender sem frete calculado** até `MELHOR_ENVIO_TOKEN` + `MELHOR_ENVIO_CEP_ORIGEM` entrarem no EasyPanel. O frete desses pedidos precisa ser combinado na mão com o comprador.
 
 ---
 
@@ -49,9 +51,29 @@ site:  npm run build → 104 páginas, check-matrix + check-cart-math + check-fe
 site:  42 diretórios em dist/porcelanato · 86 URLs de porcelanato no sitemap · 4 links /porcelanato/ na home
 ```
 
+### Verificação em PRODUÇÃO (T056, pós-deploy 2026-07-22)
+
+```
+porcelanato:  71/71 URLs → 200 (41 malha + 30 produto). Malha intacta.
+fitas:        /fitas/, 3 produtos e /carrinho-fitas/ → 200, todas com barra final.
+404 real:     /url-que-nao-existe/ → 404 (não soft-404).
+home:         h1 "Fita adesiva para embalagem, com preço por rolo" — reposicionamento no ar.
+4 índices:    sitemap 4 URLs de fita · llms.txt com seção de fitas · busca-index 4 entradas ·
+              feed com fita-gomada + fita-transparente-comum e SEM a personalizada (FR-024).
+frete:        POST /api/frete/cotar → falha_tecnica/200 (esperado sem env vars) · só-orçamento → vazio.
+cupom:        POST /api/cupom/validar com vertical=fitas aceito; NAOEXISTE → invalido (não vazio),
+              prova de que o subtotal foi recalculado pela tabela de fitas.
+app health:   /api/health → 200.
+```
+
+> Janela de deploy: `/fitas/` respondeu 404 por ~1 min enquanto o nginx trocava o `dist` (o `/fitas/index.html` já servia 200). Resolveu sozinho — não é bug de rota.
+
 ---
 
-## ⛔ Bloqueios de terceiro (Fase 1 — não são código)
+## ⛔ Pendências de terceiro — agora com o site NO AR, viraram urgência
+
+**Ordem de urgência mudou com a publicação:** T005 (env vars) e T002 (peso real) deixaram de ser pré-requisito de deploy e passaram a ser **correção de algo que já está vendendo**.
+
 
 1. **T001 — token de sandbox do Melhor Envio.** Sem ele a cotação responde `falha_tecnica` (com o log dizendo qual env var falta).
 2. **T002 — peso e dimensões da embalagem por rolo.** Estão em `precos-fitas.ts` como **estimativa calibrável** (`0,3 kg` BOPP · `1,1 kg` kraft) e marcadas com comentário. Entram **só** na cotação de frete, nunca no preço do produto. **Confirmar com o Tapepro e ajustar antes de publicar** — frete subestimado é prejuízo silencioso.
@@ -62,17 +84,31 @@ site:  42 diretórios em dist/porcelanato · 86 URLs de porcelanato no sitemap �
 
 ---
 
-## 🔴 Ordem de publicação — inverter derruba produção
+## ✅ Migração aplicada (2026-07-22) — o que foi feito, nesta ordem
 
 ```
-1. npx prisma migrate diff --from-schema-datasource prisma/schema.prisma \
-     --to-schema-datamodel prisma/schema.prisma --script     # preview seguro (T007)
-2. npx prisma db push                                        # MANUAL, de máquina que alcança o host
-3. node scripts/migrate-011-backfill.mjs                     # backfill + conferência
-4. git push                                                  # SÓ ENTÃO o código
+1. prisma migrate diff --from-schema-datasource ... --script   # preview (aditivo puro)
+2. prisma db push                                              # aplicado, 5,69s
+3. node scripts/migrate-011-backfill.mjs                       # 0 linhas, conferência 100%
+4. git push origin main                                        # 5aa93f2..2d742ec
 ```
 
-O runner standalone **não** aplica schema. Fazer o passo 4 antes do 2 põe no ar um código que consulta coluna inexistente — mesmo gotcha da 010.
+O SQL saiu **puramente aditivo**: 2 `ADD COLUMN` com default, 1 anulável, 1 tabela nova + índice + FK. Zero `DROP`, zero `ALTER TYPE`.
+
+Conferência pós-migração no banco real:
+
+| Verificação | Resultado |
+|---|---|
+| `cupons.escopo` | `text NOT NULL DEFAULT 'porcelanato'` |
+| `pedidos.vertical` | `text NOT NULL DEFAULT 'porcelanato'` |
+| `pedidos.frete_motivo` | anulável — **`where: { freteMotivo: null }` devolve 2**, a landmine da 010 não se repetiu |
+| `itens_pedido_fita` | criada, 0 linhas |
+| Backfill (T010) | `cupons: porcelanato=1` · `pedidos: porcelanato=2` |
+| Porcelanato | 2 itens em `itens_pedido` intactos |
+
+> 💡 **Por que o backfill atualizou 0 linhas e ainda assim está certo:** `ADD COLUMN NOT NULL DEFAULT` do Postgres já grava o default nas linhas existentes, então o `updateMany` com `where: { not: 'porcelanato' }` não encontra nada. O valor do script é a **conferência**, não o update. Ele continua sendo necessário: se um dia a coluna nascer sem default, é ele que impede a leitura errada.
+
+**Regra que continua valendo para a próxima migração:** o runner standalone **não** aplica schema. `db push` manual **sempre** antes do push do código.
 
 ---
 

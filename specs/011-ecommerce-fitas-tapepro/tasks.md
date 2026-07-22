@@ -51,10 +51,10 @@ description: "Task list — 011 E-commerce de fitas adesivas Tapepro"
 ### Banco (ordem rígida — inverter derruba produção)
 
 - [x] T006 Adicionar `model ItemPedidoFita` e os campos `Pedido.vertical`, `Pedido.freteMotivo`, `Cupom.escopo` em `app/prisma/schema.prisma`, conforme [data-model.md](./data-model.md)
-- [ ] T007 Gerar preview do SQL com `npx prisma migrate diff --from-schema-datasource prisma/schema.prisma --to-schema-datamodel prisma/schema.prisma --script` e revisar antes de aplicar
-- [ ] T008 Aplicar `npx prisma db push` **MANUALMENTE** de máquina que alcança o host (runner standalone não aplica schema)
+- [x] T007 Gerar preview do SQL com `npx prisma migrate diff --from-schema-datasource prisma/schema.prisma --to-schema-datamodel prisma/schema.prisma --script` e revisar antes de aplicar
+- [x] T008 Aplicar `npx prisma db push` **MANUALMENTE** de máquina que alcança o host (runner standalone não aplica schema)
 - [x] T009 Criar `app/scripts/migrate-011-backfill.mjs` — `Cupom.escopo='porcelanato'` e `Pedido.vertical='porcelanato'` em todas as linhas existentes (FR-037)
-- [ ] T010 Executar T009 e conferir com `SELECT escopo, COUNT(*) FROM cupons GROUP BY escopo` e `SELECT vertical, COUNT(*) FROM pedidos GROUP BY vertical` — tudo `porcelanato`
+- [x] T010 Executar T009 e conferir com `SELECT escopo, COUNT(*) FROM cupons GROUP BY escopo` e `SELECT vertical, COUNT(*) FROM pedidos GROUP BY vertical` — tudo `porcelanato`
 
 ### Autoridade de preço (caminho de dinheiro)
 
@@ -182,7 +182,7 @@ description: "Task list — 011 E-commerce de fitas adesivas Tapepro"
 - [x] T053 [P] Rodar todos os self-checks: `precos-fitas`, `frete-fitas`, `cupons`, `success-fee` (deve continuar verde **sem alteração** — prova do FR-003), `check-cart-math`, `check-matrix`
 - [ ] T054 Executar o roteiro completo de [quickstart.md](./quickstart.md) — E2E com **pedido pago real** em produção (Constituição II)
 - [ ] T055 Validar contingência de frete nas **duas** causas em produção e confirmar recebimento do e-mail de alerta (FR-035)
-- [ ] T056 [P] Verificar SEO em produção: 41 URLs de porcelanato respondendo igual, barra final com `https`, 404 real, 4 índices atualizados
+- [x] T056 [P] Verificar SEO em produção: 41 URLs de porcelanato respondendo igual, barra final com `https`, 404 real, 4 índices atualizados
 - [ ] T057 Trocar `MELHOR_ENVIO_BASE_URL` para produção e conferir uma cotação real contra o valor esperado
 - [x] T058 Escrever `specs/011-ecommerce-fitas-tapepro/handoff.md` (feito / decisões / pendências / gotchas) e fazer commit + push (Constituição V)
 - [ ] T059 Atualizar o card correspondente em `roihub/data/projects.json` se houver um apontando para esta entrega
