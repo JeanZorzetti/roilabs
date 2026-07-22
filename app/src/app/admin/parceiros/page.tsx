@@ -40,7 +40,8 @@ export default async function ParceirosPage() {
           cadeiraId: p.cadeiraId,
           cadeiraNiche: p.cadeira?.niche ?? null,
           estagio: p.estagio,
-          comissaoPct: p.comissaoPct !== null ? Number(p.comissaoPct) : null,
+          comissaoAquisicao: p.comissaoAquisicao !== null ? Number(p.comissaoAquisicao) : null,
+          comissaoRecorrencia: p.comissaoRecorrencia !== null ? Number(p.comissaoRecorrencia) : null,
           contratoEm: toIso(p.contratoEm),
         }))}
       />

@@ -91,6 +91,10 @@ const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
               <label for="ck-email">E-mail (opcional)</label>
               <input id="ck-email" type="email" name="email" maxlength="200" placeholder="voce@email.com" />
             </div>
+            <div class="field">
+              <label for="ck-doc">CPF ou CNPJ (opcional, para nota/atendimento)</label>
+              <input id="ck-doc" type="text" name="compradorDoc" maxlength="20" inputmode="numeric" placeholder="somente números" />
+            </div>
 
             <h2 style="font-size:1.2rem;margin:1.6rem 0 1rem;">Entrega</h2>
             <label class="radio-row">

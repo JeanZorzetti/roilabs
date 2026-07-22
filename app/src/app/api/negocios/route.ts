@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { isAuthed } from '@/lib/auth';
+import { normalizarDoc } from '@/lib/doc';
+import { classificarNegocio } from '@/lib/classificar-negocio';
 
 export const dynamic = 'force-dynamic';
 
@@ -25,6 +27,9 @@ export async function GET(req: NextRequest) {
       faturavel: r.faturavel,
       isencaoMotivo: r.isencaoMotivo,
       faturaId: r.faturaId,
+      clienteDoc: r.clienteDoc,
+      classificacao: r.classificacao,
+      taxaAplicada: r.taxaAplicada !== null ? Number(r.taxaAplicada) : null,
       pedidoReembolsado: r.pedido.statusPagamento === 'reembolsado',
       createdAt: r.createdAt,
     })),
@@ -53,6 +58,9 @@ export async function POST(req: NextRequest) {
   if (!parceiro || parceiro.estagio !== 'ativa') {
     return NextResponse.json({ ok: false, motivo: 'parceiro inexistente ou não ativo' }, { status: 400 });
   }
+  if (parceiro.comissaoAquisicao === null || parceiro.comissaoRecorrencia === null) {
+    return NextResponse.json({ ok: false, motivo: 'parceiro sem taxas de aquisição/recorrência' }, { status: 400 });
+  }
 
   const negocioAtivo = await prisma.negocioOriginado.findFirst({
     where: { pedidoId, estagio: { not: 'perdido' } },
@@ -63,6 +71,20 @@ export async function POST(req: NextRequest) {
 
   const valor = Number(pedido.total) - Number(pedido.frete ?? 0);
 
+  // Snapshot na criação (010, D3/FR-005): classifica e congela a taxa do parceiro vigente.
+  const clienteDoc = normalizarDoc(pedido.compradorDoc);
+  let docsAnteriores: string[] = [];
+  if (clienteDoc) {
+    const anteriores = await prisma.negocioOriginado.findMany({
+      where: { parceiroId, clienteDoc, estagio: { not: 'perdido' } },
+      include: { pedido: { select: { statusPagamento: true } } },
+    });
+    // Negócio perdido ou pedido reembolsado não consome a aquisição (FR-008).
+    docsAnteriores = anteriores.filter((n) => n.pedido.statusPagamento !== 'reembolsado').map((n) => clienteDoc);
+  }
+  const classificacao = classificarNegocio(clienteDoc, docsAnteriores);
+  const taxaAplicada = classificacao === 'aquisicao' ? parceiro.comissaoAquisicao : parceiro.comissaoRecorrencia;
+
   const created = await prisma.negocioOriginado.create({
     data: {
       pedidoId,
@@ -71,6 +93,9 @@ export async function POST(req: NextRequest) {
       estagio: 'repassado',
       faturavel: !isento,
       isencaoMotivo: isento ? isencaoMotivo : null,
+      clienteDoc: clienteDoc || null,
+      classificacao,
+      taxaAplicada,
     },
   });
 

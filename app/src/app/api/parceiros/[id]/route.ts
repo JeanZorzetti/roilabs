@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { isAuthed } from '@/lib/auth';
+import { parseTaxa, ERR } from '@/lib/taxa';
 
 export const dynamic = 'force-dynamic';
 
 const ESTAGIOS = ['sondagem', 'ativa', 'riscada', 'pausada'];
 
-// PATCH — edita dados/estágio/% de um parceiro. `ativa` exige comissaoPct (não pode faturar sem %).
+// PATCH — edita dados/estágio/taxas de um parceiro. `ativa` exige as duas taxas + cpfCnpj (010).
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   if (!(await isAuthed())) return NextResponse.json({ ok: false }, { status: 401 });
   const { id } = await params;
@@ -24,22 +25,27 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     data.estagio = body.estagio;
   }
 
-  if (body.comissaoPct !== undefined) {
-    if (body.comissaoPct === null || body.comissaoPct === '') {
-      data.comissaoPct = null;
-    } else {
-      const pct = Number(body.comissaoPct);
-      if (!Number.isFinite(pct) || pct < 0 || pct > 1) {
-        return NextResponse.json({ ok: false, motivo: 'comissaoPct fora de [0,1]' }, { status: 400 });
-      }
-      data.comissaoPct = pct;
-    }
+  // comissaoPct do body é ignorado (deprecado — 010). As duas taxas substituem.
+  if (body.comissaoAquisicao !== undefined) {
+    const t = parseTaxa(body.comissaoAquisicao);
+    if (t === ERR) return NextResponse.json({ ok: false, motivo: 'comissaoAquisicao fora de [0,1]' }, { status: 400 });
+    data.comissaoAquisicao = t;
+  }
+  if (body.comissaoRecorrencia !== undefined) {
+    const t = parseTaxa(body.comissaoRecorrencia);
+    if (t === ERR) return NextResponse.json({ ok: false, motivo: 'comissaoRecorrencia fora de [0,1]' }, { status: 400 });
+    data.comissaoRecorrencia = t;
   }
 
   const proximoEstagio = (data.estagio as string | undefined) ?? existing.estagio;
-  const proximoPct = data.comissaoPct !== undefined ? data.comissaoPct : existing.comissaoPct;
-  if (proximoEstagio === 'ativa' && proximoPct === null) {
-    return NextResponse.json({ ok: false, motivo: 'estágio ativa exige comissaoPct' }, { status: 400 });
+  const proximaAquisicao = data.comissaoAquisicao !== undefined ? data.comissaoAquisicao : existing.comissaoAquisicao;
+  const proximaRecorrencia = data.comissaoRecorrencia !== undefined ? data.comissaoRecorrencia : existing.comissaoRecorrencia;
+  const proximoCpfCnpj = body.cpfCnpj !== undefined ? body.cpfCnpj || null : existing.cpfCnpj;
+  if (proximoEstagio === 'ativa' && (proximaAquisicao === null || proximaRecorrencia === null || !proximoCpfCnpj)) {
+    return NextResponse.json(
+      { ok: false, motivo: 'estágio ativa exige comissaoAquisicao, comissaoRecorrencia e cpfCnpj' },
+      { status: 400 },
+    );
   }
 
   if (body.contratoEm !== undefined) {

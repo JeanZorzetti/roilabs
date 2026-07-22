@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { isAuthed } from '@/lib/auth';
-import { calcularFaturaMensal, type NegocioCalc } from '@/lib/success-fee';
+import { calcularFaturaMensal, elegivel, type NegocioCalc } from '@/lib/success-fee';
 import { garantirCliente, criarCobranca } from '@/lib/asaas';
 import { log } from '@/lib/log';
 
@@ -44,9 +44,15 @@ export async function POST(req: NextRequest) {
   }
 
   const parceiro = await prisma.parceiro.findUnique({ where: { id: parceiroId } });
-  if (!parceiro || parceiro.estagio !== 'ativa' || parceiro.comissaoPct === null || !parceiro.cpfCnpj) {
+  if (
+    !parceiro ||
+    parceiro.estagio !== 'ativa' ||
+    parceiro.comissaoAquisicao === null ||
+    parceiro.comissaoRecorrencia === null ||
+    !parceiro.cpfCnpj
+  ) {
     return NextResponse.json(
-      { ok: false, motivo: 'parceiro precisa estar ativa, com comissaoPct e cpfCnpj' },
+      { ok: false, motivo: 'parceiro precisa estar ativa, com as duas taxas e cpfCnpj' },
       { status: 400 },
     );
   }
@@ -63,13 +69,24 @@ export async function POST(req: NextRequest) {
   const negocios: NegocioCalc[] = negociosRows.map((n) => ({
     id: n.id,
     valor: Number(n.valor),
+    // NaN se o snapshot não tiver taxa (negócio legado sem backfill): o guard abaixo barra
+    // antes de calcular — money path nunca cobra taxa zero por omissão (010).
+    taxaAplicada: n.taxaAplicada !== null ? Number(n.taxaAplicada) : NaN,
     estagio: n.estagio,
     faturavel: n.faturavel,
     pedidoReembolsado: n.pedido.statusPagamento === 'reembolsado',
     jaFaturado: false,
   }));
 
-  const calc = calcularFaturaMensal(Number(parceiro.comissaoPct), negocios);
+  const semTaxa = negocios.find((n) => elegivel(n) && Number.isNaN(n.taxaAplicada));
+  if (semTaxa) {
+    return NextResponse.json(
+      { ok: false, motivo: `negócio ${semTaxa.id} ganho sem taxa aplicada — rode o backfill 010` },
+      { status: 400 },
+    );
+  }
+
+  const calc = calcularFaturaMensal(negocios);
   if (calc.negocioIds.length === 0) {
     return NextResponse.json({ ok: false, motivo: 'sem negócios faturáveis' }, { status: 400 });
   }

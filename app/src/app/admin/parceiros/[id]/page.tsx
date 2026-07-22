@@ -30,7 +30,8 @@ export default async function ParceiroDetalhePage({ params }: { params: Promise<
           <h1>{parceiro.nome}</h1>
           <p>
             {parceiro.cadeira?.niche ?? parceiro.nicho} · {parceiro.estagio}
-            {parceiro.comissaoPct !== null && ` · ${(Number(parceiro.comissaoPct) * 100).toFixed(1)}%`}
+            {parceiro.comissaoAquisicao !== null && ` · aquisição ${(Number(parceiro.comissaoAquisicao) * 100).toFixed(1)}%`}
+            {parceiro.comissaoRecorrencia !== null && ` · recorrência ${(Number(parceiro.comissaoRecorrencia) * 100).toFixed(1)}%`}
           </p>
         </div>
         <a className="btn btn--sm" href={`/admin/parceiros/${parceiro.id}/demonstrativo`}>Demonstrativo do mês</a>
@@ -66,7 +67,7 @@ export default async function ParceiroDetalhePage({ params }: { params: Promise<
       <div style={{ marginTop: '1.5rem' }}>
         <FaturasSection
           parceiroId={parceiro.id}
-          podeGerar={parceiro.estagio === 'ativa' && parceiro.comissaoPct !== null && !!parceiro.cpfCnpj}
+          podeGerar={parceiro.estagio === 'ativa' && parceiro.comissaoAquisicao !== null && parceiro.comissaoRecorrencia !== null && !!parceiro.cpfCnpj}
           faturas={faturas.map((f) => ({
             id: f.id,
             competencia: f.competencia,

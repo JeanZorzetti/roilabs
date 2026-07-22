@@ -28,7 +28,8 @@ export interface Parceiro {
   cadeiraId: string | null;
   cadeiraNiche: string | null;
   estagio: string;
-  comissaoPct: number | null;
+  comissaoAquisicao: number | null;
+  comissaoRecorrencia: number | null;
   contratoEm: string | null; // ISO date ou null
 }
 
@@ -44,16 +45,28 @@ type Novo = {
   cidade: string;
   cpfCnpj: string;
   cadeiraId: string;
-  comissaoPct: string;
+  comissaoAquisicao: string;
+  comissaoRecorrencia: string;
 };
 
-const NOVO_VAZIO: Novo = { candidaturaId: '', nome: '', whatsapp: '', email: '', cidade: '', cpfCnpj: '', cadeiraId: '', comissaoPct: '' };
+// FR-009: novo parceiro nasce com 0.15 aquisição / 0.10 recorrência (a regra declarada), editável.
+const NOVO_VAZIO: Novo = { candidaturaId: '', nome: '', whatsapp: '', email: '', cidade: '', cpfCnpj: '', cadeiraId: '', comissaoAquisicao: '0.15', comissaoRecorrencia: '0.10' };
 
-type Edit = { estagio: string; comissaoPct: string; contratoEm: string };
+type Edit = { estagio: string; comissaoAquisicao: string; comissaoRecorrencia: string; contratoEm: string };
+
+const asTaxa = (v: number | null) => (v !== null ? String(v) : '');
 
 function toEdit(p: Parceiro): Edit {
-  return { estagio: p.estagio, comissaoPct: p.comissaoPct !== null ? String(p.comissaoPct) : '', contratoEm: p.contratoEm ?? '' };
+  return {
+    estagio: p.estagio,
+    comissaoAquisicao: asTaxa(p.comissaoAquisicao),
+    comissaoRecorrencia: asTaxa(p.comissaoRecorrencia),
+    contratoEm: p.contratoEm ?? '',
+  };
 }
+
+// [0,1] no cliente (servidor é a autoridade — FR-010).
+const taxaOk = (v: string) => v === '' || (Number.isFinite(Number(v)) && Number(v) >= 0 && Number(v) <= 1);
 
 export default function ParceirosForm({
   cadeiras,
@@ -88,6 +101,10 @@ export default function ParceirosForm({
   }
 
   async function criar() {
+    if (!taxaOk(novo.comissaoAquisicao) || !taxaOk(novo.comissaoRecorrencia)) {
+      setMsgFor('novo', '✗ taxas devem ser fração 0–1 (ex.: 0.15 = 15%)');
+      return;
+    }
     setBusy('novo');
     const res = await fetch('/api/parceiros', {
       method: 'POST',
@@ -100,7 +117,8 @@ export default function ParceirosForm({
         cpfCnpj: novo.cpfCnpj || null,
         cadeiraId: novo.cadeiraId,
         candidaturaId: novo.candidaturaId || null,
-        comissaoPct: novo.comissaoPct === '' ? null : Number(novo.comissaoPct),
+        comissaoAquisicao: novo.comissaoAquisicao === '' ? null : Number(novo.comissaoAquisicao),
+        comissaoRecorrencia: novo.comissaoRecorrencia === '' ? null : Number(novo.comissaoRecorrencia),
       }),
     });
     const json = await res.json();
@@ -120,13 +138,18 @@ export default function ParceirosForm({
 
   async function salvar(p: Parceiro) {
     const f = campos(p);
+    if (!taxaOk(f.comissaoAquisicao) || !taxaOk(f.comissaoRecorrencia)) {
+      setMsgFor(p.id, '✗ taxas devem ser fração 0–1 (ex.: 0.15 = 15%)');
+      return;
+    }
     setBusy(p.id);
     const res = await fetch(`/api/parceiros/${p.id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         estagio: f.estagio,
-        comissaoPct: f.comissaoPct === '' ? null : Number(f.comissaoPct),
+        comissaoAquisicao: f.comissaoAquisicao === '' ? null : Number(f.comissaoAquisicao),
+        comissaoRecorrencia: f.comissaoRecorrencia === '' ? null : Number(f.comissaoRecorrencia),
         contratoEm: f.contratoEm || null,
       }),
     });
@@ -202,8 +225,12 @@ export default function ParceirosForm({
             <input value={novo.cpfCnpj} onChange={(e) => setNovo((f) => ({ ...f, cpfCnpj: e.target.value }))} placeholder="obrigatório p/ faturar" />
           </label>
           <label className="cc-field">
-            % negociado (opcional)
-            <input value={novo.comissaoPct} onChange={(e) => setNovo((f) => ({ ...f, comissaoPct: e.target.value }))} placeholder="0–1, ex: 0.1" />
+            Taxa aquisição (1ª compra)
+            <input value={novo.comissaoAquisicao} onChange={(e) => setNovo((f) => ({ ...f, comissaoAquisicao: e.target.value }))} placeholder="fração 0–1 (ex.: 0.15 = 15%)" />
+          </label>
+          <label className="cc-field">
+            Taxa recorrência
+            <input value={novo.comissaoRecorrencia} onChange={(e) => setNovo((f) => ({ ...f, comissaoRecorrencia: e.target.value }))} placeholder="fração 0–1 (ex.: 0.10 = 10%)" />
           </label>
         </div>
         <div className="cc-row-actions" style={{ marginTop: '0.7rem' }}>
@@ -220,7 +247,8 @@ export default function ParceirosForm({
             <th>Parceiro</th>
             <th>Cadeira</th>
             <th>Estágio</th>
-            <th>%</th>
+            <th>Aquis.</th>
+            <th>Recorr.</th>
             <th>Contrato</th>
             <th>Ocupação</th>
             <th></th>
@@ -251,10 +279,19 @@ export default function ParceirosForm({
                 <td>
                   <input
                     className="num"
-                    style={{ width: 70 }}
-                    value={f.comissaoPct}
-                    onChange={(e) => setEdits((prev) => ({ ...prev, [p.id]: { ...campos(p), comissaoPct: e.target.value } }))}
-                    placeholder="0–1"
+                    style={{ width: 64 }}
+                    value={f.comissaoAquisicao}
+                    onChange={(e) => setEdits((prev) => ({ ...prev, [p.id]: { ...campos(p), comissaoAquisicao: e.target.value } }))}
+                    placeholder="0.15"
+                  />
+                </td>
+                <td>
+                  <input
+                    className="num"
+                    style={{ width: 64 }}
+                    value={f.comissaoRecorrencia}
+                    onChange={(e) => setEdits((prev) => ({ ...prev, [p.id]: { ...campos(p), comissaoRecorrencia: e.target.value } }))}
+                    placeholder="0.10"
                   />
                 </td>
                 <td>
@@ -281,7 +318,7 @@ export default function ParceirosForm({
           })}
           {parceiros.length === 0 && (
             <tr>
-              <td colSpan={7} style={{ textAlign: 'center', padding: '2rem' }} className="muted">
+              <td colSpan={8} style={{ textAlign: 'center', padding: '2rem' }} className="muted">
                 Nenhum parceiro ainda.
               </td>
             </tr>

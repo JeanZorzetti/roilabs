@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { isAuthed } from '@/lib/auth';
+import { parseTaxa, ERR } from '@/lib/taxa';
 
 export const dynamic = 'force-dynamic';
 
@@ -25,7 +26,9 @@ export async function GET() {
       cadeiraNiche: r.cadeira?.niche ?? null,
       candidaturaId: r.candidaturaId,
       estagio: r.estagio,
-      comissaoPct: r.comissaoPct !== null ? Number(r.comissaoPct) : null,
+      comissaoPct: r.comissaoPct !== null ? Number(r.comissaoPct) : null, // deprecado, informativo
+      comissaoAquisicao: r.comissaoAquisicao !== null ? Number(r.comissaoAquisicao) : null,
+      comissaoRecorrencia: r.comissaoRecorrencia !== null ? Number(r.comissaoRecorrencia) : null,
       contratoEm: r.contratoEm,
       ocupaCadeira: r.contratoEm !== null,
       createdAt: r.createdAt,
@@ -46,13 +49,11 @@ export async function POST(req: NextRequest) {
   const cadeira = await prisma.cadeira.findUnique({ where: { id: cadeiraId } });
   if (!cadeira) return NextResponse.json({ ok: false, motivo: 'cadeira inexistente' }, { status: 400 });
 
-  let comissaoPct: number | null = null;
-  if (body.comissaoPct !== undefined && body.comissaoPct !== null && body.comissaoPct !== '') {
-    comissaoPct = Number(body.comissaoPct);
-    if (!Number.isFinite(comissaoPct) || comissaoPct < 0 || comissaoPct > 1) {
-      return NextResponse.json({ ok: false, motivo: 'comissaoPct fora de [0,1]' }, { status: 400 });
-    }
-  }
+  // comissaoPct do body é ignorado (deprecado — 010). As duas taxas substituem.
+  const aquisicao = parseTaxa(body.comissaoAquisicao);
+  if (aquisicao === ERR) return NextResponse.json({ ok: false, motivo: 'comissaoAquisicao fora de [0,1]' }, { status: 400 });
+  const recorrencia = parseTaxa(body.comissaoRecorrencia);
+  if (recorrencia === ERR) return NextResponse.json({ ok: false, motivo: 'comissaoRecorrencia fora de [0,1]' }, { status: 400 });
 
   const created = await prisma.parceiro.create({
     data: {
@@ -65,7 +66,8 @@ export async function POST(req: NextRequest) {
       polo: cadeira.polo,
       cadeiraId,
       candidaturaId: typeof body.candidaturaId === 'string' && body.candidaturaId ? body.candidaturaId : null,
-      comissaoPct,
+      comissaoAquisicao: aquisicao,
+      comissaoRecorrencia: recorrencia,
       estagio: 'sondagem',
     },
   });

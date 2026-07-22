@@ -29,13 +29,13 @@ description: "Task list — 010 success fee com duas taxas"
 
 **⚠️ CRITICAL**: schema + libs puras + cálculo. Nenhuma user story roda antes disto.
 
-- [ ] T002 Schema: em `app/prisma/schema.prisma` adicionar — `Parceiro.comissaoAquisicao` + `Parceiro.comissaoRecorrencia` (`Decimal? @db.Decimal(6,4)`, `comissaoPct` mantido deprecado); `NegocioOriginado.clienteDoc` (String?), `.classificacao` (String?), `.taxaAplicada` (`Decimal? @db.Decimal(6,4)`, **nullable nesta etapa**) + `@@index([parceiroId, clienteDoc])`; `Pedido.compradorDoc` (String?). (data-model.md)
-- [ ] T003 [P] Criar `app/src/lib/doc.ts`: `normalizarDoc` (só dígitos) + `validarDoc` (CPF 11 / CNPJ 14 dígitos) — puro.
-- [ ] T004 [P] Criar `app/test/doc.test.mjs`: self-check de `doc.ts` (pontuação some; tamanho inválido rejeita). Escrever ANTES, falhar antes de T003.
-- [ ] T005 Criar `app/src/lib/classificar-negocio.ts`: função pura `classificarNegocio(clienteDoc, anteriores) → 'aquisicao'|'recorrencia'` (doc vazio → aquisição; existe anterior não-perdido com mesmo doc → recorrência) (research.md D3). Depende de T003.
-- [ ] T006 Criar `app/test/classificar-negocio.test.mjs`: doc vazio → aquisição; histórico não-perdido → recorrência; único anterior perdido → aquisição. Escrever ANTES, falhar antes de T005.
-- [ ] T007 Alterar `app/src/lib/success-fee.ts`: `NegocioCalc += taxaAplicada`; `calcularFaturaMensal(negocios)` (sem `comissaoPct`) soma `valor = Σ money(n.valor × n.taxaAplicada)` sobre os elegíveis; `base = Σ valor` (research.md D4).
-- [ ] T008 Atualizar `app/test/success-fee.test.mjs`: cenário 2 negócios mesmo cliente → 1000×0.15=150 + 1000×0.10=100 → fatura 250 / base 2000; arredondamento por negócio sem drift. Ajustar ANTES, falhar antes de T007.
+- [x] T002 Schema: em `app/prisma/schema.prisma` adicionar — `Parceiro.comissaoAquisicao` + `Parceiro.comissaoRecorrencia` (`Decimal? @db.Decimal(6,4)`, `comissaoPct` mantido deprecado); `NegocioOriginado.clienteDoc` (String?), `.classificacao` (String?), `.taxaAplicada` (`Decimal? @db.Decimal(6,4)`, **nullable nesta etapa**) + `@@index([parceiroId, clienteDoc])`; `Pedido.compradorDoc` (String?). (data-model.md)
+- [x] T003 [P] Criar `app/src/lib/doc.ts`: `normalizarDoc` (só dígitos) + `validarDoc` (CPF 11 / CNPJ 14 dígitos) — puro.
+- [x] T004 [P] Criar `app/test/doc.test.mjs`: self-check de `doc.ts` (pontuação some; tamanho inválido rejeita). Escrever ANTES, falhar antes de T003.
+- [x] T005 Criar `app/src/lib/classificar-negocio.ts`: função pura `classificarNegocio(clienteDoc, anteriores) → 'aquisicao'|'recorrencia'` (doc vazio → aquisição; existe anterior não-perdido com mesmo doc → recorrência) (research.md D3). Depende de T003.
+- [x] T006 Criar `app/test/classificar-negocio.test.mjs`: doc vazio → aquisição; histórico não-perdido → recorrência; único anterior perdido → aquisição. Escrever ANTES, falhar antes de T005.
+- [x] T007 Alterar `app/src/lib/success-fee.ts`: `NegocioCalc += taxaAplicada`; `calcularFaturaMensal(negocios)` (sem `comissaoPct`) soma `valor = Σ money(n.valor × n.taxaAplicada)` sobre os elegíveis; `base = Σ valor` (research.md D4).
+- [x] T008 Atualizar `app/test/success-fee.test.mjs`: cenário 2 negócios mesmo cliente → 1000×0.15=150 + 1000×0.10=100 → fatura 250 / base 2000; arredondamento por negócio sem drift. Ajustar ANTES, falhar antes de T007.
 - [ ] T009 Aplicar schema: `prisma db push` no `roilabs_db` (host real) com as colunas novas (`taxaAplicada` ainda nullable). Depende de T002. Validar no host (Const. II).
 
 **Checkpoint**: schema no ar, libs puras verdes.
@@ -48,10 +48,10 @@ description: "Task list — 010 success fee com duas taxas"
 
 **Independent Test**: em `/admin/parceiros`, salvar 0.15/0.10, reabrir e ver os dois; `1` numa taxa é barrado.
 
-- [ ] T010 [US1] `app/src/app/api/parceiros/route.ts` (POST + GET): aceitar/validar `comissaoAquisicao` e `comissaoRecorrencia` em [0,1] (400 fora do range); GET expõe as duas; ignorar `comissaoPct` do body (contracts/parceiros.md).
-- [ ] T011 [US1] `app/src/app/api/parceiros/[id]/route.ts` (PATCH): validar as 2 taxas; `estagio='ativa'` e `podeGerar` exigem as **duas** + `cpfCnpj` (substitui a exigência de `comissaoPct`).
-- [ ] T012 [US1] `app/src/app/admin/parceiros/parceiros-form.tsx`: dois campos (aquisição/recorrência) com placeholder `fração 0–1 (ex.: 0.15 = 15%)`; validação [0,1] no cliente.
-- [ ] T013 [P] [US1] `app/src/app/admin/parceiros/[id]/page.tsx`: exibir as duas taxas (× 100 %) em vez de `comissaoPct`.
+- [x] T010 [US1] `app/src/app/api/parceiros/route.ts` (POST + GET): aceitar/validar `comissaoAquisicao` e `comissaoRecorrencia` em [0,1] (400 fora do range); GET expõe as duas; ignorar `comissaoPct` do body (contracts/parceiros.md).
+- [x] T011 [US1] `app/src/app/api/parceiros/[id]/route.ts` (PATCH): validar as 2 taxas; `estagio='ativa'` e `podeGerar` exigem as **duas** + `cpfCnpj` (substitui a exigência de `comissaoPct`).
+- [x] T012 [US1] `app/src/app/admin/parceiros/parceiros-form.tsx`: dois campos (aquisição/recorrência) com placeholder `fração 0–1 (ex.: 0.15 = 15%)`; validação [0,1] no cliente.
+- [x] T013 [P] [US1] `app/src/app/admin/parceiros/[id]/page.tsx`: exibir as duas taxas (× 100 %) em vez de `comissaoPct`.
 
 **Checkpoint**: taxas duplas definíveis e persistidas.
 
@@ -63,11 +63,11 @@ description: "Task list — 010 success fee com duas taxas"
 
 **Independent Test**: 2 pedidos pagos com o mesmo CPF/CNPJ → 1º negócio 15%, 2º 10%; fatura = soma por negócio; demonstrativo bate.
 
-- [ ] T014 [US2] `app/src/app/api/negocios/route.ts` (POST): ler `pedido.compradorDoc` → `normalizarDoc`; classificar via `classificarNegocio` (buscar anteriores não-perdidos do mesmo `parceiroId`+`clienteDoc`); gravar `clienteDoc`/`classificacao`/`taxaAplicada` (da taxa vigente do parceiro); exigir parceiro com as 2 taxas. GET expõe `classificacao`/`taxaAplicada` (contracts/negocios.md).
-- [ ] T015 [US2] `app/src/app/api/faturas/route.ts` (POST): trocar validação `comissaoPct===null` por "faltam as 2 taxas"; montar `NegocioCalc` com `taxaAplicada` do negócio; chamar o novo `calcularFaturaMensal(negocios)` (contracts/faturas.md).
-- [ ] T016 [US2] `app/src/app/admin/parceiros/[id]/demonstrativo/page.tsx`: breakdown por negócio (classificação + taxa aplicada + subtotal) e total conferindo com a soma (SC-002).
-- [ ] T017 [US2] Captura no checkout `site-goiania`: campo **opcional** "CPF ou CNPJ" no formulário de checkout (`site-goiania/src/pages/*` do carrinho/pedido) enviado ao criar o Pedido (contracts/checkout-pedido.md, Q1).
-- [ ] T018 [US2] Persistir `compradorDoc` na criação do Pedido no `/app` (rota que cria o `Pedido`): `normalizarDoc`+`validarDoc`; grava dígitos, `null` se inválido/ausente (não bloqueia B2C).
+- [x] T014 [US2] `app/src/app/api/negocios/route.ts` (POST): ler `pedido.compradorDoc` → `normalizarDoc`; classificar via `classificarNegocio` (buscar anteriores não-perdidos do mesmo `parceiroId`+`clienteDoc`); gravar `clienteDoc`/`classificacao`/`taxaAplicada` (da taxa vigente do parceiro); exigir parceiro com as 2 taxas. GET expõe `classificacao`/`taxaAplicada` (contracts/negocios.md).
+- [x] T015 [US2] `app/src/app/api/faturas/route.ts` (POST): trocar validação `comissaoPct===null` por "faltam as 2 taxas"; montar `NegocioCalc` com `taxaAplicada` do negócio; chamar o novo `calcularFaturaMensal(negocios)` (contracts/faturas.md).
+- [x] T016 [US2] `app/src/app/admin/parceiros/[id]/demonstrativo/page.tsx`: breakdown por negócio (classificação + taxa aplicada + subtotal) e total conferindo com a soma (SC-002).
+- [x] T017 [US2] Captura no checkout `site-goiania`: campo **opcional** "CPF ou CNPJ" no formulário de checkout (`site-goiania/src/pages/*` do carrinho/pedido) enviado ao criar o Pedido (contracts/checkout-pedido.md, Q1).
+- [x] T018 [US2] Persistir `compradorDoc` na criação do Pedido no `/app` (rota que cria o `Pedido`): `normalizarDoc`+`validarDoc`; grava dígitos, `null` se inválido/ausente (não bloqueia B2C).
 
 **Checkpoint**: fatura cobra a taxa certa por negócio, ponta a ponta.
 
@@ -79,7 +79,7 @@ description: "Task list — 010 success fee com duas taxas"
 
 **Independent Test**: rodar o backfill 2× (idempotente); nenhuma `FaturaSuccessFee` muda `valor`.
 
-- [ ] T019 [US3] Criar `app/scripts/migrate-010-backfill.mjs` (idempotente): parceiros → `comissaoAquisicao=comissaoRecorrencia=comissaoPct`; negócios abertos (`faturaId=null`, sem `taxaAplicada`) → `taxaAplicada=parceiro.comissaoPct`, `classificacao='legado'`, `clienteDoc` do pedido; não tocar negócios faturados/faturas emitidas (research.md D6).
+- [x] T019 [US3] Criar `app/scripts/migrate-010-backfill.mjs` (idempotente): parceiros → `comissaoAquisicao=comissaoRecorrencia=comissaoPct`; negócios abertos (`faturaId=null`, sem `taxaAplicada`) → `taxaAplicada=parceiro.comissaoPct`, `classificacao='legado'`, `clienteDoc` do pedido; não tocar negócios faturados/faturas emitidas (research.md D6).
 - [ ] T020 [US3] Rodar o backfill no host real 2× e verificar: `valor` de todas as faturas existentes inalterado; TapePro com `comissaoAquisicao=comissaoRecorrencia=0.15` (depois setar recorrência 0.10 pela UI) (SC-004).
 - [ ] T021 [US3] Segunda etapa da migração: tornar `NegocioOriginado.taxaAplicada` **NOT NULL** em `app/prisma/schema.prisma` + `db push` (só após T020, quando todo negócio aberto já tem taxa).
 
@@ -93,7 +93,7 @@ description: "Task list — 010 success fee com duas taxas"
 
 **Independent Test**: alterar as taxas do parceiro e reabrir negócios já criados → `taxaAplicada`/`classificacao` inalteradas.
 
-- [ ] T022 [US4] Garantir imutabilidade: revisar `app/src/app/api/negocios/[id]/route.ts` e `app/src/app/api/parceiros/[id]/route.ts` para que nenhuma transição de estágio nem edição de taxa reescreva `taxaAplicada`/`classificacao`/`clienteDoc`; adicionar assert/self-check simples que muda a taxa do parceiro e confirma o negócio congelado (FR-005).
+- [x] T022 [US4] Garantir imutabilidade: revisar `app/src/app/api/negocios/[id]/route.ts` e `app/src/app/api/parceiros/[id]/route.ts` para que nenhuma transição de estágio nem edição de taxa reescreva `taxaAplicada`/`classificacao`/`clienteDoc`; adicionar assert/self-check simples que muda a taxa do parceiro e confirma o negócio congelado (FR-005).
 
 **Checkpoint**: auditoria garantida.
 
@@ -101,9 +101,9 @@ description: "Task list — 010 success fee com duas taxas"
 
 ## Phase 7: Polish & Validação (Cross-Cutting)
 
-- [ ] T023 [P] Rodar os self-checks (Gate 1): `doc.test.mjs`, `classificar-negocio.test.mjs`, `success-fee.test.mjs` — todos verdes.
+- [x] T023 [P] Rodar os self-checks (Gate 1): `doc.test.mjs`, `classificar-negocio.test.mjs`, `success-fee.test.mjs` — todos verdes.
 - [ ] T024 Validação E2E real (Gate 3, Const. II) no EasyPanel/navegador: fluxo do quickstart (2 pedidos mesmo doc → 15%+10%, demonstrativo bate, snapshot congelado, checkout grava `compradorDoc` só dígitos).
-- [ ] T025 `specs/010-success-fee-duas-taxas/handoff.md` (feito/decisões/pendências/gotchas) — Const. V.
+- [x] T025 `specs/010-success-fee-duas-taxas/handoff.md` (feito/decisões/pendências/gotchas) — Const. V.
 - [ ] T026 [P] Atualizar o vault `Docs/Obsidian/80-dev/` com a regra de duas taxas (aquisição/recorrência) e a migração (opcional, memória durável).
 
 ---

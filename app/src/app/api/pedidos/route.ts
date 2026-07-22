@@ -5,6 +5,7 @@ import { getProduto } from '@/lib/precos';
 import { calcFrete, type Entrega } from '@/lib/frete';
 import { validarCupom } from '@/lib/cupons';
 import { createPreference } from '@/lib/mercadopago';
+import { normalizarDoc, validarDoc } from '@/lib/doc';
 import { log } from '@/lib/log';
 
 export const dynamic = 'force-dynamic';
@@ -79,12 +80,18 @@ export async function POST(req: NextRequest) {
 
   const total = money(Math.max(0, totalProduto - desconto) + (frete ?? 0));
 
+  // CPF/CNPJ opcional (010): grava só os dígitos se o formato bate; inválido/ausente → null
+  // (não bloqueia o checkout B2C). Chave de aquisição/recorrência no repasse ao parceiro.
+  const docDigits = normalizarDoc(cap(form.get('compradorDoc'), 20));
+  const compradorDoc = validarDoc(docDigits) ? docDigits : null;
+
   // Persist pending order + items.
   const pedido = await prisma.pedido.create({
     data: {
       nome,
       whatsapp,
       email: cap(form.get('email'), 200) || null,
+      compradorDoc,
       entrega,
       cep: entrega === 'retirada' ? null : cep,
       frete,

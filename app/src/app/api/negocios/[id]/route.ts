@@ -18,6 +18,8 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   const body = (await req.json().catch(() => ({}))) as Record<string, unknown>;
   const data: Record<string, unknown> = {};
 
+  // Imutáveis (010, FR-005): clienteDoc/classificacao/taxaAplicada são snapshot da criação e
+  // NÃO entram no allowlist abaixo — mudar a taxa do parceiro nunca reescreve negócio já criado.
   if (body.estagio !== undefined) {
     if (typeof body.estagio !== 'string' || !ESTAGIOS.includes(body.estagio)) {
       return NextResponse.json({ ok: false, motivo: 'estágio inválido' }, { status: 400 });
