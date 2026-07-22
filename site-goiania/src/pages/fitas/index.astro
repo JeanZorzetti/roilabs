@@ -1,0 +1,145 @@
+---
+import Base from '../../layouts/Base.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { fitas, formatPreco, menorPreco } from '../../data/fitas';
+
+// Vitrine do vertical de fitas. ZERO sinal geográfico (FR-031): fita vende para o Brasil
+// inteiro, e "Goiânia" em título/h1/copy contradiz a cobertura nacional do frete.
+const SITE = Astro.site?.href.replace(/\/$/, '') ?? 'https://goiania.roilabs.com.br';
+
+const itemList = {
+  '@type': 'ItemList',
+  '@id': `${SITE}/fitas/#lista`,
+  name: 'Fitas adesivas para embalagem',
+  numberOfItems: fitas.length,
+  itemListElement: fitas.map((f, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    url: `${SITE}/fitas/${f.slug}/`,
+    name: f.nome,
+  })),
+};
+---
+
+<Base
+  title="Fitas adesivas para embalagem — preço por rolo e frete para todo o Brasil | ROI Labs"
+  description="Fita transparente comum, fita gomada kraft com nylon e fita personalizada com a sua marca. Preço por faixa de volume, compra direta no site e frete calculado para todo o Brasil."
+  jsonLdNodes={[itemList]}
+>
+  <Header />
+
+  <main class="section">
+    <div class="wrap">
+      <div class="section__head">
+        <span class="eyebrow" style="color:var(--hivis);display:block;margin-bottom:1rem;">Fitas adesivas</span>
+        <h1>Fita adesiva para embalagem, com preço por rolo</h1>
+        <p class="section__lead" style="color:var(--d-muted);max-width:62ch;">
+          Três fitas que cobrem toda a expedição: o lacre do dia a dia, o lacre inviolável
+          de caixa pesada e a fita com a sua marca impressa. Preço cai por faixa de volume,
+          frete calculado no carrinho para todo o Brasil.
+        </p>
+      </div>
+
+      <ul class="fitas-grid">
+        {
+          fitas.map((f) => (
+            <li class="fita-card">
+              <a href={`/fitas/${f.slug}/`} class="fita-card__link">
+                <img
+                  class="fita-card__img"
+                  src={f.imagem}
+                  alt={f.alt}
+                  width="400"
+                  height="400"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <div class="fita-card__body">
+                  {/* Modalidade visível JÁ na vitrine (FR-041): descobrir que o SKU é
+                      só-orçamento depois de clicar é atrito desnecessário. */}
+                  <span class={`fita-card__tag fita-card__tag--${f.modalidade === 'precoPublico' ? 'compra' : 'orc'}`}>
+                    {f.modalidade === 'precoPublico' ? 'Compra direta' : 'Sob orçamento'}
+                  </span>
+                  <h2 class="fita-card__nome">{f.nome}</h2>
+                  <p class="fita-card__chamada">{f.chamadaVitrine}</p>
+                  <p class="fita-card__preco">
+                    {f.modalidade === 'precoPublico' ? (
+                      <>
+                        <strong>{formatPreco(menorPreco(f))}</strong>
+                        <span>
+                          {f.faixas.length === 1 ? ' /rolo' : ` /rolo a partir de ${f.faixas.at(-1)?.min} rolos`}
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <span>referência a partir de </span>
+                        <strong>{formatPreco(menorPreco(f))}</strong>
+                        <span> /rolo</span>
+                      </>
+                    )}
+                  </p>
+                  <p class="fita-card__min">Pedido mínimo: {f.minimoRolos} rolo(s)</p>
+                </div>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <section class="fitas-nota">
+        <h2>Como funciona a compra</h2>
+        <p>
+          Fitas com preço público entram direto no carrinho: você escolhe a quantidade, o
+          preço por rolo acompanha a faixa de volume e o frete é cotado pelo seu CEP antes
+          do pagamento. CNPJ ou CPF é obrigatório no pedido, para emissão da nota.
+        </p>
+        <p>
+          A fita personalizada fecha por orçamento porque cada arte exige um clichê
+          flexográfico próprio — custo único por arte, não por pedido. Quem repete a mesma
+          arte não paga o clichê de novo, e cobrar por pedido sobrecobraria o cliente
+          recorrente.
+        </p>
+      </section>
+    </div>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .fitas-grid {
+    list-style: none;
+    margin: 2.5rem 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+  }
+  .fita-card {
+    border: 1px solid var(--d-line);
+    border-radius: 12px;
+    background: var(--ink-2);
+    overflow: hidden;
+    transition: border-color 0.18s ease;
+  }
+  .fita-card:hover { border-color: var(--hivis); }
+  .fita-card__link { display: block; text-decoration: none; color: inherit; }
+  .fita-card__img { width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; display: block; background: var(--ink-3); }
+  .fita-card__body { padding: 1.2rem 1.3rem 1.4rem; }
+  .fita-card__tag {
+    display: inline-block; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em;
+    text-transform: uppercase; padding: 0.2rem 0.5rem; border-radius: 4px; margin-bottom: 0.7rem;
+  }
+  .fita-card__tag--compra { background: color-mix(in srgb, #16a34a 22%, var(--ink-2)); color: #86efac; }
+  .fita-card__tag--orc { background: color-mix(in srgb, var(--hivis) 22%, var(--ink-2)); color: var(--hivis); }
+  .fita-card__nome { font-size: 1.15rem; margin: 0 0 0.4rem; color: var(--d-text); }
+  .fita-card__chamada { font-size: 0.88rem; color: var(--d-muted); margin: 0 0 0.9rem; }
+  .fita-card__preco { font-size: 0.95rem; color: var(--d-text); margin: 0 0 0.3rem; }
+  .fita-card__preco strong { font-size: 1.25rem; }
+  .fita-card__preco span { color: var(--d-muted); font-size: 0.85rem; }
+  .fita-card__min { font-size: 0.8rem; color: var(--d-muted); margin: 0; }
+  .fitas-nota { margin-top: 3.5rem; max-width: 66ch; }
+  .fitas-nota h2 { font-size: 1.3rem; margin-bottom: 0.8rem; }
+  .fitas-nota p { color: var(--d-muted); margin-bottom: 1rem; }
+</style>

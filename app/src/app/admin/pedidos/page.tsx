@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function PedidosPage() {
   const [pedidos, parceirosAtivos, negociosAtivos] = await Promise.all([
-    prisma.pedido.findMany({ orderBy: { createdAt: 'desc' }, include: { itens: true } }),
+    prisma.pedido.findMany({ orderBy: { createdAt: 'desc' }, include: { itens: true, itensFita: true } }),
     prisma.parceiro.findMany({ where: { estagio: 'ativa' }, select: { id: true, nome: true, nicho: true } }),
     prisma.negocioOriginado.findMany({ where: { estagio: { not: 'perdido' } }, select: { pedidoId: true } }),
   ]);
@@ -27,6 +27,9 @@ export default async function PedidosPage() {
     return badge(s, map[s] ?? '#374151');
   };
 
+  const verticalBadge = (v: string) =>
+    badge(v === 'fitas' ? 'fitas' : 'porcelanato', v === 'fitas' ? '#9a3412' : '#1e3a5f');
+
   const fulBadge = (s: string) => {
     const map: Record<string, string> = { confirmado: '#1e3a5f', aguardando: '#4b3800', reembolsado: '#7f1d1d' };
     return badge(s, map[s] ?? '#374151');
@@ -36,13 +39,13 @@ export default async function PedidosPage() {
     <div className="page">
       <div className="page__head">
         <h1>Pedidos</h1>
-        <p>{pedidos.length} no total · pedidos de porcelanato vindos do carrinho.</p>
+        <p>{pedidos.length} no total · pedidos vindos dos carrinhos de porcelanato e de fitas.</p>
       </div>
 
       <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: 'monospace', fontSize: '0.85rem' }}>
         <thead>
           <tr style={{ borderBottom: '2px solid var(--l-line)' }}>
-            {['Nome', 'WhatsApp', 'Itens', 'Frete', 'Cupom', 'Total', 'Pagamento', 'Fulfillment', 'Data', 'Ações'].map((h) => (
+            {['Vertical', 'Nome', 'WhatsApp', 'Itens', 'Frete', 'Cupom', 'Total', 'Pagamento', 'Fulfillment', 'Data', 'Ações'].map((h) => (
               <th key={h} style={{ textAlign: 'left', padding: '0.6rem 0.8rem', whiteSpace: 'nowrap' }}>{h}</th>
             ))}
           </tr>
@@ -50,6 +53,7 @@ export default async function PedidosPage() {
         <tbody>
           {pedidos.map((p) => (
             <tr key={p.id} style={{ borderBottom: '1px solid var(--l-line)', verticalAlign: 'top' }}>
+              <td style={{ padding: '0.6rem 0.8rem' }}>{verticalBadge(p.vertical)}</td>
               <td style={{ padding: '0.6rem 0.8rem' }}>
                 <div>{p.nome}</div>
                 {p.email && <div style={{ color: 'var(--l-muted)', fontSize: '0.78rem' }}>{p.email}</div>}
@@ -71,12 +75,31 @@ export default async function PedidosPage() {
                     {it.caixas}cx · {Number(it.m2).toFixed(2)}m² · {it.slug.replace('porcelanato-', '')}
                   </div>
                 ))}
+                {p.itensFita.map((it) => (
+                  <div key={it.id} style={{ fontSize: '0.78rem', lineHeight: 1.5 }}>
+                    {it.rolos} rolo(s) · {brl(it.precoRolo)}/rolo (faixa {it.faixaMin}
+                    {it.faixaMax === null ? '+' : `–${it.faixaMax}`}) · {it.slug.replace('fita-', '')}
+                  </div>
+                ))}
                 <div style={{ color: 'var(--l-muted)', fontSize: '0.75rem', marginTop: 2 }}>
                   {p.entrega === 'retirada' ? 'Retirada' : p.entrega === 'a_combinar' ? 'Frete a combinar' : `Entrega · ${p.cep ?? '—'}`}
                 </div>
               </td>
               <td style={{ padding: '0.6rem 0.8rem', whiteSpace: 'nowrap' }}>
-                {p.frete == null ? <span style={{ color: 'var(--l-muted)' }}>a combinar</span> : brl(p.frete)}
+                {p.frete == null ? (
+                  <>
+                    <span style={{ color: 'var(--l-muted)' }}>a combinar</span>
+                    {/* Sem o motivo, "a combinar" esconde a diferença entre operação
+                        normal (CEP fora da malha) e frete quebrado em produção. */}
+                    {p.freteMotivo && (
+                      <div style={{ fontSize: '0.7rem', marginTop: 2, color: p.freteMotivo === 'falha_tecnica' ? '#b91c1c' : 'var(--l-muted)' }}>
+                        {p.freteMotivo === 'falha_tecnica' ? '⚠ falha técnica' : 'CEP não atendido'}
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  brl(p.frete)
+                )}
               </td>
               <td style={{ padding: '0.6rem 0.8rem', whiteSpace: 'nowrap' }}>
                 {p.cupomCodigo ? (
@@ -108,7 +131,7 @@ export default async function PedidosPage() {
           ))}
           {pedidos.length === 0 && (
             <tr>
-              <td colSpan={10} style={{ padding: '2rem', textAlign: 'center', color: 'var(--l-muted)' }}>
+              <td colSpan={11} style={{ padding: '2rem', textAlign: 'center', color: 'var(--l-muted)' }}>
                 Nenhum pedido ainda.
               </td>
             </tr>

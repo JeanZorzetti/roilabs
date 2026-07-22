@@ -13,6 +13,7 @@ const EMPTY: CupomData = {
   validadeFim: null,
   minimo: null,
   ativo: true,
+  escopo: 'porcelanato', // default seguro é o RESTRITIVO (FR-037)
 };
 
 // GET — lista todos os cupons (tela /admin/cupons). Só admin.
@@ -29,6 +30,7 @@ export async function GET() {
       validadeFim: r.validadeFim,
       minimo: r.minimo !== null ? Number(r.minimo) : null,
       ativo: r.ativo,
+      escopo: r.escopo,
       createdAt: r.createdAt,
       updatedAt: r.updatedAt,
     })),
@@ -55,6 +57,7 @@ export async function POST(req: NextRequest) {
       validadeFim: parsed.validadeFim,
       minimo: parsed.minimo,
       ativo: parsed.ativo,
+      escopo: parsed.escopo,
     },
   });
 

@@ -42,9 +42,14 @@ const graph = {
       url: 'https://roilabs.com.br/',
       email: 'parceria@roilabs.com.br',
       description:
-        'Growth Partner para fornecedores regionais: operação de vendas online sem custo fixo, remuneração 100% variável. Polo 1: Goiânia, nicho revestimentos/porcelanato.',
+        'Growth Partner para fornecedores: operação de vendas online sem custo fixo, remuneração 100% variável. Fitas adesivas para embalagem em todo o Brasil; porcelanato no polo de Goiânia.',
       logo: { '@type': 'ImageObject', url: 'https://roilabs.com.br/roilabs-icon.png' },
-      areaServed: { '@type': 'City', name: 'Goiânia' },
+      // Dois verticais com coberturas diferentes: declarar só a cidade escondia a venda
+      // nacional de fitas; declarar só o país afirmaria cobertura falsa no porcelanato.
+      areaServed: [
+        { '@type': 'Country', name: 'Brasil' },
+        { '@type': 'City', name: 'Goiânia' },
+      ],
       slogan: 'Construímos sua venda online. Você paga quando vende.',
       sameAs: [
         'https://www.linkedin.com/company/roi-labs-curadoria/',
@@ -55,7 +60,7 @@ const graph = {
       '@type': 'WebSite',
       '@id': 'https://goiania.roilabs.com.br/#website',
       url: 'https://goiania.roilabs.com.br/',
-      name: 'ROI Labs — Porcelanato Goiânia',
+      name: 'ROI Labs — Fitas adesivas e porcelanato',
       inLanguage: 'pt-BR',
       publisher: { '@id': ORG_ID },
       // Busca interna (SiteSearch): ?q= abre o painel pré-preenchido em qualquer página.

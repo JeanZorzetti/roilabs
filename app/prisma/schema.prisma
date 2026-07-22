@@ -64,7 +64,17 @@ model Pedido {
   mpPaymentId       String?  @unique @map("mp_payment_id") // chave de idempotência do webhook (D4)
   consent           Boolean  @default(false)
 
+  // 011: qual vertical o pedido é — decide qual relação de itens ler e qual modelo de frete
+  // se aplica. Um pedido tem itens de UM só vertical (FR-028). Backfill explícito em
+  // scripts/migrate-011-backfill.mjs: o @default não reescreve linha já gravada.
+  vertical    String  @default("porcelanato") // 'porcelanato' | 'fitas'
+  // Por que o frete ficou "a combinar": 'cep_nao_atendido' (operação normal) vs
+  // 'falha_tecnica' (incidente, dispara alerta). Anulável DE PROPÓSITO — NOT NULL aqui
+  // quebraria `where: { freteMotivo: null }` (mesma landmine da 010).
+  freteMotivo String? @map("frete_motivo")
+
   itens     ItemPedido[]
+  itensFita ItemPedidoFita[]
   negocios  NegocioOriginado[]
   createdAt DateTime     @default(now()) @map("created_at")
   updatedAt DateTime     @updatedAt @map("updated_at")
@@ -93,6 +103,24 @@ model ItemPedido {
 
   @@index([pedidoId])
   @@map("itens_pedido")
+}
+
+// Item de pedido de FITA (011). Tabela nova, na unidade certa (rolo) — ItemPedido é de
+// porcelanato e não é tocado (FR-003). Sem linha antiga ⇒ sem risco de backfill.
+model ItemPedidoFita {
+  id        String  @id @default(cuid())
+  pedidoId  String  @map("pedido_id")
+  slug      String
+  rolos     Int
+  precoRolo Decimal @db.Decimal(10, 2) @map("preco_rolo") // snapshot do unitário da faixa aplicada
+  faixaMin  Int     @map("faixa_min") // faixa aplicada — sem isto um pedido antigo não permite
+  faixaMax  Int?    @map("faixa_max") // reconstruir POR QUE cobrou aquele unitário
+  subtotal  Decimal @db.Decimal(10, 2)
+
+  pedido Pedido @relation(fields: [pedidoId], references: [id], onDelete: Cascade)
+
+  @@index([pedidoId])
+  @@map("itens_pedido_fita")
 }
 
 // Parâmetros dos centros de custo (global + linha). Campos nullable = herda a camada acima.
@@ -139,6 +167,9 @@ model Cupom {
   validadeFim    DateTime? @map("validade_fim") @db.Date
   minimo         Decimal?  @db.Decimal(10, 2)
   ativo          Boolean   @default(true)
+  // 011: em qual vertical o cupom vale. Ausência de escopo NÃO é 'ambos' (FR-037) — senão
+  // todo cupom vigente passa a valer para fita por omissão e drena a margem do parceiro.
+  escopo         String    @default("porcelanato") // 'porcelanato' | 'fitas' | 'ambos'
   createdAt      DateTime  @default(now()) @map("created_at")
   updatedAt      DateTime  @updatedAt @map("updated_at")
 

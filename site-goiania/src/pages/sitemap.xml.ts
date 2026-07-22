@@ -3,6 +3,7 @@ import { pages } from '../data/porcelanato';
 import { produtos, produtosDaCategoria, imgAbs } from '../data/produtos';
 import { guias } from '../data/guias';
 import { ambientes, produtosDoAmbiente } from '../data/ambientes';
+import { fitas } from '../data/fitas';
 
 const SITE = 'https://goiania.roilabs.com.br';
 
@@ -14,6 +15,9 @@ export const GET: APIRoute = () => {
   // Extensão image: — porcelanato é compra visual; Google Imagens indexa a partir daqui.
   const urls: { loc: string; imgs?: string[] }[] = [
     { loc: `${SITE}/` },
+    // Fitas — barra final obrigatória, como em toda URL nova (FR-021).
+    { loc: `${SITE}/fitas/`, imgs: fitas.map((f) => f.imagem) },
+    ...fitas.map((f) => ({ loc: `${SITE}/fitas/${f.slug}/`, imgs: [f.imagem] })),
     { loc: `${SITE}/porcelanato/` },
     { loc: `${SITE}/obrigado/` },
     { loc: `${SITE}/devolucoes/` },

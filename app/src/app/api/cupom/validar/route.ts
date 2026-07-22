@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getProduto } from '@/lib/precos';
-import { validarCupom } from '@/lib/cupons';
+import { precoPorQuantidade } from '@/lib/precos-fitas';
+import { validarCupom, type Vertical } from '@/lib/cupons';
 
 export const dynamic = 'force-dynamic';
 
@@ -15,6 +16,9 @@ const brl = (n: number) => n.toLocaleString('pt-BR', { style: 'currency', curren
 export async function POST(req: NextRequest) {
   const form = await req.formData();
   const codigo = (typeof form.get('codigo') === 'string' ? (form.get('codigo') as string) : '').slice(0, 40);
+  // Ausente ⇒ porcelanato: o carrinho já publicado (e em cache no browser do comprador)
+  // não envia este campo e precisa continuar funcionando igual.
+  const vertical: Vertical = form.get('vertical') === 'fitas' ? 'fitas' : 'porcelanato';
 
   // Recompute the product subtotal on the server (never trust client money, FR-017).
   let parsed: unknown;
@@ -25,17 +29,26 @@ export async function POST(req: NextRequest) {
   }
   if (!Array.isArray(parsed)) return NextResponse.json({ ok: false, motivo: 'vazio' }, { headers: CORS });
 
+  // Subtotal pela tabela do vertical certo — cada unidade tem a sua autoridade de preço.
   let subtotal = 0;
-  for (const i of parsed as Array<{ slug?: unknown; caixas?: unknown }>) {
+  for (const i of parsed as Array<{ slug?: unknown; caixas?: unknown; rolos?: unknown }>) {
     const slug = typeof i?.slug === 'string' ? i.slug : '';
-    const caixas = Math.floor(Number(i?.caixas));
-    const p = slug ? getProduto(slug) : null;
-    if (!p || !Number.isFinite(caixas) || caixas < 1) continue; // drop unknown/invalid
-    subtotal = money(subtotal + caixas * p.m2_caixa * p.preco);
+    if (!slug) continue;
+    if (vertical === 'fitas') {
+      const rolos = Math.floor(Number(i?.rolos));
+      const faixa = Number.isFinite(rolos) ? precoPorQuantidade(slug, rolos) : null;
+      if (!faixa) continue; // slug só-orçamento / abaixo do mínimo não soma
+      subtotal = money(subtotal + rolos * faixa.precoRolo);
+    } else {
+      const caixas = Math.floor(Number(i?.caixas));
+      const p = getProduto(slug);
+      if (!p || !Number.isFinite(caixas) || caixas < 1) continue; // drop unknown/invalid
+      subtotal = money(subtotal + caixas * p.m2_caixa * p.preco);
+    }
   }
   if (subtotal <= 0) return NextResponse.json({ ok: false, motivo: 'vazio' }, { headers: CORS });
 
-  const r = await validarCupom(codigo, subtotal);
+  const r = await validarCupom(codigo, subtotal, vertical);
   if (!r.ok) return NextResponse.json({ ok: false, motivo: r.motivo }, { headers: CORS });
 
   return NextResponse.json(

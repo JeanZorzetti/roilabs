@@ -81,4 +81,58 @@ const total = money(cart.reduce((s, it) => {
 }, 0));
 assert.equal(soma, total, 'Σ subtotais == total (sem frete)');
 
-console.log('[OK] cart math: m²→caixas, Σ subtotais==total, folga 5–20%, cupom (≥0, produto-only), link round-trip+expiração');
+// ── (f) matemática de ROLOS (011) ─────────────────────────────────────────────
+// Espelho de faixaPara() em src/lib/cart-fitas.ts e de precoPorQuantidade() no /app.
+// A matemática de porcelanato acima continua passando SEM alteração — é a prova do FR-003.
+const FAIXAS_FITA = {
+  'fita-gomada': { min: 15, faixas: [{ min: 15, preco: 37.2 }, { min: 101, preco: 32.2 }] },
+  'fita-transparente-comum': { min: 1, faixas: [{ min: 1, preco: 7.9 }] },
+};
+const SO_ORCAMENTO = ['fita-transparente-personalizada'];
+
+function precoRolo(slug, rolos) {
+  const f = FAIXAS_FITA[slug];
+  if (!f || !Number.isInteger(rolos) || rolos < f.min) return null;
+  let escolhida = f.faixas[0];
+  for (const fx of f.faixas) if (rolos >= fx.min) escolhida = fx;
+  return escolhida.preco;
+}
+
+// fronteiras de faixa — o caso que mais quebra em tabela escalonada
+assert.equal(precoRolo('fita-gomada', 14), null, '14 < mínimo 15 => sem preço');
+assert.equal(precoRolo('fita-gomada', 15), 37.2, '15 entra na faixa baixa');
+assert.equal(precoRolo('fita-gomada', 100), 37.2, '100 fica na faixa BAIXA (a favor do comprador)');
+assert.equal(precoRolo('fita-gomada', 101), 32.2, '101 vira faixa alta');
+assert.equal(precoRolo('fita-transparente-comum', 500), 7.9, 'preço único não escalona');
+
+// SKU só-orçamento não tem preço — é o que o checkout rejeita com ?erro=item_orcamento
+for (const slug of SO_ORCAMENTO) {
+  assert.equal(precoRolo(slug, 50), null, `${slug} é só-orçamento: sem preço em lugar nenhum`);
+}
+
+// faixas sem lacuna e sem sobreposição (a tabela impressa original tinha as duas)
+for (const [slug, f] of Object.entries(FAIXAS_FITA)) {
+  assert.equal(f.faixas[0].min, f.min, `${slug}: 1ª faixa começa no mínimo do SKU`);
+  for (let i = 0; i < f.faixas.length - 1; i++) {
+    assert.ok(f.faixas[i + 1].min > f.faixas[i].min, `${slug}: faixas em ordem estrita`);
+    assert.ok(f.faixas[i + 1].preco <= f.faixas[i].preco, `${slug}: faixa maior nunca é mais cara`);
+  }
+}
+
+// rolos × precoRolo = subtotal, e Σ subtotais = total de produto
+const cartFitas = [
+  { slug: 'fita-gomada', rolos: 101 },
+  { slug: 'fita-transparente-comum', rolos: 24 },
+];
+const subs = cartFitas.map((i) => money(i.rolos * precoRolo(i.slug, i.rolos)));
+assert.equal(subs[0], 3252.2, '101 × 32,20 = 3.252,20');
+assert.equal(subs[1], 189.6, '24 × 7,90 = 189,60');
+assert.equal(money(subs.reduce((s, v) => s + v, 0)), 3441.8, 'Σ subtotais de fita == total de produto');
+
+// total = produto − desconto + frete; com frete null (a combinar) o frete não entra
+const produtoFita = 3441.8;
+const descFita = descontoCupom('percentual', 10, produtoFita);
+assert.equal(money(produtoFita - descFita + 87.4), 3185.02, 'total com frete cotado');
+assert.equal(money(produtoFita - descFita + (null ?? 0)), 3097.62, 'frete a combinar => só o produto');
+
+console.log('[OK] cart math: m²→caixas, Σ subtotais==total, folga 5–20%, cupom (≥0, produto-only), link round-trip+expiração, rolos×faixa + fronteiras de faixa');

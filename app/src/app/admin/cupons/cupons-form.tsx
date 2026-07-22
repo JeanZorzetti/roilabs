@@ -11,6 +11,7 @@ export interface Cupom {
   validadeFim: string | null;
   minimo: number | null;
   ativo: boolean;
+  escopo: string;
 }
 
 type Campos = {
@@ -21,6 +22,7 @@ type Campos = {
   validadeFim: string;
   minimo: string;
   ativo: boolean;
+  escopo: string;
 };
 
 const toCampos = (c?: Cupom): Campos => ({
@@ -31,6 +33,9 @@ const toCampos = (c?: Cupom): Campos => ({
   validadeFim: c?.validadeFim ?? '',
   minimo: c?.minimo !== null && c?.minimo !== undefined ? String(c.minimo) : '',
   ativo: c?.ativo ?? true,
+  // Default do formulário é o RESTRITIVO: um operador que não pensou no campo não
+  // deve liberar desconto para o parceiro de fitas sem querer (FR-037).
+  escopo: c?.escopo ?? 'porcelanato',
 });
 
 function toBody(f: Campos) {
@@ -42,6 +47,7 @@ function toBody(f: Campos) {
     validadeFim: f.validadeFim || null,
     minimo: f.minimo === '' ? null : Number(f.minimo),
     ativo: f.ativo,
+    escopo: f.escopo,
   };
 }
 
@@ -74,6 +80,14 @@ function CupomFields({ f, onChange }: { f: Campos; onChange: (patch: Partial<Cam
       <label className="cc-field">
         Fim validade
         <input type="date" value={f.validadeFim} onChange={(e) => onChange({ validadeFim: e.target.value })} />
+      </label>
+      <label className="cc-field">
+        Vale em
+        <select value={f.escopo} onChange={(e) => onChange({ escopo: e.target.value })}>
+          <option value="porcelanato">Porcelanato</option>
+          <option value="fitas">Fitas adesivas</option>
+          <option value="ambos">Ambos os verticais</option>
+        </select>
       </label>
       <label className="cc-field cc-field--check">
         <input type="checkbox" checked={f.ativo} onChange={(e) => onChange({ ativo: e.target.checked })} />

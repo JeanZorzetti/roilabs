@@ -9,6 +9,7 @@ export interface CupomData {
   validadeFim: Date | null;
   minimo: number | null;
   ativo: boolean;
+  escopo: string; // 'porcelanato' | 'fitas' | 'ambos' (011)
 }
 
 export type ValidacaoErro = { ok: false; motivo: string; status: 400 | 409 };
@@ -62,8 +63,9 @@ export function normalizarCampos(
   }
 
   const ativo = typeof body.ativo === 'boolean' ? body.ativo : base.ativo;
+  const escopo = typeof body.escopo === 'string' ? body.escopo : base.escopo;
 
-  return { codigo, tipo, valor, validadeInicio, validadeFim, minimo, ativo };
+  return { codigo, tipo, valor, validadeInicio, validadeFim, minimo, ativo, escopo };
 }
 
 /** Valida forma + unicidade (FR-012). `excludeId` ignora o próprio registro no PATCH. */
@@ -83,6 +85,9 @@ export async function validarCupomData(
   }
   if (d.tipo === 'fixo' && d.valor < 0) {
     return { ok: false, motivo: 'valor fixo deve ser ≥ 0', status: 400 };
+  }
+  if (!['porcelanato', 'fitas', 'ambos'].includes(d.escopo)) {
+    return { ok: false, motivo: "escopo deve ser 'porcelanato', 'fitas' ou 'ambos'", status: 400 };
   }
   if (d.minimo !== null && d.minimo < 0) {
     return { ok: false, motivo: 'mínimo deve ser ≥ 0', status: 400 };

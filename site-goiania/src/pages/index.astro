@@ -3,15 +3,31 @@ import Base from '../layouts/Base.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import VistosRecentemente from '../components/VistosRecentemente.astro';
+import { fitas } from '../data/fitas';
 
 const ORG_ID = 'https://roilabs.com.br/#org';
 const SITE = Astro.site?.href.replace(/\/$/, '') ?? 'https://goiania.roilabs.com.br';
+
+// A home passa a liderar com FITAS (cadeira ocupada, venda nacional) sem que nenhuma URL
+// de porcelanato mude (FR-019/FR-025). A cobertura declarada é honesta em cada vertical:
+// fita é nacional, porcelanato continua regional — afirmar cobertura nacional para
+// porcelanato seria mentir no JSON-LD para ganhar alcance.
+const store = {
+  '@type': 'OnlineStore',
+  '@id': `${SITE}/#store`,
+  name: 'ROI Labs — Fitas adesivas para embalagem',
+  url: SITE,
+  description:
+    'Loja de fitas adesivas para embalagem: fita transparente comum, fita gomada kraft reforçada com nylon e fita personalizada com a sua marca. Preço por faixa de volume e frete para todo o Brasil.',
+  areaServed: { '@type': 'Country', name: 'Brasil' },
+  parentOrganization: { '@id': ORG_ID },
+};
 
 const localBusiness = {
   '@type': ['LocalBusiness', 'Organization'],
   '@id': `${SITE}/#localbusiness`,
   name: 'ROI Labs — Polo Goiânia Porcelanato',
-  url: SITE,
+  url: `${SITE}/porcelanato/`,
   description:
     'Curadoria e intermediação de porcelanato em Goiânia: conectamos compradores a fornecedores exclusivos com custo zero de pesquisa.',
   areaServed: { '@type': 'City', name: 'Goiânia', '@id': 'https://www.wikidata.org/wiki/Q160236' },
@@ -21,9 +37,9 @@ const localBusiness = {
 ---
 
 <Base
-  title="Porcelanato em Goiânia — Curadoria ROI Labs"
-  description="Encontre o porcelanato ideal para sua obra em Goiânia. Guias por tipo, ambiente e ocasião, com contato direto com fornecedores exclusivos."
-  jsonLdNodes={[localBusiness]}
+  title="Fitas adesivas para embalagem — preço por rolo e frete para todo o Brasil | ROI Labs"
+  description="Fita transparente comum, fita gomada kraft com fios de nylon e fita personalizada com a sua marca. Preço por faixa de volume, compra direta no site e frete calculado para todo o Brasil."
+  jsonLdNodes={[store, localBusiness]}
 >
   <Header />
 
@@ -31,27 +47,46 @@ const localBusiness = {
     <section class="section">
       <div class="wrap">
         <div class="section__head">
-          <span class="eyebrow" style="color:var(--hivis);display:block;margin-bottom:1rem;">Polo Goiânia</span>
-          <h1>Porcelanato em Goiânia</h1>
-          <p class="section__lead" style="color:var(--d-muted);">
-            Guias completos por tipo, ambiente e acabamento — com acesso direto a
-            fornecedores exclusivos do polo de Goiânia.
+          <span class="eyebrow" style="color:var(--hivis);display:block;margin-bottom:1rem;">Fitas adesivas · Brasil</span>
+          <h1>Fita adesiva para embalagem, com preço por rolo</h1>
+          <p class="section__lead" style="color:var(--d-muted);max-width:62ch;">
+            O lacre do dia a dia, o lacre inviolável de caixa pesada e a fita com a sua
+            marca impressa. Preço cai por faixa de volume, compra direta no site e frete
+            calculado para todo o Brasil.
           </p>
         </div>
 
-        <div style="display:grid;gap:1.5rem;margin-top:2.5rem;">
-          <a
-            href="/porcelanato/"
-            style="display:block;border:1px solid var(--d-line-strong);border-radius:12px;padding:1.8rem 2rem;text-decoration:none;transition:border-color .18s ease;"
-            onmouseover="this.style.borderColor='var(--hivis)'"
-            onmouseout="this.style.borderColor='var(--d-line-strong)'"
-          >
-            <span class="eyebrow" style="color:var(--hivis);display:block;margin-bottom:0.8rem;">Nicho 01</span>
-            <h2 style="font-size:clamp(1.6rem,3vw,2.4rem);margin-bottom:0.7rem;">Porcelanato</h2>
-            <p style="color:var(--d-muted);max-width:52ch;">
-              30 guias por tipo, dimensão, acabamento e ambiente — acetinado, amadeirado,
-              marmorizado, antiderrapante e muito mais.
+        <div class="home-fitas">
+          {
+            fitas.map((f) => (
+              <a class="home-fita" href={`/fitas/${f.slug}/`}>
+                <img src={f.imagem} alt={f.alt} width="300" height="300" loading="lazy" decoding="async" />
+                <div>
+                  <h2>{f.nome}</h2>
+                  <p>{f.chamadaVitrine}</p>
+                </div>
+              </a>
+            ))
+          }
+        </div>
+
+        <p class="home-cta">
+          <a class="btn btn--primary" href="/fitas/">Ver todas as fitas →</a>
+        </p>
+
+        {/* Porcelanato vira vertical secundário. O link segue vivo e a malha inteira
+            continua acessível — nenhuma URL mudou. */}
+        <div class="home-secundario">
+          <span class="eyebrow" style="color:var(--d-muted);display:block;margin-bottom:0.8rem;">
+            Também operamos
+          </span>
+          <a href="/porcelanato/" class="home-porcelanato">
+            <h2>Porcelanato em Goiânia</h2>
+            <p>
+              30 guias por tipo, dimensão, acabamento e ambiente, com catálogo real e preço
+              por m². Curadoria e entrega no polo de Goiânia.
             </p>
+            <span class="home-porcelanato__link">Ver o catálogo de porcelanato →</span>
           </a>
         </div>
       </div>
@@ -62,3 +97,44 @@ const localBusiness = {
 
   <Footer />
 </Base>
+
+<style>
+  .home-fitas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.4rem;
+    margin-top: 2.5rem;
+  }
+  .home-fita {
+    display: grid;
+    grid-template-columns: 86px 1fr;
+    gap: 1rem;
+    align-items: center;
+    border: 1px solid var(--d-line-strong);
+    border-radius: 12px;
+    padding: 1.1rem 1.2rem;
+    text-decoration: none;
+    color: inherit;
+    background: var(--ink-2);
+    transition: border-color 0.18s ease;
+  }
+  .home-fita:hover { border-color: var(--hivis); }
+  .home-fita img { width: 86px; height: 86px; object-fit: cover; border-radius: 8px; background: var(--ink-3); }
+  .home-fita h2 { font-size: 1.05rem; margin: 0 0 0.3rem; }
+  .home-fita p { font-size: 0.85rem; color: var(--d-muted); margin: 0; }
+  .home-cta { margin-top: 2rem; }
+  .home-secundario { margin-top: 4rem; padding-top: 2.5rem; border-top: 1px solid var(--d-line); }
+  .home-porcelanato {
+    display: block;
+    border: 1px solid var(--d-line-strong);
+    border-radius: 12px;
+    padding: 1.6rem 1.8rem;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.18s ease;
+  }
+  .home-porcelanato:hover { border-color: var(--hivis); }
+  .home-porcelanato h2 { font-size: clamp(1.3rem, 2.4vw, 1.8rem); margin-bottom: 0.6rem; }
+  .home-porcelanato p { color: var(--d-muted); max-width: 56ch; margin-bottom: 0.8rem; }
+  .home-porcelanato__link { color: var(--hivis); font-size: 0.9rem; font-weight: 600; }
+</style>

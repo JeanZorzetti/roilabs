@@ -22,6 +22,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     validadeFim: existing.validadeFim,
     minimo: existing.minimo !== null ? Number(existing.minimo) : null,
     ativo: existing.ativo,
+    escopo: existing.escopo,
   });
   if ('motivo' in parsed) return NextResponse.json(parsed, { status: parsed.status });
 
@@ -38,6 +39,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
       validadeFim: parsed.validadeFim,
       minimo: parsed.minimo,
       ativo: parsed.ativo,
+      escopo: parsed.escopo,
     },
   });
 

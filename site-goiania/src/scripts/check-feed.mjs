@@ -7,6 +7,11 @@ import { readFileSync, existsSync } from 'node:fs';
 
 const FEED = 'dist/feed.xml';
 const CATALOG = 'porcelanatos.json';
+// Espelho dos SKUs de fita elegíveis (este script não importa TS). Fita só-orçamento
+// FICA DE FORA POR DESIGN (FR-024) — a ausência dela no feed é o comportamento correto,
+// não um produto quebrado, e é isso que a asserção abaixo verifica.
+const FITAS_COM_PRECO = ['fita-gomada', 'fita-transparente-comum'];
+const FITAS_SO_ORCAMENTO = ['fita-transparente-personalizada'];
 const REQUIRED_TAGS = [
   'g:id',
   'title',
@@ -53,9 +58,22 @@ if (!feed.includes('<channel>')) errors.push('sem <channel>');
 
 // 3. item count matches eligible catalog, > 0
 const items = feed.split('<item>').slice(1);
+const esperados = eligible.length + FITAS_COM_PRECO.length;
 if (items.length === 0) errors.push('feed sem <item> (catálogo vazio?)');
-if (items.length !== eligible.length) {
-  errors.push(`contagem de <item> (${items.length}) ≠ produtos elegíveis (${eligible.length})`);
+if (items.length !== esperados) {
+  errors.push(
+    `contagem de <item> (${items.length}) ≠ elegíveis (${eligible.length} porcelanato + ${FITAS_COM_PRECO.length} fita)`,
+  );
+}
+
+// 3b. modalidade comercial refletida no feed (FR-024)
+for (const slug of FITAS_COM_PRECO) {
+  if (!feed.includes(`<g:id>${slug}</g:id>`)) errors.push(`fita com preço público ausente do feed — ${slug}`);
+}
+for (const slug of FITAS_SO_ORCAMENTO) {
+  if (feed.includes(`<g:id>${slug}</g:id>`)) {
+    errors.push(`fita só-orçamento NÃO pode entrar no feed (preço anunciado que o checkout não honra) — ${slug}`);
+  }
 }
 
 // 4. required non-empty fields per item

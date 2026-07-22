@@ -1,0 +1,314 @@
+---
+import Base from '../../layouts/Base.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { fitas, formatPreco, menorPreco, type Fita } from '../../data/fitas';
+
+export function getStaticPaths() {
+  return fitas.map((f) => ({ params: { slug: f.slug }, props: { fita: f } }));
+}
+
+interface Props {
+  fita: Fita;
+}
+const { fita } = Astro.props;
+
+const SITE = Astro.site?.href.replace(/\/$/, '') ?? 'https://goiania.roilabs.com.br';
+const appUrl = import.meta.env.PUBLIC_APP_URL ?? 'https://app.roilabs.com.br';
+const url = `${SITE}/fitas/${fita.slug}/`;
+const compraDireta = fita.modalidade === 'precoPublico';
+
+// ZERO sinal geográfico (FR-031): sem areaServed de cidade, sem "Goiânia" em lugar nenhum
+// desta página. O vertical é nacional e o JSON-LD não pode afirmar o contrário.
+const produto = {
+  '@type': 'Product',
+  '@id': `${url}#product`,
+  name: fita.nome,
+  description: fita.seoDescription,
+  image: `${SITE}${fita.imagem}`,
+  sku: fita.slug,
+  brand: { '@type': 'Brand', name: 'TapePro' },
+  additionalProperty: fita.specs.map((s) => ({
+    '@type': 'PropertyValue',
+    name: s.label,
+    value: s.valor,
+  })),
+  // Só SKU com preço público declara offer — anunciar preço de item só-orçamento
+  // seria afirmar um valor que o checkout não honra.
+  ...(compraDireta
+    ? {
+        offers: {
+          '@type': 'AggregateOffer',
+          priceCurrency: 'BRL',
+          lowPrice: menorPreco(fita),
+          highPrice: Math.max(...fita.faixas.map((x) => x.precoRolo)),
+          offerCount: fita.faixas.length,
+          availability: 'https://schema.org/InStock',
+          url,
+        },
+      }
+    : {}),
+};
+---
+
+<Base title={fita.seoTitle} description={fita.seoDescription} ogImage={fita.imagem} jsonLdNodes={[produto]}>
+  <Header />
+
+  <main class="section" data-app-url={appUrl}>
+    <div class="wrap fita-wrap">
+      <nav class="crumbs" aria-label="Você está aqui">
+        <a href="/">Início</a> · <a href="/fitas/">Fitas adesivas</a> · <span>{fita.nome}</span>
+      </nav>
+
+      <div class="fita-grid">
+        <div class="fita-media">
+          <img src={fita.imagem} alt={fita.alt} width="700" height="700" fetchpriority="high" decoding="async" />
+        </div>
+
+        <div class="fita-info">
+          <span class={`fita-tag fita-tag--${compraDireta ? 'compra' : 'orc'}`}>
+            {compraDireta ? 'Compra direta no site' : 'Sob orçamento'}
+          </span>
+          <h1>{fita.h1}</h1>
+
+          {fita.copyComercial.map((p) => <p class="fita-copy">{p}</p>)}
+
+          {/* Tabela de faixas SEMPRE visível (FR-039). Na personalizada ela é informação
+              (FR-040): o valor final sai no orçamento, por causa do clichê. */}
+          <section class="fita-faixas" aria-labelledby="faixas-titulo">
+            <h2 id="faixas-titulo">Preço por faixa de volume</h2>
+            <table>
+              <thead>
+                <tr><th>Quantidade</th><th>Preço por rolo</th></tr>
+              </thead>
+              <tbody>
+                {
+                  fita.faixas.map((fx) => (
+                    <tr>
+                      <td>{fx.rotulo}</td>
+                      <td class="num">{formatPreco(fx.precoRolo)}</td>
+                    </tr>
+                  ))
+                }
+              </tbody>
+            </table>
+            <p class="fita-min">Pedido mínimo: <strong>{fita.minimoRolos} rolo(s)</strong></p>
+            {fita.notaPreco && <p class="fita-nota">{fita.notaPreco}</p>}
+          </section>
+
+          {
+            compraDireta ? (
+              <div class="fita-comprar">
+                <label for="qtd">
+                  Quantidade (rolos)
+                  <input
+                    id="qtd"
+                    type="number"
+                    min={fita.minimoRolos}
+                    step="1"
+                    value={fita.minimoRolos}
+                    data-min={fita.minimoRolos}
+                  />
+                </label>
+                <div class="fita-comprar__resumo">
+                  <span class="fita-unit" data-unit>{formatPreco(fita.faixas[0].precoRolo)}</span> /rolo ·
+                  <strong class="fita-sub" data-sub>{formatPreco(fita.minimoRolos * fita.faixas[0].precoRolo)}</strong>
+                </div>
+                <button type="button" class="btn btn--primary fita-add" data-slug={fita.slug}>
+                  Adicionar ao carrinho
+                </button>
+                <p class="fita-add__msg" aria-live="polite"></p>
+                <p class="fita-frete-nota">Frete calculado no carrinho pelo seu CEP, para todo o Brasil.</p>
+              </div>
+            ) : (
+              /* Nunca preço vazio ou zerado (FR-005): o caminho de conversão deste SKU é
+                 o orçamento, e ele precisa ser tão explícito quanto um botão de compra. */
+              <div class="fita-orc" id="orcamento">
+                <h2>Peça o orçamento da sua arte</h2>
+                <p class="fita-orc__lead">
+                  Conte a quantidade, as cores da arte e o prazo que você precisa. Respondemos
+                  em até 24h úteis com o valor fechado, clichê incluso.
+                </p>
+                <form class="form" method="POST" action={`${appUrl}/api/leads-consumidor`}>
+                  <div class="form__hp" aria-hidden="true" style="position:absolute;left:-9999px;">
+                    <input tabindex="-1" autocomplete="off" name="botcheck" />
+                  </div>
+                  <input type="hidden" name="produto" value={`Orçamento — ${fita.nome} (${fita.slug})`} />
+                  <input type="hidden" name="pagina" value={`/fitas/${fita.slug}/`} />
+                  <input type="hidden" name="origem" />
+                  <input type="hidden" name="redirect" value={`${SITE}/obrigado/`} />
+
+                  <div class="form__row">
+                    <div class="field field--req">
+                      <label for="orc-nome">Nome</label>
+                      <input id="orc-nome" type="text" name="nome" maxlength="200" placeholder="Seu nome" required />
+                    </div>
+                    <div class="field field--req">
+                      <label for="orc-whatsapp">WhatsApp</label>
+                      <input id="orc-whatsapp" type="tel" name="whatsapp" maxlength="40" placeholder="(62) 9xxxx-xxxx" required />
+                    </div>
+                  </div>
+
+                  <div class="field field--req">
+                    <label for="orc-msg">Especificação</label>
+                    <textarea
+                      id="orc-msg"
+                      name="mensagem"
+                      maxlength="4000"
+                      required
+                      placeholder={`Quantidade de rolos, número de cores da arte, prazo desejado e se já tem clichê de arte anterior.`}
+                    ></textarea>
+                  </div>
+
+                  <label class="consent-field">
+                    <input type="checkbox" name="consent" value="1" required />
+                    <span>
+                      Autorizo o uso dos meus dados para contato conforme a
+                      <a href="https://roilabs.com.br/privacidade" target="_blank" rel="noopener" style="color:var(--hivis)">Política de Privacidade</a>. (LGPD)
+                    </span>
+                  </label>
+
+                  <button type="submit" class="btn btn--primary form__submit">Solicitar orçamento</button>
+                </form>
+              </div>
+            )
+          }
+        </div>
+      </div>
+
+      <section class="fita-bloco">
+        <h2>Ficha técnica</h2>
+        <table class="fita-specs">
+          <tbody>
+            {
+              fita.specs.map((s) => (
+                <tr>
+                  <th scope="row">{s.label}</th>
+                  <td>{s.valor}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </section>
+
+      <section class="fita-bloco">
+        <h2>Onde esta fita é usada</h2>
+        <ul class="fita-aplic">
+          {fita.aplicacoes.map((a) => <li>{a}</li>)}
+        </ul>
+      </section>
+
+      <p class="fita-institucional">
+        {/* Autoridade de marca (FR-033): a ficha do fabricante fica no institucional. */}
+        Ficha completa e portfólio de aplicações no site do fabricante:
+        <a href={fita.institucional} target="_blank" rel="noopener">{fita.nome} na TapePro</a>.
+      </p>
+    </div>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .fita-wrap { max-width: 1080px; }
+  .crumbs { font-size: 0.82rem; color: var(--d-muted); margin-bottom: 1.6rem; }
+  .crumbs a { color: inherit; }
+  .crumbs a:hover { color: var(--hivis); }
+  .fita-grid { display: grid; grid-template-columns: 1fr 1.15fr; gap: 2.5rem; align-items: start; }
+  @media (max-width: 820px) { .fita-grid { grid-template-columns: 1fr; } }
+  .fita-media img { width: 100%; height: auto; border-radius: 12px; border: 1px solid var(--d-line); background: var(--ink-2); }
+  .fita-tag {
+    display: inline-block; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em;
+    text-transform: uppercase; padding: 0.22rem 0.55rem; border-radius: 4px; margin-bottom: 0.9rem;
+  }
+  .fita-tag--compra { background: color-mix(in srgb, #16a34a 22%, var(--ink-2)); color: #86efac; }
+  .fita-tag--orc { background: color-mix(in srgb, var(--hivis) 22%, var(--ink-2)); color: var(--hivis); }
+  .fita-info h1 { font-size: clamp(1.6rem, 3.2vw, 2.3rem); margin-bottom: 1rem; }
+  .fita-copy { color: var(--d-muted); margin-bottom: 0.9rem; max-width: 60ch; }
+  .fita-faixas { margin: 2rem 0; }
+  .fita-faixas h2 { font-size: 1.05rem; margin-bottom: 0.7rem; }
+  .fita-faixas table { width: 100%; max-width: 420px; border-collapse: collapse; font-size: 0.92rem; }
+  .fita-faixas th, .fita-faixas td { text-align: left; padding: 0.5rem 0.7rem; border-bottom: 1px solid var(--d-line); color: var(--d-text); }
+  .fita-faixas thead th { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--d-muted); }
+  .fita-faixas .num { text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .fita-min { font-size: 0.86rem; color: var(--d-muted); margin: 0.7rem 0 0; }
+  .fita-nota { font-size: 0.82rem; color: var(--d-muted); margin: 0.6rem 0 0; max-width: 56ch; line-height: 1.55; }
+  .fita-comprar { border: 1px solid var(--d-line); border-radius: 12px; padding: 1.3rem; background: var(--ink-2); display: grid; gap: 0.8rem; justify-items: start; }
+  .fita-comprar label { display: grid; gap: 0.3rem; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--d-muted); font-weight: 600; }
+  .fita-comprar input {
+    width: 140px; padding: 0.6rem 0.75rem; border: 1px solid var(--d-line-strong);
+    border-radius: 8px; font: inherit; font-size: 1rem; background: var(--ink-3); color: var(--d-text);
+  }
+  .fita-comprar__resumo { color: var(--d-muted); font-size: 0.9rem; }
+  .fita-unit { color: var(--d-text); font-weight: 700; }
+  .fita-sub { color: var(--d-text); font-size: 1.15rem; margin-left: 0.3rem; }
+  .fita-add { width: 100%; max-width: 320px; }
+  .fita-add__msg { font-size: 0.84rem; color: #86efac; margin: 0; min-height: 1.1em; }
+  .fita-frete-nota { font-size: 0.8rem; color: var(--d-muted); margin: 0; }
+  .fita-orc { border: 1px solid var(--d-line); border-radius: 12px; padding: 1.4rem; background: var(--ink-2); }
+  .fita-orc h2 { font-size: 1.15rem; margin-bottom: 0.5rem; }
+  .fita-orc__lead { font-size: 0.9rem; color: var(--d-muted); margin-bottom: 1.2rem; }
+  .fita-bloco { margin-top: 3rem; }
+  .fita-bloco h2 { font-size: 1.3rem; margin-bottom: 0.9rem; }
+  .fita-specs { width: 100%; max-width: 520px; border-collapse: collapse; font-size: 0.92rem; }
+  .fita-specs th, .fita-specs td { text-align: left; padding: 0.55rem 0.7rem; border-bottom: 1px solid var(--d-line); }
+  .fita-specs th { color: var(--d-muted); font-weight: 600; width: 45%; }
+  .fita-specs td { color: var(--d-text); font-variant-numeric: tabular-nums; }
+  .fita-aplic { color: var(--d-muted); padding-left: 1.2rem; display: grid; gap: 0.4rem; }
+  .fita-institucional { margin-top: 3rem; font-size: 0.88rem; color: var(--d-muted); }
+  .fita-institucional a { color: var(--hivis); }
+</style>
+
+<script>
+  import { addItem } from '../../lib/cart-fitas';
+  import { fitasBySlug, formatPreco } from '../../data/fitas';
+
+  const btn = document.querySelector<HTMLButtonElement>('.fita-add');
+  const input = document.querySelector<HTMLInputElement>('#qtd');
+  // Página só-orçamento não tem nenhum dos dois.
+  if (btn && input) {
+    const slug = btn.dataset.slug!;
+    const fita = fitasBySlug.get(slug)!;
+    const min = Number(input.dataset.min) || 1;
+    const unitEl = document.querySelector<HTMLElement>('[data-unit]')!;
+    const subEl = document.querySelector<HTMLElement>('[data-sub]')!;
+    const msg = document.querySelector<HTMLElement>('.fita-add__msg')!;
+
+    // O unitário acompanha a faixa ao mudar a quantidade — sem isto o comprador vê um
+    // preço na página e outro no carrinho.
+    function faixa(rolos: number) {
+      let escolhida = fita.faixas[0];
+      for (const fx of fita.faixas) if (rolos >= fx.min) escolhida = fx;
+      return escolhida;
+    }
+
+    function render() {
+      const rolos = Math.max(min, Math.floor(Number(input!.value)) || min);
+      const fx = faixa(rolos);
+      unitEl.textContent = formatPreco(fx.precoRolo);
+      subEl.textContent = formatPreco(rolos * fx.precoRolo);
+    }
+
+    input.addEventListener('input', render);
+    input.addEventListener('change', () => {
+      const rolos = Math.floor(Number(input.value));
+      if (!Number.isFinite(rolos) || rolos < min) input.value = String(min);
+      render();
+    });
+
+    btn.addEventListener('click', () => {
+      const rolos = Math.max(min, Math.floor(Number(input.value)) || min);
+      input.value = String(rolos);
+      addItem(slug, rolos);
+      msg.innerHTML = `${rolos} rolo(s) no carrinho. <a href="/carrinho-fitas/" style="color:var(--hivis)">Ir para o carrinho →</a>`;
+      (window as any).himetrica?.track('add_to_cart_fita', { slug, rolos });
+    });
+
+    render();
+  }
+
+  // First-touch para o form de orçamento (mesmo padrão do LeadForm).
+  const origem = document.querySelector<HTMLInputElement>('input[name="origem"]');
+  if (origem) origem.value = localStorage.getItem('rlft') ?? '';
+</script>

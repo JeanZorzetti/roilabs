@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { produtos, tituloProduto, descricaoProduto, elegivelParaFeed, imgAbs } from '../data/produtos';
+import { fitas, elegivelParaFeed as fitaElegivel, menorPreco } from '../data/fitas';
 
 // Google Merchant Center product feed (RSS 2.0 + g: namespace).
 // Contract: specs/009-merchant-center-feed/contracts/feed-xml.md
@@ -57,13 +58,42 @@ ${details.map((d) => `      ${d}`).join('\n')}
     </item>`;
   });
 
+  // Só SKU com PREÇO PÚBLICO entra (FR-024): item só-orçamento não tem preço a anunciar,
+  // e um g:price inventado é exatamente o tipo de divergência que derruba a listagem.
+  const itensFita = fitas.filter(fitaElegivel).map((f) => {
+    const link = `${SITE}/fitas/${f.slug}/`;
+    // O feed anuncia o MENOR unitário e o declara como preço de volume no título do
+    // detalhe — anunciar o da primeira faixa e cobrar outro seria divergência de preço.
+    const preco = menorPreco(f);
+    const faixaMenor = f.faixas.find((x) => x.precoRolo === preco)!;
+
+    return `    <item>
+      <g:id>${esc(f.slug)}</g:id>
+      <title>${esc(f.nome)}</title>
+      <description>${esc(f.seoDescription)}</description>
+      <link>${link}</link>
+      <g:image_link>${esc(`${SITE}${f.imagem}`)}</g:image_link>
+      <g:price>${preco.toFixed(2)} BRL</g:price>
+      <g:availability>in_stock</g:availability>
+      <g:condition>new</g:condition>
+      <g:brand>TapePro</g:brand>
+      <g:identifier_exists>no</g:identifier_exists>
+      <g:product_type>Fita adesiva</g:product_type>
+      <g:google_product_category>Office Supplies &gt; Shipping Supplies &gt; Packing Tape</g:google_product_category>
+      <g:product_highlight>${esc(`Pedido mínimo de ${f.minimoRolos} rolo(s)`)}</g:product_highlight>
+      <g:product_highlight>${esc('Frete calculado para todo o Brasil')}</g:product_highlight>
+${f.specs.map((s) => `      ${detail(s.label, s.valor)}`).join('\n')}
+      ${detail('Faixa de preço', faixaMenor.rotulo)}
+    </item>`;
+  });
+
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:g="http://base.google.com/ns/1.0">
   <channel>
-    <title>Porcelanato em Goiânia — ROI Labs</title>
+    <title>ROI Labs — fitas adesivas e porcelanato</title>
     <link>${SITE}</link>
-    <description>Catálogo de porcelanato com preço real em Goiânia</description>
-${items.join('\n')}
+    <description>Fitas adesivas com preço por rolo (Brasil) e porcelanato com preço real em Goiânia</description>
+${[...itensFita, ...items].join('\n')}
   </channel>
 </rss>`;
 

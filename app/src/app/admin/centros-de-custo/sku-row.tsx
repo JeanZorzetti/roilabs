@@ -4,6 +4,8 @@ import { useRouter } from 'next/navigation';
 
 export interface SkuRowData {
   slug: string;
+  /** Fita: faixa de volume que gerou o unitário simulado. null em porcelanato (preço/m²). */
+  faixa: string | null;
   varejo: number;
   piso: number;
   real: boolean;
@@ -67,7 +69,11 @@ export default function SkuRow({ data }: { data: SkuRowData }) {
   return (
     <tr>
       <td className="slug">{data.slug.replace('porcelanato-', '')}</td>
-      <td className="num">{brl(data.varejo)}</td>
+      <td className="num">
+        {brl(data.varejo)}
+        {/* Sem dizer a faixa, o operador não sabe sobre qual cenário a simulação foi feita. */}
+        {data.faixa && <div className="cc-cell-msg">/rolo · faixa {data.faixa}</div>}
+      </td>
 
       {/* Piso */}
       <td className="num">

@@ -107,19 +107,27 @@ export async function POST(req: NextRequest) {
       // Pós-pagamento (fire-and-forget, nunca quebra o webhook): confirmação ao
       // cliente (recibo nosso, além do MP) + alerta interno de pedido novo.
       const brl = (v: unknown) => Number(v).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-      const itensHtml = skuRows
-        .map((i) => `<li>${escapeHtml(i.slug)} — ${i.caixas} caixa(s) · ${brl(i.subtotal)}</li>`)
-        .join('');
+      // 011: pedido de fita não tem linha em ItemPedido — sem isto o comprador recebe
+      // uma confirmação com a lista de itens VAZIA.
+      const fitaRows =
+        pedido.vertical === 'fitas'
+          ? await prisma.itemPedidoFita.findMany({ where: { pedidoId: pedido.id }, select: { slug: true, rolos: true, subtotal: true } })
+          : [];
+      const itensHtml = [
+        ...skuRows.map((i) => `<li>${escapeHtml(i.slug)} — ${i.caixas} caixa(s) · ${brl(i.subtotal)}</li>`),
+        ...fitaRows.map((i) => `<li>${escapeHtml(i.slug)} — ${i.rolos} rolo(s) · ${brl(i.subtotal)}</li>`),
+      ].join('');
+      const ehFitas = pedido.vertical === 'fitas';
       if (pedido.email) {
         sendEmail(
           pedido.email,
-          'Pedido confirmado — porcelanato Goiânia | ROI Labs',
+          ehFitas ? 'Pedido confirmado — fitas adesivas | ROI Labs' : 'Pedido confirmado — porcelanato Goiânia | ROI Labs',
           `<p>Olá, ${escapeHtml(pedido.nome)}!</p>
            <p>Recebemos a confirmação do seu pagamento. Seu pedido está reservado e o
-           fornecedor do polo de Goiânia já foi acionado.</p>
+           ${ehFitas ? 'fabricante já foi acionado' : 'fornecedor do polo de Goiânia já foi acionado'}.</p>
            <ul>${itensHtml}</ul>
            <p><strong>Total: ${brl(pedido.total)}</strong>${pedido.frete != null ? ` (frete incluso: ${brl(pedido.frete)})` : ' (frete a combinar)'}</p>
-           <p>Prazo de entrega/retirada: <strong>2 a 6 dias úteis</strong>. Entramos em
+           <p>${ehFitas ? 'O prazo de entrega é o da transportadora cotada no seu CEP.' : 'Prazo de entrega/retirada: <strong>2 a 6 dias úteis</strong>.'} Entramos em
            contato pelo WhatsApp informado para combinar os detalhes.</p>
            <p>Acompanhe o status do seu pedido a qualquer momento:
            <a href="https://goiania.roilabs.com.br/pedido/?t=${pedido.id}">acompanhar pedido</a></p>

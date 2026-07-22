@@ -1,0 +1,394 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+// Carrinho do vertical de fitas. Paralelo a /carrinho (porcelanato), que não é tocado.
+// Diferenças reais: unidade em rolos, frete NACIONAL cotado no servidor (nunca estimado
+// no browser) e CPF/CNPJ obrigatório. Checkout é o mesmo form-POST 303 → Mercado Pago.
+const appUrl = import.meta.env.PUBLIC_APP_URL ?? 'https://app.roilabs.com.br';
+const action = `${appUrl}/api/pedidos`;
+---
+
+<Base
+  title="Carrinho de fitas adesivas | ROI Labs"
+  description="Revise os rolos, informe o CEP para calcular o frete para todo o Brasil e finalize o pagamento online (Pix ou cartão)."
+  noindex={true}
+>
+  <Header />
+
+  <main class="section" data-app-url={appUrl}>
+    <div class="wrap cart-wrap">
+      <h1 style="font-size:clamp(1.8rem,4vw,2.6rem);margin-bottom:0.4rem;">Seu carrinho de fitas</h1>
+      <p style="color:var(--d-muted);margin-bottom:2rem;">
+        Preço por rolo acompanha a faixa de volume · frete para todo o Brasil.
+      </p>
+
+      <div class="cart-err" role="alert" hidden></div>
+
+      <div class="cart-loading">Carregando seu carrinho…</div>
+
+      <div class="cart-fail" role="alert" hidden>
+        <p>Não conseguimos montar seu carrinho.</p>
+        <button type="button" class="btn btn--primary cart-fail__retry">Tentar de novo</button>
+      </div>
+
+      <div class="cart-empty" hidden>
+        <p>Seu carrinho de fitas está vazio.</p>
+        <a class="btn btn--primary" href="/fitas/">Ver fitas adesivas</a>
+      </div>
+
+      <div class="cart-grid" hidden>
+        <section class="cart-items" aria-label="Itens do carrinho">
+          <ul class="cart-list"></ul>
+        </section>
+
+        <aside class="cart-checkout">
+          <form id="checkout-form" method="POST" action={action} novalidate>
+            <div class="form__hp" aria-hidden="true" style="position:absolute;left:-9999px;">
+              <input tabindex="-1" autocomplete="off" name="botcheck" />
+            </div>
+            <input type="hidden" name="itens" />
+            <input type="hidden" name="origin" />
+            <input type="hidden" name="cupom" />
+            <input type="hidden" name="vertical" value="fitas" />
+
+            <h2 style="font-size:1.2rem;margin:0 0 1rem;">Seus dados</h2>
+            <div class="field field--req">
+              <label for="ck-nome">Nome</label>
+              <input id="ck-nome" type="text" name="nome" maxlength="200" placeholder="Seu nome completo" required />
+            </div>
+            <div class="field field--req">
+              <label for="ck-whatsapp">WhatsApp</label>
+              <input id="ck-whatsapp" type="tel" name="whatsapp" maxlength="40" placeholder="(62) 9xxxx-xxxx" required />
+            </div>
+            <div class="field">
+              <label for="ck-email">E-mail (opcional)</label>
+              <input id="ck-email" type="email" name="email" maxlength="200" placeholder="voce@email.com" />
+            </div>
+            <div class="field field--req">
+              <label for="ck-doc">CPF ou CNPJ</label>
+              <input id="ck-doc" type="text" name="compradorDoc" maxlength="20" inputmode="numeric" placeholder="somente números" required />
+              <p style="font-size:0.78rem;color:var(--d-muted);margin:0.35rem 0 0;">Obrigatório para emissão da nota fiscal.</p>
+            </div>
+
+            <h2 style="font-size:1.2rem;margin:1.6rem 0 1rem;">Entrega</h2>
+            <div class="field">
+              <label for="ck-cep">CEP de entrega</label>
+              <div class="cart-cep__row">
+                <input id="ck-cep" type="text" name="cep" maxlength="12" inputmode="numeric" placeholder="00000-000" required />
+                <button type="button" class="btn btn--ghost cart-cep__calc">Calcular frete</button>
+              </div>
+              <p class="cart-cep__note" aria-live="polite"></p>
+            </div>
+
+            <h2 style="font-size:1.2rem;margin:1.6rem 0 1rem;">Cupom</h2>
+            <div class="cart-coupon">
+              <div class="cart-coupon__row">
+                <input id="ck-cupom" type="text" maxlength="40" placeholder="Ex: FITA10" autocapitalize="characters" aria-label="Código do cupom" />
+                <button type="button" class="btn btn--ghost cart-coupon__apply">Aplicar</button>
+              </div>
+              <p class="cart-coupon__msg" aria-live="polite"></p>
+            </div>
+
+            <div class="cart-summary">
+              <div class="cart-summary__row"><span>Produtos</span><span class="cart-sum-produto">—</span></div>
+              <div class="cart-summary__row cart-sum-desconto-row" hidden><span>Desconto</span><span class="cart-sum-desconto">—</span></div>
+              <div class="cart-summary__row"><span>Frete</span><span class="cart-sum-frete">Informe o CEP</span></div>
+              <div class="cart-summary__row cart-sum-prazo-row" hidden><span>Prazo</span><span class="cart-sum-prazo">—</span></div>
+              <div class="cart-summary__row cart-summary__total"><span>Total</span><span class="cart-sum-total">—</span></div>
+            </div>
+
+            <label class="consent-field">
+              <input type="checkbox" name="consent" value="1" required />
+              <span>
+                Autorizo o uso dos meus dados conforme a
+                <a href="https://roilabs.com.br/privacidade" target="_blank" rel="noopener" style="color:var(--hivis)">Política de Privacidade</a>. (LGPD)
+              </span>
+            </label>
+
+            <button type="submit" class="btn btn--primary cart-checkout__cta">Finalizar e pagar</button>
+            <p style="font-size:0.8rem;color:var(--d-muted);text-align:center;margin-top:0.8rem;">
+              Pagamento via Mercado Pago (Pix ou cartão). O frete é reconfirmado no servidor
+              antes da cobrança.
+            </p>
+          </form>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .cart-wrap { max-width: 1000px; }
+  .cart-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 2rem; align-items: start; }
+  @media (max-width: 760px) { .cart-grid { grid-template-columns: 1fr; } }
+  .cart-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 1rem; }
+  .cart-checkout { border: 1px solid var(--d-line); border-radius: 12px; padding: 1.4rem; background: var(--ink-2); }
+  .cart-checkout h2 { color: var(--d-text); }
+  .cart-cep__row { display: flex; gap: 0.5rem; }
+  .cart-cep__row input { flex: 1; min-width: 0; padding: 0.6rem 0.7rem; border: 1px solid var(--d-line-strong); border-radius: 6px; font: inherit; background: var(--ink-3); color: var(--d-text); }
+  .cart-cep__calc { white-space: nowrap; }
+  .cart-cep__note { font-size: 0.82rem; color: var(--d-muted); margin: 0.45rem 0 0; min-height: 1.1em; }
+  .cart-coupon__row { display: flex; gap: 0.5rem; }
+  .cart-coupon__row input { flex: 1; min-width: 0; padding: 0.6rem 0.7rem; border: 1px solid var(--d-line-strong); border-radius: 6px; font: inherit; background: var(--ink-3); color: var(--d-text); text-transform: uppercase; }
+  .cart-coupon__apply { white-space: nowrap; }
+  .cart-coupon__msg { font-size: 0.84rem; margin: 0.5rem 0 0; min-height: 1.1em; }
+  .cart-coupon__msg[data-ok] { color: #86efac; }
+  .cart-coupon__msg[data-err] { color: var(--hivis); }
+  .cart-summary { margin: 1.4rem 0; padding-top: 1rem; border-top: 1px solid var(--d-line); display: grid; gap: 0.5rem; }
+  .cart-summary__row { display: flex; justify-content: space-between; font-size: 0.95rem; color: var(--d-text); }
+  .cart-sum-desconto { color: #86efac; }
+  .cart-sum-prazo-row { font-size: 0.85rem; color: var(--d-muted); }
+  .cart-summary__total { font-size: 1.15rem; font-weight: 800; padding-top: 0.5rem; border-top: 1px dashed var(--d-line-strong); }
+  .cart-checkout__cta { width: 100%; margin-top: 1rem; font-size: 1.05rem; padding-block: 0.85rem; }
+  .cart-err, .cart-fail { background: color-mix(in srgb, var(--hivis) 16%, var(--ink-2)); color: var(--d-text); border: 1px solid var(--hivis); padding: 0.9rem 1.1rem; border-radius: 8px; margin-bottom: 1.5rem; }
+  .cart-fail { display: grid; gap: 0.9rem; justify-items: start; }
+  .cart-loading { color: var(--d-muted); padding: 2rem 0; }
+  .cart-empty { text-align: center; padding: 3rem 1rem; display: grid; gap: 1.2rem; justify-items: center; }
+</style>
+
+<style is:global>
+  /* Linhas montadas via innerHTML no cliente não recebem o data-astro-cid do escopo. */
+  .cart-line {
+    display: grid; grid-template-columns: 1fr auto; gap: 0.45rem 1.2rem;
+    padding: 1.15rem 1.25rem; border: 1px solid var(--d-line); border-radius: 12px;
+    background: var(--ink-2); align-items: start;
+  }
+  .cart-line__name { font-weight: 700; color: var(--d-text); font-size: 1rem; line-height: 1.3; }
+  .cart-line__meta { font-size: 0.82rem; color: var(--d-muted); }
+  .cart-line__sub { text-align: right; font-weight: 800; white-space: nowrap; color: var(--d-text); font-size: 1.1rem; }
+  .cart-line__edit { display: grid; gap: 0.28rem; margin: 0.8rem 0 0.55rem; max-width: 160px; }
+  .cart-line__edit label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--d-muted); font-weight: 600; }
+  .cart-line__edit input {
+    width: 100%; padding: 0.6rem 0.75rem; border: 1px solid var(--d-line-strong);
+    border-radius: 8px; font: inherit; font-size: 0.95rem; background: var(--ink-3); color: var(--d-text);
+  }
+  .cart-line__warn { color: var(--hivis); font-size: 0.8rem; }
+  .cart-line__rm { justify-self: start; background: none; border: 0; color: var(--d-muted); cursor: pointer; font-size: 0.82rem; text-decoration: underline; padding: 0; margin-top: 0.15rem; }
+  .cart-line__rm:hover { color: var(--hivis); }
+</style>
+
+<script>
+  import { lines, setRolos, removeItem, getCart, CART_FITAS_EVENT } from '../lib/cart-fitas';
+
+  const brl = (n: number) => n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  const $ = <T extends Element>(s: string) => document.querySelector<T>(s)!;
+
+  const main = $('main') as HTMLElement;
+  const appUrl = main.dataset.appUrl || 'https://app.roilabs.com.br';
+  const grid = $('.cart-grid') as HTMLElement;
+  const empty = $('.cart-empty') as HTMLElement;
+  const loading = $('.cart-loading') as HTMLElement;
+  const fail = $('.cart-fail') as HTMLElement;
+  const list = $('.cart-list') as HTMLUListElement;
+  const cepInput = $('#ck-cep') as HTMLInputElement;
+  const cepNote = $('.cart-cep__note') as HTMLElement;
+  const sumProduto = $('.cart-sum-produto') as HTMLElement;
+  const descRow = $('.cart-sum-desconto-row') as HTMLElement;
+  const sumDesconto = $('.cart-sum-desconto') as HTMLElement;
+  const sumFrete = $('.cart-sum-frete') as HTMLElement;
+  const prazoRow = $('.cart-sum-prazo-row') as HTMLElement;
+  const sumPrazo = $('.cart-sum-prazo') as HTMLElement;
+  const sumTotal = $('.cart-sum-total') as HTMLElement;
+  const form = $('#checkout-form') as HTMLFormElement;
+  const errBox = $('.cart-err') as HTMLElement;
+  const cupomField = form.elements.namedItem('cupom') as HTMLInputElement;
+
+  // ?erro= do checkout que voltou. Os 4 últimos são exclusivos do vertical de fitas.
+  const erro = new URLSearchParams(location.search).get('erro');
+  const ERROS: Record<string, string> = {
+    vazio: 'Seu carrinho está vazio ou os itens não estão mais disponíveis.',
+    validacao: 'Confira nome, WhatsApp e o aceite da Política de Privacidade.',
+    pagamento: 'Não foi possível abrir o pagamento. Tente novamente em instantes.',
+    documento: 'Informe um CPF (11 dígitos) ou CNPJ (14 dígitos) válido — é obrigatório para a nota fiscal.',
+    item_orcamento: 'Há um item que só é vendido sob orçamento no seu carrinho. Remova-o e peça o orçamento na página do produto.',
+    minimo: 'Um dos itens está abaixo da quantidade mínima do produto.',
+    vertical_misto: 'Fitas e porcelanato são pedidos separados. Finalize um de cada vez.',
+  };
+  if (erro && ERROS[erro]) { errBox.textContent = ERROS[erro]; errBox.hidden = false; }
+
+  // ── Frete: SEMPRE cotado no servidor. Nada de tabela espelhada no browser — o valor
+  //    vem do provedor, e sem cotação o pedido vai como "a combinar", nunca estimado.
+  let frete: { valor: number; prazo: string; servico: string } | null = null;
+  let freteChecado = false;
+
+  async function cotarFrete() {
+    const cart = getCart();
+    if (cart.length === 0) return;
+    const cep = cepInput.value.replace(/\D/g, '');
+    if (cep.length !== 8) { cepNote.textContent = 'Informe um CEP com 8 dígitos.'; return; }
+    cepNote.textContent = 'Calculando frete…';
+    frete = null;
+    try {
+      const res = await fetch(`${appUrl}/api/frete/cotar`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({ cep, itens: JSON.stringify(cart) }),
+      });
+      const data = await res.json();
+      if (data.ok) {
+        frete = { valor: data.valor, prazo: data.prazo, servico: data.servico };
+        cepNote.textContent = `${data.servico} · ${data.prazo}`;
+      } else {
+        cepNote.textContent = data.aviso || 'Frete a combinar após o pedido.';
+      }
+    } catch {
+      cepNote.textContent = 'Não foi possível calcular o frete agora. Ele será combinado após o pedido.';
+    }
+    freteChecado = true;
+    renderTotals();
+  }
+
+  // ── Cupom (display; o checkout re-valida e é a autoridade).
+  let cupom: { codigo: string; desconto: number } | null = null;
+  const cupomInput = $('#ck-cupom') as HTMLInputElement;
+  const cupomMsg = $('.cart-coupon__msg') as HTMLElement;
+  const MOTIVOS: Record<string, string> = {
+    invalido: 'Cupom inválido.',
+    inativo: 'Cupom indisponível.',
+    expirado: 'Cupom expirado.',
+    minimo: 'Seu carrinho não atinge o mínimo para este cupom.',
+    escopo: 'Este cupom não vale para fitas adesivas.',
+    vazio: 'Adicione itens antes de aplicar um cupom.',
+  };
+
+  function renderTotals() {
+    const produto = lines().reduce((s, l) => s + l.subtotal, 0);
+    sumProduto.textContent = brl(produto);
+
+    const desc = cupom ? Math.min(cupom.desconto, produto) : 0;
+    descRow.hidden = !cupom;
+    if (cupom) sumDesconto.textContent = '−' + brl(desc);
+    const base = Math.max(0, produto - desc);
+
+    if (frete) {
+      sumFrete.textContent = brl(frete.valor);
+      sumPrazo.textContent = frete.prazo;
+      prazoRow.hidden = false;
+      sumTotal.textContent = brl(base + frete.valor);
+    } else {
+      sumFrete.textContent = freteChecado ? 'A combinar' : 'Informe o CEP';
+      prazoRow.hidden = true;
+      sumTotal.textContent = freteChecado ? `${brl(base)} + frete` : brl(base);
+    }
+  }
+
+  function render() {
+    try {
+      const ls = lines();
+      loading.hidden = true;
+      fail.hidden = true;
+      const hasItems = ls.length > 0;
+      grid.hidden = !hasItems;
+      empty.hidden = hasItems;
+      if (!hasItems) { renderTotals(); return; }
+
+      list.innerHTML = '';
+      for (const l of ls) {
+        const li = document.createElement('li');
+        li.className = 'cart-line';
+        li.innerHTML = `
+          <div>
+            <div class="cart-line__name">${l.nome}</div>
+            <div class="cart-line__meta">${l.precoFmt}/rolo · faixa ${l.faixa}</div>
+            <div class="cart-line__edit">
+              <label for="q-${l.slug}">Rolos</label>
+              <input id="q-${l.slug}" class="qty-rolos" type="number" min="${l.minimoRolos}" step="1" value="${l.rolos}" data-slug="${l.slug}" />
+            </div>
+            ${l.abaixoDoMinimo ? `<div class="cart-line__warn">Mínimo de ${l.minimoRolos} rolos para este produto.</div>` : ''}
+            <button type="button" class="cart-line__rm" data-rm="${l.slug}">Remover</button>
+          </div>
+          <div class="cart-line__sub">${l.subtotalFmt}</div>`;
+        list.appendChild(li);
+      }
+      renderTotals();
+    } catch (e) {
+      console.error('cart-fitas render failed', e);
+      loading.hidden = true;
+      grid.hidden = true;
+      empty.hidden = true;
+      fail.hidden = false;
+    }
+  }
+
+  async function applyCupom(codigo: string, silent = false) {
+    const cart = getCart();
+    if (cart.length === 0) { cupom = null; cupomField.value = ''; setCupomMsg(MOTIVOS.vazio, false); renderTotals(); return; }
+    if (!silent) setCupomMsg('Validando…', null);
+    try {
+      const res = await fetch(`${appUrl}/api/cupom/validar`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({ codigo, itens: JSON.stringify(cart), vertical: 'fitas' }),
+      });
+      const data = await res.json();
+      if (data.ok) {
+        cupom = { codigo: data.codigo, desconto: data.desconto };
+        cupomField.value = data.codigo;
+        setCupomMsg(`Cupom ${data.codigo} aplicado: −${data.descontoFmt}`, true);
+      } else {
+        cupom = null;
+        cupomField.value = '';
+        setCupomMsg(MOTIVOS[data.motivo] || MOTIVOS.invalido, false);
+      }
+    } catch {
+      if (!silent) setCupomMsg('Não foi possível validar agora. Tente de novo.', false);
+    }
+    renderTotals();
+  }
+
+  function setCupomMsg(text: string, ok: boolean | null) {
+    cupomMsg.textContent = text;
+    cupomMsg.removeAttribute('data-ok');
+    cupomMsg.removeAttribute('data-err');
+    if (ok === true) cupomMsg.setAttribute('data-ok', '');
+    else if (ok === false) cupomMsg.setAttribute('data-err', '');
+  }
+
+  list.addEventListener('change', (e) => {
+    const t = e.target as HTMLInputElement;
+    if (!t.dataset.slug || !t.classList.contains('qty-rolos')) return;
+    setRolos(t.dataset.slug, parseInt(t.value, 10));
+    render();
+    // Mudou a carga → o frete cotado ficou obsoleto. Invalidar é mais honesto do que
+    // manter um número que já não corresponde ao pedido.
+    frete = null;
+    freteChecado = false;
+    cepNote.textContent = 'Quantidade alterada — calcule o frete de novo.';
+    renderTotals();
+    if (cupom) applyCupom(cupom.codigo, true);
+  });
+
+  list.addEventListener('click', (e) => {
+    const t = e.target as HTMLElement;
+    if (!t.dataset.rm) return;
+    removeItem(t.dataset.rm);
+    render();
+    frete = null;
+    freteChecado = false;
+    if (cupom) applyCupom(cupom.codigo, true);
+  });
+
+  $('.cart-cep__calc').addEventListener('click', cotarFrete);
+  $('.cart-coupon__apply').addEventListener('click', () => {
+    const codigo = cupomInput.value.trim();
+    if (codigo) applyCupom(codigo);
+  });
+  (fail.querySelector('.cart-fail__retry') as HTMLButtonElement).addEventListener('click', render);
+
+  form.addEventListener('submit', (e) => {
+    const cart = getCart();
+    if (cart.length === 0) { e.preventDefault(); render(); return; }
+    if (!form.checkValidity()) { e.preventDefault(); form.reportValidity(); return; }
+    (window as any).himetrica?.track('checkout_iniciado_fitas', { itens: cart.length });
+    (form.elements.namedItem('itens') as HTMLInputElement).value = JSON.stringify(cart);
+    (form.elements.namedItem('origin') as HTMLInputElement).value = location.origin;
+  });
+
+  window.addEventListener(CART_FITAS_EVENT, () => { render(); });
+
+  render();
+</script>

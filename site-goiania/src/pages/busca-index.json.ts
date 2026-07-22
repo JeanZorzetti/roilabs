@@ -3,6 +3,7 @@ import { produtos, tituloProduto, formatPreco } from '../data/produtos';
 import { pages } from '../data/porcelanato';
 import { guias } from '../data/guias';
 import { ambientes } from '../data/ambientes';
+import { fitas, formatPreco as formatPrecoFita, menorPreco } from '../data/fitas';
 
 // Índice da busca interna, gerado no build a partir das mesmas fontes do
 // sitemap (produtos + categorias + guias + calculadora). O client (SiteSearch)
@@ -13,6 +14,23 @@ const norm = (s: string) =>
 
 export const GET: APIRoute = () => {
   const entries = [
+    ...fitas.map((f) => ({
+      t: f.nome,
+      s:
+        f.modalidade === 'precoPublico'
+          ? `Fita adesiva · a partir de ${formatPrecoFita(menorPreco(f))}/rolo`
+          : 'Fita adesiva · sob orçamento',
+      u: `/fitas/${f.slug}/`,
+      k: norm(
+        `${f.nome} ${f.slug.replace(/-/g, ' ')} fita adesiva fitas embalagem lacre caixa rolo ${f.specs.map((x) => x.valor).join(' ')}`,
+      ),
+    })),
+    {
+      t: 'Fitas adesivas (vitrine)',
+      s: 'Catálogo',
+      u: '/fitas/',
+      k: norm('fitas adesivas fita embalagem lacre caixa bopp gomada kraft personalizada rolo preco por rolo'),
+    },
     ...produtos.map((p) => {
       const a = p.atributos;
       const t = tituloProduto(p);

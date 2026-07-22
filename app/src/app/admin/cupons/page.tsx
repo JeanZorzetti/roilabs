@@ -25,6 +25,7 @@ export default async function CuponsPage() {
           validadeFim: toIso(r.validadeFim),
           minimo: r.minimo !== null ? Number(r.minimo) : null,
           ativo: r.ativo,
+          escopo: r.escopo,
         }))}
       />
     </div>

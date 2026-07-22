@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import { listarProdutos } from '@/lib/precos';
+import { listarFitas } from '@/lib/precos-fitas';
 import {
   PARAMS,
   resolverParametros,
@@ -81,27 +82,48 @@ export default async function CentrosDeCustoPage() {
   const linhasDisponiveis = linhaRows.map((r) => r.chave ?? '').filter(Boolean);
 
   // ── Catálogo: parâmetros vigentes por SKU (simulação prospectiva) ──────────
-  const produtos = listarProdutos().map((p) => {
+  // Porcelanato entra pelo preço/m². Fita entra pelo MENOR unitário (última faixa): é
+  // onde a margem morre. Usar a primeira faixa esconderia prejuízo no pedido de volume,
+  // que é justamente o pedido que o vertical B2B existe para atender.
+  const catalogo = [
+    ...listarProdutos().map((p) => ({ slug: p.slug, unitario: p.preco, faixa: null as string | null })),
+    ...listarFitas().map((f) => {
+      const ultima = f.faixas[f.faixas.length - 1];
+      return {
+        slug: f.slug,
+        unitario: ultima.precoRolo,
+        faixa: `${ultima.min}${ultima.max === null ? '+' : `–${ultima.max}`} rolos`,
+      };
+    }),
+  ];
+
+  // A linha 'fitas adesivas' existe no Centro de Custo mas só sai da inércia quando algum
+  // SKU cai nela (FR-012). Os SKUs de fita entram nela por padrão; o operador ainda pode
+  // trocar no seletor da linha — o override por SKU continua vencendo.
+  const linhaFitas = linhasDisponiveis.find((l) => l.toLowerCase() === 'fitas adesivas') ?? null;
+
+  const produtos = catalogo.map((p) => {
     const skuCfg = skuMap.get(p.slug) ?? null;
-    const linhaNome = skuCfg?.linha ?? null;
+    const linhaNome = skuCfg?.linha ?? (p.faixa !== null ? linhaFitas : null);
     const linhaCfg = linhaNome ? (linhasMap.get(linhaNome) ?? null) : null;
 
     const camadas: CamadasConfig = { sku: skuCfg, linha: linhaCfg, global: globalParams };
     const parametros = resolverParametros(camadas);
-    const { piso, real } = resolverPiso(p.preco, camadas);
+    const { piso, real } = resolverPiso(p.unitario, camadas);
     const modalidade = resolverModalidade(camadas);
-    const inter = calcIntermediacao(p.preco, piso, parametros);
-    const wl = calcWL(p.preco, piso, parametros);
-    const prejuizo = piso > p.preco;
+    const inter = calcIntermediacao(p.unitario, piso, parametros);
+    const wl = calcWL(p.unitario, piso, parametros);
+    const prejuizo = piso > p.unitario;
 
     return {
       slug: p.slug,
-      varejo: p.preco,
+      faixa: p.faixa,
+      varejo: p.unitario,
       piso,
       real,
       prejuizo,
       modalidade,
-      linhaAtual: skuCfg?.linha ?? null,
+      linhaAtual: linhaNome,
       interLiquido: inter.liquido,
       wlLiquido: wl.liquido,
       linhasDisponiveis,

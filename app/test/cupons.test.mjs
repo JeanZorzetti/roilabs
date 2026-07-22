@@ -14,6 +14,7 @@ function cupom(overrides = {}) {
     validadeFim: null,
     minimo: null,
     ativo: true,
+    escopo: 'porcelanato',
     ...overrides,
   };
 }
@@ -98,6 +99,36 @@ function cupom(overrides = {}) {
   const r = avaliarCupom(cupom({ tipo: 'fixo', valor: 9999 }), 250);
   assert.equal(r.ok, true);
   assert.equal(r.desconto, 250, 'fixo > subtotal clampa no subtotal');
+}
+
+// ── escopo por vertical (011, FR-036) ─────────────────────────────────────────
+// Todos os casos acima omitem o 3º argumento e continuam verdes: o default é
+// 'porcelanato', que é exatamente o comportamento anterior à feature. É a prova do FR-003.
+{
+  const r = avaliarCupom(cupom({ escopo: 'porcelanato' }), 1000, 'fitas');
+  assert.equal(r.ok, false);
+  assert.equal(r.motivo, 'escopo', 'cupom de porcelanato não vale em carrinho de fitas');
+}
+{
+  const r = avaliarCupom(cupom({ escopo: 'fitas' }), 1000, 'porcelanato');
+  assert.equal(r.ok, false);
+  assert.equal(r.motivo, 'escopo', 'cupom de fitas não vale em carrinho de porcelanato');
+}
+{
+  assert.equal(avaliarCupom(cupom({ escopo: 'fitas' }), 1000, 'fitas').ok, true, 'escopo casando aplica');
+  assert.equal(avaliarCupom(cupom({ escopo: 'ambos' }), 1000, 'fitas').ok, true, "'ambos' vale em fitas");
+  assert.equal(avaliarCupom(cupom({ escopo: 'ambos' }), 1000, 'porcelanato').ok, true, "'ambos' vale em porcelanato");
+}
+{
+  // Precedência: inativo é mais fundamental que escopo — um cupom desligado está desligado
+  // em todo lugar, e dizer 'escopo' mandaria o operador consertar o campo errado.
+  const r = avaliarCupom(cupom({ ativo: false, escopo: 'porcelanato' }), 1000, 'fitas');
+  assert.equal(r.motivo, 'inativo', 'inativo tem precedência sobre escopo');
+}
+{
+  // Escopo antes de validade: motivo mais específico primeiro.
+  const r = avaliarCupom(cupom({ escopo: 'porcelanato', validadeFim: now - DIA }), 1000, 'fitas');
+  assert.equal(r.motivo, 'escopo', 'escopo tem precedência sobre expirado');
 }
 
 console.log('cupons.test.mjs: all assertions passed');

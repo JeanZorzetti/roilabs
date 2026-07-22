@@ -68,8 +68,48 @@ for (const p of produtos) {
   }
 }
 
+// ── Fitas: paridade dos FATOS com o institucional (011, mitigação de D5) ──────
+// Os fatos de src/data/fitas.ts são copiados à mão de ROI Labs/Tapepro/src/lib/produtos.ts
+// (repos separados, sem import possível). Se alguém mudar a medida de um lado só, o
+// e-commerce passa a mentir a ficha técnica — e é o build que precisa gritar, não o cliente.
+// Atualizar ESTA cópia junto quando o institucional mudar de verdade.
+const FATOS_INSTITUCIONAL = {
+  'fita-transparente-personalizada': ['48 mm', '100 m', 'BOPP transparente', 'Até 2 cores', '20 rolos'],
+  'fita-gomada': ['70 mm', '150 m', 'Papel kraft gomado', 'Fios de nylon', 'Com água', '15 rolos'],
+  'fita-transparente-comum': ['48 mm', '100 m', 'BOPP transparente', 'Sem impressão', 'Por volume'],
+};
+
+const fitasSrc = readFileSync(join(__dirname, '../data/fitas.ts'), 'utf8');
+const blocos = fitasSrc.split(/slug:\s*['"]/).slice(1);
+const vistoFita = new Set();
+for (const bloco of blocos) {
+  const slug = bloco.slice(0, bloco.indexOf("'") >= 0 ? bloco.indexOf("'") : bloco.indexOf('"'));
+  const esperado = FATOS_INSTITUCIONAL[slug];
+  if (!esperado) continue;
+  vistoFita.add(slug);
+  for (const valor of esperado) {
+    if (!bloco.includes(`valor: '${valor}'`)) {
+      console.error(`[ERRO] fita "${slug}": fato divergente do institucional — falta valor "${valor}"`);
+      errors++;
+    }
+  }
+  // A imagem de outro fornecedor não pode vazar para o nosso catálogo.
+  if (bloco.includes('sua-marca-aqui')) {
+    console.error(`[ERRO] fita "${slug}": usa sua-marca-aqui (marca de terceiro)`);
+    errors++;
+  }
+}
+for (const slug of Object.keys(FATOS_INSTITUCIONAL)) {
+  if (!vistoFita.has(slug)) {
+    console.error(`[ERRO] fita ausente de data/fitas.ts: "${slug}"`);
+    errors++;
+  }
+}
+
 if (errors === 0) {
-  console.log(`[OK] ${n} categorias + ${produtos.length} produtos — slugs únicos, volume/preço > 0, imagens e FAQ presentes.`);
+  console.log(
+    `[OK] ${n} categorias + ${produtos.length} produtos + ${vistoFita.size} fitas — slugs únicos, volume/preço > 0, imagens/FAQ presentes, fatos de fita em paridade com o institucional.`,
+  );
   process.exit(0);
 } else {
   console.error(`[FALHOU] ${errors} erro(s).`);
