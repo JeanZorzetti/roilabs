@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { isAuthed } from '@/lib/auth';
-import { calcularFaturaMensal, elegivel, type NegocioCalc } from '@/lib/success-fee';
+import { calcularFaturaMensal, type NegocioCalc } from '@/lib/success-fee';
 import { garantirCliente, criarCobranca } from '@/lib/asaas';
 import { log } from '@/lib/log';
 
@@ -69,22 +69,12 @@ export async function POST(req: NextRequest) {
   const negocios: NegocioCalc[] = negociosRows.map((n) => ({
     id: n.id,
     valor: Number(n.valor),
-    // NaN se o snapshot não tiver taxa (negócio legado sem backfill): o guard abaixo barra
-    // antes de calcular — money path nunca cobra taxa zero por omissão (010).
-    taxaAplicada: n.taxaAplicada !== null ? Number(n.taxaAplicada) : NaN,
+    taxaAplicada: Number(n.taxaAplicada), // NOT NULL no schema — todo negócio nasce com a taxa congelada
     estagio: n.estagio,
     faturavel: n.faturavel,
     pedidoReembolsado: n.pedido.statusPagamento === 'reembolsado',
     jaFaturado: false,
   }));
-
-  const semTaxa = negocios.find((n) => elegivel(n) && Number.isNaN(n.taxaAplicada));
-  if (semTaxa) {
-    return NextResponse.json(
-      { ok: false, motivo: `negócio ${semTaxa.id} ganho sem taxa aplicada — rode o backfill 010` },
-      { status: 400 },
-    );
-  }
 
   const calc = calcularFaturaMensal(negocios);
   if (calc.negocioIds.length === 0) {

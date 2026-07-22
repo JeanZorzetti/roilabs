@@ -21,7 +21,7 @@ description: "Task list — 010 success fee com duas taxas"
 
 ## Phase 1: Setup
 
-- [ ] T001 Confirmar ambiente do `/app`: `npx prisma generate` ok e `DATABASE_URL` do `roilabs_db@2.24.207.200:5443` alcançável do host que vai rodar o `db push` (Const. I/II).
+- [x] T001 Confirmar ambiente do `/app`: `npx prisma generate` ok e `DATABASE_URL` do `roilabs_db@2.24.207.200:5443` alcançável do host que vai rodar o `db push` (Const. I/II).
 
 ---
 
@@ -36,7 +36,7 @@ description: "Task list — 010 success fee com duas taxas"
 - [x] T006 Criar `app/test/classificar-negocio.test.mjs`: doc vazio → aquisição; histórico não-perdido → recorrência; único anterior perdido → aquisição. Escrever ANTES, falhar antes de T005.
 - [x] T007 Alterar `app/src/lib/success-fee.ts`: `NegocioCalc += taxaAplicada`; `calcularFaturaMensal(negocios)` (sem `comissaoPct`) soma `valor = Σ money(n.valor × n.taxaAplicada)` sobre os elegíveis; `base = Σ valor` (research.md D4).
 - [x] T008 Atualizar `app/test/success-fee.test.mjs`: cenário 2 negócios mesmo cliente → 1000×0.15=150 + 1000×0.10=100 → fatura 250 / base 2000; arredondamento por negócio sem drift. Ajustar ANTES, falhar antes de T007.
-- [ ] T009 Aplicar schema: `prisma db push` no `roilabs_db` (host real) com as colunas novas (`taxaAplicada` ainda nullable). Depende de T002. Validar no host (Const. II).
+- [x] T009 Aplicar schema: `prisma db push` no `roilabs_db` (host real) com as colunas novas (`taxaAplicada` ainda nullable). Depende de T002. Validar no host (Const. II).
 
 **Checkpoint**: schema no ar, libs puras verdes.
 
@@ -80,8 +80,8 @@ description: "Task list — 010 success fee com duas taxas"
 **Independent Test**: rodar o backfill 2× (idempotente); nenhuma `FaturaSuccessFee` muda `valor`.
 
 - [x] T019 [US3] Criar `app/scripts/migrate-010-backfill.mjs` (idempotente): parceiros → `comissaoAquisicao=comissaoRecorrencia=comissaoPct`; negócios abertos (`faturaId=null`, sem `taxaAplicada`) → `taxaAplicada=parceiro.comissaoPct`, `classificacao='legado'`, `clienteDoc` do pedido; não tocar negócios faturados/faturas emitidas (research.md D6).
-- [ ] T020 [US3] Rodar o backfill no host real 2× e verificar: `valor` de todas as faturas existentes inalterado; TapePro com `comissaoAquisicao=comissaoRecorrencia=0.15` (depois setar recorrência 0.10 pela UI) (SC-004).
-- [ ] T021 [US3] Segunda etapa da migração: tornar `NegocioOriginado.taxaAplicada` **NOT NULL** em `app/prisma/schema.prisma` + `db push` (só após T020, quando todo negócio aberto já tem taxa).
+- [x] T020 [US3] Rodar o backfill no host real 2× e verificar: `valor` de todas as faturas existentes inalterado; TapePro com `comissaoAquisicao=comissaoRecorrencia=0.15` (depois setar recorrência 0.10 pela UI) (SC-004).
+- [x] T021 [US3] Segunda etapa da migração: tornar `NegocioOriginado.taxaAplicada` **NOT NULL** em `app/prisma/schema.prisma` + `db push` (só após T020, quando todo negócio aberto já tem taxa).
 
 **Checkpoint**: migração fechada, zero regressão de valor.
 

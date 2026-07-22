@@ -24,7 +24,7 @@ export interface FaturaCalculada {
 const money = (n: number) => Math.round(n * 100) / 100;
 
 /** Elegível: estagio==='ganho' && faturavel && !pedidoReembolsado && !jaFaturado. */
-export const elegivel = (n: NegocioCalc) =>
+const elegivel = (n: NegocioCalc) =>
   n.estagio === 'ganho' && n.faturavel && !n.pedidoReembolsado && !n.jaFaturado;
 
 export function calcularFaturaMensal(negocios: NegocioCalc[]): FaturaCalculada {

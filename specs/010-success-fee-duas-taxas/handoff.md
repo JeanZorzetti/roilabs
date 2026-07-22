@@ -1,6 +1,6 @@
 # Handoff — 010 success fee com duas taxas (aquisição vs recorrência)
 
-**Data**: 2026-07-22 · **Status**: código completo e verde localmente (Gate 1). Faltam só os passos de **host real** (Gate 2/3).
+**Data**: 2026-07-22 · **Status**: código completo (Gate 1 verde) **e migração aplicada no `roilabs_db`** (Gate 2 ✅). Falta só o **Gate 3 (E2E real no navegador)** e duas ações de negócio do Jean (abaixo).
 
 ## Feito (código)
 
@@ -19,16 +19,24 @@ cd app && npm test
 ```
 `npx tsc --noEmit` limpo.
 
-## Pendências (HOST real — só o Jean roda, `roilabs_db@2.24.207.200:5443`)
+## Migração aplicada no host (2026-07-22) — Gate 2 ✅
 
-1. **T009 — `prisma db push`** (runner standalone NÃO aplica schema; rodar de máquina que alcança o host). Adiciona as colunas novas com `taxaAplicada` ainda **nullable**.
-2. **T020 — backfill**: `DATABASE_URL=... node scripts/migrate-010-backfill.mjs` (rodar **2×**, é idempotente). Conferir: nenhuma `FaturaSuccessFee` muda `valor`; TapePro fica com aquisição=recorrência=0.15 → depois **setar recorrência 0.10 pela UI** `/admin/parceiros`.
-3. **T021 — NOT NULL** (opcional, recomendado): só **após** o backfill confirmar que todo negócio aberto tem taxa, mudar em `schema.prisma` `taxaAplicada Decimal?` → `Decimal` e `db push` de novo. Se o backfill avisar "negócio sem taxa" (parceiro sem `comissaoPct`), resolver **antes**. O guard na fatura já protege o interim, então isto é integridade, não bloqueio.
-4. **T024 — E2E real (Gate 3, declara "pronto")**: seguir `quickstart.md` no EasyPanel/navegador — 2 pedidos mesmo doc → 15%+10%, demonstrativo bate, snapshot congelado, checkout grava `compradorDoc` só dígitos.
+Estado do `roilabs_db` antes: **1 parceiro (TapePro, ativa, `comissaoPct=0.15`), 0 negócios, 0 faturas.**
+
+1. **T009 `db push`** — preview (`prisma migrate diff`) confirmou **puramente aditivo**: 6 colunas nullable + 1 índice, zero DROP, sem drift. Aplicado.
+2. **T020 backfill** — rodado 2× (idempotente): run 1 = 1 parceiro, run 2 = 0. TapePro ficou `aquisicao=recorrencia=0.15`. **Nenhuma fatura mudou de valor — havia 0 faturas** (SC-004 trivialmente satisfeito).
+3. **T021 NOT NULL** — como havia **0 negócios**, foi seguro ir direto ao estado final: `taxaAplicada` é **NOT NULL** no banco e no schema. A constraint do DB passou a ser a garantia do invariante, então o guard "negócio sem taxa" da rota de faturas virou código morto e foi removido.
+
+## Pendências
+
+1. **T024 — E2E real (Gate 3, declara "pronto")**: seguir `quickstart.md` no navegador — 2 pedidos mesmo doc → 15%+10%, demonstrativo bate, snapshot congelado, checkout grava `compradorDoc` só dígitos. **Ainda não executado.**
+2. **Ação de negócio (Jean)**: TapePro está com **recorrência 0.15** (herdada da taxa antiga). Setar **0.10** em `/admin/parceiros`.
+3. **Ação de negócio (Jean)**: TapePro **não tem `cpfCnpj`** — sem ele não fatura (regra da 007, mantida). Preencher antes do 1º negócio.
 
 ## Gotchas / decisões
 
 - `comissaoPct` fica **deprecado** (não dropado) — `ponytail:` no schema; dropar num push futuro se incomodar.
 - Validação de doc é **por tamanho** (CPF 11 / CNPJ 14), não dígito verificador — é o que a spec pede ("formato").
-- Migração em **2 passos** (nullable+backfill → NOT NULL) porque `db push` não adiciona coluna NOT NULL a tabela com linhas sem default.
+- Migração feita em **2 passos** (nullable+backfill → NOT NULL) porque `db push` não adiciona coluna NOT NULL a tabela com linhas sem default. Com a coluna já NOT NULL, o filtro `taxaAplicada: null` é **inválido** no Prisma — por isso a 2ª etapa saiu do script de backfill (ele estourava ao rodar de novo); ficou documentada no cabeçalho dele para quem migrar outro banco.
+- `prisma migrate diff --from-url ... --script` é o preview seguro antes de qualquer `db push` em prod — mostra o SQL sem aplicar.
 - `ativa` agora exige `cpfCnpj` além das 2 taxas (T011). Se houver parceiro `ativa` legado sem cpfCnpj, o próximo PATCH pede o cpfCnpj — comportamento intencional.

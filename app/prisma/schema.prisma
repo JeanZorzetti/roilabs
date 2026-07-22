@@ -203,10 +203,10 @@ model NegocioOriginado {
   estagio        String   @default("repassado")
   faturavel      Boolean  @default(true) // isenção pontual ⇒ false
   isencaoMotivo  String?  @map("isencao_motivo")
-  // Snapshot congelado na criação do negócio (010, FR-005). taxaAplicada vira NOT NULL após o backfill (T021).
+  // Snapshot congelado na criação do negócio (010, FR-005).
   clienteDoc     String?  @map("cliente_doc") // CPF/CNPJ normalizado do comprador; null = sem doc → aquisição
   classificacao  String?  // aquisicao | recorrencia | legado (backfill)
-  taxaAplicada   Decimal? @db.Decimal(6, 4) @map("taxa_aplicada") // fração [0,1] cobrada neste negócio
+  taxaAplicada   Decimal  @db.Decimal(6, 4) @map("taxa_aplicada") // fração [0,1] cobrada neste negócio (NOT NULL — T021)
   faturaId       String?  @map("fatura_id")
   createdAt      DateTime @default(now()) @map("created_at")
   updatedAt      DateTime @updatedAt @map("updated_at")

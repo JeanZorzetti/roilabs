@@ -55,7 +55,7 @@ export default async function DemonstrativoPage({
           negocios.map((n) => ({
             id: n.id,
             valor: Number(n.valor),
-            taxaAplicada: n.taxaAplicada !== null ? Number(n.taxaAplicada) : NaN,
+            taxaAplicada: Number(n.taxaAplicada),
             estagio: n.estagio,
             faturavel: n.faturavel,
             pedidoReembolsado: n.pedido.statusPagamento === 'reembolsado',
@@ -117,9 +117,9 @@ export default async function DemonstrativoPage({
                 : reemb ? 'reembolsado'
                 : n.estagio !== 'ganho' ? 'em andamento'
                 : null;
-              const taxa = n.taxaAplicada !== null ? Number(n.taxaAplicada) : null;
+              const taxa = Number(n.taxaAplicada);
               const incluido = naFatura.has(n.id);
-              const subtotal = incluido && taxa !== null ? money(Number(n.valor) * taxa) : null;
+              const subtotal = incluido ? money(Number(n.valor) * taxa) : null;
               return (
                 <tr key={n.id}>
                   <td className="num">{n.createdAt.toISOString().slice(0, 10)}</td>

@@ -29,7 +29,7 @@ export async function GET(req: NextRequest) {
       faturaId: r.faturaId,
       clienteDoc: r.clienteDoc,
       classificacao: r.classificacao,
-      taxaAplicada: r.taxaAplicada !== null ? Number(r.taxaAplicada) : null,
+      taxaAplicada: Number(r.taxaAplicada),
       pedidoReembolsado: r.pedido.statusPagamento === 'reembolsado',
       createdAt: r.createdAt,
     })),
