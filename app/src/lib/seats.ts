@@ -9,4 +9,7 @@ export const DEFAULT_SEATS = [
   { niche: 'Iluminação / Elétrica', status: 'Em estudo', open: false },
   { niche: 'Marcenaria sob medida', status: 'Em estudo', open: false },
   { niche: 'Pisos / Deck externo', status: 'Em estudo', open: false },
+  // Primeira cadeira ocupada: Tapepro (fitas adesivas personalizadas, B2B). open:false = fora
+  // de curadoria (já preenchida). O link/estado visual "ocupada" vive no site (presentational).
+  { niche: 'Fitas adesivas', status: 'Ocupada · Tapepro', open: false },
 ] as const;

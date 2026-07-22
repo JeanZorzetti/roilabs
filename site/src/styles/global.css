@@ -596,6 +596,34 @@ a {
   background: var(--hivis);
 }
 
+/* Cadeira ocupada (venture ativa) — estado "ganho": selada, escura e clicável.
+   Distinta da verde-aberta e da apagada "em estudo". */
+.seat--taken {
+  border-color: var(--ink);
+  background: linear-gradient(160deg, var(--ink-2), var(--ink));
+  color: #fff;
+}
+
+.seat--taken .seat__status {
+  color: var(--hivis);
+  font-weight: 700;
+}
+
+.seat--taken .seat__ring {
+  border: none;
+  background: var(--hivis);
+}
+
+.seat__niche a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid color-mix(in srgb, currentColor 40%, transparent);
+}
+
+.seat__niche a:hover {
+  border-bottom-color: currentColor;
+}
+
 .map__caption {
   margin-top: 2rem;
   font-family: var(--font-mono);
