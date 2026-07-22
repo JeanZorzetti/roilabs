@@ -27,11 +27,13 @@ Estado do `roilabs_db` antes: **1 parceiro (TapePro, ativa, `comissaoPct=0.15`),
 2. **T020 backfill** — rodado 2× (idempotente): run 1 = 1 parceiro, run 2 = 0. TapePro ficou `aquisicao=recorrencia=0.15`. **Nenhuma fatura mudou de valor — havia 0 faturas** (SC-004 trivialmente satisfeito).
 3. **T021 NOT NULL** — como havia **0 negócios**, foi seguro ir direto ao estado final: `taxaAplicada` é **NOT NULL** no banco e no schema. A constraint do DB passou a ser a garantia do invariante, então o guard "negócio sem taxa" da rota de faturas virou código morto e foi removido.
 
+## TapePro configurado (2026-07-22)
+
+`cpfCnpj=44724076000135` (CNPJ 44.724.076/0001-35, só dígitos p/ o Asaas) · `comissaoAquisicao=0.15` · `comissaoRecorrencia=0.10` · `estagio=ativa` → **`podeGerar=true`** (já fatura). Gravado direto no banco com as mesmas barreiras da API (doc 11/14 dígitos, taxa em [0,1]).
+
 ## Pendências
 
-1. **T024 — E2E real (Gate 3, declara "pronto")**: seguir `quickstart.md` no navegador — 2 pedidos mesmo doc → 15%+10%, demonstrativo bate, snapshot congelado, checkout grava `compradorDoc` só dígitos. **Ainda não executado.**
-2. **Ação de negócio (Jean)**: TapePro está com **recorrência 0.15** (herdada da taxa antiga). Setar **0.10** em `/admin/parceiros`.
-3. **Ação de negócio (Jean)**: TapePro **não tem `cpfCnpj`** — sem ele não fatura (regra da 007, mantida). Preencher antes do 1º negócio.
+1. **T024 — E2E real (Gate 3, declara "pronto")**: seguir `quickstart.md` no navegador — 2 pedidos mesmo doc → 15%+10%, demonstrativo bate, snapshot congelado, checkout grava `compradorDoc` só dígitos. **Ainda não executado** (precisa de auth admin + pedido pago real).
 
 ## Gotchas / decisões
 
