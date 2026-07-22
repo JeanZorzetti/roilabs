@@ -12,6 +12,13 @@
 
 Estende a **camada 007 (parceiro)**: um `NegocioOriginado` é um Pedido pago repassado a um parceiro; a `FaturaSuccessFee` mensal cobra `base × comissaoPct` (taxa única) por parceiro. A regra comercial evoluiu: a comissão que a ROI Labs cobra é **maior na conquista de um cliente novo** e **menor na manutenção** (cuidado de carteira). A cadeira de fitas adesivas (Tapepro, ativada 2026-07-22) tornou a regra explícita — mas ela vale para **qualquer parceiro** da plataforma, não só o Tapepro.
 
+## Clarifications
+
+### Session 2026-07-22
+
+- Q: A captura de CPF/CNPJ do comprador deve ser obrigatória em quais fluxos? → A: Obrigatório só no fluxo B2B/orçamento (fitas); opcional no checkout B2C (porcelanato). Não-informado → aquisição.
+- Q: Quando a taxa e a classificação de um negócio são congeladas? → A: Na criação do negócio (venda/repasse), como o snapshot do ItemPedido na 007; mudar a taxa do parceiro depois só afeta negócios futuros.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Definir as duas taxas por parceiro (Priority: P1)
@@ -64,7 +71,7 @@ Como operador, quero que os parceiros e faturas já existentes (com taxa única)
 
 ### User Story 4 - Rastreabilidade da taxa por negócio (Priority: P2)
 
-Como operador, quero que a taxa aplicada e a classificação (aquisição/recorrência) fiquem **congeladas por negócio** no momento da fatura, para que mudar as taxas do parceiro depois não altere faturas passadas.
+Como operador, quero que a taxa aplicada e a classificação (aquisição/recorrência) fiquem **congeladas por negócio** no momento em que o negócio é criado (venda/repasse), para que mudar as taxas do parceiro depois não altere negócios já criados nem faturas passadas.
 
 **Why this priority**: Auditoria e disputa: a fatura tem que ser reconstituível exatamente como foi cobrada.
 
@@ -76,10 +83,10 @@ Como operador, quero que a taxa aplicada e a classificação (aquisição/recorr
 
 ### Edge Cases
 
-- **Pedido sem CPF/CNPJ** (legado ou captura falha): não casa com nenhum histórico → classificado como **aquisição** (FR-003b). A captura no checkout deve ser obrigatória daqui pra frente para não inflar aquisições.
+- **Pedido sem CPF/CNPJ** (checkout B2C onde é opcional, ou Pedido legado): não casa com histórico → classificado como **aquisição** (FR-003b). Aceitável porque os parceiros B2C (porcelanato) estão migrados com as duas taxas iguais (FR-006), então a classificação não muda o valor faturado; onde as taxas diferem (B2B/fitas) o documento é obrigatório.
 - **Mesmo CPF/CNPJ, formatação diferente** (pontos/traços/maiúsculas): DEVE normalizar (só dígitos) antes de comparar, senão o mesmo cliente conta duas vezes.
 - **Primeiro negócio perdido/estornado**: não consome a aquisição — o próximo negócio ganho do cliente volta a ser aquisição (FR-008).
-- **Negócio isento (não-faturável)** (`faturavel=false` na camada 007): conta para "primeira compra" mesmo sem gerar cobrança?
+- **Negócio isento (não-faturável)** (`faturavel=false` na camada 007) porém ganho: **consome** a aquisição — o cliente foi conquistado; a isenção afeta só a cobrança, não a classificação.
 - **Dois negócios do mesmo cliente na mesma competência**: qual é a aquisição — desempate pelo mais antigo (`createdAt`).
 - **Parceiro com só uma taxa preenchida**: bloquear faturamento (como a regra atual "ativa exige comissão") em vez de assumir a outra silenciosamente.
 
@@ -88,12 +95,12 @@ Como operador, quero que a taxa aplicada e a classificação (aquisição/recorr
 ### Functional Requirements
 
 - **FR-001**: Cada parceiro DEVE ter **duas taxas de success fee** — aquisição e recorrência — cada uma uma fração em [0,1], substituindo o campo de taxa única.
-- **FR-002**: Ao gerar a fatura de uma competência, o sistema DEVE classificar cada negócio incluído como **aquisição** (primeira compra do cliente com aquele parceiro) ou **recorrência**, e aplicar a taxa correspondente do parceiro.
+- **FR-002**: Ao **criar o negócio** (Pedido pago repassado ao parceiro), o sistema DEVE classificá-lo como **aquisição** (nenhum negócio ganho anterior daquele cliente com aquele parceiro) ou **recorrência**, e congelar a taxa correspondente do parceiro vigente naquele momento. A fatura mensal apenas **soma** os valores já congelados por negócio.
 - **FR-003**: A classificação aquisição/recorrência DEVE identificar o "cliente" pelo **CPF/CNPJ do comprador** do Pedido (normalizado — só dígitos). Clientes com o mesmo CPF/CNPJ são o mesmo cliente para efeito de aquisição vs recorrência.
-- **FR-003a**: Como o Pedido **não captura CPF/CNPJ do comprador hoje**, o fluxo de compra/orçamento DEVE passar a coletar e persistir esse documento no Pedido. Sem ele não há como classificar aquisição vs recorrência.
+- **FR-003a**: Como o Pedido **não captura CPF/CNPJ do comprador hoje**, o campo DEVE ser adicionado ao Pedido e coletado nos fluxos. A coleta é **obrigatória no fluxo B2B/orçamento** (fitas) e **opcional no checkout B2C** (porcelanato), para não adicionar fricção ao consumidor. Pedido sem o documento é classificado como aquisição (FR-003b).
 - **FR-003b**: O documento DEVE ser validado no formato (CPF ou CNPJ) e normalizado antes de comparar. Um negócio só é **recorrência** se existir um negócio ganho anterior com o **mesmo** CPF/CNPJ; sem correspondência (inclusive Pedidos legados sem documento), é **aquisição**. Consequência direta da regra de match, não um caso especial.
 - **FR-004**: O valor da fatura DEVE ser a **soma, negócio a negócio**, de `base_do_negócio × taxa_aplicada` — nunca uma taxa única sobre o total.
-- **FR-005**: A taxa aplicada e a classificação (aquisição/recorrência) DEVEM ser **congeladas por negócio** (snapshot) no momento da fatura, para que alterações posteriores nas taxas do parceiro não mudem faturas emitidas.
+- **FR-005**: A taxa aplicada e a classificação DEVEM ser **congeladas por negócio** (snapshot) **no momento da criação do negócio** (venda/repasse), seguindo o padrão de snapshot do `ItemPedido` da camada 007; alterações posteriores nas taxas do parceiro só afetam negócios futuros, nunca os já criados.
 - **FR-006**: Parceiros existentes com taxa única DEVEM migrar sem mudança de comportamento: até a taxa de recorrência ser definida, ambas as taxas assumem o valor da taxa antiga e o valor faturado não muda.
 - **FR-007**: O demonstrativo/relatório da fatura DEVE mostrar, por negócio, a classificação (aquisição/recorrência) e a taxa aplicada, e o total DEVE bater com a soma dos negócios.
 - **FR-008**: A determinação de "cliente já adquirido" DEVE considerar apenas negócios anteriores **efetivamente ganhos** (não perdidos, não estornados) daquele cliente com aquele parceiro. Se o negócio inaugural de um cliente foi perdido/estornado, ele **não** consome a aquisição — o próximo negócio ganho dele volta a ser aquisição (15%).
