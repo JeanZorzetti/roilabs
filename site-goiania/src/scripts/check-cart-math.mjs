@@ -87,8 +87,11 @@ assert.equal(soma, total, 'Σ subtotais == total (sem frete)');
 const FAIXAS_FITA = {
   'fita-gomada': { min: 15, faixas: [{ min: 15, preco: 37.2 }, { min: 101, preco: 32.2 }] },
   'fita-transparente-comum': { min: 1, faixas: [{ min: 1, preco: 7.9 }] },
+  // 011.1: personalizada passou a faturar direto (compra por volume + clichê fixo no checkout).
+  'fita-transparente-personalizada': { min: 20, faixas: [{ min: 20, preco: 16.2 }, { min: 50, preco: 13.9 }, { min: 100, preco: 10.5 }, { min: 200, preco: 10.1 }] },
 };
-const SO_ORCAMENTO = ['fita-transparente-personalizada'];
+// Nenhum SKU de fita é só-orçamento após a 011.1.
+const SO_ORCAMENTO = [];
 
 function precoRolo(slug, rolos) {
   const f = FAIXAS_FITA[slug];

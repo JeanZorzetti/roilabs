@@ -3,9 +3,10 @@
 //
 // A modalidade comercial é dada pela PRESENÇA na tabela, nunca por `preco = 0` (FR-005):
 // SKU aqui ⇒ preço público, compra direta. SKU ausente ⇒ só-orçamento.
-// Por isso `fita-transparente-personalizada` não está aqui: o clichê é valor variável
-// ("a partir de R$ 80") e custo único por arte — cobrar por pedido sobrecobraria o
-// cliente recorrente (FR-040). Ela vive só na página, com CTA de orçamento.
+// `fita-transparente-personalizada` agora fatura direto (como as outras): o clichê deixou
+// de ser motivo para orçamento e virou uma linha fixa no checkout (ver CLICHE_FIXO no
+// /api/pedidos), cobrada UMA vez e isenta para quem repete a arte — o FR-040 (não
+// sobrecobrar o recorrente) continua honrado, agora por dado do banco, não por modalidade.
 //
 // ponytail: Record em código, igual a precos.ts. Tabela no banco só se o catálogo virar
 // dinâmico — 2 SKUs fechados não pagam migração + tela de admin.
@@ -36,6 +37,19 @@ export interface PrecoFita {
 // ⚠️ pesoKg/dimensões são ESTIMATIVA calibrável (T002 pendente do Tapepro). São knob de
 // operador: entram só na cotação de frete, nunca no preço do produto. Confirmar e ajustar.
 const PRECOS: Record<string, PrecoFita> = {
+  'fita-transparente-personalizada': {
+    faixas: [
+      { min: 20, max: 49, precoRolo: 16.2 },
+      { min: 50, max: 99, precoRolo: 13.9 },
+      { min: 100, max: 199, precoRolo: 10.5 },
+      { min: 200, max: null, precoRolo: 10.1 },
+    ],
+    minimoRolos: 20,
+    pesoKg: 0.3, // mesmo BOPP 48mm × 100m da comum
+    alturaCm: 5,
+    larguraCm: 12,
+    comprimentoCm: 12,
+  },
   'fita-transparente-comum': {
     faixas: [{ min: 1, max: null, precoRolo: 7.9 }],
     minimoRolos: 1,

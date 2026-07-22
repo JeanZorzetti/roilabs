@@ -19,9 +19,12 @@ assert.equal(precoPorQuantidade('fita-transparente-comum', 1).precoRolo, 7.9, 'c
 assert.equal(precoPorQuantidade('fita-transparente-comum', 999).precoRolo, 7.9, 'comum: preço único não escalona');
 assert.equal(precoPorQuantidade('fita-transparente-comum', 0), null, 'zero => null');
 
-// ── só-orçamento: a AUSÊNCIA na tabela é o que marca a modalidade (FR-005/FR-040) ──
-assert.equal(precoPorQuantidade('fita-transparente-personalizada', 50), null, 'personalizada é só-orçamento');
-assert.equal(temPrecoPublico('fita-transparente-personalizada'), false, 'personalizada sem preço público');
+// ── personalizada agora fatura direto (011.1): tem preço público e faixas próprias ──
+assert.equal(precoPorQuantidade('fita-transparente-personalizada', 19), null, 'personalizada: 19 < mínimo de 20');
+assert.equal(precoPorQuantidade('fita-transparente-personalizada', 20).precoRolo, 16.2, 'personalizada: 20 na 1ª faixa');
+assert.equal(precoPorQuantidade('fita-transparente-personalizada', 50).precoRolo, 13.9, 'personalizada: 50 na 2ª faixa');
+assert.equal(precoPorQuantidade('fita-transparente-personalizada', 200).precoRolo, 10.1, 'personalizada: 200+ na faixa sem teto');
+assert.equal(temPrecoPublico('fita-transparente-personalizada'), true, 'personalizada com preço público');
 assert.equal(temPrecoPublico('fita-gomada'), true);
 assert.equal(precoPorQuantidade('slug-que-nao-existe', 10), null, 'slug ausente => null');
 
@@ -56,7 +59,8 @@ assert.equal(money(101 * precoPorQuantidade('fita-gomada', 101).precoRolo), 3252
   const c = cargaDoCarrinho([{ slug: 'fita-gomada', rolos: 15 }]);
   assert.equal(c.pesoKg, 16.5, '15 × 1,1 kg = 16,5 kg');
   assert.ok(c.alturaCm > 0 && c.larguraCm > 0 && c.comprimentoCm > 0);
-  assert.equal(cargaDoCarrinho([{ slug: 'fita-transparente-personalizada', rolos: 20 }]), null, 'SKU sem preço público não vira carga');
+  assert.equal(cargaDoCarrinho([{ slug: 'fita-transparente-personalizada', rolos: 20 }]).pesoKg, 6, '20 × 0,3 kg = 6 kg (personalizada agora tem carga)');
+  assert.equal(cargaDoCarrinho([{ slug: 'cliche-arte', rolos: 1 }]), null, 'linha de clichê não é produto físico: sem carga, não vai ao frete');
   assert.equal(cargaDoCarrinho([]), null, 'carrinho vazio => null');
 }
 

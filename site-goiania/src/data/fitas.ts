@@ -39,6 +39,12 @@ export interface Fita {
   faixas: FaixaExibida[];
   /** Observação de preço exibida abaixo da tabela. */
   notaPreco?: string;
+  /**
+   * Clichê fixo da arte (011.1), em R$. Só a personalizada tem. É DISPLAY — a autoridade
+   * do valor e da isenção do recorrente é o /api/pedidos (CLICHE_FIXO). Presente ⇒ a página
+   * e o carrinho avisam que a arte nova soma este valor no pagamento.
+   */
+  clicheFixo?: number;
   imagem: string;
   alt: string;
   /** Página correspondente no institucional — autoridade de marca (FR-033). */
@@ -52,13 +58,13 @@ export const fitas: Fita[] = [
     slug: 'fita-transparente-personalizada',
     nome: 'Fita Transparente Personalizada',
     h1: 'Fita adesiva transparente personalizada com a sua marca',
-    seoTitle: 'Fita Adesiva Personalizada 48mm × 100m — Orçamento por Volume | ROI Labs',
+    seoTitle: 'Fita Adesiva Personalizada 48mm × 100m — Compra por Volume | ROI Labs',
     seoDescription:
-      'Fita adesiva transparente personalizada em BOPP 48mm × 100m, impressão em até 2 cores, mínimo de 20 rolos. Preço por faixa de volume, orçamento com clichê incluso.',
-    chamadaVitrine: 'A partir de 20 rolos · orçamento com arte',
+      'Fita adesiva transparente personalizada em BOPP 48mm × 100m, impressão em até 2 cores, mínimo de 20 rolos. Compra direta com preço por faixa de volume e clichê único da sua arte, frete para todo o Brasil.',
+    chamadaVitrine: 'A partir de 20 rolos · compra direta',
     copyComercial: [
       'Cada caixa que sai da sua expedição vira mídia. A fita personalizada imprime a sua marca ao longo dos 100 metros do rolo, no mesmo BOPP transparente da fita comum — a caixa continua limpa e o lacre continua discreto.',
-      'O preço cai por faixa de volume: quanto maior o pedido, menor o custo por rolo. Como cada arte exige um clichê flexográfico próprio (custo único, não por pedido), o fechamento é por orçamento — quem repete a mesma arte não paga o clichê de novo.',
+      'O preço cai por faixa de volume: quanto maior o pedido, menor o custo por rolo. Cada arte nova exige um clichê flexográfico próprio (custo único), que entra uma vez no pagamento — quem repete a mesma arte não paga o clichê de novo.',
       'Mesma largura e mesma adesão da fita comum: entra na sua seladora sem nenhuma adaptação de operação.',
     ],
     specs: [
@@ -75,7 +81,8 @@ export const fitas: Fita[] = [
       'Franquias que padronizam o pacote em toda a rede',
     ],
     minimoRolos: 20,
-    modalidade: 'orcamento',
+    modalidade: 'precoPublico',
+    clicheFixo: 80,
     faixas: [
       { min: 20, rotulo: '20 a 49 rolos', precoRolo: 16.2 },
       { min: 50, rotulo: '50 a 99 rolos', precoRolo: 13.9 },
@@ -83,7 +90,7 @@ export const fitas: Fita[] = [
       { min: 200, rotulo: '200 rolos ou mais', precoRolo: 10.1 },
     ],
     notaPreco:
-      'Valores de referência por rolo. O clichê flexográfico da sua arte custa a partir de R$ 80,00 — custo único por arte, não por pedido, e quem repete a mesma arte não paga de novo. Por isso o valor final sai no orçamento.',
+      'Preço por rolo conforme a faixa de volume. A arte nova soma um clichê único de R$ 80,00 (matriz de impressão, custo único por arte) no pagamento — quem repete a mesma arte não paga de novo.',
     imagem: '/img/fitas/fita-transparente-personalizada.png',
     alt: 'Rolo de fita adesiva transparente com marca impressa em laranja e azul',
     institucional: `${TAPEPRO}/produtos/fita-transparente-personalizada/`,

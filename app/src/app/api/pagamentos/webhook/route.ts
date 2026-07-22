@@ -115,9 +115,20 @@ export async function POST(req: NextRequest) {
           : [];
       const itensHtml = [
         ...skuRows.map((i) => `<li>${escapeHtml(i.slug)} — ${i.caixas} caixa(s) · ${brl(i.subtotal)}</li>`),
-        ...fitaRows.map((i) => `<li>${escapeHtml(i.slug)} — ${i.rolos} rolo(s) · ${brl(i.subtotal)}</li>`),
+        ...fitaRows.map((i) =>
+          i.slug === 'cliche-arte'
+            ? `<li>Clichê da arte personalizada · ${brl(i.subtotal)}</li>`
+            : `<li>${escapeHtml(i.slug)} — ${i.rolos} rolo(s) · ${brl(i.subtotal)}</li>`,
+        ),
       ].join('');
       const ehFitas = pedido.vertical === 'fitas';
+      // 011.1: pedido com arte precisa que o cliente ENVIE a logo — a arte é coletada
+      // pelo WhatsApp após o pagamento (não há campo de upload no checkout). Deriva do
+      // que foi persistido: a personalizada no pedido e se o clichê foi cobrado (arte nova)
+      // ou isento (recorrente).
+      const temPersonalizada = fitaRows.some((i) => i.slug === 'fita-transparente-personalizada');
+      const clicheCobrado = fitaRows.some((i) => i.slug === 'cliche-arte');
+      const WA = 'https://wa.me/5562993265713';
       if (pedido.email) {
         sendEmail(
           pedido.email,
@@ -127,6 +138,14 @@ export async function POST(req: NextRequest) {
            ${ehFitas ? 'fabricante já foi acionado' : 'fornecedor do polo de Goiânia já foi acionado'}.</p>
            <ul>${itensHtml}</ul>
            <p><strong>Total: ${brl(pedido.total)}</strong>${pedido.frete != null ? ` (frete incluso: ${brl(pedido.frete)})` : ' (frete a combinar)'}</p>
+           ${
+             temPersonalizada
+               ? `<p><strong>Sua fita é personalizada.</strong> Para produzir, precisamos da sua arte/logo
+                  em alta resolução (PDF, PNG ou AI). Responda este e-mail ou nos chame no
+                  <a href="${WA}">WhatsApp (62) 99326-5713</a> com o arquivo.
+                  ${clicheCobrado ? 'O clichê da sua arte já está incluso neste pedido.' : 'Como você já produziu esta arte conosco, não há novo clichê.'}</p>`
+               : ''
+           }
            <p>${ehFitas ? 'O prazo de entrega é o da transportadora cotada no seu CEP.' : 'Prazo de entrega/retirada: <strong>2 a 6 dias úteis</strong>.'} Entramos em
            contato pelo WhatsApp informado para combinar os detalhes.</p>
            <p>Acompanhe o status do seu pedido a qualquer momento:
@@ -140,6 +159,14 @@ export async function POST(req: NextRequest) {
         `<p><strong>${escapeHtml(pedido.nome)}</strong> · ${escapeHtml(pedido.whatsapp)}${pedido.email ? ` · ${escapeHtml(pedido.email)}` : ''}</p>
          <ul>${itensHtml}</ul>
          <p>Total: <strong>${brl(pedido.total)}</strong> · entrega: ${escapeHtml(pedido.entrega)}</p>
+         ${
+           temPersonalizada
+             ? `<p style="background:#fef3c7;border:1px solid #f59e0b;padding:8px 12px;border-radius:6px;">
+                ⚠️ <strong>Fita PERSONALIZADA</strong> — solicitar a arte/logo do cliente pelo
+                WhatsApp <strong>${escapeHtml(pedido.whatsapp)}</strong> antes de produzir.
+                Clichê: ${clicheCobrado ? '<strong>COBRADO</strong> (arte nova).' : '<strong>ISENTO</strong> (cliente recorrente — reutilizar a arte já cadastrada).'}</p>`
+             : ''
+         }
          <p><a href="https://app.roilabs.com.br/admin/pedidos">Abrir no admin</a></p>`
       );
     }

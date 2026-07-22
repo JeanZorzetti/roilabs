@@ -119,6 +119,12 @@ const produto = {
                 </button>
                 <p class="fita-add__msg" aria-live="polite"></p>
                 <p class="fita-frete-nota">Frete calculado no carrinho pelo seu CEP, para todo o Brasil.</p>
+                {fita.clicheFixo && (
+                  <p class="fita-cliche-nota">
+                    Arte nova soma um <strong>clichê único de {formatPreco(fita.clicheFixo)}</strong> (matriz de
+                    impressão) no pagamento — <strong>isento</strong> se você já produziu esta arte conosco.
+                  </p>
+                )}
               </div>
             ) : (
               /* Nunca preço vazio ou zerado (FR-005): o caminho de conversão deste SKU é
@@ -246,6 +252,8 @@ const produto = {
   .fita-add { width: 100%; max-width: 320px; }
   .fita-add__msg { font-size: 0.84rem; color: #86efac; margin: 0; min-height: 1.1em; }
   .fita-frete-nota { font-size: 0.8rem; color: var(--d-muted); margin: 0; }
+  .fita-cliche-nota { font-size: 0.8rem; color: var(--d-muted); margin: 0; line-height: 1.5; border-top: 1px solid var(--d-line); padding-top: 0.7rem; }
+  .fita-cliche-nota strong { color: var(--d-text); }
   .fita-orc { border: 1px solid var(--d-line); border-radius: 12px; padding: 1.4rem; background: var(--ink-2); }
   .fita-orc h2 { font-size: 1.15rem; margin-bottom: 0.5rem; }
   .fita-orc__lead { font-size: 0.9rem; color: var(--d-muted); margin-bottom: 1.2rem; }

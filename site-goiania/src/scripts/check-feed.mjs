@@ -7,11 +7,12 @@ import { readFileSync, existsSync } from 'node:fs';
 
 const FEED = 'dist/feed.xml';
 const CATALOG = 'porcelanatos.json';
-// Espelho dos SKUs de fita elegíveis (este script não importa TS). Fita só-orçamento
-// FICA DE FORA POR DESIGN (FR-024) — a ausência dela no feed é o comportamento correto,
-// não um produto quebrado, e é isso que a asserção abaixo verifica.
-const FITAS_COM_PRECO = ['fita-gomada', 'fita-transparente-comum'];
-const FITAS_SO_ORCAMENTO = ['fita-transparente-personalizada'];
+// Espelho dos SKUs de fita elegíveis (este script não importa TS). Após a 011.1 as três
+// fitas faturam direto (a personalizada passou a compra por volume + clichê no checkout),
+// então todas entram no feed. Se algum SKU voltar a ser só-orçamento, ele sai daqui e vai
+// para FITAS_SO_ORCAMENTO — a ausência no feed é comportamento correto, não bug (FR-024).
+const FITAS_COM_PRECO = ['fita-gomada', 'fita-transparente-comum', 'fita-transparente-personalizada'];
+const FITAS_SO_ORCAMENTO = [];
 const REQUIRED_TAGS = [
   'g:id',
   'title',

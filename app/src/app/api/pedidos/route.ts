@@ -152,6 +152,10 @@ export async function POST(req: NextRequest) {
 /** Falhas técnicas seguidas que separam instabilidade de rede de credencial errada (D6). */
 const ALERTA_FRETE_LIMIAR = 3;
 
+/** SKU da fita com arte + slug da linha sintética do clichê (011.1). */
+const SLUG_PERSONALIZADA = 'fita-transparente-personalizada';
+const SLUG_CLICHE = 'cliche-arte';
+
 async function pedidoFitas(
   req: NextRequest,
   form: FormData,
@@ -200,6 +204,27 @@ async function pedidoFitas(
     });
   }
   if (itens.length === 0) return erro('vazio');
+
+  // Clichê (011.1): a arte da fita personalizada exige uma matriz de impressão de custo
+  // único. Cobrada UMA vez, como linha fixa do pedido, e ISENTA para quem já produziu esta
+  // arte conosco — pedido PAGO anterior com o mesmo doc contendo a personalizada (FR-040:
+  // nunca sobrecobrar o recorrente). É por-ARTE, não por-cliente: quem só comprou fita comum
+  // antes ainda paga o clichê da sua primeira arte. cargaDoCarrinho ignora este slug (não
+  // está em PRECOS), então ele nunca afeta o frete.
+  const CLICHE_FIXO = 80; // ponytail: knob do operador — "a partir de R$80" da tabela Tapepro
+  if (itens.some((i) => i.slug === SLUG_PERSONALIZADA)) {
+    const jaProduziu = await prisma.pedido.findFirst({
+      where: {
+        compradorDoc: docDigits,
+        statusPagamento: 'pago',
+        itensFita: { some: { slug: SLUG_PERSONALIZADA } },
+      },
+      select: { id: true },
+    });
+    if (!jaProduziu) {
+      itens.push({ slug: SLUG_CLICHE, rolos: 1, precoRolo: CLICHE_FIXO, faixaMin: 1, faixaMax: null, subtotal: CLICHE_FIXO });
+    }
+  }
 
   const totalProduto = money(itens.reduce((s, i) => s + i.subtotal, 0));
 
@@ -251,7 +276,8 @@ async function pedidoFitas(
       const isLast = idx === itens.length - 1;
       const unitPrice = isLast ? money(alvoProduto - acc) : money((i.subtotal * alvoProduto) / totalProduto);
       acc = money(acc + unitPrice);
-      return { title: `${i.rolos} rolo(s) — ${i.slug}`, unitPrice };
+      const title = i.slug === SLUG_CLICHE ? 'Clichê (arte personalizada)' : `${i.rolos} rolo(s) — ${i.slug}`;
+      return { title, unitPrice };
     });
     const backBase = origin.startsWith('http') ? origin : 'https://goiania.roilabs.com.br';
     // frete = null ⇒ o Mercado Pago cobra só o produto; a operação fecha o frete depois.

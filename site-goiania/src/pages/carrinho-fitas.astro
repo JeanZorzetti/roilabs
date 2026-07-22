@@ -99,6 +99,11 @@ const action = `${appUrl}/api/pedidos`;
               <div class="cart-summary__row cart-summary__total"><span>Total</span><span class="cart-sum-total">—</span></div>
             </div>
 
+            <p class="cart-cliche-nota" hidden>
+              Seu carrinho tem fita personalizada: a arte nova soma um <strong>clichê único de R$ 80,00</strong>
+              no pagamento, confirmado no checkout. Se você já produziu esta arte conosco, ele é isento.
+            </p>
+
             <label class="consent-field">
               <input type="checkbox" name="consent" value="1" required />
               <span>
@@ -143,6 +148,8 @@ const action = `${appUrl}/api/pedidos`;
   .cart-sum-desconto { color: #86efac; }
   .cart-sum-prazo-row { font-size: 0.85rem; color: var(--d-muted); }
   .cart-summary__total { font-size: 1.15rem; font-weight: 800; padding-top: 0.5rem; border-top: 1px dashed var(--d-line-strong); }
+  .cart-cliche-nota { font-size: 0.82rem; color: var(--d-muted); line-height: 1.5; margin: 0 0 0.4rem; }
+  .cart-cliche-nota strong { color: var(--d-text); }
   .cart-checkout__cta { width: 100%; margin-top: 1rem; font-size: 1.05rem; padding-block: 0.85rem; }
   .cart-err, .cart-fail { background: color-mix(in srgb, var(--hivis) 16%, var(--ink-2)); color: var(--d-text); border: 1px solid var(--hivis); padding: 0.9rem 1.1rem; border-radius: 8px; margin-bottom: 1.5rem; }
   .cart-fail { display: grid; gap: 0.9rem; justify-items: start; }
@@ -173,6 +180,7 @@ const action = `${appUrl}/api/pedidos`;
 
 <script>
   import { lines, setRolos, removeItem, getCart, CART_FITAS_EVENT } from '../lib/cart-fitas';
+  import { fitasBySlug } from '../data/fitas';
 
   const brl = (n: number) => n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
   const $ = <T extends Element>(s: string) => document.querySelector<T>(s)!;
@@ -193,6 +201,7 @@ const action = `${appUrl}/api/pedidos`;
   const prazoRow = $('.cart-sum-prazo-row') as HTMLElement;
   const sumPrazo = $('.cart-sum-prazo') as HTMLElement;
   const sumTotal = $('.cart-sum-total') as HTMLElement;
+  const clicheNota = $('.cart-cliche-nota') as HTMLElement;
   const form = $('#checkout-form') as HTMLFormElement;
   const errBox = $('.cart-err') as HTMLElement;
   const cupomField = form.elements.namedItem('cupom') as HTMLInputElement;
@@ -258,6 +267,10 @@ const action = `${appUrl}/api/pedidos`;
   function renderTotals() {
     const produto = lines().reduce((s, l) => s + l.subtotal, 0);
     sumProduto.textContent = brl(produto);
+
+    // Aviso do clichê: o servidor pode somar R$80 por arte nova. O carrinho não sabe se o
+    // comprador é recorrente, então avisa em vez de fingir o total exato (confirmado no MP).
+    clicheNota.hidden = !getCart().some((i) => fitasBySlug.get(i.slug)?.clicheFixo);
 
     const desc = cupom ? Math.min(cupom.desconto, produto) : 0;
     descRow.hidden = !cupom;
