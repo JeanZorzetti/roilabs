@@ -123,7 +123,9 @@ export function estimarFrete(cepDestino: string, itens: Array<{ slug: string; ro
  */
 export async function cotarFrete(cepDestino: string, itens: Array<{ slug: string; rolos: number }>): Promise<Cotacao> {
   const cep = (cepDestino || '').replace(/\D/g, '');
-  const origem = (process.env.MELHOR_ENVIO_CEP_ORIGEM || '').replace(/\D/g, '');
+  // CEP de despacho do Tapepro (74934-577, Goiânia) como default — assim ligar o Melhor
+  // Envio pede só MELHOR_ENVIO_TOKEN (+ BASE_URL se produção). Override por env se mudar.
+  const origem = (process.env.MELHOR_ENVIO_CEP_ORIGEM || '74934577').replace(/\D/g, '');
   const token = process.env.MELHOR_ENVIO_TOKEN;
   const base = (process.env.MELHOR_ENVIO_BASE_URL || 'https://sandbox.melhorenvio.com.br').replace(/\/$/, '');
 
