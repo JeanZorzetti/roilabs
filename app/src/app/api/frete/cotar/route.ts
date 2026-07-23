@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { cotarFrete } from '@/lib/frete-fitas';
+import { cotarFrete, cotarFreteDebug } from '@/lib/frete-fitas';
 import { temPrecoPublico } from '@/lib/precos-fitas';
 
 export const dynamic = 'force-dynamic';
@@ -35,6 +35,12 @@ export async function POST(req: NextRequest) {
     .map((i) => ({ slug: typeof i?.slug === 'string' ? i.slug : '', rolos: Math.floor(Number(i?.rolos)) }))
     .filter((i) => temPrecoPublico(i.slug) && Number.isFinite(i.rolos) && i.rolos > 0);
   if (itens.length === 0) return NextResponse.json({ ok: false, motivo: 'vazio' }, { headers: CORS });
+
+  // DIAGNÓSTICO TEMPORÁRIO (011.1): ?diag=1 devolve a resposta crua do Melhor Envio (sem o
+  // token) para investigar por que os serviços não cotam. REMOVER depois de resolver.
+  if (form.get('diag') === '1') {
+    return NextResponse.json(await cotarFreteDebug(cep, itens), { headers: CORS });
+  }
 
   // 200 mesmo em contingência: falha de cotação é estado de negócio previsto (FR-015),
   // não erro de requisição. A estimativa (011.1) vive DENTRO de cotarFrete, para quando o

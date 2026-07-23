@@ -117,6 +117,52 @@ export function estimarFrete(cepDestino: string, itens: Array<{ slug: string; ro
 }
 
 /**
+ * DIAGNÓSTICO TEMPORÁRIO (011.1) — expõe a resposta CRUA do Melhor Envio para descobrir por
+ * que os serviços não cotam (conta sem transportadora, sandbox, dimensão/peso). NÃO vaza o
+ * token: só presença + tamanho. REMOVER depois de resolver a cotação.
+ */
+export async function cotarFreteDebug(cepDestino: string, itens: Array<{ slug: string; rolos: number }>) {
+  const cep = (cepDestino || '').replace(/\D/g, '');
+  const origem = (process.env.MELHOR_ENVIO_CEP_ORIGEM || '74934577').replace(/\D/g, '');
+  const token = process.env.MELHOR_ENVIO_TOKEN;
+  const base = (process.env.MELHOR_ENVIO_BASE_URL || 'https://sandbox.melhorenvio.com.br').replace(/\/$/, '');
+  const carga = cargaDoCarrinho(itens);
+  const cfg = { hasToken: !!token, tokenLen: (token || '').length, base, origem, cep, carga };
+  if (!token || !carga) return { cfg, erro: 'sem token ou carga' };
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 12000);
+  try {
+    const res = await fetch(`${base}/api/v2/me/shipment/calculate`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        'User-Agent': 'ROI Labs (parceria@roilabs.com.br)',
+      },
+      body: JSON.stringify({
+        from: { postal_code: origem },
+        to: { postal_code: cep },
+        package: { height: carga.alturaCm, width: carga.larguraCm, length: carga.comprimentoCm, weight: carga.pesoKg },
+      }),
+      signal: ctrl.signal,
+    });
+    const txt = await res.text();
+    let json: unknown;
+    try {
+      json = JSON.parse(txt);
+    } catch {
+      json = null;
+    }
+    return { cfg, status: res.status, body: json ?? txt.slice(0, 600) };
+  } catch (e) {
+    return { cfg, erro: String(e) };
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+/**
  * Cota o carrinho. Peso e dimensões saem de `precos-fitas.ts` a partir do slug —
  * nenhum dado de carga vem do cliente (FR-006). `null` de carga ⇒ carrinho sem SKU
  * cotável, que o chamador trata como `vazio` antes de chegar aqui.
