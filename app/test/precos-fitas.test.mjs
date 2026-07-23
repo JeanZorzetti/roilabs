@@ -59,6 +59,14 @@ assert.equal(money(101 * precoPorQuantidade('fita-gomada', 101).precoRolo), 3252
   const c = cargaDoCarrinho([{ slug: 'fita-gomada', rolos: 15 }]);
   assert.equal(c.pesoKg, 16.5, '15 × 1,1 kg = 16,5 kg');
   assert.ok(c.alturaCm > 0 && c.larguraCm > 0 && c.comprimentoCm > 0);
+  // Caixa cúbica dentro do limite da transportadora (a torre antiga dava 120 cm e era
+  // recusada). 15 rolos: vol 48000 cm³ ⇒ aresta ⌈∛48000⌉ = 37 cm.
+  assert.equal(c.alturaCm, c.larguraCm, 'caixa cúbica');
+  assert.equal(c.alturaCm, c.comprimentoCm, 'caixa cúbica');
+  assert.equal(c.alturaCm, 37, '15 gomada ⇒ cubo de 37 cm');
+  assert.ok(c.alturaCm <= 100, 'aresta dentro do limite de dimensão da transportadora');
+  // Volume preservado (não subestima o peso cubado): aresta³ >= volume real dos rolos.
+  assert.ok(c.alturaCm ** 3 >= 8 * 20 * 20 * 15, 'cubo não perde volume vs. a soma dos rolos');
   assert.equal(cargaDoCarrinho([{ slug: 'fita-transparente-personalizada', rolos: 20 }]).pesoKg, 6, '20 × 0,3 kg = 6 kg (personalizada agora tem carga)');
   assert.equal(cargaDoCarrinho([{ slug: 'cliche-arte', rolos: 1 }]), null, 'linha de clichê não é produto físico: sem carga, não vai ao frete');
   assert.equal(cargaDoCarrinho([]), null, 'carrinho vazio => null');

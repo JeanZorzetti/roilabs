@@ -100,24 +100,27 @@ export function cargaDoCarrinho(itens: Array<{ slug: string; rolos: number }>): 
   comprimentoCm: number;
 } | null {
   let pesoKg = 0;
-  let alturaCm = 0;
-  let larguraCm = 0;
-  let comprimentoCm = 0;
+  let volCm3 = 0;
+  let ladoMin = 0; // maior aresta de um item isolado — a caixa nunca é menor que a maior peça
   for (const i of itens) {
     const p = getFita(i.slug);
     if (!p || !(i.rolos > 0)) continue;
     pesoKg += p.pesoKg * i.rolos;
-    // Volume empilhado: altura soma, base é a maior caixa. Aproximação deliberada — a
-    // transportadora cobra por peso cubado, e superestimar a altura nunca cobra a menos.
-    alturaCm += p.alturaCm * i.rolos;
-    larguraCm = Math.max(larguraCm, p.larguraCm);
-    comprimentoCm = Math.max(comprimentoCm, p.comprimentoCm);
+    volCm3 += p.alturaCm * p.larguraCm * p.comprimentoCm * i.rolos;
+    ladoMin = Math.max(ladoMin, p.alturaCm, p.larguraCm, p.comprimentoCm);
   }
   if (pesoKg <= 0) return null;
+  // Caixa CÚBICA de mesmo volume, não uma torre que soma a altura por rolo. Peso cubado =
+  // volume/6000, que independe do formato — o cubo cobra o mesmo que a torre (não subestima),
+  // mas mantém cada aresta pequena. A torre estourava o limite de dimensão da transportadora
+  // (120 cm p/ 15 rolos ⇒ PAC/SEDEX/Loggi recusavam "dimensões ultrapassam o limite", e onde
+  // nem a JadLog cobria virava cep_nao_atendido). ponytail: caixa única; pedido gigante que
+  // passe de ~1 m de aresta é caso de fracionar em N caixas — só se aparecer no uso real.
+  const lado = Math.ceil(Math.max(ladoMin, Math.cbrt(volCm3)));
   return {
     pesoKg: Math.round(pesoKg * 100) / 100,
-    alturaCm: Math.ceil(alturaCm),
-    larguraCm: Math.ceil(larguraCm),
-    comprimentoCm: Math.ceil(comprimentoCm),
+    alturaCm: lado,
+    larguraCm: lado,
+    comprimentoCm: lado,
   };
 }
