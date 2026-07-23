@@ -5,7 +5,7 @@
 // `falha_tecnica` (incidente que dispara alerta). Errar essa separação ou enche a caixa
 // de alerta-ruído, ou esconde a credencial errada que está matando 100% das cotações.
 import assert from 'node:assert/strict';
-import { mapearResposta } from '../src/lib/frete-fitas.ts';
+import { mapearResposta, estimarFrete } from '../src/lib/frete-fitas.ts';
 
 // ── resposta válida ───────────────────────────────────────────────────────────
 {
@@ -66,5 +66,24 @@ assert.equal(mapearResposta([]).motivo, 'falha_tecnica', 'array vazio não é "n
   assert.equal(r.ok, true);
   assert.equal(r.prazo, 'a confirmar');
 }
+
+// ── estimativa (011.1): base + R$/kg × peso × fator de região, origem Goiânia ──────
+{
+  // gomada 15 rolos = 16,5 kg. Região 7 (Centro-Oeste, origem): 20 + 3,5 × 16,5 × 1,0.
+  const r = estimarFrete('74000000', [{ slug: 'fita-gomada', rolos: 15 }]);
+  assert.equal(r.ok, true);
+  assert.equal(r.valor, 77.75, 'estimativa região 7 = 20 + 3,5×16,5×1,0');
+  assert.equal(r.servico, 'Frete estimado');
+}
+{
+  // Mesma carga, Nordeste (dígito 4, fator 2,0) sai MAIS CARA que a origem — nunca subestima
+  // o destino distante (o modo de falha que o operador teme).
+  const perto = estimarFrete('74000000', [{ slug: 'fita-gomada', rolos: 15 }]);
+  const longe = estimarFrete('40000000', [{ slug: 'fita-gomada', rolos: 15 }]);
+  assert.ok(longe.valor > perto.valor, 'região distante custa mais que a origem');
+}
+assert.equal(estimarFrete('123', [{ slug: 'fita-gomada', rolos: 15 }]).motivo, 'cep_nao_atendido', 'CEP malformado');
+assert.equal(estimarFrete('74000000', []).motivo, 'falha_tecnica', 'carrinho sem carga cotável');
+assert.equal(estimarFrete('74000000', [{ slug: 'cliche-arte', rolos: 1 }]).motivo, 'falha_tecnica', 'só clichê: não é carga física');
 
 console.log('frete-fitas.test.mjs: all assertions passed');

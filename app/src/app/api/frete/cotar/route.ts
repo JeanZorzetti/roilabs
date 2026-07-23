@@ -37,7 +37,8 @@ export async function POST(req: NextRequest) {
   if (itens.length === 0) return NextResponse.json({ ok: false, motivo: 'vazio' }, { headers: CORS });
 
   // 200 mesmo em contingência: falha de cotação é estado de negócio previsto (FR-015),
-  // não erro de requisição. Nunca estimamos valor quando a cotação falha.
+  // não erro de requisição. A estimativa (011.1) vive DENTRO de cotarFrete, para quando o
+  // provedor não está ligado; se o provedor está ligado e falha, ainda volta "a combinar".
   const r = await cotarFrete(cep, itens);
   if (!r.ok) return NextResponse.json({ ok: false, motivo: r.motivo, aviso: AVISO[r.motivo] }, { headers: CORS });
 

@@ -5,6 +5,9 @@
 // trocar de provedor (ex.: Frenet, se o Tapepro tiver contrato próprio) é reescrever
 // este arquivo, não implementar uma interface para um único produto.
 //
+// 011.1: enquanto o Melhor Envio não está configurado, cotarFrete cai em estimarFrete()
+// (estimativa calibrável) em vez de devolver "a combinar". Ver estimarFrete abaixo.
+//
 // Constituição I: falha de cotação em produção investiga-se NESTA ordem —
 // MELHOR_ENVIO_TOKEN, MELHOR_ENVIO_BASE_URL, MELHOR_ENVIO_CEP_ORIGEM. Só depois, o código.
 import { cargaDoCarrinho } from '@/lib/precos-fitas';
@@ -66,6 +69,44 @@ export function mapearResposta(raw: unknown): Cotacao {
   };
 }
 
+// ── Estimativa de frete (011.1) ────────────────────────────────────────────────
+// Enquanto o Melhor Envio não está ligado (sem MELHOR_ENVIO_TOKEN), o frete é ESTIMADO em
+// vez de "a combinar" — a pedido do operador. Modelo: base + R$/kg × peso × fator de região,
+// origem em Goiânia (CEP 74934-577, região 7 / Centro-Oeste). Quando o token entrar no
+// EasyPanel, cotarFrete volta a cotar de verdade e esta estimativa fica dormente.
+//
+// ⚠️ TODOS os números abaixo são KNOBS DE OPERADOR (estimativa calibrável, como o peso em
+// precos-fitas.ts). Frete subestimado é prejuízo silencioso — calibrar contra fretes reais.
+const EST_BASE = 20; // R$ fixo por envio (manuseio + mínimo)
+const EST_RS_POR_KG = 3.5; // R$ por kg antes do fator de região
+// Fator por 1º dígito do CEP de DESTINO, relativo à origem em Goiânia (região 7 = 1,0).
+const EST_FATOR: Record<string, number> = {
+  '7': 1.0, // Centro-Oeste (origem) + parte do Norte próximo
+  '0': 1.4, '1': 1.4, '2': 1.4, '3': 1.4, // Sudeste (SP/RJ/ES/MG)
+  '8': 1.6, '9': 1.7, // Sul (PR/SC/RS)
+  '4': 2.0, '5': 2.0, // Nordeste (BA/SE/PE/PB/RN/AL)
+  '6': 2.4, // Norte/Nordeste distante (CE/PI/MA/AM/PA…)
+};
+const EST_PRAZO_DIAS: Record<string, number> = {
+  '7': 3, '0': 5, '1': 5, '2': 5, '3': 5, '8': 6, '9': 7, '4': 8, '5': 8, '6': 10,
+};
+
+/**
+ * Estimativa PURA (sem I/O). Cobre todo o Brasil — não existe "CEP não atendido" de verdade
+ * aqui, só CEP malformado. Peso vem da carga derivada do slug, nunca do cliente (FR-006).
+ */
+export function estimarFrete(cepDestino: string, itens: Array<{ slug: string; rolos: number }>): Cotacao {
+  const cep = (cepDestino || '').replace(/\D/g, '');
+  if (cep.length !== 8) return { ok: false, motivo: 'cep_nao_atendido' };
+  const carga = cargaDoCarrinho(itens);
+  if (!carga) return { ok: false, motivo: 'falha_tecnica' };
+  const d = cep[0];
+  const fator = EST_FATOR[d] ?? 2.0; // dígito desconhecido: assume longe, nunca a menor tarifa
+  const dias = EST_PRAZO_DIAS[d] ?? 8;
+  const valor = Math.round((EST_BASE + EST_RS_POR_KG * carga.pesoKg * fator) * 100) / 100;
+  return { ok: true, valor, prazo: `~${dias} dias úteis`, servico: 'Frete estimado' };
+}
+
 /**
  * Cota o carrinho. Peso e dimensões saem de `precos-fitas.ts` a partir do slug —
  * nenhum dado de carga vem do cliente (FR-006). `null` de carga ⇒ carrinho sem SKU
@@ -79,14 +120,13 @@ export async function cotarFrete(cepDestino: string, itens: Array<{ slug: string
 
   if (cep.length !== 8) return { ok: false, motivo: 'cep_nao_atendido' };
 
-  // Env var faltando é falha técnica — e é o modo de falha mais caro da feature (FR-035),
-  // então precisa do log que diz QUAL delas, não só "quebrou".
+  // Melhor Envio ainda não ligado ⇒ ESTIMATIVA (011.1), não "a combinar". Log em info, não
+  // error: é o modo esperado até o token entrar no EasyPanel, não um incidente — e não pode
+  // disparar o alerta de contingência (que existe para credencial errada, não para "sem
+  // credencial ainda"). Quando o token existir, cai no caminho real abaixo.
   if (!token || origem.length !== 8) {
-    log.error(
-      { temToken: !!token, cepOrigemOk: origem.length === 8, cep },
-      'frete-fitas: env var ausente/inválida (MELHOR_ENVIO_TOKEN / MELHOR_ENVIO_CEP_ORIGEM)',
-    );
-    return { ok: false, motivo: 'falha_tecnica' };
+    log.info({ cep }, 'frete-fitas: sem MELHOR_ENVIO_TOKEN/CEP_ORIGEM — usando estimativa (011.1)');
+    return estimarFrete(cep, itens);
   }
 
   const carga = cargaDoCarrinho(itens);
