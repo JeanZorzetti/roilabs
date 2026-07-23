@@ -95,10 +95,10 @@ const itemList = {
           do pagamento. CNPJ ou CPF é obrigatório no pedido, para emissão da nota.
         </p>
         <p>
-          A fita personalizada fecha por orçamento porque cada arte exige um clichê
-          flexográfico próprio — custo único por arte, não por pedido. Quem repete a mesma
-          arte não paga o clichê de novo, e cobrar por pedido sobrecobraria o cliente
-          recorrente.
+          A fita personalizada também entra direto no carrinho. A única diferença é o
+          clichê da arte — a matriz de impressão, custo único por arte — que soma
+          {' '}{formatPreco(fitas.find((f) => f.clicheFixo)?.clicheFixo ?? 80)} no pagamento
+          do primeiro pedido. Quem repete a mesma arte não paga o clichê de novo.
         </p>
       </section>
     </div>
