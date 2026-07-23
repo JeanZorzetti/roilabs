@@ -78,18 +78,29 @@ export function mapearResposta(raw: unknown): Cotacao {
 // ⚠️ TODOS os números abaixo são KNOBS DE OPERADOR (estimativa calibrável, como o peso em
 // precos-fitas.ts). Frete subestimado é prejuízo silencioso — calibrar contra fretes reais.
 const EST_BASE = 20; // R$ fixo por envio (manuseio + mínimo)
-const EST_RS_POR_KG = 3.5; // R$ por kg antes do fator de região
-// Fator por 1º dígito do CEP de DESTINO, relativo à origem em Goiânia (região 7 = 1,0).
-const EST_FATOR: Record<string, number> = {
-  '7': 1.0, // Centro-Oeste (origem) + parte do Norte próximo
-  '0': 1.4, '1': 1.4, '2': 1.4, '3': 1.4, // Sudeste (SP/RJ/ES/MG)
-  '8': 1.6, '9': 1.7, // Sul (PR/SC/RS)
-  '4': 2.0, '5': 2.0, // Nordeste (BA/SE/PE/PB/RN/AL)
-  '6': 2.4, // Norte/Nordeste distante (CE/PI/MA/AM/PA…)
-};
-const EST_PRAZO_DIAS: Record<string, number> = {
-  '7': 3, '0': 5, '1': 5, '2': 5, '3': 5, '8': 6, '9': 7, '4': 8, '5': 8, '6': 10,
-};
+const EST_RS_POR_KG = 3.5; // R$ por kg antes do fator de distância
+
+/**
+ * Banda de distância a partir de Goiânia (origem 74934-577), pelo prefixo de 3 DÍGITOS do
+ * CEP de destino — nível estado. O 1º dígito sozinho não serve: Goiânia (74x) e Palmas (77x)
+ * caem no mesmo "7" e sairiam iguais, apesar de 700 km e estados diferentes.
+ * ⚠️ fator/dias são KNOBS DE OPERADOR — calibrar contra fretes reais. Prefixo desconhecido
+ * assume DISTANTE (nunca a menor tarifa: subestimar frete é prejuízo silencioso).
+ */
+function bandaFrete(cep: string): { fator: number; dias: number } {
+  const p = Number(cep.slice(0, 3)); // 000–999
+  const em = (a: number, b: number) => p >= a && p <= b;
+  if (em(700, 767)) return { fator: 1.0, dias: 3 }; // DF + GO (entorno da origem)
+  if (em(768, 769)) return { fator: 2.4, dias: 12 }; // RO (dentro do 76, mas é Norte)
+  if (em(770, 799)) return { fator: 1.3, dias: 5 }; // TO / MT / MS
+  if (em(300, 399)) return { fator: 1.3, dias: 5 }; // MG
+  if (em(10, 299)) return { fator: 1.5, dias: 6 }; // SP / RJ / ES
+  if (em(800, 879)) return { fator: 1.5, dias: 6 }; // PR
+  if (em(880, 999)) return { fator: 1.8, dias: 8 }; // SC / RS
+  if (em(400, 599)) return { fator: 2.0, dias: 9 }; // Nordeste (BA/SE/PE/AL/PB/RN)
+  if (em(600, 699)) return { fator: 2.4, dias: 12 }; // Norte + NE norte (CE/PI/MA/PA/AM/RR/AP/AC)
+  return { fator: 2.0, dias: 9 };
+}
 
 /**
  * Estimativa PURA (sem I/O). Cobre todo o Brasil — não existe "CEP não atendido" de verdade
@@ -100,9 +111,7 @@ export function estimarFrete(cepDestino: string, itens: Array<{ slug: string; ro
   if (cep.length !== 8) return { ok: false, motivo: 'cep_nao_atendido' };
   const carga = cargaDoCarrinho(itens);
   if (!carga) return { ok: false, motivo: 'falha_tecnica' };
-  const d = cep[0];
-  const fator = EST_FATOR[d] ?? 2.0; // dígito desconhecido: assume longe, nunca a menor tarifa
-  const dias = EST_PRAZO_DIAS[d] ?? 8;
+  const { fator, dias } = bandaFrete(cep);
   const valor = Math.round((EST_BASE + EST_RS_POR_KG * carga.pesoKg * fator) * 100) / 100;
   return { ok: true, valor, prazo: `~${dias} dias úteis`, servico: 'Frete estimado' };
 }

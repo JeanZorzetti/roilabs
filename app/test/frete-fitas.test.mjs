@@ -67,23 +67,25 @@ assert.equal(mapearResposta([]).motivo, 'falha_tecnica', 'array vazio não é "n
   assert.equal(r.prazo, 'a confirmar');
 }
 
-// ── estimativa (011.1): base + R$/kg × peso × fator de região, origem Goiânia ──────
+// ── estimativa (011.1): base + R$/kg × peso × banda de distância, origem Goiânia ───
 {
-  // gomada 15 rolos = 16,5 kg. Região 7 (Centro-Oeste, origem): 20 + 3,5 × 16,5 × 1,0.
-  const r = estimarFrete('74000000', [{ slug: 'fita-gomada', rolos: 15 }]);
+  // gomada 15 rolos = 16,5 kg. Goiânia (74x, banda 1,0): 20 + 3,5 × 16,5 × 1,0.
+  const r = estimarFrete('74934577', [{ slug: 'fita-gomada', rolos: 15 }]);
   assert.equal(r.ok, true);
-  assert.equal(r.valor, 77.75, 'estimativa região 7 = 20 + 3,5×16,5×1,0');
+  assert.equal(r.valor, 77.75, 'estimativa Goiânia = 20 + 3,5×16,5×1,0');
   assert.equal(r.servico, 'Frete estimado');
 }
 {
-  // Mesma carga, Nordeste (dígito 4, fator 2,0) sai MAIS CARA que a origem — nunca subestima
-  // o destino distante (o modo de falha que o operador teme).
-  const perto = estimarFrete('74000000', [{ slug: 'fita-gomada', rolos: 15 }]);
-  const longe = estimarFrete('40000000', [{ slug: 'fita-gomada', rolos: 15 }]);
-  assert.ok(longe.valor > perto.valor, 'região distante custa mais que a origem');
+  // O bug que o operador achou: Goiânia (74x) e Palmas-TO (77x) caíam no mesmo "7" e davam
+  // IGUAL. Agora a banda de 3 dígitos separa — Palmas (outro estado, 700 km) sai mais caro.
+  const goiania = estimarFrete('74934577', [{ slug: 'fita-gomada', rolos: 15 }]).valor;
+  const palmas = estimarFrete('77001002', [{ slug: 'fita-gomada', rolos: 15 }]).valor;
+  const salvador = estimarFrete('40010000', [{ slug: 'fita-gomada', rolos: 15 }]).valor;
+  assert.ok(palmas > goiania, 'Palmas-TO custa mais que a origem (não mais igual)');
+  assert.ok(salvador > palmas, 'Nordeste custa mais que Tocantins');
 }
 assert.equal(estimarFrete('123', [{ slug: 'fita-gomada', rolos: 15 }]).motivo, 'cep_nao_atendido', 'CEP malformado');
-assert.equal(estimarFrete('74000000', []).motivo, 'falha_tecnica', 'carrinho sem carga cotável');
-assert.equal(estimarFrete('74000000', [{ slug: 'cliche-arte', rolos: 1 }]).motivo, 'falha_tecnica', 'só clichê: não é carga física');
+assert.equal(estimarFrete('74934577', []).motivo, 'falha_tecnica', 'carrinho sem carga cotável');
+assert.equal(estimarFrete('74934577', [{ slug: 'cliche-arte', rolos: 1 }]).motivo, 'falha_tecnica', 'só clichê: não é carga física');
 
 console.log('frete-fitas.test.mjs: all assertions passed');
