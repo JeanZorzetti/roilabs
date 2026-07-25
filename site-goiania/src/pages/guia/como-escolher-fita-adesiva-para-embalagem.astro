@@ -1,0 +1,47 @@
+---
+import Base from '../../layouts/Base.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import Faq from '../../components/Faq.astro';
+import WhatsappCta from '../../components/WhatsappCta.astro';
+
+const faq = [
+  {
+    "q": "Qual a diferença entre fita adesiva BOPP e fita gomada?",
+    "a": "A BOPP é um filme plástico com adesivo acrílico ou hot melt que cola na superfície da caixa; a fita gomada é de papel kraft com adesivo ativado por água que penetra na fibra do papelão, criando uma vedação mais difícil de violar sem deixar marca."
+  },
+  {
+    "q": "Quantas micras de fita adesiva usar para caixas pesadas?",
+    "a": "Para cargas pesadas, empilhamento ou transporte mais longo, o recomendado é usar pelo menos 45 micras de espessura; para pacotes leves de e-commerce, 40 micras costuma ser suficiente."
+  },
+  {
+    "q": "Fita gomada personalizada é reciclável?",
+    "a": "Sim. A fita gomada é feita de papel kraft, muitas vezes com certificação FSC, e adesivo à base de amido vegetal, o que permite reciclá-la junto com a própria caixa de papelão."
+  },
+  {
+    "q": "Qual o prazo para produzir fita adesiva personalizada com logo?",
+    "a": "Varia por fornecedor e complexidade da arte: alguns fabricantes entregam fita gomada personalizada a partir de poucos rolos em prazo curto, enquanto pedidos maiores com múltiplas cores podem levar de duas a três semanas."
+  }
+];
+const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '';
+---
+
+<Base title={"Como escolher a fita adesiva certa para cada tipo de embalagem"} description={"BOPP, kraft gomada ou dupla face? Guia prático para escolher a espessura, o adesivo e a fita personalizada certa para cada tipo de embalagem e evitar caixas abertas no transporte."}>
+  <Header />
+  <main>
+    <article>
+      <h1>Como escolher a fita adesiva certa para cada tipo de embalagem</h1>
+      <img src="https://images.unsplash.com/photo-1449247666642-264389f5f5b1?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wxMDA1ODQ2fDB8MXxzZWFyY2h8MXx8d29ya2VyJTIwdGFwaW5nJTIwY2FyZGJvYXJkJTIwYm94JTIwd2FyZWhvdXNlfGVufDF8MHx8fDE3ODQ5ODExMTh8MA&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=1080" alt="person holding cardboard box on table" width="1200" height="630" />
+      <p>Fita adesiva não é peça única: BOPP, kraft gomada e dupla face atendem pesos, climas e usos diferentes. Este guia mostra como escolher a espessura certa, quando investir em fita gomada personalizada com marca própria e os erros que fazem embalagens se abrirem no transporte.</p>
+<section><h2>Os tipos de fita adesiva para embalagem, um a um</h2><p>A fita BOPP (polipropileno biorientado) é a mais usada para fechar caixas de papelão: o filme plástico recebe adesivo acrílico ou hot melt à base de água, resiste bem à umidade e a variações de temperatura, e serve tanto para aplicação manual quanto automática em linhas de embalagem.</p><p>A fita gomada, também chamada de kraft tape, é feita de papel kraft reforçado com fibras e usa adesivo ativado por água — geralmente à base de amido de milho — que gruda na própria fibra da caixa em vez de só na superfície, dificultando a reabertura sem rastro.</p><p>Fitas dupla face e de espuma atendem outro uso: fixação invisível de displays, montagem de estruturas e absorção de impacto. Não substituem a fita de fechamento de caixa, mas aparecem no mesmo carrinho de compra de quem organiza uma operação de embalagem.</p></section>
+<section><h2>Como escolher a espessura e a resistência certas</h2><p>A espessura é medida em micras. Uma fita BOPP de 45 micras típica suporta cerca de 90 N/25mm de resistência à tração, alongamento de até 190% e funciona bem entre -20°C e 80°C — por isso é a referência para quem despacha volumes pesados ou passa por variação térmica no transporte.</p><p>Para pacotes leves de e-commerce, 40 micras costuma bastar; para cargas pesadas, empilhamento ou transporte mais longo, vale subir para 45 micras ou mais. Também importa o tipo de adesivo: acrílico funciona bem em aplicação manual e ambientes variados, enquanto hot melt é mais indicado para linhas automáticas de alta velocidade.</p></section>
+<section><h2>Fita gomada personalizada: quando vale a pena</h2><p>A fita gomada personalizada imprime logotipo, slogan ou informações de contato diretamente no papel kraft, em sistema de flexografia com até três cores. Fabricantes brasileiros já produzem esse formato a partir de poucos rolos, o que reduz a barreira para pequenas e médias operações testarem a personalização.</p><p>O apelo de sustentabilidade é real: papel kraft com certificação FSC, adesivo à base de amido vegetal e reciclabilidade junto com a própria caixa de papelão tornam a fita gomada a opção preferida de marcas que já usam embalagem como parte do discurso ambiental.</p></section>
+<section><h2>Fita personalizada como ferramenta de marca e antifraude</h2><p>Tanto a fita BOPP transparente quanto a gomada podem ser impressas com a marca do remetente. Além do reforço visual no unboxing, a fita personalizada sinaliza ao destinatário que o pacote não foi violado no caminho — um detalhe que pesa em categorias sensíveis a extravio ou troca de conteúdo.</p><p>Antes de fechar o pedido, vale confirmar quantidade mínima por rolo, número de cores de impressão e prazo de produção: fornecedores consultados informam prazos de produção que variam de poucos dias a cerca de três semanas dependendo da complexidade da arte e do volume.</p></section>
+<section><h2>Erros comuns que abrem a caixa no meio do caminho</h2><p>Usar fita fina demais para o peso da carga, aplicar a fita só no meio da aba sem reforçar as bordas em H, ignorar a exposição a frio ou umidade no transporte e misturar adesivo incompatível com a superfície da caixa são as causas mais frequentes de embalagem que chega aberta ou danificada.</p></section>
+<section><h2>Sources</h2><ul><li><a href="https://mnplast.com.br/blog/fitas-adesivas/tipos-de-fitas-adesivas-para-embalagem/">Tipos de fitas adesivas para embalagem: como escolher</a> — MN Plast, 2024-12-17</li><li><a href="https://www.sotiautomacao.com.br/blog/fitas-gomadas-personalizadas-seguranca-eficiencia-e-sustentabilidade-para-embalagens/">Fitas gomadas personalizadas: Segurança, eficiência e sustentabilidade para embalagens</a> — Soti Automação, 2026-04-28</li><li><a href="https://www.supplypack.com.br/blog/fita-adesiva-para-embalagem-como-escolher-a-melhor-opcao-para-suas-necessidades">Fita adesiva para embalagem: como escolher a melhor opção para suas necessidades</a> — Supplypack, 2025-05-23</li></ul></section>
+      <section><h2>Frequently asked questions</h2><Faq items={faq} /></section>
+      <WhatsappCta termoAlvo={"fita adesiva para embalagem"} numero={whatsapp} />
+    </article>
+  </main>
+  <Footer />
+</Base>
