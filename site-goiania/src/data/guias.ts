@@ -77,6 +77,14 @@ export const guias = [
     descricao:
       'Retificado tem borda em esquadro e junta fina (~2 mm); bold vem com borda amaciada e pede junta de 3–5 mm que perdoa contrapiso irregular. Compare custo, mão de obra e visual — e por que "junta zero" é mito nos dois.',
   },
+  // Vertical FITAS (011): guias de embalagem/expedição. Mesma mecânica dos de
+  // porcelanato — sitemap, llms.txt, OG e hub /guia/ saem daqui.
+  {
+    slug: 'como-escolher-fita-adesiva-para-embalagem',
+    titulo: 'Como escolher a fita adesiva certa para cada tipo de embalagem',
+    descricao:
+      'BOPP, kraft gomada ou dupla face? Espessura, adesivo e fita personalizada para cada tipo de embalagem — e os erros que fazem a caixa abrir no transporte.',
+  },
 ] as const;
 
 export type Guia = (typeof guias)[number];

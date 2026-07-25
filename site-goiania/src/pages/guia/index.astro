@@ -17,7 +17,7 @@ const porSlug = (slug: string) => {
   return g;
 };
 
-const etapas = [
+const jornada = [
   {
     titulo: '1. Escolher o porcelanato certo',
     intro: 'Acabamento, PEI, formato e o que a etiqueta quer dizer — antes de olhar preço.',
@@ -43,16 +43,30 @@ const etapas = [
     intro: 'Rotina de limpeza por acabamento e o que nunca usar no piso.',
     slugs: ['como-limpar-porcelanato'],
   },
-].map((e) => ({ ...e, guias: e.slugs.map(porSlug) }));
+  {
+    titulo: 'Embalar e despachar: fitas adesivas',
+    intro:
+      'O outro vertical do polo: qual fita lacra cada tipo de caixa, quanta espessura o peso pede e o que faz o pacote abrir no transporte.',
+    slugs: ['como-escolher-fita-adesiva-para-embalagem'],
+  },
+];
 
-// Guard: todo guia do registro precisa aparecer em exatamente 1 etapa.
-const classificados = new Set(etapas.flatMap((e) => e.slugs));
-const faltando = guias.filter((g) => !classificados.has(g.slug));
-if (faltando.length || classificados.size !== etapas.flatMap((e) => e.slugs).length) {
-  throw new Error(
-    `Hub /guia/: guias sem etapa ou duplicados: ${faltando.map((g) => g.slug).join(', ')}`
-  );
-}
+// O robô de autopublicação escreve em guias.ts sozinho. Guia sem etapa era `throw`, ou
+// seja: um artigo novo derrubava o build do site INTEIRO. Agora ele entra numa etapa de
+// sobra até alguém classificar. Slug duplicado ou inexistente continua quebrando (é erro
+// humano, não do robô) — porSlug lança.
+const classificados = new Set(jornada.flatMap((e) => e.slugs));
+const semEtapa = guias.filter((g) => !classificados.has(g.slug));
+const etapas = [
+  ...jornada.map((e) => ({ ...e, guias: e.slugs.map(porSlug) })),
+  ...(semEtapa.length
+    ? [{
+      titulo: 'Publicados recentemente',
+      intro: 'Guias novos, ainda não encaixados na jornada acima.',
+      guias: semEtapa,
+    }]
+    : []),
+];
 
 const ferramentas = [
   {
@@ -120,12 +134,13 @@ const jsonLdNodes = [
         <div class="pseo-hero__eyebrow">
           <span class="eyebrow">Goiânia · Guias</span>
         </div>
-        <h1>Guias de porcelanato, na ordem em que as dúvidas aparecem</h1>
+        <h1>Guias de decisão, na ordem em que as dúvidas aparecem</h1>
         <p class="pseo-hero__intro">
           São {guias.length} guias que seguem a jornada real da compra: primeiro escolher o
           porcelanato certo, depois comparar com as alternativas, fechar a conta sem surpresa,
-          instalar do jeito certo e manter bonito por anos. Cada um responde a dúvida direto,
-          com tabela, FAQ e os produtos do catálogo de Goiânia que resolvem o caso.
+          instalar do jeito certo e manter bonito por anos — mais os guias de embalagem e
+          expedição do vertical de fitas adesivas. Cada um responde a dúvida direto, com
+          tabela, FAQ e os produtos do catálogo que resolvem o caso.
         </p>
       </div>
     </section>

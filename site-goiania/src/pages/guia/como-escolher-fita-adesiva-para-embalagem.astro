@@ -1,47 +1,500 @@
 ---
+// Guia de decisão do vertical FITAS: "qual fita usar em cada embalagem?" — a dúvida
+// de quem chega antes da vitrine /fitas/. Publicado pelo robô de autopublicação em
+// 25/07 e reescrito à mão no mesmo dia (registro em guias.ts, JSON-LD, tabela, fontes).
 import Base from '../../layouts/Base.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import Faq from '../../components/Faq.astro';
 import WhatsappCta from '../../components/WhatsappCta.astro';
+import { guias } from '../../data/guias';
+
+const SITE = Astro.site?.href.replace(/\/$/, '') ?? 'https://goiania.roilabs.com.br';
+const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
+const guia = guias.find((g) => g.slug === 'como-escolher-fita-adesiva-para-embalagem')!;
+const canonical = `${SITE}/guia/${guia.slug}/`;
+const capa =
+  'https://images.unsplash.com/photo-1449247666642-264389f5f5b1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDA1ODQ2fDB8MXxzZWFyY2h8MXx8d29ya2VyJTIwdGFwaW5nJTIwY2FyZGJvYXJkJTIwYm94JTIwd2FyZWhvdXNlfGVufDF8MHx8fDE3ODQ5ODExMTh8MA&ixlib=rb-4.1.0&q=80&w=1080';
 
 const faq = [
   {
-    "q": "Qual a diferença entre fita adesiva BOPP e fita gomada?",
-    "a": "A BOPP é um filme plástico com adesivo acrílico ou hot melt que cola na superfície da caixa; a fita gomada é de papel kraft com adesivo ativado por água que penetra na fibra do papelão, criando uma vedação mais difícil de violar sem deixar marca."
+    q: 'Qual a diferença entre fita adesiva BOPP e fita gomada?',
+    a: 'A BOPP é um filme de polipropileno com adesivo sensível à pressão: ela cola na superfície da caixa no instante em que você pressiona. A fita gomada é papel kraft com goma ativada por água, que penetra na fibra do papelão e vira parte da caixa — para abrir é preciso rasgar o papelão, e a violação fica visível. BOPP é mais rápida e mais barata por metro; gomada entrega lacre inviolável e acabamento sem plástico.',
   },
   {
-    "q": "Quantas micras de fita adesiva usar para caixas pesadas?",
-    "a": "Para cargas pesadas, empilhamento ou transporte mais longo, o recomendado é usar pelo menos 45 micras de espessura; para pacotes leves de e-commerce, 40 micras costuma ser suficiente."
+    q: 'Quantas micras de fita adesiva usar para caixas pesadas?',
+    a: 'Para pacote leve de e-commerce (até ~5 kg, uma viagem curta), 40 micras costuma bastar. Para caixa pesada, empilhamento ou transporte longo, suba para 45 micras ou mais e aplique no padrão H. Micragem alta não corrige aplicação errada: fita grossa aplicada só na junta central abre igual.',
   },
   {
-    "q": "Fita gomada personalizada é reciclável?",
-    "a": "Sim. A fita gomada é feita de papel kraft, muitas vezes com certificação FSC, e adesivo à base de amido vegetal, o que permite reciclá-la junto com a própria caixa de papelão."
+    q: 'Adesivo acrílico ou hot melt: qual usar?',
+    a: 'Acrílico (emulsão base água) envelhece melhor, aguenta variação de temperatura e exposição prolongada — é a escolha para estoque que fica parado e para carga que enfrenta calor. Hot melt tem adesão inicial mais agressiva e é o padrão de linhas automáticas de alta velocidade, mas amolece em calor prolongado. Aplicação manual em operação pequena: acrílico resolve.',
   },
   {
-    "q": "Qual o prazo para produzir fita adesiva personalizada com logo?",
-    "a": "Varia por fornecedor e complexidade da arte: alguns fabricantes entregam fita gomada personalizada a partir de poucos rolos em prazo curto, enquanto pedidos maiores com múltiplas cores podem levar de duas a três semanas."
-  }
+    q: 'Fita gomada é reciclável junto com a caixa?',
+    a: 'Sim. Ela é papel kraft com goma à base de amido: vai para a reciclagem de papel junto com o papelão, sem separar o lacre. Com fita plástica, o descarte correto pede remover a fita antes — na prática, quase ninguém remove.',
+  },
+  {
+    q: 'Como comparar a adesão declarada de duas fitas?',
+    a: 'Só compare valores medidos pelo mesmo método. A adesão de fita sensível à pressão é medida em N/25 mm pela ASTM D3330, com corpo de prova de 25 mm, painel de aço inox polido, velocidade de 300 mm/min e 24 h de condicionamento a 23 °C e 50% de umidade relativa. Ficha técnica sem o método declarado não é comparável com nada.',
+  },
+  {
+    q: 'Fita personalizada exige pedido mínimo?',
+    a: 'Sim, e é o que separa a personalizada da comum. Na ROI Labs a fita transparente personalizada sai a partir de 20 rolos, com um clichê único por arte (matriz de impressão, R$ 80,00 cobrado uma vez) — quem repete a mesma arte não paga de novo. A fita transparente comum não tem mínimo.',
+  },
 ];
-const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '';
+
+const jsonLdNodes = [
+  {
+    '@type': 'Article',
+    headline: guia.titulo,
+    description: guia.descricao,
+    image: capa,
+    datePublished: '2026-07-25',
+    dateModified: '2026-07-25',
+    inLanguage: 'pt-BR',
+    author: { '@type': 'Organization', name: 'Equipe ROI Labs' },
+    mainEntityOfPage: canonical,
+  },
+  {
+    '@type': 'FAQPage',
+    mainEntity: faq.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  },
+  {
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Início', item: `${SITE}/` },
+      { '@type': 'ListItem', position: 2, name: 'Guias de decisão', item: `${SITE}/guia/` },
+      { '@type': 'ListItem', position: 3, name: guia.titulo, item: canonical },
+    ],
+  },
+];
+
+const fontes = [
+  {
+    href: 'https://store.astm.org/d3330_d3330m-04r18.html',
+    titulo: 'ASTM D3330/D3330M — Standard Test Method for Peel Adhesion of Pressure-Sensitive Tape',
+    fonte: 'ASTM International, 2018',
+  },
+  {
+    href: 'https://next.henkel-adhesives.com/us/en/articles/packaging-hot-melt-adhesives.html',
+    titulo: 'Packaging hot melt adhesives',
+    fonte: 'Henkel Adhesive Technologies (fabricante de adesivo), consultado em 25/07/2026',
+  },
+  {
+    href: 'https://ista.org/test_procedures.php',
+    titulo: 'Test Procedures — ensaios pré-embarque de embalagem para distribuição',
+    fonte: 'ISTA — International Safe Transit Association, consultado em 25/07/2026',
+  },
+];
+
+const relacionados = [
+  { href: '/fitas/', label: 'Catálogo de fitas adesivas' },
+  { href: '/fitas/fita-transparente-comum/', label: 'Fita transparente comum' },
+  { href: '/fitas/fita-gomada/', label: 'Fita gomada reforçada' },
+  { href: '/fitas/fita-transparente-personalizada/', label: 'Fita personalizada com a sua marca' },
+  { href: '/guia/', label: 'Todos os guias de decisão' },
+];
 ---
 
-<Base title={"Como escolher a fita adesiva certa para cada tipo de embalagem"} description={"BOPP, kraft gomada ou dupla face? Guia prático para escolher a espessura, o adesivo e a fita personalizada certa para cada tipo de embalagem e evitar caixas abertas no transporte."}>
+<Base
+  title={`${guia.titulo} | ROI Labs`}
+  description="BOPP para volume e velocidade, kraft gomada para lacre inviolável, dupla face só para fixação. Compare adesivo, espessura e aplicação — e pare de receber caixa aberta."
+  ogImage={`/open-graph/guia/${guia.slug}.png`}
+  jsonLdNodes={jsonLdNodes}
+>
   <Header />
+
   <main>
-    <article>
-      <h1>Como escolher a fita adesiva certa para cada tipo de embalagem</h1>
-      <img src="https://images.unsplash.com/photo-1449247666642-264389f5f5b1?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wxMDA1ODQ2fDB8MXxzZWFyY2h8MXx8d29ya2VyJTIwdGFwaW5nJTIwY2FyZGJvYXJkJTIwYm94JTIwd2FyZWhvdXNlfGVufDF8MHx8fDE3ODQ5ODExMTh8MA&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=1080" alt="person holding cardboard box on table" width="1200" height="630" />
-      <p>Fita adesiva não é peça única: BOPP, kraft gomada e dupla face atendem pesos, climas e usos diferentes. Este guia mostra como escolher a espessura certa, quando investir em fita gomada personalizada com marca própria e os erros que fazem embalagens se abrirem no transporte.</p>
-<section><h2>Os tipos de fita adesiva para embalagem, um a um</h2><p>A fita BOPP (polipropileno biorientado) é a mais usada para fechar caixas de papelão: o filme plástico recebe adesivo acrílico ou hot melt à base de água, resiste bem à umidade e a variações de temperatura, e serve tanto para aplicação manual quanto automática em linhas de embalagem.</p><p>A fita gomada, também chamada de kraft tape, é feita de papel kraft reforçado com fibras e usa adesivo ativado por água — geralmente à base de amido de milho — que gruda na própria fibra da caixa em vez de só na superfície, dificultando a reabertura sem rastro.</p><p>Fitas dupla face e de espuma atendem outro uso: fixação invisível de displays, montagem de estruturas e absorção de impacto. Não substituem a fita de fechamento de caixa, mas aparecem no mesmo carrinho de compra de quem organiza uma operação de embalagem.</p></section>
-<section><h2>Como escolher a espessura e a resistência certas</h2><p>A espessura é medida em micras. Uma fita BOPP de 45 micras típica suporta cerca de 90 N/25mm de resistência à tração, alongamento de até 190% e funciona bem entre -20°C e 80°C — por isso é a referência para quem despacha volumes pesados ou passa por variação térmica no transporte.</p><p>Para pacotes leves de e-commerce, 40 micras costuma bastar; para cargas pesadas, empilhamento ou transporte mais longo, vale subir para 45 micras ou mais. Também importa o tipo de adesivo: acrílico funciona bem em aplicação manual e ambientes variados, enquanto hot melt é mais indicado para linhas automáticas de alta velocidade.</p></section>
-<section><h2>Fita gomada personalizada: quando vale a pena</h2><p>A fita gomada personalizada imprime logotipo, slogan ou informações de contato diretamente no papel kraft, em sistema de flexografia com até três cores. Fabricantes brasileiros já produzem esse formato a partir de poucos rolos, o que reduz a barreira para pequenas e médias operações testarem a personalização.</p><p>O apelo de sustentabilidade é real: papel kraft com certificação FSC, adesivo à base de amido vegetal e reciclabilidade junto com a própria caixa de papelão tornam a fita gomada a opção preferida de marcas que já usam embalagem como parte do discurso ambiental.</p></section>
-<section><h2>Fita personalizada como ferramenta de marca e antifraude</h2><p>Tanto a fita BOPP transparente quanto a gomada podem ser impressas com a marca do remetente. Além do reforço visual no unboxing, a fita personalizada sinaliza ao destinatário que o pacote não foi violado no caminho — um detalhe que pesa em categorias sensíveis a extravio ou troca de conteúdo.</p><p>Antes de fechar o pedido, vale confirmar quantidade mínima por rolo, número de cores de impressão e prazo de produção: fornecedores consultados informam prazos de produção que variam de poucos dias a cerca de três semanas dependendo da complexidade da arte e do volume.</p></section>
-<section><h2>Erros comuns que abrem a caixa no meio do caminho</h2><p>Usar fita fina demais para o peso da carga, aplicar a fita só no meio da aba sem reforçar as bordas em H, ignorar a exposição a frio ou umidade no transporte e misturar adesivo incompatível com a superfície da caixa são as causas mais frequentes de embalagem que chega aberta ou danificada.</p></section>
-<section><h2>Sources</h2><ul><li><a href="https://mnplast.com.br/blog/fitas-adesivas/tipos-de-fitas-adesivas-para-embalagem/">Tipos de fitas adesivas para embalagem: como escolher</a> — MN Plast, 2024-12-17</li><li><a href="https://www.sotiautomacao.com.br/blog/fitas-gomadas-personalizadas-seguranca-eficiencia-e-sustentabilidade-para-embalagens/">Fitas gomadas personalizadas: Segurança, eficiência e sustentabilidade para embalagens</a> — Soti Automação, 2026-04-28</li><li><a href="https://www.supplypack.com.br/blog/fita-adesiva-para-embalagem-como-escolher-a-melhor-opcao-para-suas-necessidades">Fita adesiva para embalagem: como escolher a melhor opção para suas necessidades</a> — Supplypack, 2025-05-23</li></ul></section>
-      <section><h2>Frequently asked questions</h2><Faq items={faq} /></section>
-      <WhatsappCta termoAlvo={"fita adesiva para embalagem"} numero={whatsapp} />
-    </article>
+    <section class="pseo-hero">
+      <div class="wrap">
+        <nav class="breadcrumb" aria-label="Localização">
+          <a href="/">Início</a>
+          <span class="breadcrumb__sep" aria-hidden="true">›</span>
+          <a href="/guia/">Guias de decisão</a>
+          <span class="breadcrumb__sep" aria-hidden="true">›</span>
+          <span aria-current="page">Fita adesiva para embalagem</span>
+        </nav>
+
+        <div class="pseo-hero__eyebrow">
+          <span class="eyebrow">Fitas adesivas · Guia de decisão</span>
+        </div>
+        <h1>{guia.titulo}</h1>
+        <p class="pseo-hero__intro">
+          Resposta direta: a <strong>fita BOPP</strong> resolve 90% das caixas de expedição —
+          é rápida, barata por metro e entra em qualquer seladora. A <strong>fita kraft
+          gomada</strong> é para carga pesada e para pacote que precisa de
+          <strong>lacre com evidência de violação</strong>. A <strong>dupla face</strong> não
+          fecha caixa: ela fixa display, monta estrutura e esconde emenda. O erro caro quase
+          nunca é o tipo de fita — é <strong>espessura abaixo do peso</strong> e
+          <strong>aplicação só na junta central</strong>.
+        </p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <figure class="guide-figure">
+          <img
+            src={capa}
+            alt="Pessoa fechando uma caixa de papelão sobre a mesa, ao lado de rolo de papel kraft, fita e tesoura"
+            width="1200"
+            height="630"
+            loading="eager"
+            fetchpriority="high"
+          />
+        </figure>
+      </div>
+    </section>
+
+    <!-- Tabela comparativa -->
+    <section class="section section--light">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.6rem;">
+          BOPP × kraft gomada × dupla face, lado a lado
+        </h2>
+        <div class="comp-scroll">
+          <table class="comp-table">
+            <thead>
+              <tr>
+                <th scope="col">Critério</th>
+                <th scope="col">BOPP (filme plástico)</th>
+                <th scope="col">Kraft gomada</th>
+                <th scope="col">Dupla face</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Como cola</th>
+                <td>Adesivo sensível à pressão — cola ao pressionar</td>
+                <td>Goma ativada por água — penetra na fibra do papelão</td>
+                <td>Adesivo nas duas faces, sem aparecer</td>
+              </tr>
+              <tr>
+                <th scope="row">Melhor uso</th>
+                <td>Fechamento de caixa em volume, manual ou automático</td>
+                <td>Caixa pesada, alto valor, viagem longa</td>
+                <td>Fixar display, montar estrutura, emenda invisível</td>
+              </tr>
+              <tr>
+                <th scope="row">Evidência de violação</th>
+                <td>Baixa — sai e volta sem rastro claro</td>
+                <td><strong>Alta</strong> — abrir arranca fibra do papelão</td>
+                <td>Não se aplica</td>
+              </tr>
+              <tr>
+                <th scope="row">Equipamento</th>
+                <td>Aplicador manual ou seladora de caixa</td>
+                <td>Dispenser com molhador (a goma precisa de água)</td>
+                <td>Aplicação manual</td>
+              </tr>
+              <tr>
+                <th scope="row">Descarte</th>
+                <td>Plástico — o correto é separar da caixa</td>
+                <td><strong>Recicla junto com o papelão</strong></td>
+                <td>Plástico ou espuma — separar</td>
+              </tr>
+              <tr>
+                <th scope="row">Custo por caixa fechada</th>
+                <td>Menor</td>
+                <td>Maior por rolo; menos passadas por caixa</td>
+                <td>Irrelevante (não é item de fechamento)</td>
+              </tr>
+              <tr>
+                <th scope="row">No catálogo</th>
+                <td><a href="/fitas/fita-transparente-comum/">Transparente comum</a> e <a href="/fitas/fita-transparente-personalizada/">personalizada</a></td>
+                <td><a href="/fitas/fita-gomada/">Gomada reforçada com nylon</a></td>
+                <td>Fora do catálogo — item de fixação, não de lacre</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tipos -->
+    <section class="section">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.2rem;">
+          Os três tipos de fita e o que cada um resolve
+        </h2>
+
+        <h3 class="guide-h3">BOPP: o padrão da expedição</h3>
+        <p class="guide-p">
+          BOPP é polipropileno <strong>biorientado</strong> — o filme é esticado nas duas
+          direções, o que dá resistência à tração com pouca espessura. Sobre esse filme vai um
+          adesivo sensível à pressão, acrílico ou hot melt. É a fita que fecha praticamente
+          toda caixa de papelão do e-commerce brasileiro, e a única que roda bem em seladora
+          automática.
+        </p>
+        <p class="guide-p">
+          A vantagem real não é o preço do rolo: é o <strong>tempo por caixa</strong>. Uma
+          passada, sem molhar, sem esperar cura, sem equipamento além do aplicador. Numa
+          operação que despacha algumas centenas de pedidos por semana, esse segundo por caixa
+          é o que decide.
+        </p>
+        <p class="guide-p">
+          O limite aparece em duas situações: caixa muito pesada, em que o filme cede antes do
+          papelão, e pacote de alto valor, em que o lacre precisa denunciar a abertura. Nos
+          dois casos a resposta é a gomada.
+        </p>
+
+        <h3 class="guide-h3">Kraft gomada: o lacre que vira parte da caixa</h3>
+        <p class="guide-p">
+          A fita gomada é papel kraft com goma à base de amido, ativada por água. Ao molhar, a
+          goma penetra na fibra do papelão e cria uma ligação <strong>papel com papel</strong>:
+          para abrir, é preciso rasgar a caixa. A tentativa de violação fica registrada no
+          próprio pacote, e é por isso que ela é o padrão de quem despacha valor.
+        </p>
+        <p class="guide-p">
+          A versão reforçada leva <strong>fios de nylon</strong> na estrutura do papel, que
+          impedem o rasgo sob tensão — caixa cheia, empilhada e sob vibração de estrada.
+          A <a href="/fitas/fita-gomada/">gomada reforçada do catálogo</a> vem em 70 mm × 150 m
+          justamente para caixa grande: menos passadas por volume.
+        </p>
+        <p class="guide-p">
+          O custo de entrada é o dispenser com molhador — sem água, a goma não ativa e o rolo
+          vira papel solto. Em compensação, o acabamento é integralmente de papel: nada de
+          plástico à vista, e o cliente joga a caixa inteira na reciclagem sem separar o lacre.
+        </p>
+
+        <h3 class="guide-h3">Dupla face e espuma: fixação, não fechamento</h3>
+        <p class="guide-p">
+          Fitas dupla face e de espuma resolvem outro problema: montar display, fixar peça em
+          vitrine, unir duas superfícies sem que a emenda apareça, absorver vibração entre
+          partes rígidas. Elas entram no mesmo carrinho de quem organiza uma operação de
+          embalagem, mas <strong>não substituem a fita de fechamento</strong> — a área de
+          contato é pequena demais para segurar aba de caixa sob peso.
+        </p>
+        <p class="guide-p">
+          Se você está usando dupla face para fechar caixa porque a fita comum está soltando,
+          o problema é outro: superfície suja, papelão com muita fibra solta ou espessura
+          insuficiente para o peso. Trocar de categoria de fita não corrige nenhum dos três.
+        </p>
+      </div>
+    </section>
+
+    <!-- Especificação -->
+    <section class="section section--light">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.2rem;">
+          Espessura, adesivo e temperatura: como acertar a especificação
+        </h2>
+
+        <h3 class="guide-h3">Micragem: escolha pelo peso, não pelo preço</h3>
+        <p class="guide-p">
+          A espessura da fita BOPP é medida em <strong>micras</strong> (µm) e é o primeiro
+          número da ficha técnica. Como regra prática: <strong>40 micras</strong> atendem
+          pacote leve de e-commerce que faz uma viagem curta; <strong>45 micras ou mais</strong>
+          para caixa pesada, empilhamento em palete ou transporte de longa distância.
+        </p>
+        <p class="guide-p">
+          Micragem baixa economiza centavos por rolo e devolve o prejuízo inteiro na primeira
+          caixa que chega aberta — entre o custo do produto, o frete de reenvio e a reclamação,
+          a conta nunca fecha a favor da fita fina.
+        </p>
+
+        <h3 class="guide-h3">Acrílico ou hot melt</h3>
+        <p class="guide-p">
+          O <strong>adesivo acrílico</strong> é uma emulsão base água: adesão inicial mais
+          suave, resistência boa ao envelhecimento, à luz e à variação de temperatura. É o que
+          você quer em caixa que fica meses no estoque ou que enfrenta calor no caminhão.
+        </p>
+        <p class="guide-p">
+          O <strong>hot melt</strong> é aplicado fundido, à base de borracha sintética e
+          resinas: adesão inicial agressiva e desempenho consistente em
+          <a href="https://next.henkel-adhesives.com/us/en/articles/packaging-hot-melt-adhesives.html" rel="nofollow">linhas
+          automáticas de alta velocidade</a>. Em compensação, amolece sob calor prolongado —
+          contêiner parado ao sol é o cenário clássico de falha.
+        </p>
+
+        <h3 class="guide-h3">Frio, umidade e papelão reciclado</h3>
+        <p class="guide-p">
+          Três condições derrubam adesão e quase nunca aparecem na compra: superfície
+          <strong>fria</strong> (câmara ou galpão sem isolamento no inverno), papelão
+          <strong>úmido</strong> e caixa de <strong>alto teor reciclado</strong>, cuja fibra
+          solta na superfície leva o adesivo embora junto. Se a sua caixa é reciclada e a fita
+          "descola sozinha", troque a espessura e o adesivo antes de trocar de fornecedor —
+          ou vá para a gomada, que cola justamente na fibra.
+        </p>
+      </div>
+    </section>
+
+    <!-- Aplicação -->
+    <section class="section">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.2rem;">
+          Aplicação: o padrão H e o erro que abre a caixa
+        </h2>
+        <p class="guide-p">
+          A maior parte das caixas que chegam abertas foi fechada no <strong>padrão I</strong>:
+          uma única tira sobre a junta central das abas. Ela segura a junta, mas deixa as duas
+          bordas laterais livres — e é por ali que a aba levanta quando a caixa é jogada ou
+          prensada por outra em cima.
+        </p>
+        <p class="guide-p">
+          O <strong>padrão H</strong> resolve: a tira central mais uma tira em cada borda
+          lateral, formando um H. Em qualquer um dos dois, a fita precisa
+          <strong>descer pelo menos 5 cm em cada lateral</strong> da caixa: é essa dobra que
+          transfere a carga do lacre para a parede do papelão em vez de deixá-la toda na aba.
+        </p>
+        <p class="guide-p">
+          Pressione a fita ao aplicar. Adesivo sensível à pressão precisa exatamente disso —
+          pressão — para molhar a superfície e desenvolver adesão. Fita passada com a mão de
+          leve chega ao destino com metade da força que a ficha técnica promete.
+        </p>
+        <ul class="guide-list">
+          <li>Caixa pesada ou empilhada: padrão H no fundo <em>e</em> na tampa.</li>
+          <li>Fundo é onde o produto cai: fundo sempre com reforço, mesmo em pacote leve.</li>
+          <li>Superfície limpa e seca — poeira de galpão é uma camada entre o adesivo e o papelão.</li>
+          <li>Rolo estocado longe do sol e do calor: adesivo envelhece no estoque, não só na caixa.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Compra / teste -->
+    <section class="section section--light">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.2rem;">
+          Como comparar fornecedores sem comprar caixa fechada
+        </h2>
+        <p class="guide-p">
+          Ficha técnica de fita só serve para comparação quando declara o
+          <strong>método de ensaio</strong>. A adesão de fita sensível à pressão é medida em
+          N/25 mm pela
+          <a href="https://store.astm.org/d3330_d3330m-04r18.html" rel="nofollow">ASTM D3330</a>,
+          com corpo de prova de 25 mm de largura, painel de aço inox polido, arrancamento a
+          300 mm/min e condicionamento de 24 h a 23 °C e 50% de umidade relativa. Dois valores
+          medidos por métodos diferentes <strong>não são comparáveis</strong>.
+        </p>
+        <p class="guide-p">
+          Adesão em aço inox, porém, não é adesão no <em>seu</em> papelão. Por isso o teste que
+          vale é o seu: feche cinco caixas reais, com o produto real, e derrube cada uma da
+          altura de uma esteira. Quem quiser formalizar, os
+          <a href="https://ista.org/test_procedures.php" rel="nofollow">procedimentos da ISTA</a>
+          descrevem ensaios pré-embarque que simulam a distribuição de encomendas.
+        </p>
+        <p class="guide-p">
+          Na hora do orçamento, compare <strong>custo por caixa fechada</strong>, não preço do
+          rolo: metragem, largura e número de passadas mudam a conta mais que o valor unitário.
+          Um rolo de 150 m a preço maior pode sair mais barato por volume que dois de 100 m.
+        </p>
+      </div>
+    </section>
+
+    <!-- Personalizada -->
+    <section class="section">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.2rem;">
+          Fita personalizada: quando a marca no lacre se paga
+        </h2>
+        <p class="guide-p">
+          A fita personalizada imprime a marca ao longo de todo o rolo, no mesmo BOPP da fita
+          comum. Ela faz dois trabalhos ao mesmo tempo: transforma cada caixa em
+          <strong>mídia</strong> no corredor da transportadora e na porta do cliente, e sinaliza
+          ao destinatário que o pacote <strong>não foi aberto no caminho</strong> — a arte
+          interrompida denuncia a emenda.
+        </p>
+        <p class="guide-p">
+          A barreira é o pedido mínimo e o clichê. Na
+          <a href="/fitas/fita-transparente-personalizada/">fita personalizada do catálogo</a>,
+          são 20 rolos de mínimo, impressão em até 2 cores e um clichê único de R$ 80,00 por
+          arte, cobrado uma vez — quem repete a mesma arte não paga de novo. Acima de 100 rolos
+          o preço por rolo cai a ponto de a personalizada custar perto da comum.
+        </p>
+        <p class="guide-p">
+          Operação enxuta costuma acertar com a combinação óbvia: personalizada no lacre externo,
+          que o cliente vê, e <a href="/fitas/fita-transparente-comum/">comum</a> na montagem
+          interna e no reforço de fundo, que ninguém vê.
+        </p>
+      </div>
+    </section>
+
+    <!-- Erros -->
+    <section class="section section--light">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.2rem;">
+          Os erros que abrem a caixa no meio do caminho
+        </h2>
+        <ul class="guide-list">
+          <li><strong>Fita fina demais para o peso</strong> — 40 micras em caixa de 15 kg empilhada.</li>
+          <li><strong>Padrão I em carga pesada</strong> — sem as tiras laterais, a aba levanta pela borda.</li>
+          <li><strong>Sobreposição curta</strong> — fita que não desce 5 cm na lateral joga toda a carga na aba.</li>
+          <li><strong>Aplicar sem pressionar</strong> — adesivo sensível à pressão não desenvolve adesão sem pressão.</li>
+          <li><strong>Superfície suja, úmida ou muito fria</strong> — o adesivo cola na poeira, não no papelão.</li>
+          <li><strong>Hot melt em carga que pega sol</strong> — amolece; para calor prolongado, acrílico.</li>
+          <li><strong>Comparar preço de rolo</strong> em vez de custo por caixa fechada.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:1.8rem;">Perguntas frequentes</h2>
+        <Faq items={faq} />
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section section--light" id="contato">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.5rem,2.8vw,2.2rem);margin-bottom:0.8rem;">
+          Já sabe qual fita usar? Veja preço por faixa de volume
+        </h2>
+        <p style="color:var(--d-muted);margin-bottom:2rem;max-width:54ch;">
+          Três SKUs para expedição — transparente comum, personalizada e kraft gomada
+          reforçada — com preço por rolo conforme o volume, compra direta e frete calculado
+          por CEP para todo o Brasil.
+        </p>
+        <div class="cta-block" style="display:flex;gap:1rem;flex-wrap:wrap;align-items:center;">
+          <a class="btn btn--primary" href="/fitas/">Ver catálogo de fitas</a>
+          <WhatsappCta termoAlvo="fita adesiva para embalagem" numero={whatsapp} />
+        </div>
+      </div>
+    </section>
+
+    <!-- Fontes -->
+    <section class="section">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.3rem,2.2vw,1.8rem);margin-bottom:1.4rem;">Fontes</h2>
+        <ul class="guide-list">
+          {fontes.map((f) => (
+            <li>
+              <a href={f.href} rel="nofollow">{f.titulo}</a> — {f.fonte}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <!-- Relacionados -->
+    <section class="section section--light">
+      <div class="wrap">
+        <h2 style="font-size:clamp(1.3rem,2.2vw,1.8rem);margin-bottom:1.4rem;">Veja também</h2>
+        <div class="related-grid">
+          {relacionados.map((r) => (
+            <a href={r.href} class="related-card">{r.label}</a>
+          ))}
+        </div>
+      </div>
+    </section>
   </main>
+
   <Footer />
 </Base>
+
+<style>
+  .comp-scroll { overflow-x: auto; }
+  .comp-table { width: 100%; border-collapse: collapse; font-size: 0.92rem; min-width: 680px; }
+  .comp-table th, .comp-table td { text-align: left; padding: 0.8rem 0.9rem; border-bottom: 1px solid color-mix(in srgb, currentColor 18%, transparent); vertical-align: top; }
+  .comp-table thead th { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.75; }
+  .comp-table tbody th { font-weight: 700; width: 18%; }
+  .guide-h3 { font-size: clamp(1.05rem, 1.8vw, 1.3rem); margin: 2rem 0 0.8rem; }
+  .guide-p { max-width: 68ch; line-height: 1.7; margin-bottom: 1rem; }
+  .guide-figure { margin: 0; }
+  .guide-figure img { width: 100%; height: auto; border-radius: 10px; }
+</style>
