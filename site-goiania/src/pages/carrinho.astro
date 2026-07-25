@@ -445,7 +445,7 @@ const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
         consent: '1',
         produto: `Orçamento carrinho (${cart.length} item(ns) · ${brl(total)})`,
         pagina: '/carrinho',
-        mensagem: `Pediu orçamento pelo WhatsApp. Carrinho: ${location.origin}/carrinho?c=${encodeCart()}`,
+        mensagem: `Pediu orçamento pelo WhatsApp. Carrinho: ${location.origin}/carrinho/?c=${encodeCart()}`,
         origem: localStorage.getItem('rlft') ?? '',
       }),
       keepalive: true,
@@ -462,7 +462,7 @@ const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
     const msg = $('.cart-share__msg') as HTMLElement;
     const cart = getCart();
     if (cart.length === 0) { msg.textContent = 'Adicione itens antes de pedir o orçamento.'; return; }
-    const cartUrl = `${location.origin}/carrinho?c=${encodeCart()}`;
+    const cartUrl = `${location.origin}/carrinho/?c=${encodeCart()}`;
     const texto = `Olá! Quero um orçamento deste carrinho de porcelanato:\n${cartUrl}`;
     (window as any).himetrica?.track('orcamento_whatsapp', { itens: cart.length });
     // Checkout form already has contact + LGPD consent? Capture the lead right away;
@@ -494,7 +494,7 @@ const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
   $('.cart-share').addEventListener('click', async () => {
     const msg = $('.cart-share__msg') as HTMLElement;
     if (getCart().length === 0) { msg.textContent = 'Adicione itens antes de gerar o link.'; return; }
-    const url = `${location.origin}/carrinho?c=${encodeCart()}`;
+    const url = `${location.origin}/carrinho/?c=${encodeCart()}`;
     try {
       await navigator.clipboard.writeText(url);
       msg.textContent = 'Link copiado! Cole onde quiser — válido por 30 dias.';

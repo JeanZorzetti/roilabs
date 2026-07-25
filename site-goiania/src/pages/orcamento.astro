@@ -81,7 +81,7 @@ const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
         </div>
 
         <div class="orc__actions no-print">
-          <a class="btn btn--primary" data-fechar href="/carrinho">Fechar pedido agora</a>
+          <a class="btn btn--primary" data-fechar href="/carrinho/">Fechar pedido agora</a>
           <a class="btn btn--ghost" data-whats href={`https://wa.me/${whatsapp}`}>Tirar dúvida no WhatsApp</a>
           <button type="button" class="btn btn--ghost" data-print>Imprimir / salvar PDF</button>
         </div>
@@ -190,7 +190,7 @@ const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
     const total = lines.reduce((s, l) => s + l.subtotal, 0);
     $('[data-total]').textContent = formatPreco(total);
 
-    ($('[data-fechar]') as HTMLAnchorElement).href = `/carrinho?c=${encodeURIComponent(token)}`;
+    ($('[data-fechar]') as HTMLAnchorElement).href = `/carrinho/?c=${encodeURIComponent(token)}`;
     const whats = $('[data-whats]') as HTMLAnchorElement;
     whats.href += `?text=${encodeURIComponent(`Olá! Tenho uma dúvida sobre o orçamento Nº ${ts.toString(36).toUpperCase()}:\n${location.origin}/orcamento?c=${token}`)}`;
     $('[data-print]').addEventListener('click', () => window.print());
