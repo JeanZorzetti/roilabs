@@ -21,7 +21,7 @@ const CANDIDATURAS_ENDPOINT = 'https://app.roilabs.com.br/api/candidaturas';
 // cacheia o layer do `npm run build`, então redeploy sem commit novo servia dist velho e
 // não refletia o admin. Runtime fetch é imune a esse cache e reflete a edição na hora.
 // taken/href são presentational (cadeira já ocupada + link pra venture); só o estático os usa,
-// o fetch ao vivo não os toca (casa por índice e a 7ª não existe no DB até rodar o seed).
+// o fetch ao vivo não os toca (casa por índice até as novas cadeiras entrarem no DB pelo seed).
 const seats: { niche: string; status: string; open: boolean; taken?: boolean; href?: string }[] = [
   { niche: 'Revestimentos / Porcelanato', status: 'Curadoria aberta', open: true },
   { niche: 'Materiais de construção', status: 'Em estudo', open: false },
@@ -30,6 +30,7 @@ const seats: { niche: string; status: string; open: boolean; taken?: boolean; hr
   { niche: 'Marcenaria sob medida', status: 'Em estudo', open: false },
   { niche: 'Pisos / Deck externo', status: 'Em estudo', open: false },
   { niche: 'Fitas adesivas', status: 'Ocupada · Tapepro', open: false, taken: true, href: 'https://tapepro.roilabs.com.br/' },
+  { niche: 'Ortodontia / Alinhadores', status: 'Ocupada · Atma Aligner', open: false, taken: true, href: 'https://atma.roilabs.com.br/' },
 ];
 
 // Nó próprio da home no @graph: o serviço Growth Partner (Base entrega Organization + WebSite).

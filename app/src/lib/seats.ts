@@ -12,4 +12,5 @@ export const DEFAULT_SEATS = [
   // Primeira cadeira ocupada: Tapepro (fitas adesivas personalizadas, B2B). open:false = fora
   // de curadoria (já preenchida). O link/estado visual "ocupada" vive no site (presentational).
   { niche: 'Fitas adesivas', status: 'Ocupada · Tapepro', open: false },
+  { niche: 'Ortodontia / Alinhadores', status: 'Ocupada · Atma Aligner', open: false },
 ] as const;
