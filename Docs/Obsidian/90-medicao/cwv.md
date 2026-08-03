@@ -1,10 +1,10 @@
 ---
 tipo: medicao
-data: 2026-07-27
+data: 2026-08-03
 fonte: PageSpeed Insights API (Lighthouse mobile em prod)
 ---
 
-# 📉 Core Web Vitals — goiânia (2026-07-27)
+# 📉 Core Web Vitals — goiânia (2026-08-03)
 
 > Lab data (Lighthouse na infra do Google). CrUX (campo) fica "—" até o site ter
 > tráfego suficiente no Chrome. Histórico completo em `cwv.csv`. Metas: score ≥ 90,
@@ -12,8 +12,8 @@ fonte: PageSpeed Insights API (Lighthouse mobile em prod)
 
 | Página | Score | LCP | CLS | TBT | CrUX LCP |
 |---|---|---|---|---|---|
-| / | 79 | 5.2s | 0 | 75ms | — |
-| /porcelanato/ | 79 | 5.1s | 0 | 129ms | — |
-| /porcelanato/porcelanato-amadeirado/ | 98 | 2.3s | 0.002 | 61ms | — |
-| /porcelanato/produto/porcelanato-20x120-carvalho-natural/ | 76 | 5.2s | 0 | 200ms | — |
-| /calculadora/ | 72 | 5.4s | 0 | 307ms | — |
+| / | 79 | 5.4s | 0 | 6ms | — |
+| /porcelanato/ | 81 | 5.0s | 0 | 24ms | — |
+| /porcelanato/porcelanato-amadeirado/ | 82 | 5.0s | 0 | 37ms | — |
+| /porcelanato/produto/porcelanato-20x120-carvalho-natural/ | 80 | 5.2s | 0.005 | 126ms | — |
+| /calculadora/ | 100 | 1.5s | 0.015 | 17ms | — |

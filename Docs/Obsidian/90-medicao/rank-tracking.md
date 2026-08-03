@@ -1,13 +1,13 @@
 ---
 tipo: medição
 status: vivo
-data: 2026-07-27
+data: 2026-08-03
 dono: automático (rank-tracking.mjs, cron semanal)
 ---
 
 # 📈 Rank tracking — goiania.roilabs.com.br
 
-> [!info] Atualizado em 2026-07-27 — 0/40 keywords no top 50 (Google, Goiânia).
+> [!info] Atualizado em 2026-08-03 — 0/40 keywords no top 50 (Google, Goiânia).
 > Histórico completo em `rank-tracking.csv` (mesma pasta). Fonte: serper.dev SERP.
 
 ## No top 50

@@ -1,13 +1,13 @@
 ---
 tipo: medição
 status: vivo
-data: 2026-07-27
+data: 2026-08-03
 dono: automático (gsc-miner.mjs, cron semanal)
 ---
 
 # ⛏️ GSC miner — candidatas de expansão da malha
 
-> [!info] 2026-06-27 → 2026-07-25 (28 dias) · 42 pares query×page · propriedade sc-domain:goiania.roilabs.com.br
+> [!info] 2026-07-04 → 2026-08-01 (28 dias) · 43 pares query×page · propriedade sc-domain:goiania.roilabs.com.br
 > Fonte grátis que substitui a mineração DataForSEO. Critério de página nova continua o
 > editorial de sempre: intenção clara + produto real no catálogo (nada de página vazia).
 
@@ -21,4 +21,4 @@ dono: automático (gsc-miner.mjs, cron semanal)
 
 | Query | Página | Impressões | Cliques | Posição |
 |-------|--------|-----------:|--------:|--------:|
-| — | nenhuma na faixa ainda | | | |
+| o que preciso especificar no porcelanato, se é retificado, borda reta? | /guia/porcelanato-retificado-ou-bold/ | 15 | 0 | 25.3 |
