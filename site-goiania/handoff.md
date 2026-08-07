@@ -1,5 +1,78 @@
 # Handoff — site-goiania
 
+## 2026-08-07 (noite) — 🚨 As fitas não estão na página 2. Elas estão no ESTOQUE.
+
+> **BLUF:** o `0 impressões` das fitas não era ranking, era **descoberta**. URL Inspection
+> devolve **"O Google não reconhece o URL"** nas **4/4** URLs de `/fitas/` — 200 no ar, no
+> sitemap, linkadas da home indexada, e o Google **nunca soube que existem**. Causa raiz:
+> **o Google baixou o sitemap uma única vez, em 03/07, com 75 URLs.** As fitas subiram em
+> **22/07**, 19 dias depois. O sitemap vivo tem **99**. **24 URLs — um quarto do site —
+> nunca entraram na cópia que o Google lê.** Reenviado hoje (204) e automatizado no cron.
+
+### A medição
+
+| URL | verdict | estado |
+|---|---|---|
+| `/fitas/` | NEUTRAL | **O Google não reconhece o URL** |
+| `/fitas/fita-transparente-personalizada/` | NEUTRAL | **idem** |
+| `/fitas/fita-gomada/` | NEUTRAL | **idem** |
+| `/fitas/fita-transparente-comum/` | NEUTRAL | **idem** |
+| `/carrinho-fitas/` | NEUTRAL | **idem** |
+| `/` (controle) | PASS | Enviada e indexada · crawl 03/08 |
+| `/porcelanato/` (controle) | PASS | Enviada e indexada · crawl 26/07 |
+| `/guia/porcelanato-retificado-ou-bold/` (controle) | PASS | Enviada e indexada · crawl 03/08 |
+
+Descartados na mesma passada: **sem** `meta robots`, canonical correto e próprio,
+`robots.txt` com `Allow: /`, as 4 URLs presentes no `sitemap.xml` de prod e linkadas da home.
+Nada disso era o problema.
+
+`GET /webmasters/v3/sites/sc-domain:goiania.roilabs.com.br/sitemaps`:
+
+```
+lastSubmitted  2026-07-03T12:31:15Z
+lastDownloaded 2026-07-03T12:31:16Z   ← 35 dias
+submitted      75                     ← o sitemap vivo tem 99
+```
+
+### O buraco estrutural
+
+**Nada no deploy avisa o Google.** O `postbuild` fala com o **IndexNow** (Bing/Yandex) e o
+Google **aposentou o endpoint de ping em 2023** — a API do Search Console virou o único
+caminho programático. Então toda malha publicada desde 03/07 dependia de o Google resolver
+rebaixar o sitemap sozinho, num subdomínio que tem 2 cliques em 28 dias e portanto
+prioridade de rastreio mínima. Ele não resolveu.
+
+**Consertado:** `gsc-miner.mjs` faz `PUT` do sitemap toda rodada semanal (escopo subiu de
+`webmasters.readonly` para `webmasters`; falha é non-fatal, a medição da semana vale
+sozinha). Commit `ab37cdf`.
+
+### O que isto NÃO conserta — não confundir de novo
+
+Descoberta ≠ indexação ≠ ranking. O reenvio põe as fitas na fila; **nada garante posição**.
+E não muda em nada o veredito do porcelanato: **0/40 no top 50 com 4 meses de malha
+publicada** continua sendo demanda-sem-ranking, e mais página não conserta.
+
+**Aferir em ~7 dias:** rodar de novo a URL Inspection nas 4 URLs de `/fitas/`. Se ainda
+disserem "não reconhece", o problema é de autoridade/rastreio, não de sitemap — e aí a tese
+de canal muda de novo.
+
+### O funil, com o dado na mão
+
+O Jean está certo que sem impressão não há conversão. O que a quebra por vertical mostra é
+que **a camada de educação já é a que mais aparece — e é a que menos clica**:
+
+| camada | páginas | impressões | cliques |
+|---|---|---|---|
+| topo — guias/conteúdo | 10 | **174** (54%) | **0** |
+| fundo — porcelanato | 34 | 148 | 2 |
+| fundo — fitas | 0 | **0** | 0 |
+
+Topo de funil com **0 clique em 174 impressões** na posição ~20 não é falta de conteúdo: é
+conteúdo que aparece onde ninguém rola. O gargalo do topo é **posição**, o do fundo das
+fitas era **existência**.
+
+---
+
 ## 2026-08-07 (tarde) — Executados os itens 1–4: o dado que faltava chegou
 
 > **BLUF:** os quatro passos mecânicos da ordem sugerida foram executados. O número que ia
