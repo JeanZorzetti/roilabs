@@ -1,322 +1,252 @@
 # Handoff — site-goiania
 
-## 2026-08-07 (noite) — 🚨 As fitas não estão na página 2. Elas estão no ESTOQUE.
+## 2026-08-07 — A loja está pronta, o canal não entrega, e um quarto dela estava invisível
 
-> **BLUF:** o `0 impressões` das fitas não era ranking, era **descoberta**. URL Inspection
-> devolve **"O Google não reconhece o URL"** nas **4/4** URLs de `/fitas/` — 200 no ar, no
-> sitemap, linkadas da home indexada, e o Google **nunca soube que existem**. Causa raiz:
-> **o Google baixou o sitemap uma única vez, em 03/07, com 75 URLs.** As fitas subiram em
-> **22/07**, 19 dias depois. O sitemap vivo tem **99**. **24 URLs — um quarto do site —
-> nunca entraram na cópia que o Google lê.** Reenviado hoje (204) e automatizado no cron.
-
-### A medição
-
-| URL | verdict | estado |
-|---|---|---|
-| `/fitas/` | NEUTRAL | **O Google não reconhece o URL** |
-| `/fitas/fita-transparente-personalizada/` | NEUTRAL | **idem** |
-| `/fitas/fita-gomada/` | NEUTRAL | **idem** |
-| `/fitas/fita-transparente-comum/` | NEUTRAL | **idem** |
-| `/carrinho-fitas/` | NEUTRAL | **idem** |
-| `/` (controle) | PASS | Enviada e indexada · crawl 03/08 |
-| `/porcelanato/` (controle) | PASS | Enviada e indexada · crawl 26/07 |
-| `/guia/porcelanato-retificado-ou-bold/` (controle) | PASS | Enviada e indexada · crawl 03/08 |
-
-Descartados na mesma passada: **sem** `meta robots`, canonical correto e próprio,
-`robots.txt` com `Allow: /`, as 4 URLs presentes no `sitemap.xml` de prod e linkadas da home.
-Nada disso era o problema.
-
-`GET /webmasters/v3/sites/sc-domain:goiania.roilabs.com.br/sitemaps`:
-
-```
-lastSubmitted  2026-07-03T12:31:15Z
-lastDownloaded 2026-07-03T12:31:16Z   ← 35 dias
-submitted      75                     ← o sitemap vivo tem 99
-```
-
-### O buraco estrutural
-
-**Nada no deploy avisa o Google.** O `postbuild` fala com o **IndexNow** (Bing/Yandex) e o
-Google **aposentou o endpoint de ping em 2023** — a API do Search Console virou o único
-caminho programático. Então toda malha publicada desde 03/07 dependia de o Google resolver
-rebaixar o sitemap sozinho, num subdomínio que tem 2 cliques em 28 dias e portanto
-prioridade de rastreio mínima. Ele não resolveu.
-
-**Consertado:** `gsc-miner.mjs` faz `PUT` do sitemap toda rodada semanal (escopo subiu de
-`webmasters.readonly` para `webmasters`; falha é non-fatal, a medição da semana vale
-sozinha). Commit `ab37cdf`.
-
-### O que isto NÃO conserta — não confundir de novo
-
-Descoberta ≠ indexação ≠ ranking. O reenvio põe as fitas na fila; **nada garante posição**.
-E não muda em nada o veredito do porcelanato: **0/40 no top 50 com 4 meses de malha
-publicada** continua sendo demanda-sem-ranking, e mais página não conserta.
-
-**Aferir em ~7 dias:** rodar de novo a URL Inspection nas 4 URLs de `/fitas/`. Se ainda
-disserem "não reconhece", o problema é de autoridade/rastreio, não de sitemap — e aí a tese
-de canal muda de novo.
-
-### O funil, com o dado na mão
-
-O Jean está certo que sem impressão não há conversão. O que a quebra por vertical mostra é
-que **a camada de educação já é a que mais aparece — e é a que menos clica**:
-
-| camada | páginas | impressões | cliques |
-|---|---|---|---|
-| topo — guias/conteúdo | 10 | **174** (54%) | **0** |
-| fundo — porcelanato | 34 | 148 | 2 |
-| fundo — fitas | 0 | **0** | 0 |
-
-Topo de funil com **0 clique em 174 impressões** na posição ~20 não é falta de conteúdo: é
-conteúdo que aparece onde ninguém rola. O gargalo do topo é **posição**, o do fundo das
-fitas era **existência**.
+> **BLUF:** `goiania.roilabs.com.br` está **completo e no ar** — 99 URLs, dois verticais,
+> checkout ligado, feed no Merchant Center, LCP 2,5s — e **nunca faturou um real**.
+> Hoje mediu-se o que faltava e apareceu **um bug e um diagnóstico**, que não se confundem:
+>
+> 1. 🔧 **Bug, consertado:** o Google lia uma cópia do sitemap de **03/07 com 75 URLs**. As
+>    **24 URLs** publicadas depois — incluindo o vertical de fitas inteiro — ele **nunca soube
+>    que existiam**. Reenviado e automatizado no cron.
+> 2. 📉 **Diagnóstico, aberto:** o que ele **conhece** rende **322 impressões / 2 cliques /
+>    posição 19,8** em 28 dias, com **0/40 keywords no top 50** e 4 meses de malha publicada.
+>    Isso é demanda-sem-ranking e **nenhum sitemap conserta**.
+>
+> **A próxima sessão não começa escrevendo página.** Começa aferindo o (1) e decidindo o (2).
 
 ---
 
-## 2026-08-07 (tarde) — Executados os itens 1–4: o dado que faltava chegou
+### O modelo do negócio (contexto que o código não conta)
 
-> **BLUF:** os quatro passos mecânicos da ordem sugerida foram executados. O número que ia
-> mudar todas as decisões chegou: **não são 43 impressões, são 322** em 28 dias — os pares
-> query×page cobriam só **22%**. Mas a leitura do canal **não muda**: 322 impressões, **2
-> cliques**, posição média **19,8** (página 2), e **as fitas tiveram ZERO impressão e 0/3 no
-> rank nacional**. O vertical que assumiu a home não tem presença nenhuma no Google.
-> **As decisões (a)–(d) do Jean continuam abertas — agora com o dado na mão.**
+Três camadas, confirmadas pelo Jean nesta sessão:
 
-### 1. Move do `docs/` ✅ já estava resolvido
+| camada | domínio | o que adquire |
+|---|---|---|
+| aquisição de **cadeiras** | `roilabs.com.br` (institucional, ICP B2B) | quem ocupa cadeira |
+| aquisição de **cliente final** | site de cada projeto (`tapepro.`, Sirius, Atma…) | demanda do nicho |
+| **loja** | `goiania.roilabs.com.br` | e-commerce de **todos** os projetos com cadeira |
 
-Commitado em `51f3b63` (`site-goiania/{ => docs}/handoff-fitas-ecommerce.md` + `docs/Imagens/`),
-`main` em dia com `origin`. Nada a fazer — o `git status` sujo do handoff anterior era da
-própria sessão que o escreveu.
+🚩 **O goiania adquire E converte — não é só checkout.** Essa pergunta foi levantada e o Jean
+fechou: *"como converter sem quem conheça? Precisa de impressões, cliques, elevação do nível
+de consciência. Como vende escondido? É como uma loja que não coloca produtos na loja."*
+Funil padrão, topo incluído. **Não reabrir** como se goiania pudesse viver só de tráfego
+roteado pelos projetos.
 
-### 2. GSC com `dimensions: []` ✅ — o piso escondia 78% do dado
+⚠️ Mas o modelo tem um custo que ainda não foi endereçado: **um domínio não vira autoridade
+tópica de porcelanato-Goiânia + fita-B2B-nacional + SaaS ao mesmo tempo**, e piora a cada
+cadeira. Hoje isso é teoria; vira problema real quando a 3ª cadeira publicar.
 
-Rodado contra `sc-domain:goiania.roilabs.com.br` (28 dias, 08/07 → 05/08):
+📌 **Estado da camada de cadeiras: escrita e DESLIGADA.** `src/data/cadeiras.ts` tem **1**
+cadeira (Sirius, `publicado: false`) e o sitemap tem **zero** URL de `/cadeira/`. Ou seja: o
+goiania **hoje** é a loja própria da ROI Labs (porcelanato, cadeira **vaga**) + 1 tenant
+(fitas/TapePro). O e-commerce-de-todos-os-projetos é intenção, não estado.
+
+---
+
+### 🚨 Achado da sessão: as fitas estavam no ESTOQUE, não na página 2
+
+URL Inspection (API, 07/08):
+
+| URL | verdict | estado |
+|---|---|---|
+| `/fitas/` · `/fitas/fita-transparente-personalizada/` · `/fitas/fita-gomada/` · `/fitas/fita-transparente-comum/` · `/carrinho-fitas/` | NEUTRAL | **"O Google não reconhece o URL"** (5/5) |
+| `/` · `/porcelanato/` · `/guia/porcelanato-retificado-ou-bold/` (controles) | PASS | Enviada e indexada |
+
+Descartados na mesma passada — **não reinvestigar**: sem `meta robots`, canonical próprio e
+correto, `robots.txt` com `Allow: /`, as 4 URLs presentes no `sitemap.xml` **de prod** e
+linkadas da home **indexada** (crawl 03/08).
+
+```
+GET /webmasters/v3/sites/sc-domain:goiania.roilabs.com.br/sitemaps
+lastSubmitted  2026-07-03T12:31:15Z
+lastDownloaded 2026-07-03T12:31:16Z    ← 35 dias
+submitted      75                      ← o sitemap vivo tem 99
+```
+
+**Buraco estrutural:** o `postbuild` fala com o **IndexNow (Bing/Yandex)**, o que dá a
+sensação de que o deploy avisa os buscadores. **O Google aposentou o `/ping?sitemap=` em
+2023** — a API do Search Console é o único caminho programático que sobrou.
+
+**Consertado (`ab37cdf`):** `gsc-miner.mjs` faz `PUT` do sitemap toda rodada semanal. Escopo
+subiu de `webmasters.readonly` → `webmasters`. Falha é non-fatal de propósito.
+
+☑️ **AFERIR EM ~14/08 — é o primeiro item da próxima sessão.** Rodar a URL Inspection de
+novo nas 4 URLs de `/fitas/`:
+- ainda **"não reconhece"** ⇒ não era sitemap, é rastreio/autoridade — e a tese de canal muda;
+- **"Descoberta – não indexada"** ⇒ descoberta resolvida, o funil andou uma casa;
+- **"Enviada e indexada"** ⇒ agora sim as fitas passam a ter veredito de ranking.
+
+Descoberta ≠ indexação ≠ ranking. Não celebrar o `204` como se fosse tráfego.
+
+---
+
+### Estado medido (07/08/2026 — medido, não lembrado)
+
+**Site:** 99 URLs no sitemap (71 `/porcelanato/`, 14 `/guia/`, 10 fitas+afins), home é do
+vertical de **fitas**, `feed.xml` com 33 itens, `robots.txt`/`llms.txt` no ar com whitelist
+de crawlers de IA, `areaServed` = Brasil **+** Goiânia. Todas as rotas em 200.
+
+**Demanda — GSC, 28 dias (08/07 → 05/08), lido com `dimensions: []`:**
+
+| | impressões | cliques | rank top 50 |
+|---|---|---|---|
+| topo — guias/conteúdo (10 págs) | **174** (54%) | **0** | — |
+| fundo — porcelanato (34 págs) | 148 | 2 | **0/40** |
+| fundo — **fitas** | **0** | 0 | **0/3** |
+| home/outras | 6 | 0 | — |
+| **total do site** | **322** | **2** · CTR 0,62% · **pos. 19,8** | **0/43** |
+
+🚩 **A leitura do funil:** a camada de **educação já é a que mais aparece** (54%) e é a que
+**menos clica** (zero). Topo de funil em posição ~20 aparece onde ninguém rola. **O gargalo
+do topo é POSIÇÃO; o do fundo das fitas era EXISTÊNCIA.** São doenças diferentes e pedem
+remédios diferentes.
+
+⚠️ O número anterior de "43 pares query×page" era **piso, não total** — a dimensão `query`
+anonimiza as raras e o erro era de **7,5×** (os pares cobriam 22%). Já corrigido no script;
+a seção 0 da nota do vault traz o total toda semana. Ver [[gsc_query_dimension_hides_rare]].
+
+**Dinheiro (`roilabs_db`):** `Pedido: 6 · PAGOS: 0 · mpPaymentId: 0 · NegocioOriginado: 0 ·
+LeadConsumidor: 2 (1 é lixo de teste) · Candidatura: 0 · Cupom OBRA10: ativo=FALSE`
+
+| data | vertical | total | chegou no MP? | itens |
+|---|---|---|---|---|
+| 07/07 | porcelanato | 7.244,45 | ❌ | marmo-perla ×25cx |
+| 07/07 | porcelanato | 7.244,45 | ❌ | *(duplicata da linha acima)* |
+| 23/07 | fitas | 2.461,05 | ❌ | transparente-personalizada ×200rl + clichê |
+| 23/07 | fitas | 2.360,73 | ❌ | idem |
+| 23/07 | fitas | 2.361,19 | ✅ | idem |
+| 23/07 | fitas | 420,02 | ✅ | transparente-personalizada ×20rl + clichê |
+
+🚨 **4 dos 6 pedidos nunca chegaram ao Mercado Pago.** `mpPreferenceId` é gravado na linha
+**seguinte** ao `createPreference` bem-sucedido ([route.ts:138](../app/src/app/api/pedidos/route.ts)
+e [:293](../app/src/app/api/pedidos/route.ts)) — nulo = a chamada **falhou** e o comprador
+voltou com `?erro=pagamento`. Os 2 últimos de 23/07 têm preference, então o caminho
+aparentemente foi consertado naquele dia (token fora do env de prod — ver
+[[roilabs_mercadopago_prod_env_vars]]). **Nunca foi provado ponta a ponta: zero pagamento
+aprovado, zero webhook, zero `NegocioOriginado`.** A régua do success fee da TapePro
+(15%/10%, spec 010) nunca rodou contra dado real.
+
+---
+
+### O que já foi feito hoje (não refazer)
 
 | | |
 |---|---|
-| **Impressões reais** | **322** |
-| Cliques | **2** (CTR 0,62%) |
-| Posição média | **19,8** |
-| Soma dos pares query×page | 71 — **22,0%** do total |
+| ✅ move do `docs/` | já estava commitado em `51f3b63`; o `git status` sujo era da própria sessão anterior |
+| ✅ GSC com `dimensions: []` | virou a seção 0 da nota; o piso nunca mais é lido como total |
+| ✅ quebra por vertical | `dimensions:['page']`, semeada com todos os baldes — vertical zerado vira linha `0` em vez de sumir |
+| ✅ `termoAlvo` nas fitas | 3 SKUs em `fitas.ts`; `rank-tracking` lê **os dois** catálogos |
+| ✅ localização por keyword | porcelanato → SERP de Goiânia, fita → SERP nacional. Era constante hard-coded e mediria a SERP errada |
+| ✅ `/fitas/<slug>` = página dedicada | senão toda query de fita virava "candidata a página nova" pedindo página que já existe |
+| ✅ reenvio do sitemap | manual (204) + automático no cron semanal |
+| ✅ `OBRA10` decidido | `createdAt 01/07 13:02:01` × `updatedAt 13:05:02` — **3 minutos de vida**. Foi desligado de propósito, **não é regressão**. Fica `false` até o Jean querer religar (10%, escopo porcelanato, mínimo R$ 500) |
 
-A suspeita de [[gsc_query_dimension_hides_rare]] se confirmou: a dimensão `query` anonimiza
-as raras, e ler "43 pares" como "43 impressões" errava por **7,5×**. **É "espalhado", não
-"invisível"** — mas espalhado na página 2, e 322 impressões em 4 meses de malha publicada
-não desmentem o diagnóstico de demanda-sem-ranking. A leitura fica **mais precisa, não mais
-otimista**.
-
-`gsc-miner.mjs` passou a ler os totais toda rodada (seção 0 da nota) — o piso nunca mais é
-lido como total.
-
-### 3. Fitas entraram nas duas medições ✅ — e o veredito é ZERO
-
-`termoAlvo` declarado nos 3 SKUs de `fitas.ts` (`fita adesiva personalizada`, `fita gomada`,
-`fita adesiva transparente`) e `rank-tracking.mjs` agora lê **os dois** catálogos.
-
-🚨 **A localização virou parte da keyword.** O script mandava *toda* busca com
-`location: Goiânia`. Fita é B2B **nacional**: medir na SERP de Goiânia mediria a SERP errada
-e o primeiro veredito sobre as fitas já nasceria falso. Agora porcelanato vai geolocalizado
-(40 keywords) e fita vai nacional (3).
-
-**Resultado das duas medições, rodadas de verdade hoje:**
-
-| medição | porcelanato | fitas |
-|---|---|---|
-| rank tracking (serper, top 50) | 0/40 | **0/3** |
-| GSC — impressões em 28 dias | 148 (34 páginas) | **0 (nenhuma página)** |
-
-Quebra por vertical no GSC: **guias 174** · porcelanato 148 · home/outras 6 · **fitas 0**.
-Duas leituras: (1) o conteúdo **informacional** é quem traz quase toda a impressão, e ele
-não vende; (2) as fitas estão no ar desde 22/07 — ~2 semanas dentro da janela — e não
-receberam **uma única** impressão. Isso é jovem demais para ser veredito de ranking, mas é
-veredito suficiente sobre **indexação**: vale rodar URL Inspection nas 4 URLs de `/fitas/`
-antes de qualquer tese de canal ([[site_200_is_not_indexed_url_inspection]] — 200 não é
-índice). A próxima rodada semanal já mede fitas sozinha.
-
-`gsc-miner` também aprendeu que `/fitas/<slug>` é página **dedicada** — sem isso toda query
-de fita entraria como "candidata a página nova" pedindo uma página que já existe.
-
-### 4. Sujeiras do painel — uma resolvida, uma decidida
-
-**`OBRA10`: foi desligado de propósito, não é regressão.** O banco mostra
-`createdAt 01/07 13:02:01` e `updatedAt 01/07 13:05:02` — **3 minutos** de vida. Ninguém
-"esqueceu ativo"; alguém desligou logo depois de criar. Deixado `ativo: false` — religar um
-cupom de 10% é decisão comercial do Jean, não de sessão. (`escopo: porcelanato`, mínimo
-R$ 500.)
-
-⛔ **O lead de teste NÃO foi apagado — o ambiente bloqueou o DELETE.** O script guardado
-está pronto em `app/.tmp-lead.mjs` (não commitado): confere a assinatura (`id` +
-`TESTE` no nome + `verificacao ntfy` na mensagem) e **aborta** se não bater. Rodar com
-`cd app && node .tmp-lead.mjs` e apagar o arquivo depois. Confirmado no banco:
+⛔ **Único item não fechado: apagar o lead de teste.** O ambiente bloqueou o `DELETE` no
+banco. Script pronto e guardado em `app/.tmp-lead.mjs` (**não commitado**) — confere a
+assinatura (`id` + `TESTE` no nome + `verificacao ntfy` na mensagem) e **aborta** se não
+bater. `cd app && node .tmp-lead.mjs`, depois apagar o arquivo.
 
 | lead | o que é |
 |---|---|
 | `cmr534je…` · 03/07 · "Orçamento WhatsApp (carrinho)" · R$ 17.878,01 | **real** — manter |
 | `cmr5g3kf…` · 03/07 · "TESTE ntfy - pode ignorar" | **lixo** — apagar |
 
-Ou seja: o `/admin` mostra "2 novo" e o número honesto é **1**.
-
-### O que continua aberto (decisões do Jean, itens 5-6 da ordem anterior)
-
-Nada do que foi medido hoje responde **(a)**, **(b)**, **(c)** ou **(d)** da seção abaixo —
-os quatro passos eram pré-requisito, não resposta. O que mudou é que agora a decisão **(b)**
-tem números: **322 impressões / 2 cliques / pos. 19,8 em 28 dias**, com o tráfego concentrado
-em **guias** e **zero** no vertical que é a cara do site. O teste real de pagamento **(a)**
-segue intocado e continua sendo a única coisa que não depende do Google.
+O `/admin` mostra "2 novo"; o número honesto é **1**.
 
 ---
 
-## 2026-08-07 — Prosseguir: a loja está pronta, o canal não entrega
-
-> **BLUF:** `goiania.roilabs.com.br` está **completo e no ar** — 99 URLs, dois verticais,
-> checkout ligado, feed no Merchant Center, LCP 2,5s — e **nunca faturou um real**. O gargalo
-> não é mais construção: **0 de 40 keywords no top 50** e **43 pares query×page em 28 dias**.
-> Antes de escrever qualquer linha de código nova, decidir o que fazer com o CANAL. Escrever
-> a 100ª página é a coisa mais fácil e mais inútil que a próxima sessão pode fazer.
-
-### Estado medido em 07/08/2026 (medido agora, não lembrado)
-
-**Site (tudo 200, conferido no ar):**
-
-| | |
-|---|---|
-| sitemap | **99 URLs** — 71 `/porcelanato/`, 14 `/guia/`, 10 `/fitas/` |
-| home | é do vertical de **fitas** (011 shipada); `/porcelanato/` intacto |
-| feed.xml | 33 itens |
-| `robots.txt` / `llms.txt` | no ar, com whitelist de crawlers de IA |
-| `areaServed` | já é `Brasil` **+** `Goiânia` — o risco nº 4 do briefing de fitas foi resolvido |
-
-**Dinheiro (`roilabs_db@2.24.207.200:5443`):**
-
-```
-Pedido: 6   ·   PAGOS: 0   ·   mpPaymentId: 0   ·   NegocioOriginado: 0
-LeadConsumidor: 2   ·   Candidatura: 0   ·   Cupom OBRA10: ativo=FALSE
-```
-
-| data | vertical | total | frete | chegou no MP? | itens |
-|---|---|---|---|---|---|
-| 07/07 | porcelanato | 7.244,45 | 150 | ❌ | marmo-perla ×25cx |
-| 07/07 | porcelanato | 7.244,45 | 150 | ❌ | marmo-perla ×25cx *(duplicata do de cima)* |
-| 23/07 | fitas | 2.461,05 | 361,05 | ❌ | transparente-personalizada ×200rl + clichê |
-| 23/07 | fitas | 2.360,73 | 260,73 | ❌ | idem |
-| 23/07 | fitas | 2.361,19 | 261,19 | ✅ | idem |
-| 23/07 | fitas | 420,02 | 16,02 | ✅ | transparente-personalizada ×20rl + clichê |
-
-🚨 **4 dos 6 pedidos nunca chegaram ao Mercado Pago.** `mpPreferenceId` é gravado na linha
-**seguinte** ao `createPreference` bem-sucedido ([route.ts:138](../app/src/app/api/pedidos/route.ts)
-e [:293](../app/src/app/api/pedidos/route.ts)) — nulo significa que a chamada **falhou** e o
-comprador voltou com `?erro=pagamento`. Os 2 últimos do dia 23/07 têm preference, então o
-caminho aparentemente foi consertado naquele dia (assinatura de token fora do env de prod —
-ver [[roilabs_mercadopago_prod_env_vars]]). **Mas isso nunca foi provado ponta a ponta:
-zero pagamento aprovado, zero webhook, zero `NegocioOriginado`.** A régua do success fee da
-TapePro (15%/10%, spec 010) nunca rodou contra dado real.
-
-**Demanda (cron semanal, rodou hoje 06:03; janela 04/07 → 01/08):**
-
-| medição | resultado | arquivo |
-|---|---|---|
-| rank tracking (serper, Google/Goiânia) | **0 de 40 keywords no top 50** | `Docs/Obsidian/90-medicao/rank-tracking.md` |
-| GSC miner | **43 pares query×page em 28 dias** · **zero** candidata a página nova (piso 20 impressões) · **uma** striking distance: `porcelanato retificado ou bold`, 15 impressões, **pos. 25,3** | `Docs/Obsidian/90-medicao/gsc-miner.md` |
-
-### A leitura — e o que ela NÃO é
-
-Não é "não há demanda": `porcelanato goiânia`, `loja de porcelanato goiânia`, `porcelanato
-preço` são queries reais e existem no rastreio. É **demanda sem ranking**, com ~4 meses de
-malha publicada. É a metade oposta da doença do Atma ([[atma_uma_pagina_uma_query_de_preco]]),
-e o remédio é outro: mais páginas **não** conserta ranking zero.
-
-⚠️ **O número do miner é PISO, não total** — a dimensão `query` do GSC esconde as raras
-([[gsc_query_dimension_hides_rare]]). Antes de concluir "o site não tem tráfego nenhum",
-rodar UMA leitura com `dimensions: []`. É a diferença entre "invisível" e "espalhado".
-
-### 🚩 Achado de brinde: o vertical PRIMÁRIO não é medido por ninguém
-
-[rank-tracking.mjs:31-37](src/scripts/rank-tracking.mjs) monta a lista de keywords lendo
-`termoAlvo` de **`src/data/porcelanato.ts`** — 41 ocorrências. Em **`src/data/fitas.ts` há
-ZERO `termoAlvo`**. Ou seja: as fitas assumiram a home, a nav e a identidade do site em 22/07,
-e **nenhuma das duas medições semanais olha para elas**. O `0/40` acima é um veredito sobre
-porcelanato; sobre fitas **não existe veredito**, e a ausência de dado está sendo lida como
-ausência de resultado. Declarar `termoAlvo` nas páginas de fita é pré-requisito de qualquer
-decisão sobre o canal — custa pouco e desbloqueia as duas medições de graça.
-
-### 🚩 Duas sujeiras que contaminam o painel
-
-1. **1 dos 2 `LeadConsumidor` é lixo de teste:** `[origem] C:/Program Files/Git/teste <-
-   verificacao ntfy`. O `/admin` conta os dois e mostra "2 novo". Apagar, ou a taxa de
-   conversão nasce dividida por um denominador falso.
-2. **`OBRA10` está `ativo: false`** no banco, embora o seed o crie ativo. Ou foi desligado de
-   propósito e ninguém anotou, ou é regressão. Decidir e anotar.
-
-### 🚩 Pendência de git, resolver antes de qualquer coisa
-
-`site-goiania/handoff-fitas-ecommerce.md` está **deletado** e reaparece **não-commitado** em
-`site-goiania/docs/` (junto com `docs/Imagens/`). É uma movimentação de arquivo pela metade:
-`git status` acusa `D` + `??`. Commitar o move, senão a próxima sessão acha que o handoff
-sumiu. (Aquele arquivo é o briefing da spec 011, **já shipada** — é histórico, não pendência.)
-
-### Decisões do Jean antes de mexer
+### Decisões do Jean que continuam abertas
 
 **a) Provar o caminho do dinheiro — sim ou não?** Um pedido real, valor baixo, cartão real,
-ponta a ponta: confirma preference → pagamento aprovado → webhook → `NegocioOriginado` →
-success fee da TapePro. Hoje **todos os quatro elos são teoria**. ⚠️ Não vale pagamento de
-teste: só o **payer** separa teste de receita ([[mercadopago_approved_is_not_a_sale]]).
-**Sugestão: fazer.** É a única coisa aqui que não depende do Google.
+ponta a ponta: preference → pagamento aprovado → webhook → `NegocioOriginado` → success fee
+da TapePro. Hoje **os quatro elos são teoria**. ⚠️ Não vale pagamento de teste: só o **payer**
+separa teste de receita ([[mercadopago_approved_is_not_a_sale]]).
+**Sugestão: fazer.** É a única coisa aqui que não depende do Google, e é ela que prova o
+mecanismo que o institucional vende para conquistar cadeira.
 
-**b) O canal.** Três saídas honestas, e a escolha é comercial, não técnica:
-   1. **Insistir no SEO** — o ativo existe, mas 4 meses deram 0/40; precisa de uma tese nova
-      (backlinks? GBP? conteúdo de fundo?), não de mais páginas da mesma malha.
-   2. **Trocar de canal** — mas [[feedback_full_seo_no_ads]] fecha a porta do Ads.
-   3. **Congelar** o investimento no goiania e realocar. É uma resposta legítima e o handoff
-      não vai fingir que não é.
+**b) O canal, com o dado na mão.** O `0/40` + `pos. 19,8` é demanda-sem-ranking — a metade
+oposta da doença da Atma ([[atma_uma_pagina_uma_query_de_preco]]), e **mais páginas da mesma
+malha não conserta ranking zero**. As saídas honestas: tese nova de autoridade (backlinks?
+GBP? conteúdo de fundo?) · congelar e realocar. [[feedback_full_seo_no_ads]] fecha a porta
+do Ads. **Esperar a aferição de 14/08 antes de decidir** — se as fitas indexarem, o site
+ganha um vertical inteiro que hoje conta como zero.
 
-**c) A cadeira de porcelanato está VAGA** (`estado: vaga`, `open: true`, curadoria aberta —
-corrigido em 07/08). Quem opera a loja hoje é a própria ROI Labs. Vender a cadeira **antes**
-de ter tráfego provado, ou usar o tráfego como argumento de venda? Isso muda o que a próxima
-sessão persegue.
+**c) A cadeira de porcelanato está VAGA** (`estado: vaga`, `open: true`, curadoria aberta).
+Quem opera a loja hoje é a própria ROI Labs. Vender a cadeira **antes** de ter tráfego
+provado, ou usar o tráfego como argumento de venda?
 
-**d) Fitas × porcelanato: quem é o site?** A home é de fitas (B2B nacional), o SEO todo é de
-porcelanato (B2C local). Os dois verticais competem pela mesma identidade e o Google recebe
-sinal misto. Manter os dois, ou escolher?
+**d) Autoridade tópica do domínio.** Ver a ⚠️ do modelo de negócio acima. Não é urgente
+enquanto houver 1 tenant publicado; vira urgente na 3ª cadeira.
 
-### Ordem sugerida
+---
 
-1. Commitar o move do `docs/` (30 s, destrava o `git status`).
-2. Ler o GSC com `dimensions: []` — saber se são 43 impressões ou 4.300 muda TODAS as decisões.
-3. Declarar `termoAlvo` nas páginas de `fitas.ts` e rodar as duas medições. Sem isso, decidir
-   sobre o canal é decidir sobre metade do site.
-4. Limpar o lead de teste + decidir o `OBRA10`.
-5. Só então: a decisão **(b)**, com o dado dos passos 2-3 na mão.
-6. Em paralelo e independente do Google: o teste real de pagamento **(a)**.
+### Ordem sugerida para a próxima sessão
+
+1. **Aferir a URL Inspection das 4 URLs de `/fitas/`** (~14/08). Uma chamada, muda a leitura
+   do canal inteiro. Script pronto no padrão do `gsc-miner` (mesma auth).
+2. **Apagar o lead de teste** (`cd app && node .tmp-lead.mjs`) e remover o arquivo.
+3. **(a), o teste real de pagamento** — independente do Google, e o de maior retorno.
+4. Só então **(b)**, com o resultado de 1 na mão.
+
+---
+
+### Credenciais e como rodar (economiza 20 min de caça)
+
+- **`ROI Labs/.env` (raiz) tem tudo** — `DATABASE_URL`, `GOOGLE_SERVICE_ACCOUNT_JSON`,
+  MP, Melhor Envio. **Não** existe `.env` dentro de `app/` nem de `site-goiania/`.
+- 🚩 **`GOOGLE_SERVICE_ACCOUNT_JSON` não é o JSON** — é uma expressão PowerShell
+  `$(Get-Content <caminho>)`. Resolver o arquivo antes de dar `JSON.parse`.
+  SA = `nimblabs@review-dispute-agent-498311`, e ela enxerga a propriedade **de domínio**
+  (`sc-domain:goiania.roilabs.com.br`), **não** a URL-prefix (403).
+- 🚩 **`DATABASE_URL` do `.env` aponta para o host INTERNO do Docker**
+  (`doc_crm_roilabs_db:5432`), inalcançável da máquina. Mesmas credenciais no endpoint
+  externo: trocar host/porta para **`2.24.207.200:5443`** e limpar a query string
+  (o PG do VPS **não suporta TLS**).
+- 🚩 **`LeadConsumidor` não tem coluna `origem` nem `criadoEm`** — é `createdAt`, e o texto
+  "[origem] …" mora em `mensagem`.
+- **`SERPER_API_KEY` só existe como secret do GitHub.** Para rodar rank-tracking de verdade:
+  `gh workflow run rank-tracking.yml` + `gh run watch <id>`, depois `git pull --rebase`
+  (o job commita o vault sozinho).
+
+```bash
+cd site-goiania && npx astro build     # 🚨 `npm run build` SUBMETE ao IndexNow (postbuild)
+cd site-goiania && npm run indexnow:check
+GSC_SA_KEY='<json>' GSC_SITE=sc-domain:goiania.roilabs.com.br \
+  node site-goiania/src/scripts/gsc-miner.mjs        # sem a chave é no-op SILENCIOSO
+gh workflow run rank-tracking.yml                    # rank + gsc-miner + CWV + digest
+```
 
 ### O que NÃO reinvestigar (medido em 07/08)
 
 - **Todas as rotas respondem 200** — `/`, `/fitas/`, `/porcelanato/`, `/carrinho-fitas/`,
   `/feed.xml`, `/robots.txt`, `/llms.txt`, `/sitemap.xml`.
-- **`areaServed` já cobre Brasil + Goiânia.** O risco nº 4 do briefing de fitas está resolvido.
+- **A invisibilidade das fitas não era** `robots`, canonical, `noindex`, sitemap de prod nem
+  falta de link interno. Era a **cópia velha** do sitemap no lado do Google.
+- **`areaServed` já cobre Brasil + Goiânia** — o risco nº 4 do briefing de fitas está resolvido.
 - **A spec 011 está shipada** — `/fitas/` existe, `ItemPedidoFita` é tabela própria, o
   `ItemPedido` de porcelanato ficou intocado. O `itens` vazio de um pedido de fita **não é
   bug**: são duas relações (`itens` × `itensFita`).
 - **O LCP já foi resolvido** (5,9s → 2,5s, seção de 13/07 abaixo). Não é o gargalo.
 - **`Candidatura` está vazia** e a única cadeira que aceita candidatura é a de porcelanato.
-
-### Comandos
-
-```bash
-# os 6 pedidos como o banco os tem (script temporário DENTRO de app/, apagar depois)
-cd app && DATABASE_URL='...' node --import tsx .tmp-x.mts
-
-cd site-goiania && npx astro build     # 🚨 `npm run build` SUBMETE ao IndexNow (postbuild)
-cd site-goiania && npm run indexnow:check
-GSC_SA_KEY='<json>' node site-goiania/src/scripts/gsc-miner.mjs   # sem a chave é no-op silencioso
-```
+- **`OBRA10` desligado é intencional**, não regressão (evidência nos timestamps, acima).
 
 ### Armadilhas que continuam valendo
 
 - **🚨 `git push` em `main` É DEPLOY** (EasyPanel). Sem branch, sem PR.
 - **🚨 `npm run build` no `site-goiania` publica no Bing** via `postbuild`. Use `npx astro build`.
+- **🚨 200 não é índice** — só a URL Inspection decide ([[site_200_is_not_indexed_url_inspection]]).
 - **Uma run de PSI não decide nada** — mediana de 5 (seção de 13/07).
 - **URL sem barra final = 301 `http://`** no nginx; rota nova precisa respeitar.
 - **`gsc-miner` sem `GSC_SA_KEY` sai com exit 0 e não faz nada** — silêncio dele não é "sem dado".
+- **IndexNow ≠ Google.** O `postbuild` só cobre Bing/Yandex, e o Bing devolve 403 no
+  subdomínio até as propriedades do GSC serem importadas no Bing Webmaster (login do Jean,
+  ~10 min — ver [[indexnow_403_subdomain_bing]]).
+
+### Commits desta sessão
+
+`bac40ac` medição das fitas + totais do GSC · `2a7c77f` handoff dos itens 1-4 ·
+`f5e743b` rodada semanal do cron · `ab37cdf` reenvio do sitemap · `e4d40ca` handoff do achado
 
 ---
 
