@@ -5,8 +5,14 @@
 # ✅ EXECUTADO em 07/08 — itens 1 e 2 (commitados, **NÃO pushados**)
 
 **Decisões do Jean, tomadas antes de escrever:** saída **B** (casar por `siteUrl`) · os **5
-rótulos propostos aceitos** · Meridian **nunca foi de beleza** (o produto sempre foi finanças; "beleza" era o polimento
-memória é que estava velha) · fusão com **skeleton estático GERADO**.
+rótulos propostos aceitos** · fusão com **skeleton estático GERADO**.
+
+Sobre o Meridian, a dúvida levantada mais abaixo neste arquivo **se resolveu para o lado
+contrário**: não houve pivô e o subdomínio não está errado. A memória do projeto sempre disse
+"site institucional de um app de controle financeiro" — a **"beleza" era o polimento VISUAL**
+do laboratório de front-end para a vaga da FitNext, não o setor. O rótulo `Beleza / Estética`
+nasceu de ler o apelido do projeto como se fosse o nicho dele. `Finanças pessoais` vale pelas
+duas leituras, então o rótulo escrito está certo de qualquer ângulo.
 
 O que mudou:
 
