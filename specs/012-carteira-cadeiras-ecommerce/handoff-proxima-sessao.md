@@ -5,7 +5,7 @@
 # ✅ EXECUTADO em 07/08 — itens 1 e 2 (commitados, **NÃO pushados**)
 
 **Decisões do Jean, tomadas antes de escrever:** saída **B** (casar por `siteUrl`) · os **5
-rótulos propostos aceitos** · Meridian **pivotou** para finanças (o subdomínio está certo, a
+rótulos propostos aceitos** · Meridian **nunca foi de beleza** (o produto sempre foi finanças; "beleza" era o polimento
 memória é que estava velha) · fusão com **skeleton estático GERADO**.
 
 O que mudou:

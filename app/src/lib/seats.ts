@@ -69,9 +69,10 @@ export const PROJETOS_CADEIRA = [
   // ── Fora da fase 1, mas nomeadas pela spec ─────────────────────────────────
   // meridian: NÃO está entre as 7 da fase 1 nem entre as 8 do SEED de nicho — ele só existe
   // como cadeira por causa de FR-010a. Sem esta linha, T052 escreveria numa linha inexistente.
-  // ⚠️ O rótulo era `Beleza / Estética` (o laboratório para a vaga da FitNext). O produto
-  // PIVOTOU (Jean, 07/08): meridian.roilabs.com.br serve "See every dollar", um motor de
-  // finanças pessoais. O subdomínio está certo; a memória é que estava velha.
+  // ⚠️ O rótulo era `Beleza / Estética` e nunca descreveu o produto: o Meridian sempre foi o
+  // site de um app de FINANÇAS pessoais ("See every dollar"). A "beleza" era do laboratório
+  // de front-end para a vaga da FitNext — polimento visual, não o setor. Não houve pivô;
+  // o rótulo nasceu de ler o apelido do projeto como se fosse o nicho dele.
   { slug: 'meridian', niche: 'Finanças pessoais', status: 'Em preparação · Meridian', estado: 'em-preparacao', gateway: null, daCasa: true, exibirDaCasa: true, siteUrl: 'https://meridian.roilabs.com.br/', repoUrl: 'https://github.com/JeanZorzetti/meridian' },
   // orcaobra: saiu da fase 1 por bloqueio de PRODUTO, não de fiação ("acho ele um produto
   // ruim do jeito que está"). Ligar checkout aqui venderia algo que não deveria estar à venda.
