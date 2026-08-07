@@ -20,7 +20,7 @@ dono: automático (gsc-miner.mjs, cron semanal)
 > A soma dos pares query×page é **piso**: a dimensão `query` anonimiza as raras. Só esta
 > linha diz quanta impressão o site teve de verdade.
 
-### Por vertical (`dimensions: ['page']` — sem anonimização, soma bate com o total)
+### Por vertical (`dimensions: ['page']` — sem a anonimização que corta `query`)
 
 | Vertical | Impressões | Cliques | Páginas com impressão |
 |----------|-----------:|--------:|----------------------:|
