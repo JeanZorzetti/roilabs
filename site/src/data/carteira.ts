@@ -7,6 +7,7 @@ export const carteira: {
   niche: string;
   estado: string;
   rotulo: 'casa' | 'parceiro';
+  nome: string;
   siteUrl: string;
   ordem: number;
 }[] = [
@@ -14,6 +15,7 @@ export const carteira: {
     "niche": "Orquestração de agentes IA",
     "estado": "ocupada-vendavel",
     "rotulo": "parceiro",
+    "nome": "Polaris IA",
     "siteUrl": "https://polarisia.com.br/",
     "ordem": 8
   },
@@ -21,6 +23,7 @@ export const carteira: {
     "niche": "CRM / Estética",
     "estado": "ocupada-vendavel",
     "rotulo": "parceiro",
+    "nome": "Estetia CRM",
     "siteUrl": "https://estetiacrm.com.br/",
     "ordem": 9
   },
@@ -28,6 +31,7 @@ export const carteira: {
     "niche": "Onboarding de clientes",
     "estado": "ocupada-vendavel",
     "rotulo": "parceiro",
+    "nome": "Vértice",
     "siteUrl": "https://vertice.roilabs.com.br/",
     "ordem": 10
   },
@@ -35,6 +39,7 @@ export const carteira: {
     "niche": "CRM de vendas",
     "estado": "ocupada-vendavel",
     "rotulo": "casa",
+    "nome": "Sirius CRM",
     "siteUrl": "https://siriuscrm.com.br/",
     "ordem": 11
   },
@@ -42,6 +47,7 @@ export const carteira: {
     "niche": "Ferramentas de dev",
     "estado": "ocupada-vendavel",
     "rotulo": "parceiro",
+    "nome": "Context Keeper",
     "siteUrl": "https://context.nimblabs.com/",
     "ordem": 12
   },
@@ -49,6 +55,7 @@ export const carteira: {
     "niche": "ERP / Gestão empresarial",
     "estado": "ocupada-vendavel",
     "rotulo": "casa",
+    "nome": "Orion ERP",
     "siteUrl": "https://orion.roilabs.com.br/",
     "ordem": 13
   },
@@ -56,6 +63,7 @@ export const carteira: {
     "niche": "Finanças pessoais",
     "estado": "em-preparacao",
     "rotulo": "casa",
+    "nome": "Meridian",
     "siteUrl": "https://meridian.roilabs.com.br/",
     "ordem": 14
   },
@@ -63,6 +71,7 @@ export const carteira: {
     "niche": "Orçamento de obra",
     "estado": "em-preparacao",
     "rotulo": "parceiro",
+    "nome": "OrçaObra",
     "siteUrl": "https://orcaobra.roilabs.com.br/",
     "ordem": 15
   }

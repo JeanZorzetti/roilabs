@@ -19,7 +19,7 @@
 import { writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { DEFAULT_SEATS, PROJETOS_CADEIRA } from '../src/lib/seats';
-import { rotuloPublico } from '../src/lib/carteira/produto';
+import { nomeExibido, rotuloPublico } from '../src/lib/carteira/produto';
 
 // A MESMA regra do seed: projeto cujo `niche` já é cadeira de nicho (a `atma`) não vira card
 // próprio — ele ocupa a linha do mapa de Goiânia. Derivar isso daqui evita o card duplicado
@@ -31,6 +31,9 @@ const carteira = PROJETOS_CADEIRA.filter((p) => !nichos.has(p.niche)).map((p, i)
   // FR-010a: `rotulo` resolvido, NUNCA `daCasa` — a mesma projeção que /api/cadeiras aplica.
   // Vazar `daCasa` aqui exporia para o HTML a curadoria que a API existe para esconder.
   rotulo: rotuloPublico(p),
+  // O nome da empresa, extraído do `status` (curadoria do /admin). O skeleton carrega o nome
+  // JÁ resolvido porque `site/` não consegue importar de `app/` (o Docker copia só site/).
+  nome: nomeExibido(p.status),
   siteUrl: p.siteUrl,
   // `ordem` é o que alinha este card com o índice do array de /api/cadeiras no navegador.
   ordem: DEFAULT_SEATS.length + i,
@@ -49,6 +52,7 @@ export const carteira: {
   niche: string;
   estado: string;
   rotulo: 'casa' | 'parceiro';
+  nome: string;
   siteUrl: string;
   ordem: number;
 }[] = ${JSON.stringify(carteira, null, 2)};

@@ -100,3 +100,15 @@ export function ehIndexavel(e: EntradaCheckout): boolean {
 export function rotuloPublico(c: { daCasa: boolean; exibirDaCasa: boolean }): 'casa' | 'parceiro' {
   return c.exibirDaCasa ? 'casa' : 'parceiro';
 }
+
+/**
+ * O nome da empresa que ocupa a cadeira — o que a home descartava até 07/08.
+ *
+ * Ele NÃO é campo novo: já vive dentro do `status` de exibição ("Ocupada · Polaris IA"),
+ * que é curadoria do /admin. Criar uma coluna `nome` duplicaria a mesma verdade em dois
+ * lugares que passariam a divergir na primeira edição feita só num deles.
+ * Sem separador, o `status` inteiro É o nome.
+ */
+export function nomeExibido(status: string): string {
+  return status.split('·').pop()?.trim() ?? '';
+}

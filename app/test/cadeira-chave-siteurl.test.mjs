@@ -11,7 +11,7 @@
 import assert from 'node:assert/strict';
 import { DEFAULT_SEATS, PROJETOS_CADEIRA } from '../src/lib/seats.ts';
 import { carteira } from '../../site/src/data/carteira.ts';
-import { rotuloPublico } from '../src/lib/carteira/produto.ts';
+import { nomeExibido, rotuloPublico } from '../src/lib/carteira/produto.ts';
 
 // 1 — siteUrl único entre as cadeiras de projeto.
 const urls = PROJETOS_CADEIRA.map((p) => p.siteUrl).filter(Boolean);
@@ -29,10 +29,20 @@ const esperado = PROJETOS_CADEIRA.filter((p) => !nichos.has(p.niche)).map((p, i)
   niche: p.niche,
   estado: p.estado,
   rotulo: rotuloPublico(p),
+  nome: nomeExibido(p.status),
   siteUrl: p.siteUrl,
   ordem: DEFAULT_SEATS.length + i,
 }));
 assert.deepEqual(carteira, esperado, 'site/src/data/carteira.ts desatualizado — rode `npm run gen:carteira`');
+
+// 3b — o nome que a home passou a exibir (07/08). Curadoria com o separador errado produz
+// legenda vazia ("No ar · ") ou com o prefixo dentro ("No ar · Ocupada · X"), e as duas
+// só apareceriam na tela publicada.
+for (const p of PROJETOS_CADEIRA) {
+  const nome = nomeExibido(p.status);
+  assert.ok(nome.length > 0, `${p.slug}: status "${p.status}" não produz nome exibível`);
+  assert.ok(!nome.includes('·'), `${p.slug}: nome "${nome}" ainda carrega o prefixo de estado`);
+}
 
 // 4 — FR-010a: o skeleton publica `rotulo` resolvido e NUNCA a marcação interna `daCasa`.
 assert.ok(

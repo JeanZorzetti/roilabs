@@ -215,7 +215,7 @@ const jsonLdNodes = [
               <a class="seat__niche" href={c.siteUrl} target="_blank" rel="noopener">{c.niche} ↗</a>
               <span class="seat__status">
                 <span class="seat__ring" aria-hidden="true"></span>
-                {' '}{ESTADO[c.estado] ?? c.estado} · {c.rotulo === 'casa' ? 'Da casa' : 'Parceiro'}
+                {' '}{ESTADO[c.estado] ?? c.estado}{c.nome ? ` · ${c.nome}` : ''}{c.rotulo === 'casa' ? ' · Da casa' : ''}
               </span>
             </li>
           ))}
@@ -254,13 +254,18 @@ const jsonLdNodes = [
             ring.className = 'seat__ring';
             ring.setAttribute('aria-hidden', 'true');
             st.appendChild(ring);
-            // Cadeira de PROJETO (ordem 8+) tem outra legenda: `status` ali é texto interno do
-            // /admin ("Ocupada · Polaris"), e o que vai para o público é estado + rótulo.
-            // ⚠️ FR-010a: `rotulo`, NUNCA `daCasa`. A projeção da API existe para esconder
-            // essa curadoria, e o skeleton gerado aplica a mesma regra.
+            // Cadeira de PROJETO (ordem 8+) tem outra legenda: `estado · nome`, e o selo
+            // "Da casa" SÓ quando `rotulo === 'casa'` (decisão do Jean, 07/08 — opção C).
+            // O nome sai do `status` do /admin ("Ocupada · Polaris IA"), o mesmo lugar de onde
+            // o skeleton o extrai em `nomeExibido`; mudar um sem o outro faz a legenda piscar.
+            // ⚠️ FR-010a: `rotulo`, NUNCA `daCasa`. Sem selo agora SIGNIFICA parceiro — é o
+            // preço da opção C, e é como os cards de nicho (Tapepro, Atma) já se apresentam.
+            const nome = String(s.status || '').split('·').pop().trim();
             const texto =
               s.ordem >= 8
-                ? (ESTADO[s.estado] || s.estado) + ' · ' + (s.rotulo === 'casa' ? 'Da casa' : 'Parceiro')
+                ? (ESTADO[s.estado] || s.estado) +
+                  (nome ? ' · ' + nome : '') +
+                  (s.rotulo === 'casa' ? ' · Da casa' : '')
                 : s.status;
             st.appendChild(document.createTextNode(' ' + texto));
 

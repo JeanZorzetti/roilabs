@@ -54,7 +54,10 @@ export const PROJETOS_CADEIRA = [
   // saiu do que o próprio site diz de si, lido no ar em 07/08 — 5 dos 8 descreviam produto
   // que não existe mais (o `polarisia` não tinha uma palavra sobre imóvel na página inteira).
   // Trocar rótulo aqui é edição de texto: NÃO cria cadeira nova, mas exige rodar o seed.
-  { slug: 'polarisia', niche: 'Orquestração de agentes IA', status: 'Ocupada · Polaris', estado: 'ocupada-vendavel', gateway: 'mercadopago', daCasa: true, exibirDaCasa: false, siteUrl: 'https://polarisia.com.br/', repoUrl: 'https://github.com/JeanZorzetti/sofia-ia' },
+  // ⚠️ 07/08: o trecho DEPOIS do `·` virou o nome exibido na home (`nomeExibido`). O banco
+  // ainda diz "Ocupada · Polaris" — o seed NÃO escreve `status` (é curadoria do /admin), então
+  // este valor só alimenta o skeleton. Corrigir no /admin, senão a home pisca "Polaris".
+  { slug: 'polarisia', niche: 'Orquestração de agentes IA', status: 'Ocupada · Polaris IA', estado: 'ocupada-vendavel', gateway: 'mercadopago', daCasa: true, exibirDaCasa: false, siteUrl: 'https://polarisia.com.br/', repoUrl: 'https://github.com/JeanZorzetti/sofia-ia' },
   { slug: 'estetiacrm', niche: 'CRM / Estética', status: 'Ocupada · Estetia CRM', estado: 'ocupada-vendavel', gateway: 'mercadopago', daCasa: true, exibirDaCasa: false, siteUrl: 'https://estetiacrm.com.br/', repoUrl: 'https://github.com/JeanZorzetti/estetia' },
   // T052 RESOLVIDA (Jean, 07/08): `vertice` é parceiro externo → daCasa:false. Sai do
   // fail-closed e ENTRA na régua do success fee.
@@ -65,7 +68,8 @@ export const PROJETOS_CADEIRA = [
   // consultores, representantes) — o rótulo antigo estreitava a cadeira a um quinto dela.
   { slug: 'sirius', niche: 'CRM de vendas', status: 'Ocupada · Sirius CRM', estado: 'ocupada-vendavel', gateway: 'stripe', daCasa: true, exibirDaCasa: true, siteUrl: 'https://siriuscrm.com.br/', repoUrl: 'https://github.com/JeanZorzetti/sirius' },
   { slug: 'context', niche: 'Ferramentas de dev', status: 'Ocupada · Context Keeper', estado: 'ocupada-vendavel', gateway: 'stripe', daCasa: true, exibirDaCasa: false, siteUrl: 'https://context.nimblabs.com/', repoUrl: 'https://github.com/JeanZorzetti/context-keeper' },
-  { slug: 'orion', niche: 'ERP / Gestão empresarial', status: 'Ocupada · Orion', estado: 'ocupada-vendavel', gateway: 'stripe', daCasa: true, exibirDaCasa: true, siteUrl: 'https://orion.roilabs.com.br/', repoUrl: 'https://github.com/JeanZorzetti/orion-nova-ui' },
+  // ⚠️ mesma nota do `polarisia`: banco tem "Ocupada · Orion", corrigir no /admin.
+  { slug: 'orion', niche: 'ERP / Gestão empresarial', status: 'Ocupada · Orion ERP', estado: 'ocupada-vendavel', gateway: 'stripe', daCasa: true, exibirDaCasa: true, siteUrl: 'https://orion.roilabs.com.br/', repoUrl: 'https://github.com/JeanZorzetti/orion-nova-ui' },
   // ── Fora da fase 1, mas nomeadas pela spec ─────────────────────────────────
   // meridian: NÃO está entre as 7 da fase 1 nem entre as 8 do SEED de nicho — ele só existe
   // como cadeira por causa de FR-010a. Sem esta linha, T052 escreveria numa linha inexistente.
