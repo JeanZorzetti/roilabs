@@ -57,9 +57,11 @@ export const PROJETOS_CADEIRA = [
   // este valor só alimenta o skeleton. Corrigir no /admin, senão a home pisca "Polaris".
   { slug: 'polarisia', niche: 'Orquestração de agentes IA', status: 'Ocupada · Polaris IA', estado: 'ocupada-vendavel', gateway: 'mercadopago', daCasa: true, exibirDaCasa: false, siteUrl: 'https://polarisia.com.br/', repoUrl: 'https://github.com/JeanZorzetti/sofia-ia' },
   { slug: 'estetiacrm', niche: 'CRM / Estética', status: 'Ocupada · Estetia CRM', estado: 'ocupada-vendavel', gateway: 'mercadopago', daCasa: true, exibirDaCasa: false, siteUrl: 'https://estetiacrm.com.br/', repoUrl: 'https://github.com/JeanZorzetti/estetia' },
-  // T052 RESOLVIDA (Jean, 07/08): `vertice` é parceiro externo → daCasa:false. Sai do
-  // fail-closed e ENTRA na régua do success fee.
-  { slug: 'vertice', niche: 'Onboarding de clientes', status: 'Ocupada · Vértice', estado: 'ocupada-vendavel', gateway: 'mercadopago', daCasa: false, exibirDaCasa: false, siteUrl: 'https://vertice.roilabs.com.br/', repoUrl: 'https://github.com/JeanZorzetti/vertice' },
+  // T052 CORRIGIDA (Jean, 07/08, fim do dia): `vertice` é DA CASA. A leitura anterior o
+  // classificou como parceiro externo e o colocou na régua do success fee — que é o erro que
+  // FR-010 proíbe (a ROI Labs cobrando fee de si mesma e INFLANDO a receita da carteira).
+  // `exibirDaCasa` continua false: a lista de exceções é DADO e são só sirius/meridian/orion.
+  { slug: 'vertice', niche: 'Onboarding de clientes', status: 'Ocupada · Vértice', estado: 'ocupada-vendavel', gateway: 'mercadopago', daCasa: true, exibirDaCasa: false, siteUrl: 'https://vertice.roilabs.com.br/', repoUrl: 'https://github.com/JeanZorzetti/vertice' },
   // ── Fase 1: Stripe (3 cadeiras) ────────────────────────────────────────────
   // sirius/orion: daCasa E exibirDaCasa — as exceções nomeadas em FR-010a.
   // Solar era 1 de 5 segmentos que o próprio site lista (corretores, solar, agências,
@@ -79,9 +81,9 @@ export const PROJETOS_CADEIRA = [
   // orcaobra: saiu da fase 1 por bloqueio de PRODUTO, não de fiação ("acho ele um produto
   // ruim do jeito que está"). Ligar checkout aqui venderia algo que não deveria estar à venda.
   // ⚠️ O repo NÃO se chama `orcaobra`: é `reforma-maestro`. Derivar repoUrl do slug erraria aqui.
-  // T052 RESOLVIDA (Jean, 07/08): parceiro externo → daCasa:false. O bloqueio dele segue
-  // sendo de PRODUTO (`em-preparacao`), que é o que impede a venda — não a curadoria.
-  { slug: 'orcaobra', niche: 'Orçamento de obra', status: 'Em preparação · OrçaObra', estado: 'em-preparacao', gateway: null, daCasa: false, exibirDaCasa: false, siteUrl: 'https://orcaobra.roilabs.com.br/', repoUrl: 'https://github.com/JeanZorzetti/reforma-maestro' },
+  // T052 CORRIGIDA (Jean, 07/08, fim do dia): `orcaobra` é DA CASA — mesma correção do
+  // `vertice`. O bloqueio dele segue sendo de PRODUTO (`em-preparacao`), não de curadoria.
+  { slug: 'orcaobra', niche: 'Orçamento de obra', status: 'Em preparação · OrçaObra', estado: 'em-preparacao', gateway: null, daCasa: true, exibirDaCasa: false, siteUrl: 'https://orcaobra.roilabs.com.br/', repoUrl: 'https://github.com/JeanZorzetti/reforma-maestro' },
 ] as const;
 
 /**
