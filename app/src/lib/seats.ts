@@ -52,7 +52,9 @@ export const PROJETOS_CADEIRA = [
   { slug: 'atma', niche: 'Ortodontia / Alinhadores', status: 'Ocupada · Atma Aligner', estado: 'ocupada-vendavel', gateway: 'mercadopago', daCasa: false, exibirDaCasa: false, siteUrl: 'https://atma.roilabs.com.br/', repoUrl: 'https://github.com/JeanZorzetti/Atma' },
   { slug: 'polarisia', niche: 'Imobiliário / IA', status: 'Ocupada · Polaris', estado: 'ocupada-vendavel', gateway: 'mercadopago', daCasa: true, exibirDaCasa: false, siteUrl: 'https://polarisia.com.br/', repoUrl: 'https://github.com/JeanZorzetti/sofia-ia' },
   { slug: 'estetiacrm', niche: 'CRM / Estética', status: 'Ocupada · Estetia CRM', estado: 'ocupada-vendavel', gateway: 'mercadopago', daCasa: true, exibirDaCasa: false, siteUrl: 'https://estetiacrm.com.br/', repoUrl: 'https://github.com/JeanZorzetti/estetia' },
-  { slug: 'vertice', niche: 'Vértice', status: 'Ocupada · Vértice', estado: 'ocupada-vendavel', gateway: 'mercadopago', daCasa: true, exibirDaCasa: false, siteUrl: 'https://vertice.roilabs.com.br/', repoUrl: 'https://github.com/JeanZorzetti/vertice' },
+  // T052 RESOLVIDA (Jean, 07/08): `vertice` é parceiro externo → daCasa:false. Sai do
+  // fail-closed e ENTRA na régua do success fee.
+  { slug: 'vertice', niche: 'Vértice', status: 'Ocupada · Vértice', estado: 'ocupada-vendavel', gateway: 'mercadopago', daCasa: false, exibirDaCasa: false, siteUrl: 'https://vertice.roilabs.com.br/', repoUrl: 'https://github.com/JeanZorzetti/vertice' },
   // ── Fase 1: Stripe (3 cadeiras) ────────────────────────────────────────────
   // sirius/orion: daCasa E exibirDaCasa — as exceções nomeadas em FR-010a.
   { slug: 'sirius', niche: 'CRM / Solar', status: 'Ocupada · Sirius CRM', estado: 'ocupada-vendavel', gateway: 'stripe', daCasa: true, exibirDaCasa: true, siteUrl: 'https://siriuscrm.com.br/', repoUrl: 'https://github.com/JeanZorzetti/sirius' },
@@ -65,7 +67,9 @@ export const PROJETOS_CADEIRA = [
   // orcaobra: saiu da fase 1 por bloqueio de PRODUTO, não de fiação ("acho ele um produto
   // ruim do jeito que está"). Ligar checkout aqui venderia algo que não deveria estar à venda.
   // ⚠️ O repo NÃO se chama `orcaobra`: é `reforma-maestro`. Derivar repoUrl do slug erraria aqui.
-  { slug: 'orcaobra', niche: 'Orçamento de obra', status: 'Em preparação · OrçaObra', estado: 'em-preparacao', gateway: null, daCasa: true, exibirDaCasa: false, siteUrl: 'https://orcaobra.roilabs.com.br/', repoUrl: 'https://github.com/JeanZorzetti/reforma-maestro' },
+  // T052 RESOLVIDA (Jean, 07/08): parceiro externo → daCasa:false. O bloqueio dele segue
+  // sendo de PRODUTO (`em-preparacao`), que é o que impede a venda — não a curadoria.
+  { slug: 'orcaobra', niche: 'Orçamento de obra', status: 'Em preparação · OrçaObra', estado: 'em-preparacao', gateway: null, daCasa: false, exibirDaCasa: false, siteUrl: 'https://orcaobra.roilabs.com.br/', repoUrl: 'https://github.com/JeanZorzetti/reforma-maestro' },
 ] as const;
 
 /**

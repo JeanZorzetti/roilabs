@@ -1,67 +1,66 @@
 # Handoff — 012 carteira de cadeiras no e-commerce
 
-**Data**: 2026-08-07 (2ª sessão) · **Status**: **66 de 83 tasks entregues**, `npm test` 17/17,
-migração aplicada em produção. **18 em aberto** — 17 por falta de acesso ao painel do parceiro
-ou de **decisão do Jean** (agora são **quatro** decisões, não duas), e **uma nova: a T057a**,
-aberta pela pergunta do Jean sobre os sites públicos. Leia o bloco 🚨 abaixo antes de tudo.
+**Data**: 2026-08-07 (3ª sessão) · **Status**: **68 de 84 tasks entregues**, `npm test` 17/17,
+migração aplicada em produção. **16 em aberto**, e a natureza delas mudou: **as quatro decisões
+do Jean foram respondidas** e a T057a fechou. O que sobra trava em **acesso a painel de
+terceiro** (T033/T034/T036/T037), **uma tabela de 26 linhas** (T066) ou **execução de infra**
+(fase D + T072b). Leia o bloco 🚨 abaixo antes de tudo.
 
 ---
 
-# 🚨 COMECE AQUI — "não vi diferença nenhuma nos dois sites públicos"
+# 🚨 COMECE AQUI — as decisões do Jean, e o que elas mudaram
 
-O Jean olhou `roilabs.com.br` e `goiania.roilabs.com.br` depois da migração e não viu mudança.
-**Está certo, e as duas causas são diferentes.** Uma é comportamento esperado; a outra é um
-buraco real que nenhuma task da 012 cobre.
+## As quatro respostas (07/08)
 
-## 1. `goiania.roilabs.com.br` — esperado, e não há o que consertar
+| pergunta | resposta | efeito |
+|---|---|---|
+| A carteira aparece no institucional? (T057a) | **Sim — seção própria "A carteira"** (saída 2) | ✅ implementada e vista no browser |
+| Qual cadeira ganha a 1ª página? (T048) | **`sirius`**, não `atma` | ✅ conteúdo escrito, 1817 palavras |
+| `daCasa` de `vertice` e `orcaobra`? | **Nenhum dos dois** → `daCasa: false` | ✅ no código; ⏳ falta seed em prod |
+| Label do subdomínio? (T058) | **`loja.roilabs.com.br`** | ✅ T058 fechada, destrava T059/T061-T065 |
 
-`site-goiania/src/data/cadeiras.ts` é `[]`. Sem cadeira publicada, `getStaticPaths()` gera
-**zero** páginas e o sitemap ganha **zero** entradas. Medido em produção agora:
+## 1. A carteira agora APARECE em `roilabs.com.br` — T057a fechada
+
+Seção nova `#carteira` no institucional, alimentada por `ordem >= 8 && siteUrl`, exibindo
+`rotulo` + `estado` + link para o site de cada projeto. **Visto no browser contra a API de
+produção** (não curlado): 8 cards, `sirius`/`orion`/`meridian` como "Da casa" e os outros
+cinco como "Parceiro" — FR-010a mantida, `daCasa` não vaza.
+Print: [snapshots/t057a-carteira.png](./snapshots/t057a-carteira.png).
+
+**A decisão de projeto que vale registrar: NÃO existe skeleton estático nessa seção.** O
+motivo é o defeito que ela conserta — espelhar a lista em HTML foi exatamente o que fez a
+tela ficar byte-idêntica com a API em 200 ou em 500. Um segundo espelho, agora com 8 linhas,
+repetiria o mesmo defeito em dobro. A fonte é única (`/api/cadeiras`); fetch falhou ⇒ a seção
+não aparece, que é o comportamento de hoje. Custo aceito e anotado no código: **essa seção
+não existe para quem não roda JS**. Se o SEO dela vier a importar, a saída é gerar no build —
+e build-time fetch está proibido naquele arquivo porque o layer do Docker cacheia o `dist`.
+
+Zero backend, zero CSS novo (reusa `.map__grid`/`.seat`). O laço antigo passou a usar
+`#cadeiras .map__grid .seat`: agora existem **dois** `.map__grid` na página, e o seletor solto
+teria começado a casar os cards da carteira.
+
+## 2. ⚠️ DEFEITO NOVO achado ao ler a API — o seed não conserta `estado` de cadeira de nicho
+
+Não estava em task nenhuma. Em produção, `Fitas adesivas` serve:
 
 ```
-sitemap.xml  → corpo começa em `<?xml version=`, 99 <loc>, ZERO /cadeira/
-/cadeira/atma/ → 404
+{"niche":"Fitas adesivas","status":"Ocupada · Tapepro","estado":"vaga", ...}
 ```
 
-Isso é a T048 aberta, não um defeito. **A 012 nunca prometeu mudar este site sem conteúdo.**
+`status` diz ocupada, `estado` diz vaga. **Causa raiz:** as 8 cadeiras de nicho nasceram na
+011, antes da coluna `estado`; a migração da 012 criou a coluna com default `'vaga'`; e o laço
+de `DEFAULT_SEATS` em `prisma/seed.ts` só escrevia `ordem` no ramo `existing`. Logo **nenhuma
+rodada de seed jamais as corrigiria** — o dado certo estava em `seats.ts` o tempo todo e não
+tinha caminho até o banco.
 
-## 2. `roilabs.com.br` — ⚠️ AQUI ESTÁ O BURACO: a carteira é INVISÍVEL
+O efeito é visível: o skeleton no-JS pinta a Tapepro como `seat--taken`, e quando o JS roda a
+API **remove** a classe. A cadeira ocupada visualmente desocupa. Corrigido no seed (agora
+escreve `estado`; `status`/`open` continuam de fora, esses o /admin curou à mão) — **falta
+rodar em produção: T072b.**
 
-O site já roda o script da 012 (o HTML servido contém `aceitaCandidatura` e `seat--taken`),
-o fetch voltou a dar 200, e **mesmo assim a tela é byte-idêntica**. Dois motivos somados:
-
-- **O skeleton estático ESPELHA `DEFAULT_SEATS`** — `index.astro:28-37` tem o mesmo `status` e
-  o mesmo `estado` que o banco. O script busca a API e reescreve **os mesmos valores**. A
-  página renderiza igual com a API no ar ou em 500. Foi por isso que ela "degradava limpo"
-  antes — e é por isso que consertar o 500 não mudou pixel nenhum.
-- **O laço casa por índice sobre os 8 `<li>` do grid** (`index.astro:219`). A API devolve
-  **16** cadeiras; as 9 de PROJETO entram com `ordem` 8+ e **nunca são renderizadas**. Toda a
-  carteira da 012 — `estado`, `rotulo`, `siteUrl`, `produto`, `checkout` — é servida pela API
-  e **lida por ninguém**.
-
-**Consequência que muda a leitura do projeto:** as tasks de US5 (T053/T054/T055) entregaram o
-*dado* na API e o *espelho* do skeleton, mas **nenhuma task manda o institucional DESENHAR as
-cadeiras de projeto**. FR-019 diz "exibir o estado das cadeiras a partir de `/api/cadeiras`" —
-e o site exibe, só que apenas das 8 de nicho, que já eram estáticas. **A spec passa; o
-objetivo não.**
-
-### O que fazer com isso (decisão antes de código)
-
-Não saia implementando: a pergunta é de produto, não de engenharia. O institucional vende a
-**cadeira vaga** para o ICP B2B; a carteira de 9 projetos é prova social de outro tipo. Três
-saídas, em ordem de esforço:
-
-1. **Nada.** Aceitar que a carteira só aparece no e-commerce (T048), e que o institucional
-   segue sendo o mapa de 8 nichos de Goiânia. Defensável — os dois têm público diferente.
-2. **Segunda seção no institucional** ("a carteira"), alimentada pelas cadeiras com `ordem`
-   ≥ 8, usando `rotulo` e `siteUrl` que a API **já serve**. Zero mudança de backend.
-3. Trocar o casamento por índice por casamento por `id`/`niche` e deixar o grid crescer —
-   **é o que o comentário `ponytail:` em `index.astro:213` já previu como o gatilho**
-   ("se um dia a contagem divergir, casar por id"). A contagem divergiu: 8 `<li>` × 16 linhas.
-
-⚠️ **Enquanto ninguém decide, não invente uma seção nova.** Quatro das nove cadeiras de
-projeto são `daCasa` sem exibição pública (FR-010a) — publicar a carteira crua exporia a
-curadoria interna que a projeção da API existe para esconder. Use `rotulo`, nunca `daCasa`.
+Lição que generaliza: *ler a API inteira e comparar campo a campo com a fonte* achou em um
+minuto um defeito que 17 testes verdes e um `db push` conferido não pegaram. Nenhum dos dois
+compara **`status` com `estado` na mesma linha**.
 
 ---
 
@@ -115,16 +114,32 @@ T036** — só aí ele cobre a primeira venda de webhook.
 
 ---
 
-# As 18 tasks restantes
+# As 16 tasks restantes
 
-## 0. T057a — a carteira invisível no institucional
-
-Está no bloco 🚨 do topo. **Trava numa decisão de produto, não em código**, e é a única task
-que nasceu de olhar o site em vez de ler a spec.
+## 0. ~~T057a~~ — FEITA. Ver o bloco 🚨 do topo.
 
 ## A. ~~Destravadas pelo `db push`~~ — FEITAS em 07/08
 
 `T003a · T008 · T009 · T011 · T072a`. Ver o bloco acima.
+
+## A2. T072b — rodar o seed em produção (NOVA, e é a mais barata da lista)
+
+Uma execução destrava **duas** coisas de uma vez:
+
+1. `vertice` e `orcaobra` viram `daCasa=false` (a decisão do Jean) e entram na régua do
+   success fee. Enquanto não roda, os dois seguem `true` em prod — o lado que **sub-reporta**,
+   que é o recuperável, e por isso isto não é urgente, só é barato.
+2. `Fitas adesivas` vira `estado='ocupada-vendavel'` e para de perder o `seat--taken`.
+
+Conferir depois **no banco ou na API**, não no log do seed:
+
+```bash
+curl -s https://app.roilabs.com.br/api/cadeiras | node -e "let d='';process.stdin.on('data',c=>d+=c).on('end',()=>JSON.parse(d).forEach(c=>console.log(c.ordem,c.niche,c.estado,c.rotulo)))"
+```
+
+O que se espera ver: `6 Fitas adesivas ocupada-vendavel parceiro`. ⚠️ `rotulo` de `vertice` e
+`orcaobra` **não muda** (os dois já eram `exibirDaCasa:false`) — quem muda é `daCasa`, que a
+API não serve de propósito. Para esse, ler o banco.
 
 ## B. Ligar a primeira cadeira — é onde `SC-001` sai de R$ 0,00
 
@@ -151,6 +166,46 @@ parceiro. Confirme só que `ALERT_EMAIL`/`RESEND_API_KEY` estão publicados, sen
 vira no-op silencioso — e ele é o **único** sinal de segredo derivado do painel.
 
 ## C. Conteúdo das páginas de cadeira (T048 · T049 · T050)
+
+### ✅ T048 — a página do `sirius` está ESCRITA e MEDIDA. Falta uma palavra: `publicado`.
+
+Cadeira escolhida pelo Jean: `sirius`, não `atma` (a atma tem página de preço própria com 189
+queries na pág. 1 e seria canibalizada por uma segunda página do mesmo produto).
+
+Preço e planos **apurados no próprio produto** em 07/08, não estimados
+(`siriuscrm.com.br/pricing`): Gratuito R$ 0 · Starter R$ 67 · **Pro R$ 147** · Business R$ 397,
+todos mensais. O `preco` do Offer é o Pro, que é o marcado como mais popular.
+
+Medido com o flag temporariamente em `true`, com o build de verdade:
+
+```
+✓ sirius: 1817 palavras · 9 FAQ · preço no corpo · Offer ok
+check-cadeiras: 1/1 acima do piso de FR-014.       (piso: 800 palavras / 6 FAQ)
+@graph ÚNICO: Organization, WebSite, Product, FAQPage
+```
+
+🚨 **Ficou `publicado: false` de propósito, e a task segue ABERTA.** O Sirius cobra por Stripe
+e a `CredencialGateway` dele **não existe** (T033). Publicar o botão agora manda o cliente
+pagar num lugar que a carteira não enxerga — venda feita, receita invisível, que é o buraco
+que esta feature existe para fechar. **Vira `true` quando T033+T034 fecharem, e só então.**
+
+Portão de FR-009 conferido nas **duas** posições, não só na que interessava: com `true` gera
+`/cadeira/sirius/` e entra no sitemap; com `false` não existe `dist/cadeira` e a URL some do
+sitemap — e o verificador diz `nenhuma cadeira publicada — NADA foi medido (não é aprovação)`,
+que é a resposta honesta e não um ✓ verde por vacuidade.
+
+⚠️ **Rodar o build com `npx astro build`, nunca `npm run build`, enquanto se experimenta o
+flag.** O `postbuild` do `site-goiania` chama `indexnow.mjs`: um build "só para testar" com
+`publicado: true` **submete a URL ao Bing/IndexNow**, e aí a página existe para o buscador
+antes de existir para o comprador.
+
+⚠️ **A canibalização não é exclusiva da atma.** O `siriuscrm.com.br/pricing` já é uma página
+de preço indexada (title: "Planos Sirius CRM 2026 [Grátis a R$397/mês]"), e o template gera
+`Sirius CRM — preço e assinatura | ROI Labs`. São dois documentos disputando a mesma pergunta.
+Hoje não há risco porque a página não está publicada — mas **decidir o ângulo antes de virar o
+flag**: ou a página da cadeira mira outra intenção, ou ela canibaliza o próprio produto.
+
+### T049 · T050 — as 6 restantes
 
 **Bloqueadas por conteúdo, não por código.** Prontos e testados: o template
 `site-goiania/src/pages/cadeira/[slug].astro`, o `Product`/`Offer` + `FAQPage` no `@graph`
@@ -180,7 +235,8 @@ e-commerce compete com ela. Decidir antes de escrever a da `atma`.
 ## D. Corte de domínio (T058 · T059 · T061 · T062 · T063 · T064 · T065)
 
 **Por último, de propósito** — é a única fase que pode destruir ativo, e **não bloqueia
-receita nenhuma**. Depende da decisão do label (ver "Decisões pendentes").
+receita nenhuma**. ✅ **T058 fechada: o label é `loja.roilabs.com.br`.** T059 e T061–T065
+deixaram de depender de decisão e passaram a depender só de execução (EasyPanel + DNS).
 
 **T060 está feita.** O mapa saiu do `dist/` que o site serve, não de lista à mão:
 [snapshots/mapa-301.txt](./snapshots/mapa-301.txt) e
@@ -242,26 +298,29 @@ Docker/EasyPanel ou browser em produção, output anexado. Build local não vale
 
 ---
 
-# 🚩 Decisões pendentes do Jean (travam tasks)
+# 🚩 Decisões — 3 de 4 fechadas em 07/08
 
-1. **`daCasa` de `vertice` e `orcaobra`.** A spec diz explicitamente que a curadoria "não
-   está apurada" (é a T052). Semeei **fail-closed** (`daCasa: true`) — errado para `false`
-   faz a ROI Labs cobrar success fee de si mesma e **inflar** a receita da carteira, que é o
-   defeito que FR-010 proíbe; errado para `true` só sub-reporta, e isso é recuperável.
-   - Da FR-010a, sem dúvida: `sirius`, `meridian`, `orion` → `daCasa` **e** `exibirDaCasa`.
-   - Inferidos de serem produto da casa: `polarisia`, `estetiacrm`, `context`.
-   - `false` por serem parceiro externo documentado: `atma`, Fitas adesivas (Tapepro).
-   - **Confirmar:** `vertice` e `orcaobra` — são os que não derivei de nada escrito.
-2. **Label do subdomínio (T058).** Assumido `loja.roilabs.com.br`. Trava T059 e T061–T065.
-   Um label só: o cert Universal da Cloudflare cobre apex + **um** nível.
-3. **As 26 cadeiras restantes (T066): `niche` e `daCasa` de cada uma.** A lista de projetos
-   está apurada (`roihub/data/projects.json`); o que falta é o rótulo de nicho — que é a
-   **chave de casamento do seed** — e a curadoria de casa. Sem os dois, cadastrar produz
-   cadeira duplicada e/ou success fee de si mesma. Ver a seção E.
-4. **A carteira aparece ou não no institucional? (T057a)** É a pergunta que o "não vi
-   diferença" abriu. As três saídas estão no bloco 🚨 do topo; a nº 1 (não fazer nada) é
-   legítima. **Nenhuma linha de código antes desta resposta** — implementar a seção errada
-   custa mais que não ter seção.
+## ✅ Fechadas (não reabrir)
+
+1. ~~**`daCasa` de `vertice` e `orcaobra`**~~ → **Nenhum dos dois é da casa: `daCasa: false`.**
+   Ambos entram na régua do success fee. Já no `seats.ts`; falta o seed em prod (T072b).
+   Placar final: **6 cadeiras da casa** (`polarisia`, `estetiacrm`, `sirius`, `context`,
+   `orion`, `meridian`), das quais **3 exibidas como da casa** (`sirius`, `orion`, `meridian`)
+   — o número que o log do seed confere contra FR-010a.
+2. ~~**Label do subdomínio (T058)**~~ → **`loja.roilabs.com.br`**, o assumido. T058 fechada;
+   T059 e T061–T065 destravadas.
+3. ~~**A carteira aparece no institucional? (T057a)**~~ → **Sim, saída 2: seção própria.**
+   Implementada e vista no browser. Ver o bloco 🚨 do topo.
+
+## 🚩 A única que sobra
+
+**As 26 cadeiras restantes (T066): `niche` e `daCasa` de cada uma.** A lista de projetos está
+apurada (`roihub/data/projects.json`); o que falta é o rótulo de nicho — que é a **chave de
+casamento do seed** — e a curadoria de casa. Sem os dois, cadastrar produz cadeira duplicada
+e/ou success fee de si mesma. Ver a seção E.
+
+⚠️ E note que ela **não trava receita**: as 26 são justamente as que não têm caminho de
+cobrança. Quem trava receita é T033/T034/T036, e essas travam em **painel**, não em decisão.
 
 ---
 
@@ -365,6 +424,17 @@ venda original, `VendaParceiro.status` ficaria eternamente `'aprovada'`.
   **lê** o campo novo. Aqui o skeleton estático já servia os mesmos valores e o laço só
   alcança os 8 primeiros de 16 — logo o 500→200 foi invisível de propósito. **Verificar
   entrega de UI é abrir a página e comparar, nunca curlar a API que a alimenta.**
+- **★ `npm run build` no `site-goiania` PUBLICA.** O `postbuild` chama `indexnow.mjs`, que
+  submete as URLs ao Bing. Build exploratório — testar um flag, medir uma página — usa
+  `npx astro build`, que não dispara lifecycle do npm. O mesmo vale no `site` (institucional).
+- **★ Seed com `update` parcial é um caminho que NÃO existe.** O ramo `existing` do laço de
+  `DEFAULT_SEATS` escrevia só `ordem`; coluna nova adicionada por migração ficava no default
+  para sempre, sem erro e sem aviso. Ao acrescentar coluna que o SEED governa, **conferir se
+  o ramo de update a escreve** — senão o dado certo mora no arquivo e nunca chega ao banco.
+- **★ `status` e `estado` na mesma linha podem se contradizer.** Nenhum teste compara os dois
+  (um é texto de exibição, o outro é decisão de máquina), então a contradição sobrevive a
+  suíte verde e a `db push` conferido. Ler a API **inteira**, campo a campo, achou em um
+  minuto o que 17 testes não pegaram.
 - **Sitemap em 200 não prova deploy** — validar o corpo (`<?xml`), nunca o status.
 - **`curl -k` esconde erro de cert**: 200 no terminal, "Failed to fetch" no browser.
 - **`goiania` e `roilabs` são o mesmo repo** — card ≠ repositório; somar os dois infla a

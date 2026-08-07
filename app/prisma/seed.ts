@@ -9,7 +9,13 @@ async function main() {
     const s = DEFAULT_SEATS[i];
     const existing = await prisma.cadeira.findFirst({ where: { niche: s.niche } });
     if (existing) {
-      await prisma.cadeira.update({ where: { id: existing.id }, data: { ordem: i } });
+      // ⚠️ `estado` entra no update, não só `ordem`. As 8 cadeiras de nicho nasceram ANTES da
+      // coluna `estado` (o SEED é de 011), e este laço só escrevia `ordem` — então a migração
+      // da 012 deixou todas no default 'vaga' e nenhuma rodada de seed as corrigia. Medido em
+      // produção: `Fitas adesivas` servia `status: 'Ocupada · Tapepro'` com `estado: 'vaga'`,
+      // divergindo do skeleton no-JS de site/src/pages/index.astro. `status`/`open` continuam
+      // fora: esses o /admin curou à mão. `estado` é do SEED, como nas cadeiras de projeto.
+      await prisma.cadeira.update({ where: { id: existing.id }, data: { ordem: i, estado: s.estado } });
     } else {
       await prisma.cadeira.create({ data: { ...s, ordem: i } });
     }

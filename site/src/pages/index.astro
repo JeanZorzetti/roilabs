@@ -208,15 +208,40 @@ const jsonLdNodes = [
       </div>
     </section>
 
+    <!-- A CARTEIRA (012/T057a) — as cadeiras de PROJETO, que o mapa de nichos acima não mostra.
+         SEM skeleton estático de propósito: espelhar a lista em HTML foi exatamente o que
+         deixou o conserto da API invisível aqui (a tela ficava idêntica com a API em 200 ou
+         em 500). Fonte única = /api/cadeiras. Fetch falhou → a seção não aparece, que é o
+         comportamento de hoje.
+         ponytail: se o SEO desta seção vier a importar, gerar no build — mas build-time fetch
+         está proibido neste arquivo (o layer do Docker cacheia o dist). -->
+    <section class="section section--light" id="carteira" aria-labelledby="carteira-title" hidden>
+      <div class="wrap">
+        <div class="section__head">
+          <span class="eyebrow">Prova de operação</span>
+          <h2 id="carteira-title">A carteira</h2>
+          <p class="section__lead">
+            Fora do polo Goiânia, a ROI Labs já opera estas cadeiras. Cada uma é um
+            produto no ar — não um case, não um mockup.
+          </p>
+        </div>
+        <ul class="map__grid" id="carteira-grid" role="list"></ul>
+        <p class="map__caption">
+          // carteira ao vivo · a mesma fonte que o /admin edita
+        </p>
+      </div>
+    </section>
+
     <script is:inline>
       // Mapa de cadeiras AO VIVO: busca o DB no navegador e sobrescreve o skeleton estático.
-      // ponytail: casa por índice — 8 nichos fixos, a API ordena por `ordem`. As cadeiras de
-      // PROJETO da 012 entram com ordem 8+, então não desalinham estas. Se um dia a contagem
-      // divergir, casar por id. Falhou o fetch? mantém o skeleton (degrada limpo).
+      // ponytail: casa por índice — 8 nichos fixos, a API ordena por `ordem`, e as cadeiras de
+      // PROJETO (ordem 8+) são desenhadas pelo bloco da carteira, abaixo. O seletor é escopado
+      // em #cadeiras porque agora existem DOIS `.map__grid` na página.
+      // Falhou o fetch? mantém o skeleton (degrada limpo).
       fetch('https://app.roilabs.com.br/api/cadeiras')
         .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
         .then((seats) => {
-          document.querySelectorAll('.map__grid .seat').forEach((li, i) => {
+          document.querySelectorAll('#cadeiras .map__grid .seat').forEach((li, i) => {
             const s = seats[i];
             if (!s) return;
             // 012 FR-020: cadeira OCUPADA não é oferecida para candidatura. `s.open` sozinho
@@ -232,6 +257,45 @@ const jsonLdNodes = [
             st.appendChild(ring);
             st.appendChild(document.createTextNode(' ' + s.status));
           });
+
+          // 012/T057a — A CARTEIRA. `ordem >= 8` é o corte entre o mapa de nichos de Goiânia
+          // (0..7) e as cadeiras de projeto; `siteUrl` porque cadeira sem site não é prova.
+          // ⚠️ FR-010a: exibe `rotulo`, NUNCA `daCasa`. 4 das 9 são da casa sem exibição
+          // pública, e a projeção da API existe justamente para esconder essa curadoria.
+          var grid = document.getElementById('carteira-grid');
+          var carteira = seats.filter(function (s) {
+            return s.ordem >= 8 && s.siteUrl;
+          });
+          if (!grid || !carteira.length) return;
+          var ESTADO = { 'ocupada-vendavel': 'No ar', 'em-preparacao': 'Em preparação' };
+          carteira.forEach(function (s) {
+            var li = document.createElement('li');
+            // Mesma convenção do laço acima: só `ocupada*` recebe o estado "ganho".
+            li.className = 'seat' + (String(s.estado || '').indexOf('ocupada') === 0 ? ' seat--taken' : '');
+            var n = document.createElement('span');
+            n.className = 'seat__niche';
+            var a = document.createElement('a');
+            a.href = s.siteUrl;
+            a.target = '_blank';
+            a.rel = 'noopener';
+            a.textContent = s.niche + ' ↗';
+            n.appendChild(a);
+            var st2 = document.createElement('span');
+            st2.className = 'seat__status';
+            var ring2 = document.createElement('span');
+            ring2.className = 'seat__ring';
+            ring2.setAttribute('aria-hidden', 'true');
+            st2.appendChild(ring2);
+            st2.appendChild(
+              document.createTextNode(
+                ' ' + (ESTADO[s.estado] || s.estado) + ' · ' + (s.rotulo === 'casa' ? 'Da casa' : 'Parceiro')
+              )
+            );
+            li.appendChild(n);
+            li.appendChild(st2);
+            grid.appendChild(li);
+          });
+          document.getElementById('carteira').hidden = false;
         })
         .catch(() => {});
     </script>
