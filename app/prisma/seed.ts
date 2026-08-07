@@ -27,9 +27,18 @@ async function main() {
     if (existing) {
       // Só o que a 012 governa. `status`, `open` e `ordem` de cadeira já existente ficam
       // como estão: mudá-los aqui reescreveria curadoria feita à mão no /admin.
+      // `siteUrl`/`repoUrl` entram porque a cadeira de nicho nasceu sem eles (o SEED é de
+      // 011) e sem eles o dedupe de FR-011 não tem o que comparar. Não são curadoria: são
+      // identidade do projeto, e a fonte é o roihub.
       await prisma.cadeira.update({
         where: { id: existing.id },
-        data: { estado: dados.estado, daCasa: dados.daCasa, exibirDaCasa: dados.exibirDaCasa },
+        data: {
+          estado: dados.estado,
+          daCasa: dados.daCasa,
+          exibirDaCasa: dados.exibirDaCasa,
+          siteUrl: dados.siteUrl,
+          repoUrl: dados.repoUrl,
+        },
       });
     } else {
       await prisma.cadeira.create({ data: { ...dados, open: false, ordem: DEFAULT_SEATS.length + criadas } });

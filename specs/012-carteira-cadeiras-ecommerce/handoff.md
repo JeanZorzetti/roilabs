@@ -1,8 +1,8 @@
 # Handoff — 012 carteira de cadeiras no e-commerce
 
-**Data**: 2026-08-07 (2ª sessão) · **Status**: **65 de 83 tasks entregues**, `npm test` 17/17.
-18 em aberto — nenhuma por falta de implementação; todas por falta de acesso (produção do
-parceiro, roihub) ou de decisão do Jean.
+**Data**: 2026-08-07 (2ª sessão) · **Status**: **66 de 83 tasks entregues**, `npm test` 17/17,
+migração aplicada em produção. 17 em aberto — nenhuma por falta de implementação; todas por
+falta de acesso ao painel do parceiro ou de **decisão do Jean** (agora são três, não duas).
 
 ---
 
@@ -134,14 +134,35 @@ Ordem obrigatória, sem atalho: cert e handshake verificados **sem `curl -k`** �
 URL → sitemap submetido com o **CORPO** validado (`<?xml`, nunca o status 200) → conferir em
 D+30. O script já recusa label de segundo nível (o cert Universal cobre apex + **um** label).
 
-## E. As 27 restantes (T066 · T067) e a régua (T071)
+## E. As 26 restantes (T066) e a régua (T071) — **T067 feita**
 
 **A lista dos 35 projetos vive no `roihub`, que não é este repositório.** Inventar slug ou
 URL para "completar 35" fabricaria a carteira — e a chave é a **URL do site**, não o repo.
 
-Para fazer: exportar a lista do roihub (`roihub/scripts/gateways.mjs` lê o GitHub) e
-acrescentar em `PROJETOS_CADEIRA` de `app/src/lib/seats.ts`, com `estado: 'em-preparacao'`,
-`siteUrl` e `repoUrl` reais. `orcaobra` **já está lá**.
+✅ **Metade feita em 07/08.** A lista existe e está aqui: `roihub/data/projects.json`, 35
+projetos com `slug`, `url` e `repo` (o dono é `JeanZorzetti`, e o `repo` **não** deriva do
+slug — `orcaobra` mora em `reforma-maestro`). As **9 cadeiras já cadastradas** ganharam
+`siteUrl` e `repoUrl` reais, dali, e o seed passou a gravá-los em cadeira **já existente**
+(o `update` só tocava em `estado`/`daCasa`/`exibirDaCasa`). Conferido em produção: 9 de 16
+cadeiras servem `siteUrl` em `/api/cadeiras`, e nem `repoUrl` nem `daCasa` vazam.
+
+⚠️ **Isso destravou FR-011, que até então valia por vacuidade:** com todo `repoUrl` nulo,
+`reposDuplicados()` não tinha par para comparar. O `cadeira-repo-unico.test.mjs` agora roda
+sobre a lista **real**, não só sobre casos sintéticos.
+
+**As 26 que faltam NÃO travam por acesso — travam por decisão**, e é diferente do que este
+handoff dizia antes:
+- O seed casa cadeira por **`niche`** (`prisma/seed.ts`), e `niche` das 26 não está escrito
+  em lugar nenhum. Inventar rótulo cria **cadeira duplicada** no banco, não uma linha a mais.
+- `daCasa` das 26 é a mesma pergunta da T052, ×26.
+- **`goiania` e `roilabs` compartilham o repo `roilabs`**: cadastrar os dois como cadeira é
+  exatamente o caso que o `cadeira-repo-unico` reprova. Nenhum dos dois é cadeira — o
+  primeiro é o próprio marketplace, o segundo o institucional.
+- 8 dos 35 estão `no-ar-inutilizavel` no roihub (`reviewshield`, `cardiorisk`, `tapevision`,
+  `potencialarquitetado`, `matchfios`, `cyberspace`, `compass`, `pathfinder`).
+  `em-preparacao` para eles é otimista; `vaga` provavelmente descreve melhor.
+
+Ou seja: **T066 pede uma tabela de 26 linhas × (niche, daCasa) do Jean**, não um export.
 
 ⚠️ **T069 — ao apurar estado por HTTP, `tapevision`, `potencialarquitetado` e `pathfinder`
 servem TUDO em 200** (shell de SPA). Ler "200" como caminho de cobrança produz
@@ -169,6 +190,10 @@ Docker/EasyPanel ou browser em produção, output anexado. Build local não vale
    - **Confirmar:** `vertice` e `orcaobra` — são os que não derivei de nada escrito.
 2. **Label do subdomínio (T058).** Assumido `loja.roilabs.com.br`. Trava T059 e T061–T065.
    Um label só: o cert Universal da Cloudflare cobre apex + **um** nível.
+3. **As 26 cadeiras restantes (T066): `niche` e `daCasa` de cada uma.** A lista de projetos
+   está apurada (`roihub/data/projects.json`); o que falta é o rótulo de nicho — que é a
+   **chave de casamento do seed** — e a curadoria de casa. Sem os dois, cadastrar produz
+   cadeira duplicada e/ou success fee de si mesma. Ver a seção E.
 
 ---
 

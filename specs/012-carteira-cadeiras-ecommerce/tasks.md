@@ -193,8 +193,8 @@ páginas finas é o resultado a evitar.
 
 **Independent Test**: cadastrar uma em `em-preparacao` e ver que não gera URL nem checkout.
 
-- [ ] T066 [US6] Cadastrar as cadeiras restantes com `estado='em-preparacao'`, incluindo **`orcaobra`** (saiu da fase 1 por bloqueio de produto, não de fiação)
-- [ ] T067 [US6] Provar que cadeira `em-preparacao` não gera URL pública indexável nem oferece checkout
+- [ ] T066 [US6] Cadastrar as cadeiras restantes com `estado='em-preparacao'`, incluindo **`orcaobra`** (saiu da fase 1 por bloqueio de produto, não de fiação). **Parcial em 07/08:** `siteUrl`/`repoUrl` das 9 já cadastradas saíram de `roihub/data/projects.json` e estão no banco de produção. As **26** que faltam travam numa decisão, não em acesso: o SEED casa por **`niche`**, e `niche` das 26 não existe escrito em lugar nenhum — inventá-lo cria cadeira duplicada. `daCasa` idem. Ver "Decisões pendentes" no handoff
+- [X] T067 [US6] Provar que cadeira `em-preparacao` não gera URL pública indexável nem oferece checkout — `ehIndexavel` e `decidirCheckout` reprovam o estado em [cadeira-checkout.test.mjs:57-61,70](../../app/test/cadeira-checkout.test.mjs), e **em produção** as duas cadeiras `em-preparacao` (`meridian`, `orcaobra`) servem `checkout: {tipo:'indisponivel', motivo:'estado'}` e `produto: null`. ⚠️ O portão do **sitemap** (`cadeirasPublicadas()`) segue sem exercício real: `site-goiania/src/data/cadeiras.ts` está vazio, então essa metade passa por vacuidade até a T048
 - [X] T068 [US6] Implementar FR-011 como **teste**, não constraint: `app/test/cadeira-repo-unico.test.mjs` provando que nenhuma cadeira compartilha `repoUrl` com outra (`goiania` e `roilabs` são o mesmo repo). ⚠️ `@@unique` em `repoUrl` proibiria para sempre um repo servir dois sites legítimos — o teste é onde a decisão aparece se isso mudar
 - [X] T068a [US6] Adicionar `app/test/cadeira-repo-unico.test.mjs` à lista de `test` em `app/package.json`
 - [X] T069 [US6] ⚠️ Ao apurar o estado dos hosts, **não ler "200" como caminho de cobrança** em `tapevision`, `potencialarquitetado` e `pathfinder` — os três servem tudo em 200 (shell de SPA)

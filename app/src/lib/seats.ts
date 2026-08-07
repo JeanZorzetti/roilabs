@@ -35,6 +35,9 @@ export const DEFAULT_SEATS = [
  *
  * `siteUrl`/`repoUrl` ficam `null` onde não foram apurados: nulo é "não sei", e é honesto.
  * Preenchê-los com palpite quebraria FR-011 (dedupe por repo) sem ninguém perceber.
+ * ✅ 07/08: os das 9 abaixo saíram de `roihub/data/projects.json` (a lista que o roihub monta
+ * do GitHub), não de palpite. Enquanto eram nulos, `reposDuplicados()` não tinha o que
+ * comparar e FR-011 valia por vacuidade.
  *
  * ⚠️ `daCasa` é FAIL-CLOSED aqui: na dúvida, `true`. daCasa errado para `false` faz a ROI
  * Labs cobrar success fee de si mesma e INFLAR a "receita da carteira" — o mesmo defeito
@@ -46,22 +49,23 @@ export const DEFAULT_SEATS = [
  */
 export const PROJETOS_CADEIRA = [
   // ── Fase 1: Mercado Pago (4 cadeiras) ──────────────────────────────────────
-  { slug: 'atma', niche: 'Ortodontia / Alinhadores', status: 'Ocupada · Atma Aligner', estado: 'ocupada-vendavel', gateway: 'mercadopago', daCasa: false, exibirDaCasa: false },
-  { slug: 'polarisia', niche: 'Imobiliário / IA', status: 'Ocupada · Polaris', estado: 'ocupada-vendavel', gateway: 'mercadopago', daCasa: true, exibirDaCasa: false },
-  { slug: 'estetiacrm', niche: 'CRM / Estética', status: 'Ocupada · Estetia CRM', estado: 'ocupada-vendavel', gateway: 'mercadopago', daCasa: true, exibirDaCasa: false },
-  { slug: 'vertice', niche: 'Vértice', status: 'Ocupada · Vértice', estado: 'ocupada-vendavel', gateway: 'mercadopago', daCasa: true, exibirDaCasa: false },
+  { slug: 'atma', niche: 'Ortodontia / Alinhadores', status: 'Ocupada · Atma Aligner', estado: 'ocupada-vendavel', gateway: 'mercadopago', daCasa: false, exibirDaCasa: false, siteUrl: 'https://atma.roilabs.com.br/', repoUrl: 'https://github.com/JeanZorzetti/Atma' },
+  { slug: 'polarisia', niche: 'Imobiliário / IA', status: 'Ocupada · Polaris', estado: 'ocupada-vendavel', gateway: 'mercadopago', daCasa: true, exibirDaCasa: false, siteUrl: 'https://polarisia.com.br/', repoUrl: 'https://github.com/JeanZorzetti/sofia-ia' },
+  { slug: 'estetiacrm', niche: 'CRM / Estética', status: 'Ocupada · Estetia CRM', estado: 'ocupada-vendavel', gateway: 'mercadopago', daCasa: true, exibirDaCasa: false, siteUrl: 'https://estetiacrm.com.br/', repoUrl: 'https://github.com/JeanZorzetti/estetia' },
+  { slug: 'vertice', niche: 'Vértice', status: 'Ocupada · Vértice', estado: 'ocupada-vendavel', gateway: 'mercadopago', daCasa: true, exibirDaCasa: false, siteUrl: 'https://vertice.roilabs.com.br/', repoUrl: 'https://github.com/JeanZorzetti/vertice' },
   // ── Fase 1: Stripe (3 cadeiras) ────────────────────────────────────────────
   // sirius/orion: daCasa E exibirDaCasa — as exceções nomeadas em FR-010a.
-  { slug: 'sirius', niche: 'CRM / Solar', status: 'Ocupada · Sirius CRM', estado: 'ocupada-vendavel', gateway: 'stripe', daCasa: true, exibirDaCasa: true },
-  { slug: 'context', niche: 'Ferramentas de dev', status: 'Ocupada · Context Keeper', estado: 'ocupada-vendavel', gateway: 'stripe', daCasa: true, exibirDaCasa: false },
-  { slug: 'orion', niche: 'Orion', status: 'Ocupada · Orion', estado: 'ocupada-vendavel', gateway: 'stripe', daCasa: true, exibirDaCasa: true },
+  { slug: 'sirius', niche: 'CRM / Solar', status: 'Ocupada · Sirius CRM', estado: 'ocupada-vendavel', gateway: 'stripe', daCasa: true, exibirDaCasa: true, siteUrl: 'https://siriuscrm.com.br/', repoUrl: 'https://github.com/JeanZorzetti/sirius' },
+  { slug: 'context', niche: 'Ferramentas de dev', status: 'Ocupada · Context Keeper', estado: 'ocupada-vendavel', gateway: 'stripe', daCasa: true, exibirDaCasa: false, siteUrl: 'https://context.nimblabs.com/', repoUrl: 'https://github.com/JeanZorzetti/context-keeper' },
+  { slug: 'orion', niche: 'Orion', status: 'Ocupada · Orion', estado: 'ocupada-vendavel', gateway: 'stripe', daCasa: true, exibirDaCasa: true, siteUrl: 'https://orion.roilabs.com.br/', repoUrl: 'https://github.com/JeanZorzetti/orion-nova-ui' },
   // ── Fora da fase 1, mas nomeadas pela spec ─────────────────────────────────
   // meridian: NÃO está entre as 7 da fase 1 nem entre as 8 do SEED de nicho — ele só existe
   // como cadeira por causa de FR-010a. Sem esta linha, T052 escreveria numa linha inexistente.
-  { slug: 'meridian', niche: 'Beleza / Estética', status: 'Em preparação · Meridian', estado: 'em-preparacao', gateway: null, daCasa: true, exibirDaCasa: true },
+  { slug: 'meridian', niche: 'Beleza / Estética', status: 'Em preparação · Meridian', estado: 'em-preparacao', gateway: null, daCasa: true, exibirDaCasa: true, siteUrl: 'https://meridian.roilabs.com.br/', repoUrl: 'https://github.com/JeanZorzetti/meridian' },
   // orcaobra: saiu da fase 1 por bloqueio de PRODUTO, não de fiação ("acho ele um produto
   // ruim do jeito que está"). Ligar checkout aqui venderia algo que não deveria estar à venda.
-  { slug: 'orcaobra', niche: 'Orçamento de obra', status: 'Em preparação · OrçaObra', estado: 'em-preparacao', gateway: null, daCasa: true, exibirDaCasa: false },
+  // ⚠️ O repo NÃO se chama `orcaobra`: é `reforma-maestro`. Derivar repoUrl do slug erraria aqui.
+  { slug: 'orcaobra', niche: 'Orçamento de obra', status: 'Em preparação · OrçaObra', estado: 'em-preparacao', gateway: null, daCasa: true, exibirDaCasa: false, siteUrl: 'https://orcaobra.roilabs.com.br/', repoUrl: 'https://github.com/JeanZorzetti/reforma-maestro' },
 ] as const;
 
 /**
