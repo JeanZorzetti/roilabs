@@ -72,9 +72,68 @@ if (data.error) throw new Error(`gsc-miner: API ${data.error.code} — ${data.er
 const rows = data.rows ?? [];
 console.log(`gsc-miner: ${rows.length} pares query×page (${fmt(start)} → ${fmt(end)}, ${SITE})`);
 
+// ── Totais REAIS do período. A dimensão `query` esconde as raras (anonimizadas): a soma
+// dos pares acima é PISO, não total. Sem esta leitura, "43 pares" é lido como "43
+// impressões" e a diferença entre invisível e espalhado desaparece.
+const totalRes = await fetch(
+  `https://www.googleapis.com/webmasters/v3/sites/${encodeURIComponent(SITE)}/searchAnalytics/query`,
+  {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ startDate: fmt(start), endDate: fmt(end), dimensions: [] }),
+  }
+);
+const totalJson = await totalRes.json();
+if (totalJson.error) throw new Error(`gsc-miner totais: API ${totalJson.error.code} — ${totalJson.error.message}`);
+const tot = totalJson.rows?.[0] ?? { impressions: 0, clicks: 0, ctr: 0, position: 0 };
+const somaPares = rows.reduce((s, r) => s + r.impressions, 0);
+const cobertura = tot.impressions ? ((somaPares / tot.impressions) * 100).toFixed(1) : '0,0';
+console.log(
+  `gsc-miner totais (dimensions:[]): ${tot.impressions} impressões, ${tot.clicks} cliques, pos. média ${tot.position.toFixed(1)} — os pares cobrem ${cobertura}%`
+);
+
+// ── Quebra por vertical. O site tem dois (porcelanato B2C local, fitas B2B nacional) e a
+// leitura agregada não diz qual deles o Google está mostrando. `dimensions:['page']` não
+// sofre a anonimização de `query` — a soma fica ~2% acima do total agregado (arredondamento
+// do próprio GSC), não 78% abaixo como a de `query`.
+const pageRes = await fetch(
+  `https://www.googleapis.com/webmasters/v3/sites/${encodeURIComponent(SITE)}/searchAnalytics/query`,
+  {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ startDate: fmt(start), endDate: fmt(end), dimensions: ['page'], rowLimit: 5000 }),
+  }
+);
+const pageRows = (await pageRes.json()).rows ?? [];
+const VERTICAL = [
+  ['fitas', /\/(fitas|carrinho-fitas)/],
+  ['porcelanato', /\/porcelanato/],
+  ['guia/conteúdo', /\/(guia|glossario|inspire-se|calculadora|comparar)/],
+];
+// Semeado com TODOS os verticais: um vertical com zero impressão precisa aparecer como
+// linha "0", não sumir da tabela — ausência de linha vira "não medido" na leitura seguinte.
+const porVertical = new Map(
+  [...VERTICAL.map(([n]) => n), 'home/outras'].map((n) => [n, { impressions: 0, clicks: 0, paginas: 0 }])
+);
+for (const r of pageRows) {
+  const nome = VERTICAL.find(([, re]) => re.test(r.keys[0]))?.[0] ?? 'home/outras';
+  const a = porVertical.get(nome) ?? { impressions: 0, clicks: 0, paginas: 0 };
+  porVertical.set(nome, {
+    impressions: a.impressions + r.impressions,
+    clicks: a.clicks + r.clicks,
+    paginas: a.paginas + 1,
+  });
+}
+const verticais = [...porVertical].sort((a, b) => b[1].impressions - a[1].impressions);
+console.log(
+  'gsc-miner por vertical: ' + verticais.map(([n, v]) => `${n} ${v.impressions}/${v.paginas}p`).join(' · ')
+);
+
 // ── Classificação. Página "dedicada" = malha, guia ou produto; o resto (home, hub,
 // carrinho, calculadora...) rankeando é sintoma de query órfã.
-const dedicada = (url) => /\/(porcelanato\/(produto\/)?[^/]+|guia\/[^/]+)\/?$/.test(url);
+// `fitas/<slug>` entrou em 07/08/2026: sem ele toda query de fita caía como "query órfã"
+// e o miner pediria uma página nova para uma página que já existe.
+const dedicada = (url) => /\/(porcelanato\/(produto\/)?[^/]+|guia\/[^/]+|fitas\/[^/]+)\/?$/.test(url);
 
 // Melhor página por query (mais impressões vence — é a que o Google escolheu de fato).
 const porQuery = new Map();
@@ -113,6 +172,21 @@ dono: automático (gsc-miner.mjs, cron semanal)
 > [!info] ${fmt(start)} → ${fmt(end)} (28 dias) · ${rows.length} pares query×page · propriedade ${SITE}
 > Fonte grátis que substitui a mineração DataForSEO. Critério de página nova continua o
 > editorial de sempre: intenção clara + produto real no catálogo (nada de página vazia).
+
+## 0. Totais do período (\`dimensions: []\`)
+
+| Impressões | Cliques | CTR | Posição média | Cobertura dos pares |
+|-----------:|--------:|----:|--------------:|--------------------:|
+| ${tot.impressions} | ${tot.clicks} | ${(tot.ctr * 100).toFixed(2)}% | ${tot.position.toFixed(1)} | ${somaPares} (${cobertura}%) |
+
+> A soma dos pares query×page é **piso**: a dimensão \`query\` anonimiza as raras. Só esta
+> linha diz quanta impressão o site teve de verdade.
+
+### Por vertical (\`dimensions: ['page']\` — sem a anonimização que corta \`query\`)
+
+| Vertical | Impressões | Cliques | Páginas com impressão |
+|----------|-----------:|--------:|----------------------:|
+${verticais.map(([n, v]) => `| ${n} | ${v.impressions} | ${v.clicks} | ${v.paginas} |`).join('\n') || '| — | | | |'}
 
 ## 1. Candidatas a página nova (query sem página dedicada, ≥ ${MIN_IMPRESSOES_NOVA} impressões)
 

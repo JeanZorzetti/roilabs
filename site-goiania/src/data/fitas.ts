@@ -20,6 +20,13 @@ export interface FaixaExibida {
 export interface Fita {
   slug: string;
   nome: string;
+  /**
+   * Query principal que esta página persegue. Mesmo papel do `termoAlvo` da malha de
+   * porcelanato, mas aqui a intenção é NACIONAL (B2B) — não leva "goiânia".
+   * É a única fonte de keyword de fita para rank-tracking.mjs; sem ela o vertical
+   * primário do site fica fora de toda medição semanal.
+   */
+  termoAlvo: string;
   h1: string;
   seoTitle: string;
   seoDescription: string;
@@ -57,6 +64,7 @@ export const fitas: Fita[] = [
   {
     slug: 'fita-transparente-personalizada',
     nome: 'Fita Transparente Personalizada',
+    termoAlvo: 'fita adesiva personalizada',
     h1: 'Fita adesiva transparente personalizada com a sua marca',
     seoTitle: 'Fita Adesiva Personalizada 48mm × 100m — Compra por Volume | ROI Labs',
     seoDescription:
@@ -98,6 +106,7 @@ export const fitas: Fita[] = [
   {
     slug: 'fita-gomada',
     nome: 'Fita Gomada Reforçada',
+    termoAlvo: 'fita gomada',
     h1: 'Fita gomada kraft reforçada com fios de nylon',
     seoTitle: 'Fita Gomada Kraft com Nylon 70mm × 150m — Preço por Rolo | ROI Labs',
     seoDescription:
@@ -135,6 +144,7 @@ export const fitas: Fita[] = [
   {
     slug: 'fita-transparente-comum',
     nome: 'Fita Transparente Comum',
+    termoAlvo: 'fita adesiva transparente',
     h1: 'Fita adesiva transparente comum 48mm × 100m',
     seoTitle: 'Fita Adesiva Transparente Comum 48mm × 100m — R$ 7,90/rolo | ROI Labs',
     seoDescription:

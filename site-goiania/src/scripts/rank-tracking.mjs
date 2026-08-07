@@ -27,25 +27,36 @@ const CSV = path.join(ROOT, 'Docs/Obsidian/90-medicao/rank-tracking.csv');
 const NOTE = path.join(ROOT, 'Docs/Obsidian/90-medicao/rank-tracking.md');
 const hoje = new Date().toISOString().slice(0, 10);
 
-// Keywords = termoAlvo de cada página da malha (fonte única) + âncora do Keyword Planner.
-const dataTs = readFileSync(path.join(ROOT, 'site-goiania/src/data/porcelanato.ts'), 'utf8');
+// Keywords = termoAlvo de cada página (fonte única) + âncora do Keyword Planner.
+// Os DOIS verticais entram: porcelanato (B2C local) e fitas (B2B nacional). Até 07/08/2026
+// só porcelanato era lido, e o vertical que assumiu a home ficava sem veredito nenhum.
+// A localização é parte da keyword: medir fita geolocalizado em Goiânia mede a SERP errada.
+const GOIANIA = 'Goiania, State of Goias, Brazil';
+const BRASIL = 'Brazil';
+const termosDe = (arquivo) =>
+  [...readFileSync(path.join(ROOT, arquivo), 'utf8').matchAll(/termoAlvo:\s*'([^']+)'/g)].map(
+    (m) => m[1]
+  );
 const keywords = [
-  ...new Set([
-    'porcelanato goiânia',
-    ...[...dataTs.matchAll(/termoAlvo:\s*'([^']+)'/g)].map((m) => m[1]),
+  // Map dedupa por keyword mantendo a 1ª localização declarada.
+  ...new Map([
+    ['porcelanato goiânia', GOIANIA],
+    ...termosDe('site-goiania/src/data/porcelanato.ts').map((k) => [k, GOIANIA]),
+    ...termosDe('site-goiania/src/data/fitas.ts').map((k) => [k, BRASIL]),
   ]),
-];
+].map(([kw, location]) => ({ kw, location }));
 
+const nLocal = keywords.filter((k) => k.location === GOIANIA).length;
 console.log(
-  `rank-tracking ${hoje}: ${keywords.length} keywords, alvo ${TARGET}, fonte ${SERPER ? 'serper.dev' : 'dataforseo'}`
+  `rank-tracking ${hoje}: ${keywords.length} keywords (${nLocal} Goiânia · ${keywords.length - nLocal} Brasil), alvo ${TARGET}, fonte ${SERPER ? 'serper.dev' : 'dataforseo'}`
 );
 
 // Cada provider devolve { pos, url } (null = fora do top 50) ou lança.
-async function viaSerper(kw) {
+async function viaSerper(kw, location) {
   const r = await fetch('https://google.serper.dev/search', {
     method: 'POST',
     headers: { 'X-API-KEY': SERPER, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ q: kw, gl: 'br', hl: 'pt-br', location: 'Goiania, State of Goias, Brazil', num: 50 }),
+    body: JSON.stringify({ q: kw, gl: 'br', hl: 'pt-br', location, num: 50 }),
   });
   if (!r.ok) throw new Error(`serper HTTP ${r.status}`);
   const j = await r.json();
@@ -53,12 +64,13 @@ async function viaSerper(kw) {
   return { pos: hit?.position ?? null, url: hit?.link ?? '' };
 }
 
-async function viaDataForSeo(kw) {
+async function viaDataForSeo(kw, location) {
   const r = await fetch('https://api.dataforseo.com/v3/serp/google/organic/live/regular', {
     method: 'POST',
     headers: { Authorization: `Basic ${DFS}`, 'Content-Type': 'application/json' },
     body: JSON.stringify([
-      { keyword: kw, location_name: 'Goiania,State of Goias,Brazil', language_code: 'pt', depth: 50 },
+      // DFS escreve location_name sem espaço depois da vírgula; serper com.
+      { keyword: kw, location_name: location.replace(/,\s+/g, ','), language_code: 'pt', depth: 50 },
     ]),
   });
   const j = await r.json();
@@ -70,9 +82,9 @@ async function viaDataForSeo(kw) {
 
 const check = SERPER ? viaSerper : viaDataForSeo;
 const results = [];
-for (const kw of keywords) {
+for (const { kw, location } of keywords) {
   try {
-    const { pos, url } = await check(kw);
+    const { pos, url } = await check(kw, location);
     results.push({ kw, pos, url });
     console.log(`  ${kw}: ${pos ? `#${pos}` : '—'}`);
   } catch (e) {
@@ -103,7 +115,8 @@ dono: automático (rank-tracking.mjs, cron semanal)
 
 # 📈 Rank tracking — ${TARGET}
 
-> [!info] Atualizado em ${hoje} — ${ranqueadas.length}/${results.length} keywords no top 50 (Google, Goiânia).
+> [!info] Atualizado em ${hoje} — ${ranqueadas.length}/${results.length} keywords no top 50.
+> ${nLocal} medidas na SERP de **Goiânia** (porcelanato, B2C local) e ${results.length - nLocal} na SERP **nacional** (fitas, B2B).
 > Histórico completo em \`rank-tracking.csv\` (mesma pasta). Fonte: ${SERPER ? 'serper.dev' : 'DataForSEO'} SERP.
 
 ## No top 50
