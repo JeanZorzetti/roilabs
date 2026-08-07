@@ -269,7 +269,7 @@ const produto = {
 </style>
 
 <script>
-  import { addItem } from '../../lib/cart-fitas';
+  import { addItem } from '../../lib/cart';
   import { fitasBySlug, formatPreco } from '../../data/fitas';
 
   const btn = document.querySelector<HTMLButtonElement>('.fita-add');
@@ -308,8 +308,8 @@ const produto = {
     btn.addEventListener('click', () => {
       const rolos = Math.max(min, Math.floor(Number(input.value)) || min);
       input.value = String(rolos);
-      addItem(slug, rolos);
-      msg.innerHTML = `${rolos} rolo(s) no carrinho. <a href="/carrinho-fitas/" style="color:var(--hivis)">Ir para o carrinho →</a>`;
+      addItem('fitas', slug, rolos);
+      msg.innerHTML = `${rolos} rolo(s) no carrinho. <a href="/carrinho/" style="color:var(--hivis)">Ir para o carrinho →</a>`;
       (window as any).himetrica?.track('add_to_cart_fita', { slug, rolos });
     });
 

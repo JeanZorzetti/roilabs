@@ -71,7 +71,7 @@ const { slug, m2Caixa, preco } = Astro.props;
 </style>
 
 <script>
-  import { m2ParaCaixas, addItem, lines } from '../lib/cart';
+  import { m2ParaCaixas, addItem, resolveCart } from '../lib/cart';
 
   function brl(n: number) {
     return n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -102,9 +102,9 @@ const { slug, m2Caixa, preco } = Astro.props;
     btn.addEventListener('click', () => {
       const caixas = caixasFromInput();
       if (caixas === 0) { input.focus(); return; }
-      addItem(slug, caixas);
-      const total = lines().length;
-      preview.innerHTML = `Adicionado! <a href="/carrinho/">Ver carrinho (${total})</a>`;
+      addItem('porcelanato', slug, caixas);
+      const res = resolveCart();
+      preview.innerHTML = `Adicionado! <a href="/carrinho/">Ver carrinho (${res.lines.length})</a>`;
       input.value = '';
     });
   });

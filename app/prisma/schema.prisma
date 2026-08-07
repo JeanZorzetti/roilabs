@@ -74,7 +74,6 @@ model Pedido {
   freteMotivo String? @map("frete_motivo")
 
   itens     ItemPedido[]
-  itensFita ItemPedidoFita[]
   negocios  NegocioOriginado[]
   createdAt DateTime     @default(now()) @map("created_at")
   updatedAt DateTime     @updatedAt @map("updated_at")
@@ -87,10 +86,19 @@ model ItemPedido {
   id       String  @id @default(cuid())
   pedidoId String  @map("pedido_id")
   slug     String
-  caixas   Int
-  m2       Decimal @db.Decimal(10, 2)
-  precoM2  Decimal @db.Decimal(10, 2) @map("preco_m2") // snapshot do preço/m² na compra
   subtotal Decimal @db.Decimal(10, 2)
+
+  // 013: colunas do item unificado. ANULÁVEIS de propósito — @default NÃO reescreve linha
+  // já gravada (landmine registrada 2× neste repo). Preenchidas por UPDATE explícito no
+  // scripts/migrate-013-backfill.mjs. Removidas na fase 5 (colunas legadas acima servem
+  // de conferência cruzada até lá).
+  unidade           String?                                      // m2 | rolo | assinatura
+  quantidade        Decimal? @db.Decimal(10, 3)                  // 3 casas: m² fracionário existe
+  precoUnitario     Decimal? @db.Decimal(10, 2) @map("preco_unitario") // unitário aplicado
+  detalhe           Json?                                        // justificativa do preço (FR-004)
+  recorrencia       String?                                      // mensal | anual; null = avulso
+  assinaturaRef     String?  @map("assinatura_ref")              // id da assinatura no gateway
+  assinaturaEstado  String?  @map("assinatura_estado")           // ativa | cancelada
 
   // Snapshot congelado quando o pedido vira 'pago' (US4). NULL = pedido anterior à feature.
   pisoSnapshot              Decimal? @db.Decimal(10, 2) @map("piso_snapshot")
@@ -105,23 +113,6 @@ model ItemPedido {
   @@map("itens_pedido")
 }
 
-// Item de pedido de FITA (011). Tabela nova, na unidade certa (rolo) — ItemPedido é de
-// porcelanato e não é tocado (FR-003). Sem linha antiga ⇒ sem risco de backfill.
-model ItemPedidoFita {
-  id        String  @id @default(cuid())
-  pedidoId  String  @map("pedido_id")
-  slug      String
-  rolos     Int
-  precoRolo Decimal @db.Decimal(10, 2) @map("preco_rolo") // snapshot do unitário da faixa aplicada
-  faixaMin  Int     @map("faixa_min") // faixa aplicada — sem isto um pedido antigo não permite
-  faixaMax  Int?    @map("faixa_max") // reconstruir POR QUE cobrou aquele unitário
-  subtotal  Decimal @db.Decimal(10, 2)
-
-  pedido Pedido @relation(fields: [pedidoId], references: [id], onDelete: Cascade)
-
-  @@index([pedidoId])
-  @@map("itens_pedido_fita")
-}
 
 // Parâmetros dos centros de custo (global + linha). Campos nullable = herda a camada acima.
 model ParametroCentroCusto {

@@ -38,18 +38,10 @@
   .mini-cart__total { display: flex; justify-content: space-between; font-weight: 800; color: var(--d-text); }
   .mini-cart__grupo { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--d-muted); font-weight: 700; padding: 0.9rem 0 0.3rem; }
   .mini-cart__grupo:first-child { padding-top: 0; }
-  .mini-cart__aviso {
-    font-size: 0.78rem; color: var(--d-text); line-height: 1.5;
-    background: color-mix(in srgb, var(--hivis) 14%, var(--ink-2));
-    border: 1px solid var(--hivis); border-radius: 8px; padding: 0.65rem 0.8rem; margin-bottom: 0.9rem;
-  }
 </style>
 
 <script>
-  import { lines, removeItem, CART_EVENT } from '../lib/cart';
-  import { lines as linesFitas, removeItem as removeFita, CART_FITAS_EVENT } from '../lib/cart-fitas';
-
-  const brl = (n: number) => n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  import { resolveCart, removeItem, CART_EVENT } from '../lib/cart';
 
   // Build the drawer once, client-side, appended to <body> (keeps pSEO HTML clean).
   const overlay = document.createElement('div');
@@ -66,66 +58,45 @@
     <div class="mini-cart__foot" hidden>
       <div class="mini-cart__total"><span>Total produtos</span><span class="mini-cart__total-val">—</span></div>
       <a class="btn btn--primary mini-cart__cta" href="/carrinho/" style="width:100%;text-align:center;">Ver carrinho</a>
-      <a class="btn btn--ghost mini-cart__cta-fitas" href="/carrinho-fitas/" style="width:100%;text-align:center;" hidden>Ver carrinho de fitas</a>
     </div>`;
   document.body.append(overlay, drawer);
 
   const body = drawer.querySelector<HTMLElement>('.mini-cart__body')!;
   const foot = drawer.querySelector<HTMLElement>('.mini-cart__foot')!;
   const totalVal = drawer.querySelector<HTMLElement>('.mini-cart__total-val')!;
-  const cta = drawer.querySelector<HTMLAnchorElement>('.mini-cart__cta')!;
-  const ctaFitas = drawer.querySelector<HTMLAnchorElement>('.mini-cart__cta-fitas')!;
 
-  const linha = (nome: string, meta: string, slug: string, sub: string, tipo: string) => `
+  const linha = (nome: string, meta: string, slug: string, sub: string) => `
         <div class="mini-cart__line">
           <div>
             <div class="mini-cart__name">${nome}</div>
             <div class="mini-cart__meta">${meta}</div>
-            <button type="button" class="mini-cart__rm" data-rm="${slug}" data-tipo="${tipo}">Remover</button>
+            <button type="button" class="mini-cart__rm" data-rm="${slug}">Remover</button>
           </div>
           <div class="mini-cart__sub">${sub}</div>
         </div>`;
 
   function render() {
-    const ls = lines();
-    const lf = linesFitas();
-    if (ls.length === 0 && lf.length === 0) {
+    const res = resolveCart();
+    
+    if (res.lines.length === 0) {
       body.innerHTML = '<p class="mini-cart__empty">Seu carrinho está vazio.</p>';
       foot.hidden = true;
       return;
     }
 
-    // Verticais coexistem SEM se sobrescrever (chaves diferentes no localStorage), mas o
-    // pedido é separado — dizer isso aqui evita a surpresa no checkout, onde o servidor
-    // rejeita carrinho misto.
-    const misto = ls.length > 0 && lf.length > 0;
     const html: string[] = [];
-    if (misto) {
-      html.push(
-        '<p class="mini-cart__aviso">Você tem porcelanato e fitas no carrinho. São <strong>pedidos separados</strong>: o pagamento é feito um de cada vez, e nenhum dos dois se perde.</p>',
-      );
+    html.push(`<div class="mini-cart__grupo">${res.cadeira === 'porcelanato' ? 'Porcelanato' : res.cadeira === 'fitas' ? 'Fitas' : res.cadeira}</div>`);
+    
+    for (const l of res.lines) {
+      if (l.unidade.id === 'm2') {
+        html.push(linha(l.nome, `${l.quantidade} cx · ${(l.quantidade * (l.detalhe.m2PorCaixa as number || 1)).toFixed(2).replace('.', ',')} m²`, l.slug, l.subtotalFmt));
+      } else {
+        html.push(linha(l.nome, `${l.quantidade} ${l.unidade.rotuloPlural} · ${l.precoUnitario.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}/${l.unidade.rotulo}`, l.slug, l.subtotalFmt));
+      }
     }
-    if (ls.length) {
-      if (misto) html.push('<div class="mini-cart__grupo">Porcelanato</div>');
-      html.push(
-        ...ls.map((l) =>
-          linha(l.nome, `${l.caixas} cx · ${l.m2.toFixed(2).replace('.', ',')} m²`, l.slug, l.subtotalFmt, 'porcelanato'),
-        ),
-      );
-    }
-    if (lf.length) {
-      if (misto) html.push('<div class="mini-cart__grupo">Fitas adesivas</div>');
-      html.push(...lf.map((l) => linha(l.nome, `${l.rolos} rolo(s) · ${l.precoFmt}/rolo`, l.slug, l.subtotalFmt, 'fitas')));
-    }
+    
     body.innerHTML = html.join('');
-
-    totalVal.textContent = brl(
-      ls.reduce((s, l) => s + l.subtotal, 0) + lf.reduce((s, l) => s + l.subtotal, 0),
-    );
-    // Sem porcelanato no carrinho, o CTA principal é o de fitas — nada de mandar o
-    // comprador para um carrinho vazio.
-    cta.hidden = ls.length === 0;
-    ctaFitas.hidden = lf.length === 0;
+    totalVal.textContent = res.totalProdutoFmt;
     foot.hidden = false;
   }
 
@@ -137,8 +108,7 @@
   body.addEventListener('click', (e) => {
     const t = e.target as HTMLElement;
     if (!t.dataset.rm) return;
-    if (t.dataset.tipo === 'fitas') removeFita(t.dataset.rm);
-    else removeItem(t.dataset.rm);
+    removeItem(t.dataset.rm);
     render();
   });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
@@ -151,5 +121,4 @@
   // Keep an open drawer fresh when either cart changes elsewhere.
   const refresh = () => { if (drawer.hasAttribute('data-open')) render(); };
   window.addEventListener(CART_EVENT, refresh);
-  window.addEventListener(CART_FITAS_EVENT, refresh);
 </script>

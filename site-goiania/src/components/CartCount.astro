@@ -37,19 +37,17 @@
 
 <script>
   import { count, CART_EVENT } from '../lib/cart';
-  import { count as countFitas, CART_FITAS_EVENT } from '../lib/cart-fitas';
 
-  const badge = document.querySelector<HTMLElement>('.cart-link__badge');
+  const badge = document.querySelectorAll<HTMLElement>('.cart-link__badge');
   function update() {
-    if (!badge) return;
-    // Soma os dois verticais: o ícone é um só, e mostrar só o porcelanato faria o
-    // carrinho de fitas parecer que sumiu.
-    const n = count() + countFitas();
-    badge.textContent = String(n);
-    badge.hidden = n === 0;
+    if (badge.length === 0) return;
+    const n = count();
+    badge.forEach(b => {
+      b.textContent = String(n);
+      b.hidden = n === 0;
+    });
   }
   update();
   window.addEventListener(CART_EVENT, update);
-  window.addEventListener(CART_FITAS_EVENT, update);
   window.addEventListener('storage', update); // sync across tabs
 </script>

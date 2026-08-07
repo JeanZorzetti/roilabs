@@ -50,7 +50,7 @@ const { slug, m2Caixa, preco } = Astro.props;
 </style>
 
 <script>
-  import { m2ParaCaixas, addFromSimulador, clampPerda, PERDA_MIN, PERDA_MAX, lines } from '../lib/cart';
+  import { m2ParaCaixas, addFromSimulador, clampPerda, PERDA_MIN, PERDA_MAX, resolveCart } from '../lib/cart';
 
   const brl = (n: number) => n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
   const num = (el: HTMLInputElement) => parseFloat(el.value.replace(',', '.'));
@@ -120,7 +120,8 @@ const { slug, m2Caixa, preco } = Astro.props;
       const ambientes = getAmbientes();
       if (ambientes.length === 0) { preview.textContent = 'Informe ao menos um ambiente (largura × comprimento).'; return; }
       addFromSimulador(slug, ambientes, folgaFrac());
-      preview.innerHTML = `Adicionado! <a href="/carrinho/">Ver carrinho (${lines().length})</a>`;
+      const res = resolveCart();
+      preview.innerHTML = `Adicionado! <a href="/carrinho/">Ver carrinho (${res.lines.length})</a>`;
     });
 
     addRoom(); // start with one empty room

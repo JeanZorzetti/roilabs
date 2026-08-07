@@ -11,14 +11,10 @@
             "id": "3c183d87334b6597",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "80-dev/proximos-passos-dev.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "proximos-passos-dev"
+              "type": "graph",
+              "state": {},
+              "icon": "lucide-git-fork",
+              "title": "Visualização em gráfico"
             }
           }
         ]
@@ -185,12 +181,23 @@
   },
   "active": "3c183d87334b6597",
   "lastOpenFiles": [
+    "Sem título.canvas",
+    "notebook/ROI Labs_B2B_Infrastructure_Blueprint.pdf",
+    "notebook/Pesquisa Hub E-commerce ROI Labs.md",
+    "notebook/Blueprint Estratégico_ Hub de Infraestrutura Digital ROI Labs.md",
+    "40-gtm/gtm.md",
+    "00-tese/tese.md",
+    "10-mercado/mercado.md",
+    "10-mercado/fornecedores-goiania.md",
+    "60-legal-fin/projecao-financeira.md",
+    "80-dev/sem-swarm-ingestao.md.tmp.38240.d62c03f271a7",
+    "60-legal-fin/auditoria.md",
+    "60-legal-fin/centro-de-custo.md",
+    "80-dev/proximos-passos-dev.md",
     "80-dev/proximos-passos-dev.md.tmp.21660.f244aa08a5ef",
     "80-dev/proximos-passos-dev.md.tmp.21660.87ed5474b426",
     "80-dev/proximos-passos-dev.md.tmp.27668.7732db9764e5",
     "80-dev/proximos-passos-dev.md.tmp.10176.1c53f245f5e5",
-    "10-mercado/fornecedores-goiania.md",
-    "80-dev/proximos-passos-dev.md",
     "10-mercado/mercado.md.tmp.10176.d04ab144af5b",
     "80-dev/backup-uptime.md",
     "80-dev/backlog-pendencias.md",
@@ -199,9 +206,6 @@
     "80-dev/proximos-passos-dev.md.tmp.19756.cddf06bf9f53",
     "80-dev/changelog-ciclos.md.tmp.19756.7f96c6c42f52",
     "80-dev/proximos-passos-dev.md.tmp.31932.a08b1cb5f5d3",
-    "80-dev/proximos-passos-dev.md.tmp.33036.29484aa0c849",
-    "80-dev/backlog-pendencias.md.tmp.21228.16c6b5d3487e",
-    "80-dev/proximos-passos-dev.md.tmp.29404.c00759c0f974",
     "80-dev/pinterest-catalog.md",
     "80-dev/bing-webmaster.md",
     "80-dev/merchant-center.md",
@@ -212,15 +216,6 @@
     "proximos-passos-dev.md",
     "dashboard.md",
     "_template.md",
-    "00-tese/tese.md",
-    "rank-tracking.md",
-    "Sem título.canvas",
-    "10-mercado/mercado.md",
-    "60-legal-fin/anexo-A-intermediacao.md",
-    "60-legal-fin/contrato-quadro.md",
-    "60-legal-fin/centro-de-custo.md",
-    "30-modelo/modelo.md",
-    "60-legal-fin/projecao-financeira.md",
-    "60-legal-fin/auditoria.md"
+    "rank-tracking.md"
   ]
 }

@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function PedidosPage() {
   const [pedidos, parceirosAtivos, negociosAtivos] = await Promise.all([
-    prisma.pedido.findMany({ orderBy: { createdAt: 'desc' }, include: { itens: true, itensFita: true } }),
+    prisma.pedido.findMany({ orderBy: { createdAt: 'desc' }, include: { itens: true } }),
     prisma.parceiro.findMany({ where: { estagio: 'ativa' }, select: { id: true, nome: true, nicho: true } }),
     prisma.negocioOriginado.findMany({ where: { estagio: { not: 'perdido' } }, select: { pedidoId: true } }),
   ]);
@@ -76,13 +76,13 @@ export default async function PedidosPage() {
               <td style={{ padding: '0.6rem 0.8rem', maxWidth: 240 }}>
                 {p.itens.map((it) => (
                   <div key={it.id} style={{ fontSize: '0.78rem', lineHeight: 1.5 }}>
-                    {it.caixas}cx · {Number(it.m2).toFixed(2)}m² · {it.slug.replace('porcelanato-', '')}
-                  </div>
-                ))}
-                {p.itensFita.map((it) => (
-                  <div key={it.id} style={{ fontSize: '0.78rem', lineHeight: 1.5 }}>
-                    {it.rolos} rolo(s) · {brl(it.precoRolo)}/rolo (faixa {it.faixaMin}
-                    {it.faixaMax === null ? '+' : `–${it.faixaMax}`}) · {it.slug.replace('fita-', '')}
+                    {it.unidade === 'm2' ? (
+                      <>{(it.detalhe as any)?.caixas ?? it.caixas}cx · {Number(it.quantidade ?? it.m2).toFixed(2)}m² · {it.slug}</>
+                    ) : it.unidade === 'rolo' ? (
+                      <>{it.quantidade} rolo(s) · {brl(it.precoUnitario)}/rolo · {it.slug}</>
+                    ) : (
+                      <>{it.quantidade} unid · {it.slug}</>
+                    )}
                   </div>
                 ))}
                 <div style={{ color: 'var(--l-muted)', fontSize: '0.75rem', marginTop: 2 }}>

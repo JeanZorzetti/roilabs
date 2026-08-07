@@ -6,8 +6,7 @@ import { prisma } from '@/lib/prisma';
 
 type Tipo = 'percentual' | 'fixo';
 
-export type Vertical = 'porcelanato' | 'fitas';
-export type Escopo = Vertical | 'ambos';
+export type Escopo = string;
 
 export interface CupomAvaliavel {
   tipo: Tipo;
@@ -16,7 +15,7 @@ export interface CupomAvaliavel {
   validadeFim: number | null; // epoch ms, ou null = sem fim
   minimo: number | null; // subtotal mínimo de produto para aplicar
   ativo: boolean;
-  escopo: Escopo; // 011: em qual vertical vale (FR-036)
+  escopo: Escopo; // em qual cadeira/escopo vale
 }
 
 export type Motivo = 'invalido' | 'expirado' | 'minimo' | 'inativo' | 'escopo';
@@ -33,13 +32,11 @@ const money = (n: number) => Math.round(n * 100) / 100;
 export function avaliarCupom(
   c: CupomAvaliavel | null,
   subtotalProduto: number,
-  vertical: Vertical = 'porcelanato',
+  escopoAtual: string = 'porcelanato',
 ): ResultadoAvaliacao {
   if (!c) return { ok: false, motivo: 'invalido' };
   if (!c.ativo) return { ok: false, motivo: 'inativo' };
-  // Escopo antes de validade: motivo mais específico primeiro. Um cupom de porcelanato
-  // num carrinho de fitas deve dizer 'escopo', não 'expirado' — diagnóstico errado custa suporte.
-  if (c.escopo !== 'ambos' && c.escopo !== vertical) return { ok: false, motivo: 'escopo' };
+  if (c.escopo !== 'ambos' && c.escopo !== escopoAtual) return { ok: false, motivo: 'escopo' };
 
   const now = Date.now();
   if (c.validadeInicio !== null && now < c.validadeInicio) return { ok: false, motivo: 'expirado' };
@@ -55,7 +52,7 @@ export function avaliarCupom(
 export async function validarCupom(
   codigo: string,
   subtotalProduto: number,
-  vertical: Vertical = 'porcelanato',
+  escopoAtual: string = 'porcelanato',
 ): Promise<ResultadoCupom> {
   const codigoNorm = (codigo || '').trim().toUpperCase();
   const row = await prisma.cupom.findUnique({ where: { codigo: codigoNorm } });

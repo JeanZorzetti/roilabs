@@ -3,13 +3,13 @@ import { prisma } from '@/lib/prisma';
 import { isAuthed } from '@/lib/auth';
 import { getProduto } from '@/lib/precos';
 import { calcFrete, type Entrega } from '@/lib/frete';
-import { precoPorQuantidade, temPrecoPublico } from '@/lib/precos-fitas';
-import { cotarFrete } from '@/lib/frete-fitas';
+import { precoPorQuantidade, temPrecoPublico, cotarFrete, SLUG_PERSONALIZADA, SLUG_CLICHE } from '@/lib/precos-fitas';
 import { validarCupom } from '@/lib/cupons';
 import { createPreference } from '@/lib/mercadopago';
 import { normalizarDoc, validarDoc } from '@/lib/doc';
 import { sendAlert } from '@/lib/email';
 import { log } from '@/lib/log';
+import { getLoja } from '@/lib/lojas';
 
 export const dynamic = 'force-dynamic';
 
@@ -18,92 +18,190 @@ const cap = (v: FormDataEntryValue | null, max: number) =>
 
 const money = (n: number) => Math.round(n * 100) / 100;
 
-function backTo(origin: string, erro: string, vertical: 'porcelanato' | 'fitas' = 'porcelanato') {
+function backTo(origin: string, erro: string, cadeira: string = 'porcelanato') {
   const base = origin.startsWith('http') ? origin : 'https://goiania.roilabs.com.br';
-  const path = vertical === 'fitas' ? '/carrinho-fitas/' : '/carrinho';
-  return NextResponse.redirect(`${base}${path}?erro=${erro}`, 303);
+  // O site-goiania novo unificou a rota em /carrinho (suporta qualquer cadeira por URL/localStorage)
+  return NextResponse.redirect(`${base}/carrinho?erro=${erro}`, 303);
 }
+
+const ALERTA_FRETE_LIMIAR = 3;
 
 // Public checkout: the static cart POSTs here (urlencoded, no preflight). 303 → Mercado Pago.
 export async function POST(req: NextRequest) {
   const form = await req.formData();
   const origin = cap(form.get('origin'), 300); // static site base, for redirects back
-  // 011: discriminador de vertical. Ausente ⇒ porcelanato — o carrinho já publicado
-  // (e em cache no browser) não envia este campo e continua funcionando igual.
-  const vertical = form.get('vertical') === 'fitas' ? 'fitas' : 'porcelanato';
+  
+  // Lê a cadeira do carrinho (fallback pro legado caso o front não envie cadeira)
+  const cadeiraId = cap(form.get('cadeira'), 50) || cap(form.get('vertical'), 50) || 'porcelanato';
+  
+  const loja = getLoja(cadeiraId);
+  if (!loja) return backTo(origin, 'vazio', cadeiraId);
+  if (!loja.publicada) return backTo(origin, 'indisponivel', cadeiraId);
+  if (!loja.modoCobranca) return backTo(origin, 'sem_cobranca', cadeiraId);
 
   // Honeypot + LGPD consent (FR-008 boundary).
   if (cap(form.get('botcheck'), 100) || form.get('consent') !== '1') {
-    return backTo(origin, 'validacao', vertical);
+    return backTo(origin, 'validacao', cadeiraId);
   }
 
   const nome = cap(form.get('nome'), 200);
   const whatsapp = cap(form.get('whatsapp'), 40);
-  if (!nome || !whatsapp) return backTo(origin, 'validacao', vertical);
+  if (!nome || !whatsapp) return backTo(origin, 'validacao', cadeiraId);
 
-  if (vertical === 'fitas') return pedidoFitas(req, form, origin, nome, whatsapp);
+  const docDigits = normalizarDoc(cap(form.get('compradorDoc'), 20));
+  if (loja.docObrigatorio && !validarDoc(docDigits)) {
+    return backTo(origin, 'documento', cadeiraId);
+  }
+  const compradorDoc = validarDoc(docDigits) ? docDigits : null;
 
-  // Parse + recompute items on the server (FR-005: ignore any client money).
+  // ── Parse dos Itens ────────────────────────────────────────────────────────
+
   let parsed: unknown;
   try {
     parsed = JSON.parse(cap(form.get('itens'), 5000) || '[]');
   } catch {
-    return backTo(origin, 'vazio');
+    return backTo(origin, 'vazio', cadeiraId);
   }
-  if (!Array.isArray(parsed)) return backTo(origin, 'vazio');
+  if (!Array.isArray(parsed) || parsed.length === 0) return backTo(origin, 'vazio', cadeiraId);
 
-  const itens = parsed
-    .map((i: { slug?: unknown; caixas?: unknown }) => {
-      const slug = typeof i?.slug === 'string' ? i.slug : '';
-      const caixas = Math.floor(Number(i?.caixas));
-      const p = slug ? getProduto(slug) : null;
-      if (!p || !Number.isFinite(caixas) || caixas < 1) return null; // drop unknown/invalid
+  const crus = parsed.map((i: any) => ({
+    slug: typeof i?.slug === 'string' ? i.slug : '',
+    quantidade: Math.max(0, Number(i?.quantidade) || 0),
+  })).filter(i => i.slug && i.quantidade > 0);
+
+  if (crus.length === 0) return backTo(origin, 'vazio', cadeiraId);
+
+  const itens = [];
+  
+  // Dispatch mínimo de precificação baseado na unidade da loja (T017)
+  for (const i of crus) {
+    if (loja.unidade === 'm2') {
+      const p = getProduto(i.slug);
+      if (!p) return backTo(origin, 'vazio', cadeiraId);
+      
+      const caixas = Math.floor(i.quantidade);
+      if (caixas < 1) continue;
+      
       const m2 = money(caixas * p.m2_caixa);
-      const subtotal = money(caixas * p.m2_caixa * p.preco);
-      return { slug, caixas, m2, precoM2: p.preco, subtotal };
-    })
-    .filter((x): x is NonNullable<typeof x> => x !== null);
+      const subtotal = money(m2 * p.preco);
+      
+      itens.push({
+        slug: i.slug,
+        unidade: 'm2',
+        quantidade: m2,
+        precoUnitario: p.preco,
+        detalhe: { caixas, m2PorCaixa: p.m2_caixa },
+        subtotal,
+        // Legado (será dropado na próxima fase)
+        caixas, m2, precoM2: p.preco,
+      });
+    } else if (loja.unidade === 'rolo') {
+      if (!temPrecoPublico(i.slug)) return backTo(origin, 'item_orcamento', cadeiraId);
+      
+      const rolos = Math.floor(i.quantidade);
+      const faixa = precoPorQuantidade(i.slug, rolos);
+      if (!faixa) return backTo(origin, 'minimo', cadeiraId);
+      
+      const subtotal = money(rolos * faixa.precoRolo);
+      itens.push({
+        slug: i.slug,
+        unidade: 'rolo',
+        quantidade: rolos,
+        precoUnitario: faixa.precoRolo,
+        detalhe: { faixaMin: faixa.min, faixaMax: faixa.max },
+        subtotal,
+        // Legado
+        caixas: 0, m2: 0, precoM2: 0,
+      });
+    }
+  }
 
-  if (itens.length === 0) return backTo(origin, 'vazio');
+  if (itens.length === 0) return backTo(origin, 'vazio', cadeiraId);
 
-  // Freight: retirada → 0; CEP in table → value; CEP outside → null = "a combinar" (FR-016).
-  const entregaInput = (cap(form.get('entrega'), 20) || 'retirada') as Entrega;
-  const cep = cap(form.get('cep'), 12) || null;
-  const frete = calcFrete(entregaInput, cep);
-  const entrega = entregaInput === 'retirada' ? 'retirada' : frete === null ? 'a_combinar' : 'entrega';
+  // ── Linha Fixa (ex: clichê de fita) ────────────────────────────────────────
+
+  if (loja.linhaFixa) {
+    if (itens.some((i) => i.slug === loja.linhaFixa!.quandoSlug)) {
+      let isento = false;
+      if (loja.linhaFixa.isentoSeJaComprou && compradorDoc) {
+        // Busca se já produziu no passado na mesma cadeira
+        const jaProduziu = await prisma.pedido.findFirst({
+          where: {
+            compradorDoc,
+            statusPagamento: 'pago',
+            // Agora a busca é na tabela unificada (itens), usando a unidade (risco #3 do research.md mitigado)
+            itens: { some: { slug: loja.linhaFixa.quandoSlug, unidade: loja.unidade } },
+          },
+          select: { id: true },
+        });
+        isento = !!jaProduziu;
+      }
+      
+      if (!isento) {
+        itens.push({
+          slug: SLUG_CLICHE,
+          unidade: loja.unidade, // herda a unidade da loja, mesmo sendo 1 rolo/1 item abstrato
+          quantidade: 1,
+          precoUnitario: loja.linhaFixa.valor,
+          detalhe: { isencao: false },
+          subtotal: loja.linhaFixa.valor,
+          // Legado
+          caixas: 0, m2: 0, precoM2: 0,
+        });
+      }
+    }
+  }
 
   const totalProduto = money(itens.reduce((s, i) => s + i.subtotal, 0));
 
-  // Coupon: re-validate on the server (authoritative, FR-014). A coupon that expired
-  // between cart and checkout is charged WITHOUT discount; the customer is warned.
+  // ── Frete ──────────────────────────────────────────────────────────────────
+
+  const cep = cap(form.get('cep'), 12) || null;
+  const entregaInput = (cap(form.get('entrega'), 20) || 'retirada');
+  
+  let frete = null;
+  let freteMotivo = null;
+  let entrega = 'retirada'; // default
+  
+  if (loja.frete !== 'nenhum' && entregaInput === 'entrega') {
+    if (loja.frete === 'tabela-cep') {
+      frete = calcFrete('entrega', cep);
+      entrega = frete === null ? 'a_combinar' : 'entrega';
+    } else if (loja.frete === 'cotacao') {
+      // Para fitas, a cotação depende do peso abstrato
+      const rolosParaCotar = itens.map(i => ({ slug: i.slug, rolos: i.detalhe?.caixas || Math.floor(i.quantidade) }));
+      const cot = await cotarFrete(cep ?? '', rolosParaCotar);
+      frete = cot.ok ? cot.valor : null;
+      freteMotivo = cot.ok ? null : cot.motivo;
+      entrega = cot.ok ? 'entrega' : 'a_combinar';
+    }
+  }
+
+  // ── Cupom ──────────────────────────────────────────────────────────────────
+
   const cupomInput = cap(form.get('cupom'), 40);
-  const rRaw = cupomInput ? await validarCupom(cupomInput, totalProduto) : null;
-  // Guard (D3): um cupom que zeraria o produto (desconto >= subtotal) é tratado como
-  // inválido no checkout — reusa o caminho de "cupom rejeitado" (cobra sem desconto +
-  // aviso) em vez de gerar uma linha de preço 0 no Mercado Pago.
-  // ponytail: sem suporte a pedido 100% grátis via MP; upgrade = fluxo dedicado se precisar.
+  const rRaw = cupomInput ? await validarCupom(cupomInput, totalProduto, loja.cupomEscopo) : null;
   const r = rRaw && rRaw.ok && rRaw.desconto >= totalProduto ? null : rRaw;
   const desconto = r && r.ok ? r.desconto : 0;
   const cupomCodigo = r && r.ok ? r.codigo : null;
-  const avisoCupom = !!cupomInput && !(r && r.ok); // sent but rejected at checkout
+  const avisoCupom = !!cupomInput && !(r && r.ok);
 
   const total = money(Math.max(0, totalProduto - desconto) + (frete ?? 0));
 
-  // CPF/CNPJ opcional (010): grava só os dígitos se o formato bate; inválido/ausente → null
-  // (não bloqueia o checkout B2C). Chave de aquisição/recorrência no repasse ao parceiro.
-  const docDigits = normalizarDoc(cap(form.get('compradorDoc'), 20));
-  const compradorDoc = validarDoc(docDigits) ? docDigits : null;
+  // ── Gravação ───────────────────────────────────────────────────────────────
 
-  // Persist pending order + items.
+  // Tudo grava em itens_pedido (unificado) a partir de agora
   const pedido = await prisma.pedido.create({
     data: {
       nome,
       whatsapp,
       email: cap(form.get('email'), 200) || null,
       compradorDoc,
+      vertical: loja.id,
       entrega,
       cep: entrega === 'retirada' ? null : cep,
       frete,
+      freteMotivo,
       cupomCodigo,
       desconto: cupomCodigo ? desconto : null,
       total,
@@ -113,176 +211,39 @@ export async function POST(req: NextRequest) {
     include: { itens: true },
   });
 
-  // Create the Mercado Pago preference, then redirect the browser straight to it.
-  try {
-    const appOrigin = req.nextUrl.origin; // app.roilabs.com.br
-    // Scale item unitPrice so the MP total (Σ items + frete) == server total (D7): MP has no
-    // negative line. desconto < totalProduto sempre aqui — o guard acima já rejeita cupons
-    // que zerariam o produto, então alvoProduto nunca é 0.
-    const alvoProduto = money(Math.max(0, totalProduto - desconto));
-    let acc = 0;
-    const mpItems = itens.map((i, idx) => {
-      const isLast = idx === itens.length - 1;
-      const unitPrice = isLast ? money(alvoProduto - acc) : money((i.subtotal * alvoProduto) / totalProduto);
-      acc = money(acc + unitPrice);
-      return { title: `${i.caixas} cx — ${i.slug}`, unitPrice };
-    });
-    const backBase = origin.startsWith('http') ? origin : 'https://goiania.roilabs.com.br';
-    const pref = await createPreference({
-      externalReference: pedido.id,
-      items: mpItems,
-      frete,
-      backUrl: `${backBase}/obrigado?pedido=${pedido.id}${avisoCupom ? '&aviso=cupom' : ''}`,
-      notificationUrl: `${appOrigin}/api/pagamentos/webhook`,
-    });
-    await prisma.pedido.update({ where: { id: pedido.id }, data: { mpPreferenceId: pref.id } });
-    return NextResponse.redirect(pref.initPoint, 303);
-  } catch (err) {
-    // pedidoId (not the buyer) is the trace key: the order is already persisted and
-    // stays pendente, so this log is what tells you which one never reached MP.
-    log.error({ err, pedidoId: pedido.id, total }, 'checkout: MP preference falhou');
-    return backTo(origin, 'pagamento'); // order stays pendente
-  }
-}
-
-// ── Ramo de FITAS (011) ───────────────────────────────────────────────────────
-// Vertical paralelo: unidade em rolos, preço por faixa de volume, frete nacional
-// re-cotado, CNPJ obrigatório. O ramo de porcelanato acima fica byte a byte igual.
-
-/** Falhas técnicas seguidas que separam instabilidade de rede de credencial errada (D6). */
-const ALERTA_FRETE_LIMIAR = 3;
-
-/** SKU da fita com arte + slug da linha sintética do clichê (011.1). */
-const SLUG_PERSONALIZADA = 'fita-transparente-personalizada';
-const SLUG_CLICHE = 'cliche-arte';
-
-async function pedidoFitas(
-  req: NextRequest,
-  form: FormData,
-  origin: string,
-  nome: string,
-  whatsapp: string,
-) {
-  const erro = (e: string) => backTo(origin, e, 'fitas');
-
-  // CPF/CNPJ é OBRIGATÓRIO em fitas (FR-007): sem ele, todo negócio da 010 seria
-  // classificado como aquisição (15%) por omissão — a taxa errada, sempre.
-  const docDigits = normalizarDoc(cap(form.get('compradorDoc'), 20));
-  if (!validarDoc(docDigits)) return erro('documento');
-
-  let parsed: unknown;
-  try {
-    parsed = JSON.parse(cap(form.get('itens'), 5000) || '[]');
-  } catch {
-    return erro('vazio');
-  }
-  if (!Array.isArray(parsed) || parsed.length === 0) return erro('vazio');
-
-  const crus = (parsed as Array<{ slug?: unknown; rolos?: unknown }>).map((i) => ({
-    slug: typeof i?.slug === 'string' ? i.slug : '',
-    rolos: Math.floor(Number(i?.rolos)),
-  }));
-
-  // Trava do servidor contra carrinho misto (FR-028) — o front já separa os dois.
-  if (crus.some((i) => getProduto(i.slug) !== null)) return erro('vertical_misto');
-
-  // Item sem preço público é REJEITADO, nunca descartado em silêncio (FR-009): descarte
-  // silencioso deixaria o comprador pagar um pedido incompleto sem perceber.
-  if (crus.some((i) => !temPrecoPublico(i.slug))) return erro('item_orcamento');
-
-  const itens = [];
-  for (const i of crus) {
-    const faixa = precoPorQuantidade(i.slug, i.rolos);
-    if (!faixa) return erro('minimo'); // abaixo do mínimo do SKU ou quantidade inválida
-    itens.push({
-      slug: i.slug,
-      rolos: i.rolos,
-      precoRolo: faixa.precoRolo,
-      faixaMin: faixa.min,
-      faixaMax: faixa.max,
-      subtotal: money(i.rolos * faixa.precoRolo),
-    });
-  }
-  if (itens.length === 0) return erro('vazio');
-
-  // Clichê (011.1): a arte da fita personalizada exige uma matriz de impressão de custo
-  // único. Cobrada UMA vez, como linha fixa do pedido, e ISENTA para quem já produziu esta
-  // arte conosco — pedido PAGO anterior com o mesmo doc contendo a personalizada (FR-040:
-  // nunca sobrecobrar o recorrente). É por-ARTE, não por-cliente: quem só comprou fita comum
-  // antes ainda paga o clichê da sua primeira arte. cargaDoCarrinho ignora este slug (não
-  // está em PRECOS), então ele nunca afeta o frete.
-  const CLICHE_FIXO = 80; // ponytail: knob do operador — "a partir de R$80" da tabela Tapepro
-  if (itens.some((i) => i.slug === SLUG_PERSONALIZADA)) {
-    const jaProduziu = await prisma.pedido.findFirst({
-      where: {
-        compradorDoc: docDigits,
-        statusPagamento: 'pago',
-        itensFita: { some: { slug: SLUG_PERSONALIZADA } },
-      },
-      select: { id: true },
-    });
-    if (!jaProduziu) {
-      itens.push({ slug: SLUG_CLICHE, rolos: 1, precoRolo: CLICHE_FIXO, faixaMin: 1, faixaMax: null, subtotal: CLICHE_FIXO });
-    }
-  }
-
-  const totalProduto = money(itens.reduce((s, i) => s + i.subtotal, 0));
-
-  // Frete RE-COTADO no servidor — o valor exibido no carrinho é display (FR-016).
-  const cep = cap(form.get('cep'), 12) || null;
-  const cot = await cotarFrete(cep ?? '', itens);
-  const frete = cot.ok ? cot.valor : null;
-  const freteMotivo = cot.ok ? null : cot.motivo;
-  const entrega = cot.ok ? 'entrega' : 'a_combinar';
-
-  // Cupom re-validado no vertical certo: cupom de porcelanato NÃO desconta fita (FR-036).
-  // Fora de escopo reusa o caminho de "cupom rejeitado" — cobra sem desconto e avisa.
-  const cupomInput = cap(form.get('cupom'), 40);
-  const rRaw = cupomInput ? await validarCupom(cupomInput, totalProduto, 'fitas') : null;
-  const r = rRaw && rRaw.ok && rRaw.desconto >= totalProduto ? null : rRaw;
-  const desconto = r && r.ok ? r.desconto : 0;
-  const cupomCodigo = r && r.ok ? r.codigo : null;
-  const avisoCupom = !!cupomInput && !(r && r.ok);
-
-  const total = money(Math.max(0, totalProduto - desconto) + (frete ?? 0));
-
-  const pedido = await prisma.pedido.create({
-    data: {
-      nome,
-      whatsapp,
-      email: cap(form.get('email'), 200) || null,
-      compradorDoc: docDigits,
-      vertical: 'fitas',
-      entrega,
-      cep,
-      frete,
-      freteMotivo,
-      cupomCodigo,
-      desconto: cupomCodigo ? desconto : null,
-      total,
-      consent: true,
-      itensFita: { create: itens },
-    },
-    include: { itensFita: true },
-  });
-
   if (freteMotivo === 'falha_tecnica') await alertarFreteQuebrado(pedido.id);
+
+  // ── Integração Mercado Pago (Rateio unificado) ─────────────────────────────
 
   try {
     const appOrigin = req.nextUrl.origin;
+    
+    // O MP não tem linha negativa. O desconto é rateado entre as linhas de forma que
+    // Σ linhas + frete = total do pedido. A última linha absorve a diferença acumulada.
     const alvoProduto = money(Math.max(0, totalProduto - desconto));
     let acc = 0;
     const mpItems = itens.map((i, idx) => {
       const isLast = idx === itens.length - 1;
       const unitPrice = isLast ? money(alvoProduto - acc) : money((i.subtotal * alvoProduto) / totalProduto);
       acc = money(acc + unitPrice);
-      const title = i.slug === SLUG_CLICHE ? 'Clichê (arte personalizada)' : `${i.rolos} rolo(s) — ${i.slug}`;
+      
+      const title = i.slug === SLUG_CLICHE 
+        ? 'Clichê (arte personalizada)' 
+        : loja.unidade === 'm2'
+          ? `${i.detalhe?.caixas} cx — ${i.slug}`
+          : `${i.quantidade} ${loja.unidade}(s) — ${i.slug}`;
+          
       return { title, unitPrice };
     });
+    
     const backBase = origin.startsWith('http') ? origin : 'https://goiania.roilabs.com.br';
-    // frete = null ⇒ o Mercado Pago cobra só o produto; a operação fecha o frete depois.
-    // Divergência carrinho↔checkout volta como aviso na tela de retorno (mesmo mecanismo
-    // do aviso=cupom que já existe).
+    
+    // modoCobranca parceiro seria redirecionado aqui, mas roilabs abre MP (T028 lida com isso depois).
+    if (loja.modoCobranca === 'parceiro' && loja.checkoutUrl) {
+      // Simulação ou redirecionamento futuro? Hoje não temos, vamos jogar erro provisório ou voltar
+      return backTo(origin, 'pagamento', cadeiraId); 
+    }
+    
     const pref = await createPreference({
       externalReference: pedido.id,
       items: mpItems,
@@ -290,19 +251,15 @@ async function pedidoFitas(
       backUrl: `${backBase}/obrigado?pedido=${pedido.id}${avisoCupom ? '&aviso=cupom' : ''}${freteMotivo ? '&aviso=frete' : ''}`,
       notificationUrl: `${appOrigin}/api/pagamentos/webhook`,
     });
+    
     await prisma.pedido.update({ where: { id: pedido.id }, data: { mpPreferenceId: pref.id } });
     return NextResponse.redirect(pref.initPoint, 303);
   } catch (err) {
-    log.error({ err, pedidoId: pedido.id, total }, 'checkout fitas: MP preference falhou');
-    return erro('pagamento');
+    log.error({ err, pedidoId: pedido.id, total }, `checkout ${cadeiraId}: MP preference falhou`);
+    return backTo(origin, 'pagamento', cadeiraId);
   }
 }
 
-/**
- * Alerta de contingência (FR-035): N falhas TÉCNICAS consecutivas nos pedidos de fita.
- * Nunca alerta em `cep_nao_atendido` — isso é operação normal e viraria ruído que
- * ninguém lê. ponytail: limiar é knob de operador, não configuração.
- */
 async function alertarFreteQuebrado(pedidoId: string) {
   const ultimos = await prisma.pedido.findMany({
     where: { vertical: 'fitas' },
@@ -313,22 +270,21 @@ async function alertarFreteQuebrado(pedidoId: string) {
   if (ultimos.length < ALERTA_FRETE_LIMIAR) return;
   if (!ultimos.every((p) => p.freteMotivo === 'falha_tecnica')) return;
 
-  // Constituição I: a primeira coisa a conferir é a env var, e o alerta diz isso.
   sendAlert(
-    '🚨 Frete de fitas quebrado — 3 pedidos seguidos sem cotação',
-    `<p>Os últimos ${ALERTA_FRETE_LIMIAR} pedidos de fita saíram com frete "a combinar" por <strong>falha técnica</strong>.</p>
+    '🚨 Frete quebrado — 3 pedidos seguidos sem cotação',
+    `<p>Os últimos ${ALERTA_FRETE_LIMIAR} pedidos saíram com frete "a combinar" por <strong>falha técnica</strong>.</p>
      <p>Conferir NESTA ordem: <code>MELHOR_ENVIO_TOKEN</code>, <code>MELHOR_ENVIO_BASE_URL</code>, <code>MELHOR_ENVIO_CEP_ORIGEM</code>. Só depois, o código.</p>
      <p>Último pedido: ${pedidoId}</p>
      <p><a href="https://app.roilabs.com.br/admin/pedidos">Abrir no admin</a></p>`,
   );
 }
 
-// Admin: list orders for manual fulfillment (espelha /api/leads-consumidor GET).
+// Admin: list orders for manual fulfillment
 export async function GET() {
   if (!(await isAuthed())) return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
   const pedidos = await prisma.pedido.findMany({
     orderBy: { createdAt: 'desc' },
-    include: { itens: true, itensFita: true },
+    include: { itens: true },
   });
   return NextResponse.json(pedidos);
 }

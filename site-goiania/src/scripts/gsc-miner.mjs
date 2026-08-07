@@ -110,7 +110,7 @@ const pageRes = await fetch(
 );
 const pageRows = (await pageRes.json()).rows ?? [];
 const VERTICAL = [
-  ['fitas', /\/(fitas|carrinho-fitas)/],
+  ['fitas', /\/fitas/],
   ['porcelanato', /\/porcelanato/],
   ['guia/conteúdo', /\/(guia|glossario|inspire-se|calculadora|comparar)/],
 ];

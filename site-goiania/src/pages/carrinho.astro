@@ -3,24 +3,22 @@ import Base from '../layouts/Base.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 
-// Static shell; the cart list, freight, coupon and totals are rendered client-side from
-// localStorage. Checkout is a native urlencoded form POST to the /app (303 → Mercado Pago).
-// Coupon validation is the one fetch (cross-origin JSON) — the server is the money authority.
+// O motor (013): carrinho único, resolvido no cliente.
 const appUrl = import.meta.env.PUBLIC_APP_URL ?? 'https://app.roilabs.com.br';
 const action = `${appUrl}/api/pedidos`;
 const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
 ---
 
 <Base
-  title="Carrinho — Porcelanato Goiânia | ROI Labs"
-  description="Revise seus itens, ajuste a metragem, aplique cupom, escolha retirada ou entrega na Grande Goiânia e finalize o pagamento online (Pix ou cartão)."
+  title="Carrinho | ROI Labs"
+  description="Revise seus itens, ajuste quantidades, aplique cupom e finalize o pagamento online de forma segura."
 >
   <Header />
 
   <main class="section" data-app-url={appUrl}>
     <div class="wrap cart-wrap">
-      <h1 style="font-size:clamp(1.8rem,4vw,2.6rem);margin-bottom:0.4rem;">Seu carrinho</h1>
-      <p style="color:var(--d-muted);margin-bottom:2rem;">Porcelanato em Goiânia · pagamento online seguro.</p>
+      <h1 class="cart-title" style="font-size:clamp(1.8rem,4vw,2.6rem);margin-bottom:0.4rem;">Seu carrinho</h1>
+      <p class="cart-desc" style="color:var(--d-muted);margin-bottom:2rem;">Pagamento online seguro.</p>
 
       <div class="cart-err" role="alert" hidden></div>
 
@@ -36,7 +34,6 @@ const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
       <!-- Empty state -->
       <div class="cart-empty" hidden>
         <p>Seu carrinho está vazio.</p>
-        <a class="btn btn--primary" href="/porcelanato/">Ver porcelanatos</a>
       </div>
 
       <div class="cart-grid" hidden>
@@ -48,8 +45,6 @@ const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
               Receber orçamento no WhatsApp
             </button>
             <p class="cart-whats__note">Compra consultiva? Mandamos seu carrinho pro nosso especialista — sem compromisso.</p>
-            <!-- Safety net: shown after the WhatsApp click. If the visitor never sends the
-                 message, this is the only way the lead (and their cart) reaches the admin. -->
             <form class="cart-callback" hidden>
               <p class="cart-callback__title">Se preferir, deixe seu WhatsApp que nosso especialista te chama:</p>
               <div class="cart-callback__row">
@@ -74,7 +69,10 @@ const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
             <div class="form__hp" aria-hidden="true" style="position:absolute;left:-9999px;">
               <input tabindex="-1" autocomplete="off" name="botcheck" />
             </div>
+            <!-- O cart envia a si mesmo completo para o server -->
             <input type="hidden" name="itens" />
+            <input type="hidden" name="cadeira" />
+            <input type="hidden" name="vertical" /> <!-- Legado mantido temporariamente -->
             <input type="hidden" name="origin" />
             <input type="hidden" name="cupom" />
 
@@ -91,24 +89,29 @@ const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
               <label for="ck-email">E-mail (opcional)</label>
               <input id="ck-email" type="email" name="email" maxlength="200" placeholder="voce@email.com" />
             </div>
-            <div class="field">
-              <label for="ck-doc">CPF ou CNPJ (opcional, para nota/atendimento)</label>
+            <div class="field cart-doc">
+              <label for="ck-doc">CPF ou CNPJ <span class="cart-doc-req" style="color:var(--hivis)">(obrigatório)</span></label>
               <input id="ck-doc" type="text" name="compradorDoc" maxlength="20" inputmode="numeric" placeholder="somente números" />
             </div>
 
-            <h2 style="font-size:1.2rem;margin:1.6rem 0 1rem;">Entrega</h2>
-            <label class="radio-row">
-              <input type="radio" name="entrega" value="retirada" checked />
-              <span>Retirar no fornecedor <strong>(grátis)</strong></span>
-            </label>
-            <label class="radio-row">
-              <input type="radio" name="entrega" value="entrega" />
-              <span>Entrega na Grande Goiânia</span>
-            </label>
-            <div class="field cart-cep" hidden style="margin-top:0.8rem;">
-              <label for="ck-cep">CEP de entrega</label>
-              <input id="ck-cep" type="text" name="cep" maxlength="12" inputmode="numeric" placeholder="74000-000" />
-              <p class="cart-cep__note" style="font-size:0.82rem;color:var(--d-muted);margin:0.4rem 0 0;"></p>
+            <div class="cart-entrega-section">
+              <h2 style="font-size:1.2rem;margin:1.6rem 0 1rem;">Entrega</h2>
+              <label class="radio-row">
+                <input type="radio" name="entrega" value="retirada" checked />
+                <span>Retirar no fornecedor <strong>(grátis)</strong></span>
+              </label>
+              <label class="radio-row">
+                <input type="radio" name="entrega" value="entrega" />
+                <span>Entrega no meu endereço</span>
+              </label>
+              <div class="field cart-cep" hidden style="margin-top:0.8rem;">
+                <label for="ck-cep">CEP de entrega</label>
+                <div style="display:flex; gap:0.5rem;">
+                  <input id="ck-cep" type="text" name="cep" maxlength="12" inputmode="numeric" placeholder="74000-000" style="flex:1" />
+                  <button type="button" class="btn btn--ghost cart-cep__calc" hidden>Calcular</button>
+                </div>
+                <p class="cart-cep__note" style="font-size:0.82rem;color:var(--d-muted);margin:0.4rem 0 0;"></p>
+              </div>
             </div>
 
             <h2 style="font-size:1.2rem;margin:1.6rem 0 1rem;">Cupom</h2>
@@ -122,8 +125,9 @@ const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
 
             <div class="cart-summary">
               <div class="cart-summary__row"><span>Produtos</span><span class="cart-sum-produto">—</span></div>
+              <p class="cart-cliche-nota" hidden><strong>Atenção:</strong> Se você não for cliente recorrente dessa arte, uma taxa de clichê (R$ 80) será adicionada na página de pagamento.</p>
               <div class="cart-summary__row cart-sum-desconto-row" hidden><span>Desconto</span><span class="cart-sum-desconto">—</span></div>
-              <div class="cart-summary__row"><span>Frete</span><span class="cart-sum-frete">Grátis</span></div>
+              <div class="cart-summary__row cart-sum-frete-row"><span>Frete</span><span class="cart-sum-frete">Grátis</span></div>
               <div class="cart-summary__row cart-sum-prazo-row" hidden><span>Prazo</span><span class="cart-sum-prazo">—</span></div>
               <div class="cart-summary__row cart-summary__total"><span>Total</span><span class="cart-sum-total">—</span></div>
             </div>
@@ -139,8 +143,8 @@ const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
             <button type="submit" class="btn btn--primary cart-checkout__cta">
               Finalizar e pagar
             </button>
-            <p style="font-size:0.8rem;color:var(--d-muted);text-align:center;margin-top:0.8rem;">
-              Pagamento via Mercado Pago (Pix ou cartão). Pedido pago entra como reserva, confirmado pelo fornecedor em até 24h.
+            <p class="cart-checkout__pago-a" style="font-size:0.8rem;color:var(--d-muted);text-align:center;margin-top:0.8rem;">
+              Pagamento via Mercado Pago (Pix ou cartão).
             </p>
           </form>
         </aside>
@@ -180,6 +184,8 @@ const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
   .cart-coupon__msg[data-err] { color: var(--hivis); }
   .cart-summary { margin: 1.4rem 0; padding-top: 1rem; border-top: 1px solid var(--d-line); display: grid; gap: 0.5rem; }
   .cart-summary__row { display: flex; justify-content: space-between; font-size: 0.95rem; color: var(--d-text); }
+  .cart-cliche-nota { font-size: 0.82rem; color: var(--d-muted); line-height: 1.5; margin: 0 0 0.4rem; }
+  .cart-cliche-nota strong { color: var(--d-text); }
   .cart-sum-desconto { color: #86efac; }
   .cart-sum-prazo-row { font-size: 0.85rem; color: var(--d-muted); }
   .cart-summary__total { font-size: 1.15rem; font-weight: 800; padding-top: 0.5rem; border-top: 1px dashed var(--d-line-strong); }
@@ -191,9 +197,7 @@ const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
 </style>
 
 <style is:global>
-  /* Cart line items are built client-side via innerHTML, so they never get Astro's
-     scoped data-astro-cid attribute — these rules must be global to reach them
-     (same reason MiniCart uses is:global). */
+  /* Linhas montadas via innerHTML */
   .cart-line {
     display: grid; grid-template-columns: 1fr auto; gap: 0.45rem 1.2rem;
     padding: 1.15rem 1.25rem; border: 1px solid var(--d-line); border-radius: 12px;
@@ -214,10 +218,10 @@ const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
 </style>
 
 <script>
-  import { lines, setCaixas, setM2, removeItem, getCart, encodeCart, decodeCart, restoreCart } from '../lib/cart';
+  import { resolveCart, setQuantidade, setM2, removeItem, getCart, encodeCart, decodeCart, restoreCart, formatPreco } from '../lib/cart';
+  import { lojasById } from '../data/lojas';
 
-  // ponytail: front-side mirror of app/src/lib/frete.ts (display only). Server recomputes
-  // and is the authority (FR-017). Keep the two tables (valor + prazo) in sync.
+  // Tabela local de frete (usada apenas se loja.frete === 'tabela-cep')
   const FAIXAS = [
     { min: 74000, max: 74894, valor: 150, prazo: '2–4 dias úteis', regiao: 'Goiânia' },
     { min: 74900, max: 74999, valor: 180, prazo: '3–5 dias úteis', regiao: 'Aparecida de Goiânia' },
@@ -225,16 +229,8 @@ const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
     { min: 75370, max: 75379, valor: 220, prazo: '4–7 dias úteis', regiao: 'Goianira' },
     { min: 75380, max: 75399, valor: 220, prazo: '4–7 dias úteis', regiao: 'Trindade' },
   ];
-  function calcFrete(entrega: string, cep: string): { valor: number | null; prazo?: string; regiao?: string } {
-    if (entrega === 'retirada') return { valor: 0 };
-    const d = cep.replace(/\D/g, '');
-    if (d.length !== 8) return { valor: null };
-    const prefix = parseInt(d.slice(0, 5), 10);
-    const f = FAIXAS.find((x) => prefix >= x.min && prefix <= x.max);
-    return f ? { valor: f.valor, prazo: f.prazo, regiao: f.regiao } : { valor: null };
-  }
 
-  const brl = (n: number) => n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  const brl = formatPreco;
   const $ = <T extends Element>(s: string) => document.querySelector<T>(s)!;
 
   const main = $('main') as HTMLElement;
@@ -244,9 +240,14 @@ const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
   const loading = $('.cart-loading') as HTMLElement;
   const fail = $('.cart-fail') as HTMLElement;
   const list = $('.cart-list') as HTMLUListElement;
+  
   const cepWrap = $('.cart-cep') as HTMLElement;
   const cepInput = $('#ck-cep') as HTMLInputElement;
+  const cepCalc = $('.cart-cep__calc') as HTMLButtonElement;
   const cepNote = $('.cart-cep__note') as HTMLElement;
+  const entregaSection = $('.cart-entrega-section') as HTMLElement;
+  const sumFreteRow = $('.cart-sum-frete-row') as HTMLElement;
+  
   const sumProduto = $('.cart-sum-produto') as HTMLElement;
   const descRow = $('.cart-sum-desconto-row') as HTMLElement;
   const sumDesconto = $('.cart-sum-desconto') as HTMLElement;
@@ -257,8 +258,15 @@ const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
   const form = $('#checkout-form') as HTMLFormElement;
   const errBox = $('.cart-err') as HTMLElement;
   const cupomField = form.elements.namedItem('cupom') as HTMLInputElement;
+  
+  const docReqLabel = $('.cart-doc-req') as HTMLElement;
+  const docInput = $('#ck-doc') as HTMLInputElement;
+  const pagoAText = $('.cart-checkout__pago-a') as HTMLElement;
+  const cartTitle = $('.cart-title') as HTMLElement;
+  const cartDesc = $('.cart-desc') as HTMLElement;
+  const clicheNota = $('.cart-cliche-nota') as HTMLElement;
 
-  // ── Share-link restore: ?c=<payload> → restore cart or show "expired" (FR / D4).
+  // ── Share-link restore ────────────────────────────────────────────────────
   const cParam = new URLSearchParams(location.search).get('c');
   if (cParam) {
     const r = decodeCart(cParam);
@@ -268,97 +276,226 @@ const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
     } else {
       restoreCart(r);
     }
-    // Drop ?c= so a refresh / new edits don't keep re-restoring the snapshot.
     history.replaceState(null, '', location.pathname);
   }
 
-  // Show ?erro= from a bounced checkout.
+  // Erros de checkout
   const erro = new URLSearchParams(location.search).get('erro');
   const ERROS: Record<string, string> = {
     vazio: 'Seu carrinho está vazio ou os itens não estão mais disponíveis.',
     validacao: 'Confira nome, WhatsApp e o aceite da Política de Privacidade.',
     pagamento: 'Não foi possível abrir o pagamento. Tente novamente em instantes.',
+    documento: 'Informe um CPF ou CNPJ válido — é obrigatório.',
+    item_orcamento: 'Há um item que só é vendido sob orçamento.',
+    minimo: 'Um dos itens está abaixo da quantidade mínima.',
+    vertical_misto: 'Finalize pedidos de cadeiras diferentes separadamente.',
+    sem_cobranca: 'Esta loja está configurada sem cobrança, entre em contato.',
+    indisponivel: 'Esta loja não está disponível no momento.',
+    cadeira_mista: 'O carrinho misturou itens de cadeiras diferentes (não suportado).',
   };
   if (erro && ERROS[erro]) { errBox.textContent = ERROS[erro]; errBox.hidden = false; }
 
-  // ── Coupon state (1 per cart). Display only; the checkout re-validates (FR-014).
   let cupom: { codigo: string; desconto: number } | null = null;
   const cupomInput = $('#ck-cupom') as HTMLInputElement;
   const cupomMsg = $('.cart-coupon__msg') as HTMLElement;
-  const MOTIVOS: Record<string, string> = {
-    invalido: 'Cupom inválido.',
-    inativo: 'Cupom indisponível.',
-    expirado: 'Cupom expirado.',
-    minimo: 'Seu carrinho não atinge o mínimo para este cupom.',
-    vazio: 'Adicione itens antes de aplicar um cupom.',
-  };
+
+  let freteCotado: { valor: number; prazo: string; servico: string } | null = null;
+  let freteChecado = false;
 
   function selectedEntrega() {
     return document.querySelector<HTMLInputElement>('input[name="entrega"]:checked')?.value || 'retirada';
   }
 
-  function renderTotals() {
-    const produto = lines().reduce((s, l) => s + l.subtotal, 0);
-    sumProduto.textContent = brl(produto);
+  async function atualizarFrete(loja: any) {
+    if (loja.frete === 'nenhum') return;
+    
+    if (loja.frete === 'tabela-cep') {
+      const cep = cepInput.value.replace(/\D/g, '');
+      if (cep.length !== 8) {
+        freteCotado = null;
+        freteChecado = !!cep;
+        return;
+      }
+      const prefix = parseInt(cep.slice(0, 5), 10);
+      const f = FAIXAS.find((x) => prefix >= x.min && prefix <= x.max);
+      if (f) {
+        freteCotado = { valor: f.valor, prazo: f.prazo, servico: f.regiao };
+      } else {
+        freteCotado = null; // fora da tabela
+      }
+      freteChecado = true;
+      renderTotals(loja);
+      return;
+    }
 
-    const desc = cupom ? Math.min(cupom.desconto, produto) : 0;
+    if (loja.frete === 'cotacao') {
+      const cartState = getCart();
+      const cep = cepInput.value.replace(/\D/g, '');
+      if (cep.length !== 8) { cepNote.textContent = 'Informe um CEP com 8 dígitos.'; return; }
+      
+      cepNote.textContent = 'Calculando frete…';
+      freteCotado = null;
+      try {
+        const res = await fetch(`${appUrl}/api/frete/cotar`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          // cartState tem o formato v2 (cadeira + itens), que o backend lida
+          body: new URLSearchParams({ cep, itens: JSON.stringify(cartState.itens), cadeira: loja.id }),
+        });
+        const data = await res.json();
+        if (data.ok) {
+          freteCotado = { valor: data.valor, prazo: data.prazo, servico: data.servico };
+          cepNote.textContent = `${data.servico} · ${data.prazo}`;
+        } else {
+          cepNote.textContent = data.aviso || 'Frete a combinar após o pedido.';
+        }
+      } catch {
+        cepNote.textContent = 'Não foi possível calcular o frete agora. A combinar.';
+      }
+      freteChecado = true;
+      renderTotals(loja);
+    }
+  }
+
+  function renderTotals(loja: any) {
+    const { totalProduto } = resolveCart();
+    sumProduto.textContent = brl(totalProduto);
+
+    const desc = cupom ? Math.min(cupom.desconto, totalProduto) : 0;
     descRow.hidden = !cupom;
     if (cupom) sumDesconto.textContent = '−' + brl(desc);
-    const base = Math.max(0, produto - desc);
+    const base = Math.max(0, totalProduto - desc);
+
+    if (loja.frete === 'nenhum' || !loja.unidadeConfig?.entregaFisica) {
+      entregaSection.hidden = true;
+      sumFreteRow.hidden = true;
+      prazoRow.hidden = true;
+      sumTotal.textContent = brl(base);
+      return;
+    }
+
+    entregaSection.hidden = false;
+    sumFreteRow.hidden = false;
 
     const entrega = selectedEntrega();
-    const { valor, prazo, regiao } = calcFrete(entrega, cepInput.value);
     if (entrega === 'retirada') {
       sumFrete.textContent = 'Grátis';
       prazoRow.hidden = true;
       sumTotal.textContent = brl(base);
-    } else if (valor === null) {
-      sumFrete.textContent = 'A combinar';
-      prazoRow.hidden = true;
-      sumTotal.textContent = `${brl(base)} + frete`;
-      cepNote.textContent = cepInput.value ? 'CEP fora da tabela — frete a combinar com o fornecedor.' : '';
-    } else {
-      sumFrete.textContent = brl(valor);
-      sumPrazo.textContent = prazo || '—';
+      cepNote.textContent = '';
+      return;
+    }
+
+    // entrega === 'entrega'
+    if (freteCotado) {
+      sumFrete.textContent = brl(freteCotado.valor);
+      sumPrazo.textContent = freteCotado.prazo;
       prazoRow.hidden = false;
-      sumTotal.textContent = brl(base + valor);
-      cepNote.textContent = regiao ? `Região: ${regiao}` : '';
+      sumTotal.textContent = brl(base + freteCotado.valor);
+      if (loja.frete === 'tabela-cep') cepNote.textContent = freteCotado.servico ? `Região: ${freteCotado.servico}` : '';
+    } else {
+      sumFrete.textContent = freteChecado ? 'A combinar' : (loja.frete === 'cotacao' ? 'Calcule o frete' : 'Informe o CEP');
+      prazoRow.hidden = true;
+      sumTotal.textContent = freteChecado ? `${brl(base)} + frete` : brl(base);
+      if (loja.frete === 'tabela-cep' && freteChecado) cepNote.textContent = 'CEP fora da tabela — frete a combinar com o fornecedor.';
     }
   }
 
   function render() {
     try {
-      const ls = lines();
+      const res = resolveCart();
+      const loja = lojasById.get(res.cadeira);
+      if (!loja) throw new Error('Loja desconhecida');
+      
+      // Inject the static definition of Unidade so we know it
+      loja.unidadeConfig = res.lines[0]?.unidade ?? { id: loja.unidade, entregaFisica: true }; // fallback if empty
+
       loading.hidden = true;
       fail.hidden = true;
-      const hasItems = ls.length > 0;
+      
+      const hasItems = res.lines.length > 0;
       grid.hidden = !hasItems;
       empty.hidden = hasItems;
-      if (!hasItems) { renderTotals(); return; }
+      if (!hasItems) return;
+
+      // Header setup based on cadeira
+      cartTitle.textContent = `Carrinho — ${loja.id === 'porcelanato' ? 'Porcelanato' : loja.id === 'fitas' ? 'Fitas' : loja.id}`;
+      cartDesc.textContent = `Pagamento online seguro para ${loja.pagoA}.`;
+      pagoAText.textContent = `Pagamento via Mercado Pago (Pix ou cartão) em nome de ${loja.pagoA}.`;
+      
+      // Doc
+      if (loja.docObrigatorio) {
+        docReqLabel.hidden = false;
+        docInput.required = true;
+      } else {
+        docReqLabel.hidden = true;
+        docInput.required = false;
+      }
+
+      // Frete config
+      if (loja.frete === 'cotacao') {
+        cepCalc.hidden = false; // exibe botão de calcular explícito
+        cepInput.removeEventListener('input', onCepInputSync); // remove debounce/sync
+      } else {
+        cepCalc.hidden = true;
+        cepInput.addEventListener('input', onCepInputSync);
+      }
+
+      // Clichê config (aviso global de linha fixa)
+      clicheNota.hidden = !loja.linhaFixa || !res.lines.some((l) => l.slug === loja.linhaFixa?.quandoSlug);
 
       list.innerHTML = '';
-      for (const l of ls) {
+      for (const l of res.lines) {
         const li = document.createElement('li');
         li.className = 'cart-line';
+        
+        let editHtml = '';
+        let metaHtml = '';
+        
+        // M2 logic allows editing caixas OR m2. Outras unidades (rolo, assinatura) só editam quantidade (passo 1)
+        if (l.unidade.id === 'm2') {
+          editHtml = `
+            <label>Caixas
+              <input class="qty-cx" type="number" min="1" step="1" value="${l.quantidade}" data-slug="${l.slug}" />
+            </label>
+            <label>Metragem (m²)
+              <input class="qty-m2" type="number" min="0.1" step="0.1" value="${(l.quantidade * (l.detalhe.m2PorCaixa as number || 1)).toFixed(2)}" data-slug="${l.slug}" />
+            </label>
+          `;
+          metaHtml = `
+            <div class="cart-line__meta">${formatPreco(l.precoUnitario)}/m² · ${l.detalhe.m2PorCaixa} m²/caixa</div>
+            <div class="cart-line__meta" style="grid-column: 1 / -1">${l.quantidade} caixa(s) cobrem ${(l.quantidade * (l.detalhe.m2PorCaixa as number || 1)).toFixed(2).replace('.', ',')} m²</div>
+          `;
+        } else {
+          // rolo ou assinatura
+          const isFita = l.unidade.id === 'rolo';
+          const faixaMeta = isFita && l.detalhe.faixaMin ? `(faixa ${l.detalhe.faixaMin}${l.detalhe.faixaMax === null ? '+' : `–${l.detalhe.faixaMax}`})` : '';
+          editHtml = `
+            <label>${l.unidade.rotuloPlural}
+              <input class="qty-cx" type="number" min="1" step="1" value="${l.quantidade}" data-slug="${l.slug}" />
+            </label>
+          `;
+          metaHtml = `
+            <div class="cart-line__meta">${formatPreco(l.precoUnitario)}/${l.unidade.rotulo} ${faixaMeta}</div>
+          `;
+        }
+
         li.innerHTML = `
           <div>
             <div class="cart-line__name">${l.nome}</div>
-            <div class="cart-line__meta">${l.precoFmt}/m² · ${l.m2_caixa} m²/caixa</div>
+            ${metaHtml}
             <div class="cart-line__edit">
-              <label>Caixas
-                <input class="qty-cx" type="number" min="1" step="1" value="${l.caixas}" data-slug="${l.slug}" />
-              </label>
-              <label>Metragem (m²)
-                <input class="qty-m2" type="number" min="0.1" step="0.1" value="${l.m2.toFixed(2)}" data-slug="${l.slug}" />
-              </label>
+              ${editHtml}
             </div>
-            <div class="cart-line__meta">${l.caixas} caixa(s) cobrem ${l.m2.toFixed(2).replace('.', ',')} m²</div>
             <button type="button" class="cart-line__rm" data-rm="${l.slug}">Remover</button>
           </div>
           <div class="cart-line__sub">${l.subtotalFmt}</div>`;
         list.appendChild(li);
       }
-      renderTotals();
+      
+      // Update form action logic if modoCobranca é parceiro (handled in server, but good to know)
+      // The server will do the redirect to parceiro if it receives modoCobranca=parceiro
+      renderTotals(loja);
     } catch (e) {
       console.error('cart render failed', e);
       loading.hidden = true;
@@ -368,89 +505,89 @@ const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
     }
   }
 
-  // When the cart changes and a coupon is applied, the discount may go stale → re-validate.
-  async function refreshCupom() {
-    if (!cupom) return;
-    await applyCupom(cupom.codigo, true);
-  }
+  const onCepInputSync = () => {
+    const res = resolveCart();
+    const loja = lojasById.get(res.cadeira);
+    if (loja) atualizarFrete(loja);
+  };
 
   async function applyCupom(codigo: string, silent = false) {
-    const cart = getCart();
-    if (cart.length === 0) { cupom = null; cupomField.value = ''; setCupomMsg(MOTIVOS.vazio, false); renderTotals(); return; }
-    if (!silent) setCupomMsg('Validando…', null);
+    const resCart = resolveCart();
+    if (resCart.lines.length === 0) { cupom = null; cupomField.value = ''; cupomMsg.textContent=''; renderTotals(lojasById.get(resCart.cadeira)); return; }
+    if (!silent) { cupomMsg.textContent = 'Validando…'; cupomMsg.removeAttribute('data-ok'); cupomMsg.removeAttribute('data-err'); }
     try {
       const res = await fetch(`${appUrl}/api/cupom/validar`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams({ codigo, itens: JSON.stringify(cart) }),
+        body: new URLSearchParams({ codigo, cadeira: resCart.cadeira, itens: JSON.stringify(getCart().itens) }),
       });
       const data = await res.json();
       if (data.ok) {
         cupom = { codigo: data.codigo, desconto: data.desconto };
         cupomField.value = data.codigo;
-        setCupomMsg(`Cupom ${data.codigo} aplicado: −${data.descontoFmt}`, true);
+        cupomMsg.textContent = `Cupom ${data.codigo} aplicado: −${formatPreco(data.desconto)}`;
+        cupomMsg.setAttribute('data-ok', '');
+        cupomMsg.removeAttribute('data-err');
       } else {
         cupom = null;
         cupomField.value = '';
-        setCupomMsg(MOTIVOS[data.motivo] || MOTIVOS.invalido, false);
+        cupomMsg.textContent = data.motivo || 'Cupom inválido.';
+        cupomMsg.setAttribute('data-err', '');
+        cupomMsg.removeAttribute('data-ok');
       }
     } catch {
-      if (!silent) setCupomMsg('Não foi possível validar agora. Tente de novo.', false);
+      if (!silent) { cupomMsg.textContent = 'Não foi possível validar agora.'; cupomMsg.setAttribute('data-err', ''); cupomMsg.removeAttribute('data-ok'); }
     }
-    renderTotals();
+    renderTotals(lojasById.get(resCart.cadeira));
   }
 
-  function setCupomMsg(text: string, ok: boolean | null) {
-    cupomMsg.textContent = text;
-    cupomMsg.removeAttribute('data-ok');
-    cupomMsg.removeAttribute('data-err');
-    if (ok === true) cupomMsg.setAttribute('data-ok', '');
-    else if (ok === false) cupomMsg.setAttribute('data-err', '');
-  }
-
-  // ── Events (delegated).
   list.addEventListener('change', (e) => {
     const t = e.target as HTMLInputElement;
     if (!t.dataset.slug) return;
-    if (t.classList.contains('qty-cx')) setCaixas(t.dataset.slug, parseInt(t.value, 10) || 1);
+    if (t.classList.contains('qty-cx')) setQuantidade(t.dataset.slug, parseInt(t.value, 10) || 1);
     else if (t.classList.contains('qty-m2')) setM2(t.dataset.slug, parseFloat(t.value.replace(',', '.')) || 0);
     render();
-    refreshCupom();
+    if (cupom) applyCupom(cupom.codigo, true);
   });
+
   list.addEventListener('click', (e) => {
     const t = e.target as HTMLElement;
-    if (t.dataset.rm) { removeItem(t.dataset.rm); render(); refreshCupom(); }
+    if (t.dataset.rm) { removeItem(t.dataset.rm); render(); if(cupom) applyCupom(cupom.codigo, true); }
   });
+
   form.querySelectorAll('input[name="entrega"]').forEach((r) =>
-    r.addEventListener('change', () => { cepWrap.hidden = selectedEntrega() !== 'entrega'; renderTotals(); }),
+    r.addEventListener('change', () => { 
+      cepWrap.hidden = selectedEntrega() !== 'entrega'; 
+      const res = resolveCart();
+      const loja = lojasById.get(res.cadeira);
+      if (loja) renderTotals(loja); 
+    }),
   );
-  cepInput.addEventListener('input', renderTotals);
+
+  cepCalc.addEventListener('click', () => {
+    const res = resolveCart();
+    const loja = lojasById.get(res.cadeira);
+    if (loja) atualizarFrete(loja);
+  });
 
   $('.cart-coupon__apply').addEventListener('click', () => {
     const codigo = cupomInput.value.trim();
     if (codigo) applyCupom(codigo);
   });
 
-  // Snapshot the cart into the admin's lead kanban so a quote click survives a
-  // WhatsApp message that never gets sent. Fire-and-forget, same no-preflight
-  // urlencoded POST the pSEO LeadForm uses; failure never touches the UX.
   function postOrcamentoLead(nome: string, whatsapp: string) {
-    const cart = getCart();
-    const total = lines().reduce((s, l) => s + l.subtotal, 0);
+    const { cadeira, lines, totalProduto } = resolveCart();
     fetch(`${appUrl}/api/leads-consumidor`, {
       method: 'POST',
       body: new URLSearchParams({
-        nome,
-        whatsapp,
-        consent: '1',
-        produto: `Orçamento carrinho (${cart.length} item(ns) · ${brl(total)})`,
+        nome, whatsapp, consent: '1',
+        produto: `Orçamento carrinho ${cadeira} (${lines.length} item(ns) · ${formatPreco(totalProduto)})`,
         pagina: '/carrinho',
         mensagem: `Pediu orçamento pelo WhatsApp. Carrinho: ${location.origin}/carrinho/?c=${encodeCart()}`,
         origem: localStorage.getItem('rlft') ?? '',
       }),
       keepalive: true,
     }).catch(() => {});
-    (window as any).himetrica?.track('orcamento_lead', { itens: cart.length });
   }
 
   const cbForm = $('.cart-callback') as HTMLFormElement;
@@ -460,18 +597,17 @@ const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
   $('.cart-whats').addEventListener('click', () => {
     const btn = $('.cart-whats') as HTMLButtonElement;
     const msg = $('.cart-share__msg') as HTMLElement;
-    const cart = getCart();
-    if (cart.length === 0) { msg.textContent = 'Adicione itens antes de pedir o orçamento.'; return; }
+    const res = resolveCart();
+    if (res.lines.length === 0) { msg.textContent = 'Adicione itens antes de pedir o orçamento.'; return; }
     const cartUrl = `${location.origin}/carrinho/?c=${encodeCart()}`;
-    const texto = `Olá! Quero um orçamento deste carrinho de porcelanato:\n${cartUrl}`;
-    (window as any).himetrica?.track('orcamento_whatsapp', { itens: cart.length });
-    // Checkout form already has contact + LGPD consent? Capture the lead right away;
-    // otherwise reveal the opt-in callback field for when the message isn't sent.
+    const texto = `Olá! Quero um orçamento deste carrinho de ${res.cadeira}:\n${cartUrl}`;
+    
     const nomeVal = (form.elements.namedItem('nome') as HTMLInputElement).value.trim();
     const whatsVal = (form.elements.namedItem('whatsapp') as HTMLInputElement).value.trim();
     const consentOk = (form.elements.namedItem('consent') as HTMLInputElement).checked;
     if (whatsVal && consentOk) postOrcamentoLead(nomeVal || 'Orçamento WhatsApp', whatsVal);
     else if (!cbMsg.textContent) cbForm.hidden = false;
+    
     window.open(`https://wa.me/${btn.dataset.whats}?text=${encodeURIComponent(texto)}`, '_blank', 'noopener');
   });
 
@@ -484,41 +620,37 @@ const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
     (cbForm.querySelector('.cart-callback__consent') as HTMLElement).hidden = true;
   });
 
-  // Quote view: same ?c= token on /orcamento (formal doc + print CSS → PDF).
   $('.cart-orc').addEventListener('click', () => {
     const msg = $('.cart-share__msg') as HTMLElement;
-    if (getCart().length === 0) { msg.textContent = 'Adicione itens antes de gerar o orçamento.'; return; }
+    if (resolveCart().lines.length === 0) { msg.textContent = 'Adicione itens antes de gerar o orçamento.'; return; }
     window.open(`/orcamento?c=${encodeCart()}`, '_blank', 'noopener');
   });
 
   $('.cart-share').addEventListener('click', async () => {
     const msg = $('.cart-share__msg') as HTMLElement;
-    if (getCart().length === 0) { msg.textContent = 'Adicione itens antes de gerar o link.'; return; }
+    if (resolveCart().lines.length === 0) { msg.textContent = 'Adicione itens antes de gerar o link.'; return; }
     const url = `${location.origin}/carrinho/?c=${encodeCart()}`;
     try {
       await navigator.clipboard.writeText(url);
       msg.textContent = 'Link copiado! Cole onde quiser — válido por 30 dias.';
     } catch {
-      msg.textContent = url; // clipboard blocked → show it so the user can copy manually
+      msg.textContent = url;
     }
   });
 
   (fail.querySelector('.cart-fail__retry') as HTMLButtonElement).addEventListener('click', render);
 
   form.addEventListener('submit', (e) => {
-    const cart = getCart();
-    if (cart.length === 0) { e.preventDefault(); render(); return; }
+    const state = getCart();
+    if (state.itens.length === 0) { e.preventDefault(); render(); return; }
     if (!form.checkValidity()) { e.preventDefault(); form.reportValidity(); return; }
-    // ponytail: fired during navigation, may occasionally drop; /obrigado events are the authoritative count.
-    (window as any).himetrica?.track('checkout_iniciado', { itens: cart.length });
-    // Populate hidden fields the server reads; native POST then follows the 303 to Mercado Pago.
-    (form.elements.namedItem('itens') as HTMLInputElement).value = JSON.stringify(cart);
+    (form.elements.namedItem('itens') as HTMLInputElement).value = JSON.stringify(state.itens);
+    (form.elements.namedItem('cadeira') as HTMLInputElement).value = state.cadeira;
+    (form.elements.namedItem('vertical') as HTMLInputElement).value = state.cadeira; // legacy fallback
     (form.elements.namedItem('origin') as HTMLInputElement).value = location.origin;
-    // cupom hidden field is already kept in sync by applyCupom; server re-validates it.
   });
 
-  // Keep in sync if another tab / the mini-cart changes the cart.
-  window.addEventListener('roi-cart-change', () => { render(); });
+  window.addEventListener('roi-cart-change', render);
 
   render();
 </script>

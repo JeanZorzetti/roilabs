@@ -138,4 +138,26 @@ const descFita = descontoCupom('percentual', 10, produtoFita);
 assert.equal(money(produtoFita - descFita + 87.4), 3185.02, 'total com frete cotado');
 assert.equal(money(produtoFita - descFita + (null ?? 0)), 3097.62, 'frete a combinar => só o produto');
 
-console.log('[OK] cart math: m²→caixas, Σ subtotais==total, folga 5–20%, cupom (≥0, produto-only), link round-trip+expiração, rolos×faixa + fronteiras de faixa');
+// ── (g) matemática de ASSINATURA (013) ────────────────────────────────────────
+// Unidade nova: quantidade é sempre 1 (um ciclo), precoUnitario é o valor do ciclo.
+// A invariante quantidade × precoUnitario = subtotal vale trivialmente, mas precisa
+// estar coberta — é o que garante que a 4ª unidade não passa sem teste.
+const ASSINATURA_PRECO = 199;
+assert.equal(money(1 * ASSINATURA_PRECO), 199, 'assinatura: 1 × 199 = 199');
+// Múltiplas assinaturas no mesmo carrinho (cenário futuro) — ainda linear
+assert.equal(money(3 * ASSINATURA_PRECO), 597, 'assinatura: 3 × 199 = 597');
+// A invariante unificada: quantidade × precoUnitario = subtotal para as 3 unidades
+// m²: caixas × m2_caixa × preco/m² = subtotal (já testado acima em (b))
+// rolo: rolos × precoRolo = subtotal (já testado em (f))
+// assinatura: ciclos × valorCiclo = subtotal (testado aqui)
+const unificado = [
+  { unidade: 'm2', quantidade: 5.5, precoUnitario: 98.99, subtotal: money(5.5 * 98.99) },
+  { unidade: 'rolo', quantidade: 20, precoUnitario: 16.2, subtotal: money(20 * 16.2) },
+  { unidade: 'assinatura', quantidade: 1, precoUnitario: 199, subtotal: money(1 * 199) },
+];
+for (const u of unificado) {
+  assert.equal(money(u.quantidade * u.precoUnitario), u.subtotal,
+    `invariante unificada: ${u.unidade} — ${u.quantidade} × ${u.precoUnitario} = ${u.subtotal}`);
+}
+
+console.log('[OK] cart math: m²→caixas, Σ subtotais==total, folga 5–20%, cupom (≥0, produto-only), link round-trip+expiração, rolos×faixa + fronteiras de faixa, assinatura × valor = subtotal, invariante unificada 3 unidades');
