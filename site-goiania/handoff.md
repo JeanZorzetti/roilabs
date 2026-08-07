@@ -6,9 +6,10 @@
 > checkout ligado, feed no Merchant Center, LCP 2,5s — e **nunca faturou um real**.
 > Hoje mediu-se o que faltava e apareceu **um bug e um diagnóstico**, que não se confundem:
 >
-> 1. 🔧 **Bug, consertado:** o Google lia uma cópia do sitemap de **03/07 com 75 URLs**. As
->    **24 URLs** publicadas depois — incluindo o vertical de fitas inteiro — ele **nunca soube
->    que existiam**. Reenviado e automatizado no cron.
+> 1. 🔧 **Bug, consertado E AFERIDO no mesmo dia:** o Google lia uma cópia do sitemap de
+>    **03/07 com 75 URLs**. As **24 URLs** publicadas depois — incluindo o vertical de fitas
+>    inteiro — ele **nunca soube que existiam**. Reenviado, automatizado no cron, e **3 dos 4
+>    SKUs de fita já saíram de "URL desconhecida" para "Descoberta – não indexada"**.
 > 2. 📉 **Diagnóstico, aberto:** o que ele **conhece** rende **322 impressões / 2 cliques /
 >    posição 19,8** em 28 dias, com **0/40 keywords no top 50** e 4 meses de malha publicada.
 >    Isso é demanda-sem-ranking e **nenhum sitemap conserta**.
@@ -71,13 +72,29 @@ sensação de que o deploy avisa os buscadores. **O Google aposentou o `/ping?si
 **Consertado (`ab37cdf`):** `gsc-miner.mjs` faz `PUT` do sitemap toda rodada semanal. Escopo
 subiu de `webmasters.readonly` → `webmasters`. Falha é non-fatal de propósito.
 
-☑️ **AFERIR EM ~14/08 — é o primeiro item da próxima sessão.** Rodar a URL Inspection de
-novo nas 4 URLs de `/fitas/`:
-- ainda **"não reconhece"** ⇒ não era sitemap, é rastreio/autoridade — e a tese de canal muda;
-- **"Descoberta – não indexada"** ⇒ descoberta resolvida, o funil andou uma casa;
-- **"Enviada e indexada"** ⇒ agora sim as fitas passam a ter veredito de ranking.
+☑️ **AFERIDO NO MESMO DIA (07/08, 18:32Z) — era o sitemap mesmo.** O Google **baixou** a cópia
+nova (`lastDownloaded 2026-08-07T18:22:35Z`, **99 URLs**, 0 warning / 0 erro) e a URL
+Inspection **virou de casa em 10 minutos**:
 
-Descoberta ≠ indexação ≠ ranking. Não celebrar o `204` como se fosse tráfego.
+| URL | antes | depois do PUT | `sitemap` |
+|---|---|---|---|
+| `/fitas/fita-transparente-personalizada/` · `/fitas/fita-gomada/` · `/fitas/fita-transparente-comum/` | URL desconhecida | **Descoberta – não indexada** | 1 |
+| `/fitas/` (o hub) | URL desconhecida | URL desconhecida | 0 |
+| `/carrinho-fitas/` | URL desconhecida | URL desconhecida | 0 — **fora do sitemap de propósito** (é carrinho) |
+
+**O funil andou uma casa: descoberta resolvida nos 3 SKUs.** `lastCrawlTime` continua vazio nos
+3 — descoberto ≠ rastreado ≠ indexado, e **nada disso é ranking**. Não celebrar o `204` como
+se fosse tráfego.
+
+⚠️ **`/fitas/` é a única anomalia:** está no `sitemap.xml` de prod (conferido — 99 `<loc>`, o
+hub incluído) e ainda assim veio `sitemap 0`. Com 10 minutos entre o download e a leitura,
+isso é **lag até prova em contrário** — não abrir investigação agora.
+
+☑️ **REAFERIR EM ~14/08** — a pergunta agora é **indexação**, não descoberta:
+- 3 SKUs **"Enviada e indexada"** ⇒ as fitas finalmente têm veredito de ranking;
+- ainda **"Descoberta – não indexada"** ⇒ o Google achou e **escolheu não gastar crawl** — a
+  doença passa a ser autoridade, a mesma do `0/40` do porcelanato;
+- `/fitas/` ainda `sitemap 0` ⇒ deixou de ser lag e vira bug de verdade.
 
 ---
 
@@ -142,10 +159,9 @@ aprovado, zero webhook, zero `NegocioOriginado`.** A régua do success fee da Ta
 | ✅ reenvio do sitemap | manual (204) + automático no cron semanal |
 | ✅ `OBRA10` decidido | `createdAt 01/07 13:02:01` × `updatedAt 13:05:02` — **3 minutos de vida**. Foi desligado de propósito, **não é regressão**. Fica `false` até o Jean querer religar (10%, escopo porcelanato, mínimo R$ 500) |
 
-⛔ **Único item não fechado: apagar o lead de teste.** O ambiente bloqueou o `DELETE` no
-banco. Script pronto e guardado em `app/.tmp-lead.mjs` (**não commitado**) — confere a
-assinatura (`id` + `TESTE` no nome + `verificacao ntfy` na mensagem) e **aborta** se não
-bater. `cd app && node .tmp-lead.mjs`, depois apagar o arquivo.
+✅ **Lead de teste APAGADO (07/08).** `cmr5g3kf…` ("TESTE ntfy - pode ignorar") saiu do banco;
+`LeadConsumidor` restantes = **1** (o real, de R$ 17.878,01). O `/admin` agora bate com a
+verdade. O `app/.tmp-lead.mjs` foi removido — não recriar.
 
 | lead | o que é |
 |---|---|
@@ -183,11 +199,12 @@ enquanto houver 1 tenant publicado; vira urgente na 3ª cadeira.
 
 ### Ordem sugerida para a próxima sessão
 
-1. **Aferir a URL Inspection das 4 URLs de `/fitas/`** (~14/08). Uma chamada, muda a leitura
-   do canal inteiro. Script pronto no padrão do `gsc-miner` (mesma auth).
-2. **Apagar o lead de teste** (`cd app && node .tmp-lead.mjs`) e remover o arquivo.
-3. **(a), o teste real de pagamento** — independente do Google, e o de maior retorno.
-4. Só então **(b)**, com o resultado de 1 na mão.
+1. ~~Aferir a URL Inspection das 4 URLs de `/fitas/`~~ **FEITO 07/08** — 3/4 já em "Descoberta
+   – não indexada". **Reaferir ~14/08** (agora é indexação, não descoberta).
+2. ~~Apagar o lead de teste~~ **FEITO 07/08.**
+3. **(a), o teste real de pagamento** — independente do Google, e o de maior retorno. **Depende
+   do Jean:** exige cartão real e um pedido de valor baixo; pagamento de teste não vale.
+4. Só então **(b)**, com o resultado da reaferição de 14/08 na mão.
 
 ---
 
