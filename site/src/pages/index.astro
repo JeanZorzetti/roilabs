@@ -2,6 +2,10 @@
 import Base from '../layouts/Base.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+// 012/T057b — as cadeiras de PROJETO, no MESMO grid do mapa de nichos. Arquivo GERADO de
+// app/src/lib/seats.ts (`cd app && npm run gen:carteira`), nunca escrito à mão: espelho
+// manual foi o que deixou o conserto da API invisível aqui.
+import { carteira } from '../data/carteira';
 
 const apply = 'mailto:parceria@roilabs.com.br?subject=Candidatura%20%C3%A0%20cadeira%20%E2%80%94%20Goi%C3%A2nia';
 
@@ -37,6 +41,9 @@ const seats: { niche: string; status: string; open: boolean; estado: string; hre
 ];
 const ocupada = (s: { estado: string }) => s.estado.startsWith('ocupada');
 const aceitaCandidatura = (s: { estado: string; open: boolean }) => s.estado === 'vaga' && s.open;
+// Texto de estado das cadeiras de projeto. Duplicado no <script is:inline> abaixo de
+// propósito: o inline não compartilha escopo com o frontmatter, e são 2 linhas.
+const ESTADO: Record<string, string> = { 'ocupada-vendavel': 'No ar', 'em-preparacao': 'Em preparação' };
 
 // Nó próprio da home no @graph: o serviço Growth Partner (Base entrega Organization + WebSite).
 const jsonLdNodes = [
@@ -180,10 +187,12 @@ const jsonLdNodes = [
       <div class="wrap">
         <div class="section__head">
           <span class="eyebrow">Escassez programada</span>
-          <h2 id="cadeiras-title">Mapa de cadeiras — Goiânia</h2>
+          <h2 id="cadeiras-title">Mapa de cadeiras</h2>
           <p class="section__lead">
             Uma cadeira por nicho, por polo, renovável por desempenho. Quando uma
-            fecha, ela sai do mapa — e o seu concorrente não senta nela.
+            fecha, ela sai do mapa — e o seu concorrente não senta nela. O mapa traz
+            o polo de Goiânia e, junto, as cadeiras que a ROI Labs já opera fora dele:
+            cada uma é um produto no ar, não um case.
           </p>
         </div>
 
@@ -201,43 +210,33 @@ const jsonLdNodes = [
               </span>
             </li>
           ))}
+          {carteira.map((c) => (
+            <li class={`seat ${ocupada(c) ? 'seat--taken' : ''}`}>
+              <a class="seat__niche" href={c.siteUrl} target="_blank" rel="noopener">{c.niche} ↗</a>
+              <span class="seat__status">
+                <span class="seat__ring" aria-hidden="true"></span>
+                {' '}{ESTADO[c.estado] ?? c.estado} · {c.rotulo === 'casa' ? 'Da casa' : 'Parceiro'}
+              </span>
+            </li>
+          ))}
         </ul>
         <p class="map__caption">
-          // polo 01 de N · novos nichos abrem após a primeira cadeira faturar
-        </p>
-      </div>
-    </section>
-
-    <!-- A CARTEIRA (012/T057a) — as cadeiras de PROJETO, que o mapa de nichos acima não mostra.
-         SEM skeleton estático de propósito: espelhar a lista em HTML foi exatamente o que
-         deixou o conserto da API invisível aqui (a tela ficava idêntica com a API em 200 ou
-         em 500). Fonte única = /api/cadeiras. Fetch falhou → a seção não aparece, que é o
-         comportamento de hoje.
-         ponytail: se o SEO desta seção vier a importar, gerar no build — mas build-time fetch
-         está proibido neste arquivo (o layer do Docker cacheia o dist). -->
-    <section class="section section--light" id="carteira" aria-labelledby="carteira-title" hidden>
-      <div class="wrap">
-        <div class="section__head">
-          <span class="eyebrow">Prova de operação</span>
-          <h2 id="carteira-title">A carteira</h2>
-          <p class="section__lead">
-            Fora do polo Goiânia, a ROI Labs já opera estas cadeiras. Cada uma é um
-            produto no ar — não um case, não um mockup.
-          </p>
-        </div>
-        <ul class="map__grid" id="carteira-grid" role="list"></ul>
-        <p class="map__caption">
-          // carteira ao vivo · a mesma fonte que o /admin edita
+          // polo 01 de N · cadeira escura = ocupada · novos nichos abrem após a primeira cadeira faturar
         </p>
       </div>
     </section>
 
     <script is:inline>
       // Mapa de cadeiras AO VIVO: busca o DB no navegador e sobrescreve o skeleton estático.
-      // ponytail: casa por índice — 8 nichos fixos, a API ordena por `ordem`, e as cadeiras de
-      // PROJETO (ordem 8+) são desenhadas pelo bloco da carteira, abaixo. O seletor é escopado
-      // em #cadeiras porque agora existem DOIS `.map__grid` na página.
-      // Falhou o fetch? mantém o skeleton (degrada limpo).
+      // ponytail: casa por ÍNDICE — a API ordena por `ordem`, e o skeleton renderiza na mesma
+      // ordem (8 nichos de Goiânia 0..7 + as cadeiras de projeto 8..15, geradas de seats.ts).
+      // Falhou o fetch? mantém o skeleton (degrada limpo) — que agora é o grid inteiro, e não
+      // mais meia seção em branco.
+      //
+      // 012/T057b: o laço ATUALIZA, nunca cria <li>. Criar aqui duplicaria os cards que o
+      // skeleton já desenhou — foi o que a versão anterior fazia quando a carteira era uma
+      // seção separada e JS-only.
+      var ESTADO = { 'ocupada-vendavel': 'No ar', 'em-preparacao': 'Em preparação' };
       fetch('https://app.roilabs.com.br/api/cadeiras')
         .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
         .then((seats) => {
@@ -255,47 +254,22 @@ const jsonLdNodes = [
             ring.className = 'seat__ring';
             ring.setAttribute('aria-hidden', 'true');
             st.appendChild(ring);
-            st.appendChild(document.createTextNode(' ' + s.status));
-          });
+            // Cadeira de PROJETO (ordem 8+) tem outra legenda: `status` ali é texto interno do
+            // /admin ("Ocupada · Polaris"), e o que vai para o público é estado + rótulo.
+            // ⚠️ FR-010a: `rotulo`, NUNCA `daCasa`. A projeção da API existe para esconder
+            // essa curadoria, e o skeleton gerado aplica a mesma regra.
+            const texto =
+              s.ordem >= 8
+                ? (ESTADO[s.estado] || s.estado) + ' · ' + (s.rotulo === 'casa' ? 'Da casa' : 'Parceiro')
+                : s.status;
+            st.appendChild(document.createTextNode(' ' + texto));
 
-          // 012/T057a — A CARTEIRA. `ordem >= 8` é o corte entre o mapa de nichos de Goiânia
-          // (0..7) e as cadeiras de projeto; `siteUrl` porque cadeira sem site não é prova.
-          // ⚠️ FR-010a: exibe `rotulo`, NUNCA `daCasa`. 4 das 9 são da casa sem exibição
-          // pública, e a projeção da API existe justamente para esconder essa curadoria.
-          var grid = document.getElementById('carteira-grid');
-          var carteira = seats.filter(function (s) {
-            return s.ordem >= 8 && s.siteUrl;
+            // O rótulo do nicho MUDA (5 dos 8 foram corrigidos em 07/08). O skeleton é gerado
+            // de seats.ts e o banco vem do mesmo seed, mas quem manda é o banco: sem isto, um
+            // rótulo editado no /admin ficaria invisível até o próximo deploy.
+            const alvo = li.querySelector('.seat__niche a') || li.querySelector('.seat__niche');
+            if (alvo && s.niche) alvo.textContent = alvo.tagName === 'A' ? s.niche + ' ↗' : s.niche;
           });
-          if (!grid || !carteira.length) return;
-          var ESTADO = { 'ocupada-vendavel': 'No ar', 'em-preparacao': 'Em preparação' };
-          carteira.forEach(function (s) {
-            var li = document.createElement('li');
-            // Mesma convenção do laço acima: só `ocupada*` recebe o estado "ganho".
-            li.className = 'seat' + (String(s.estado || '').indexOf('ocupada') === 0 ? ' seat--taken' : '');
-            var n = document.createElement('span');
-            n.className = 'seat__niche';
-            var a = document.createElement('a');
-            a.href = s.siteUrl;
-            a.target = '_blank';
-            a.rel = 'noopener';
-            a.textContent = s.niche + ' ↗';
-            n.appendChild(a);
-            var st2 = document.createElement('span');
-            st2.className = 'seat__status';
-            var ring2 = document.createElement('span');
-            ring2.className = 'seat__ring';
-            ring2.setAttribute('aria-hidden', 'true');
-            st2.appendChild(ring2);
-            st2.appendChild(
-              document.createTextNode(
-                ' ' + (ESTADO[s.estado] || s.estado) + ' · ' + (s.rotulo === 'casa' ? 'Da casa' : 'Parceiro')
-              )
-            );
-            li.appendChild(n);
-            li.appendChild(st2);
-            grid.appendChild(li);
-          });
-          document.getElementById('carteira').hidden = false;
         })
         .catch(() => {});
     </script>

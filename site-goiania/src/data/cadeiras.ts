@@ -80,7 +80,9 @@ export const cadeiras: Cadeira[] = [
     // não estimados: Gratuito R$ 0 · Starter R$ 67 · Pro R$ 147 · Business R$ 397, mensais.
     slug: 'sirius',
     nome: 'Sirius CRM',
-    niche: 'CRM / Solar',
+    // ⚠️ Escrito à mão e NÃO comparado por `check-cadeiras`: tem de bater com o `niche` do
+    // sirius em app/src/lib/seats.ts, que é o que a home exibe. São dois lugares.
+    niche: 'CRM de vendas',
     resumo:
       'O Sirius CRM começa em R$ 0 no plano Gratuito e custa R$ 147/mês no Pro, o plano que a maioria dos times contrata: pipeline Kanban, WhatsApp e agentes de IA que trabalham o funil sozinhos.',
     preco: 147,

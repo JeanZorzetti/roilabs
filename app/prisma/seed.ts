@@ -24,12 +24,27 @@ async function main() {
 
   // 012 (T051/T052/T066): as cadeiras de PROJETO. `slug` e `gateway` são metadados do SEED,
   // não colunas — o gateway de verdade é a CredencialGateway, cadastrada por cadeira (T033).
-  // Casa por `niche` de propósito: `atma` já existe como cadeira de nicho, e criar de novo
-  // duplicaria a mesma cadeira (card ≠ projeto ≠ repositório).
+  //
+  // 🚨 A CHAVE DE CASAMENTO É `siteUrl`, NÃO `niche`. Enquanto era `niche`, renomear um
+  // rótulo fazia o findFirst não achar nada e o seed CRIAVA linha nova — duas cadeiras para
+  // o mesmo projeto, as duas servidas por /api/cadeiras, as duas desenhadas na home. E
+  // rótulo é texto de exibição: ele MUDA (5 dos 8 descreviam o produto errado em 07/08).
+  // `siteUrl` é @unique desde a migração da 012 e identifica o projeto — é a mesma regra do
+  // roihub ("a chave é a URL do site, não o repo, e muito menos o rótulo").
+  //
+  // O fallback por `niche` existe para UM caso e se auto-cura na primeira rodada: `atma` já
+  // nasceu como cadeira de NICHO (SEED de 011, sem siteUrl). Achada por niche, o update
+  // abaixo grava o siteUrl dela; da segunda rodada em diante ela casa pela chave nova.
   let criadas = 0;
   for (const p of PROJETOS_CADEIRA) {
     const { slug: _slug, gateway: _gateway, ...dados } = p;
-    const existing = await prisma.cadeira.findFirst({ where: { niche: dados.niche } });
+    // 🚨 O `dados.siteUrl &&` NÃO é defensivo à toa: `siteUrl` é anulável de propósito
+    // ("nulo é não sei", ver seats.ts), e `findFirst({ siteUrl: null })` casaria com a
+    // PRIMEIRA cadeira de nicho sem site — sobrescrevendo uma linha aleatória do mapa de
+    // Goiânia com os dados de um projeto. Sem site apurado, cai no `niche`, como antes.
+    const existing =
+      (dados.siteUrl ? await prisma.cadeira.findFirst({ where: { siteUrl: dados.siteUrl } }) : null) ??
+      (await prisma.cadeira.findFirst({ where: { niche: dados.niche } }));
     if (existing) {
       // Só o que a 012 governa. `status`, `open` e `ordem` de cadeira já existente ficam
       // como estão: mudá-los aqui reescreveria curadoria feita à mão no /admin.
@@ -39,6 +54,10 @@ async function main() {
       await prisma.cadeira.update({
         where: { id: existing.id },
         data: {
+          // `niche` agora é ESCRITO, não lido: ele deixou de ser chave, então renomear o
+          // rótulo em seats.ts é o que aplica o novo texto na linha que já existe.
+          // ⚠️ As 8 cadeiras de NICHO de Goiânia não passam por aqui — o laço acima é outro.
+          niche: dados.niche,
           estado: dados.estado,
           daCasa: dados.daCasa,
           exibirDaCasa: dados.exibirDaCasa,

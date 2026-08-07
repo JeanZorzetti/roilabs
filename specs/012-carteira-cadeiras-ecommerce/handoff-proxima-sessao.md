@@ -1,5 +1,51 @@
 # Handoff — próxima sessão (3 itens do Jean, 07/08/2026)
 
+---
+
+# ✅ EXECUTADO em 07/08 — itens 1 e 2 (commitados, **NÃO pushados**)
+
+**Decisões do Jean, tomadas antes de escrever:** saída **B** (casar por `siteUrl`) · os **5
+rótulos propostos aceitos** · Meridian **pivotou** para finanças (o subdomínio está certo, a
+memória é que estava velha) · fusão com **skeleton estático GERADO**.
+
+O que mudou:
+
+| arquivo | o quê |
+|---|---|
+| [app/prisma/seed.ts](../../app/prisma/seed.ts) | chave = `siteUrl` (fallback `niche` só para a `atma`, que se auto-cura na 1ª rodada). `niche` passou a ser ESCRITO no update |
+| [app/src/lib/seats.ts](../../app/src/lib/seats.ts) | os 5 rótulos novos |
+| [site-goiania/src/data/cadeiras.ts](../../site-goiania/src/data/cadeiras.ts) | `CRM / Solar` → `CRM de vendas` (o 2º lugar, escrito à mão) |
+| [app/scripts/gen-carteira.ts](../../app/scripts/gen-carteira.ts) + `npm run gen:carteira` | gera o skeleton no-JS de `seats.ts`. Sem rede, sem build-time fetch |
+| `site/src/data/carteira.ts` | **GERADO e commitado** — o Docker do `site` só copia `site/`, então `../app` não existe no build dele |
+| [site/src/pages/index.astro](../../site/src/pages/index.astro) | `#carteira` apagada · 16 cards num grid só · copy nova · o laço JS **atualiza** os 16, nunca cria `<li>` |
+| [app/test/cadeira-chave-siteurl.test.mjs](../../app/test/cadeira-chave-siteurl.test.mjs) | novo, na suíte |
+
+Medido, não lembrado: `npm test` **18/18** · `tsc --noEmit` limpo · `dist/index.html` do `site`
+com **16 cards no HTML inicial**, zero duplicado, `#carteira` ausente, `daCasa` só em
+comentário · `site-goiania` builda 105 páginas. O teste novo foi conferido **falhando** antes
+de conferido passando (dessincronizei o skeleton de propósito).
+
+## 🚨 O ÚNICO passo que falta — e por que o push está segurado
+
+`niche` é editável no `/admin`, então quem manda na tela é o **BANCO**: o laço JS reescreve o
+rótulo dos 16 cards com o que `/api/cadeiras` devolve. **O banco ainda tem os rótulos velhos.**
+
+Deployar agora colocaria `Imobiliário / IA` e os outros 4 **dentro da vitrine** — exatamente o
+que a ordem deste handoff existia para impedir. Não há `.env` com `DATABASE_URL` neste
+ambiente, então o seed em produção não roda daqui.
+
+**Duas formas de destravar, as duas do Jean:**
+
+1. `cd app && npm run db:seed` com a `DATABASE_URL` de produção — aplica os 5 rótulos **e**
+   fecha a **T072b** que já estava pendente (`daCasa` de `vertice`/`orcaobra` + `estado` de
+   `Fitas adesivas`, hoje `vaga` no ar contra `ocupada-vendavel` no arquivo).
+2. Renomear os 5 à mão no `/admin` (é um `<input>`) — instantâneo, sem seed e sem deploy.
+
+**Depois de qualquer uma das duas: `git push` (= deploy).** O commit já está pronto.
+
+---
+
+
 **Contexto**: a 012 está em **68 de 84 tasks**, `npm test` 17/17, tudo pushado em `main`
 (`7645d67`). O histórico completo da feature está em [handoff.md](./handoff.md) — **este
 arquivo é só o que vem a seguir**, e nasceu de o Jean olhar a home depois do deploy.

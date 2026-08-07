@@ -50,20 +50,29 @@ export const DEFAULT_SEATS = [
 export const PROJETOS_CADEIRA = [
   // ── Fase 1: Mercado Pago (4 cadeiras) ──────────────────────────────────────
   { slug: 'atma', niche: 'Ortodontia / Alinhadores', status: 'Ocupada · Atma Aligner', estado: 'ocupada-vendavel', gateway: 'mercadopago', daCasa: false, exibirDaCasa: false, siteUrl: 'https://atma.roilabs.com.br/', repoUrl: 'https://github.com/JeanZorzetti/Atma' },
-  { slug: 'polarisia', niche: 'Imobiliário / IA', status: 'Ocupada · Polaris', estado: 'ocupada-vendavel', gateway: 'mercadopago', daCasa: true, exibirDaCasa: false, siteUrl: 'https://polarisia.com.br/', repoUrl: 'https://github.com/JeanZorzetti/sofia-ia' },
+  // ⚠️ `niche` aqui é RÓTULO DE EXIBIÇÃO, não chave (o seed casa por `siteUrl`). Cada um
+  // saiu do que o próprio site diz de si, lido no ar em 07/08 — 5 dos 8 descreviam produto
+  // que não existe mais (o `polarisia` não tinha uma palavra sobre imóvel na página inteira).
+  // Trocar rótulo aqui é edição de texto: NÃO cria cadeira nova, mas exige rodar o seed.
+  { slug: 'polarisia', niche: 'Orquestração de agentes IA', status: 'Ocupada · Polaris', estado: 'ocupada-vendavel', gateway: 'mercadopago', daCasa: true, exibirDaCasa: false, siteUrl: 'https://polarisia.com.br/', repoUrl: 'https://github.com/JeanZorzetti/sofia-ia' },
   { slug: 'estetiacrm', niche: 'CRM / Estética', status: 'Ocupada · Estetia CRM', estado: 'ocupada-vendavel', gateway: 'mercadopago', daCasa: true, exibirDaCasa: false, siteUrl: 'https://estetiacrm.com.br/', repoUrl: 'https://github.com/JeanZorzetti/estetia' },
   // T052 RESOLVIDA (Jean, 07/08): `vertice` é parceiro externo → daCasa:false. Sai do
   // fail-closed e ENTRA na régua do success fee.
-  { slug: 'vertice', niche: 'Vértice', status: 'Ocupada · Vértice', estado: 'ocupada-vendavel', gateway: 'mercadopago', daCasa: false, exibirDaCasa: false, siteUrl: 'https://vertice.roilabs.com.br/', repoUrl: 'https://github.com/JeanZorzetti/vertice' },
+  { slug: 'vertice', niche: 'Onboarding de clientes', status: 'Ocupada · Vértice', estado: 'ocupada-vendavel', gateway: 'mercadopago', daCasa: false, exibirDaCasa: false, siteUrl: 'https://vertice.roilabs.com.br/', repoUrl: 'https://github.com/JeanZorzetti/vertice' },
   // ── Fase 1: Stripe (3 cadeiras) ────────────────────────────────────────────
   // sirius/orion: daCasa E exibirDaCasa — as exceções nomeadas em FR-010a.
-  { slug: 'sirius', niche: 'CRM / Solar', status: 'Ocupada · Sirius CRM', estado: 'ocupada-vendavel', gateway: 'stripe', daCasa: true, exibirDaCasa: true, siteUrl: 'https://siriuscrm.com.br/', repoUrl: 'https://github.com/JeanZorzetti/sirius' },
+  // Solar era 1 de 5 segmentos que o próprio site lista (corretores, solar, agências,
+  // consultores, representantes) — o rótulo antigo estreitava a cadeira a um quinto dela.
+  { slug: 'sirius', niche: 'CRM de vendas', status: 'Ocupada · Sirius CRM', estado: 'ocupada-vendavel', gateway: 'stripe', daCasa: true, exibirDaCasa: true, siteUrl: 'https://siriuscrm.com.br/', repoUrl: 'https://github.com/JeanZorzetti/sirius' },
   { slug: 'context', niche: 'Ferramentas de dev', status: 'Ocupada · Context Keeper', estado: 'ocupada-vendavel', gateway: 'stripe', daCasa: true, exibirDaCasa: false, siteUrl: 'https://context.nimblabs.com/', repoUrl: 'https://github.com/JeanZorzetti/context-keeper' },
-  { slug: 'orion', niche: 'Orion', status: 'Ocupada · Orion', estado: 'ocupada-vendavel', gateway: 'stripe', daCasa: true, exibirDaCasa: true, siteUrl: 'https://orion.roilabs.com.br/', repoUrl: 'https://github.com/JeanZorzetti/orion-nova-ui' },
+  { slug: 'orion', niche: 'ERP / Gestão empresarial', status: 'Ocupada · Orion', estado: 'ocupada-vendavel', gateway: 'stripe', daCasa: true, exibirDaCasa: true, siteUrl: 'https://orion.roilabs.com.br/', repoUrl: 'https://github.com/JeanZorzetti/orion-nova-ui' },
   // ── Fora da fase 1, mas nomeadas pela spec ─────────────────────────────────
   // meridian: NÃO está entre as 7 da fase 1 nem entre as 8 do SEED de nicho — ele só existe
   // como cadeira por causa de FR-010a. Sem esta linha, T052 escreveria numa linha inexistente.
-  { slug: 'meridian', niche: 'Beleza / Estética', status: 'Em preparação · Meridian', estado: 'em-preparacao', gateway: null, daCasa: true, exibirDaCasa: true, siteUrl: 'https://meridian.roilabs.com.br/', repoUrl: 'https://github.com/JeanZorzetti/meridian' },
+  // ⚠️ O rótulo era `Beleza / Estética` (o laboratório para a vaga da FitNext). O produto
+  // PIVOTOU (Jean, 07/08): meridian.roilabs.com.br serve "See every dollar", um motor de
+  // finanças pessoais. O subdomínio está certo; a memória é que estava velha.
+  { slug: 'meridian', niche: 'Finanças pessoais', status: 'Em preparação · Meridian', estado: 'em-preparacao', gateway: null, daCasa: true, exibirDaCasa: true, siteUrl: 'https://meridian.roilabs.com.br/', repoUrl: 'https://github.com/JeanZorzetti/meridian' },
   // orcaobra: saiu da fase 1 por bloqueio de PRODUTO, não de fiação ("acho ele um produto
   // ruim do jeito que está"). Ligar checkout aqui venderia algo que não deveria estar à venda.
   // ⚠️ O repo NÃO se chama `orcaobra`: é `reforma-maestro`. Derivar repoUrl do slug erraria aqui.
