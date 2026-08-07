@@ -1,5 +1,98 @@
 # Handoff — site-goiania
 
+## 2026-08-07 (tarde) — Executados os itens 1–4: o dado que faltava chegou
+
+> **BLUF:** os quatro passos mecânicos da ordem sugerida foram executados. O número que ia
+> mudar todas as decisões chegou: **não são 43 impressões, são 322** em 28 dias — os pares
+> query×page cobriam só **22%**. Mas a leitura do canal **não muda**: 322 impressões, **2
+> cliques**, posição média **19,8** (página 2), e **as fitas tiveram ZERO impressão e 0/3 no
+> rank nacional**. O vertical que assumiu a home não tem presença nenhuma no Google.
+> **As decisões (a)–(d) do Jean continuam abertas — agora com o dado na mão.**
+
+### 1. Move do `docs/` ✅ já estava resolvido
+
+Commitado em `51f3b63` (`site-goiania/{ => docs}/handoff-fitas-ecommerce.md` + `docs/Imagens/`),
+`main` em dia com `origin`. Nada a fazer — o `git status` sujo do handoff anterior era da
+própria sessão que o escreveu.
+
+### 2. GSC com `dimensions: []` ✅ — o piso escondia 78% do dado
+
+Rodado contra `sc-domain:goiania.roilabs.com.br` (28 dias, 08/07 → 05/08):
+
+| | |
+|---|---|
+| **Impressões reais** | **322** |
+| Cliques | **2** (CTR 0,62%) |
+| Posição média | **19,8** |
+| Soma dos pares query×page | 71 — **22,0%** do total |
+
+A suspeita de [[gsc_query_dimension_hides_rare]] se confirmou: a dimensão `query` anonimiza
+as raras, e ler "43 pares" como "43 impressões" errava por **7,5×**. **É "espalhado", não
+"invisível"** — mas espalhado na página 2, e 322 impressões em 4 meses de malha publicada
+não desmentem o diagnóstico de demanda-sem-ranking. A leitura fica **mais precisa, não mais
+otimista**.
+
+`gsc-miner.mjs` passou a ler os totais toda rodada (seção 0 da nota) — o piso nunca mais é
+lido como total.
+
+### 3. Fitas entraram nas duas medições ✅ — e o veredito é ZERO
+
+`termoAlvo` declarado nos 3 SKUs de `fitas.ts` (`fita adesiva personalizada`, `fita gomada`,
+`fita adesiva transparente`) e `rank-tracking.mjs` agora lê **os dois** catálogos.
+
+🚨 **A localização virou parte da keyword.** O script mandava *toda* busca com
+`location: Goiânia`. Fita é B2B **nacional**: medir na SERP de Goiânia mediria a SERP errada
+e o primeiro veredito sobre as fitas já nasceria falso. Agora porcelanato vai geolocalizado
+(40 keywords) e fita vai nacional (3).
+
+**Resultado das duas medições, rodadas de verdade hoje:**
+
+| medição | porcelanato | fitas |
+|---|---|---|
+| rank tracking (serper, top 50) | 0/40 | **0/3** |
+| GSC — impressões em 28 dias | 148 (34 páginas) | **0 (nenhuma página)** |
+
+Quebra por vertical no GSC: **guias 174** · porcelanato 148 · home/outras 6 · **fitas 0**.
+Duas leituras: (1) o conteúdo **informacional** é quem traz quase toda a impressão, e ele
+não vende; (2) as fitas estão no ar desde 22/07 — ~2 semanas dentro da janela — e não
+receberam **uma única** impressão. Isso é jovem demais para ser veredito de ranking, mas é
+veredito suficiente sobre **indexação**: vale rodar URL Inspection nas 4 URLs de `/fitas/`
+antes de qualquer tese de canal ([[site_200_is_not_indexed_url_inspection]] — 200 não é
+índice). A próxima rodada semanal já mede fitas sozinha.
+
+`gsc-miner` também aprendeu que `/fitas/<slug>` é página **dedicada** — sem isso toda query
+de fita entraria como "candidata a página nova" pedindo uma página que já existe.
+
+### 4. Sujeiras do painel — uma resolvida, uma decidida
+
+**`OBRA10`: foi desligado de propósito, não é regressão.** O banco mostra
+`createdAt 01/07 13:02:01` e `updatedAt 01/07 13:05:02` — **3 minutos** de vida. Ninguém
+"esqueceu ativo"; alguém desligou logo depois de criar. Deixado `ativo: false` — religar um
+cupom de 10% é decisão comercial do Jean, não de sessão. (`escopo: porcelanato`, mínimo
+R$ 500.)
+
+⛔ **O lead de teste NÃO foi apagado — o ambiente bloqueou o DELETE.** O script guardado
+está pronto em `app/.tmp-lead.mjs` (não commitado): confere a assinatura (`id` +
+`TESTE` no nome + `verificacao ntfy` na mensagem) e **aborta** se não bater. Rodar com
+`cd app && node .tmp-lead.mjs` e apagar o arquivo depois. Confirmado no banco:
+
+| lead | o que é |
+|---|---|
+| `cmr534je…` · 03/07 · "Orçamento WhatsApp (carrinho)" · R$ 17.878,01 | **real** — manter |
+| `cmr5g3kf…` · 03/07 · "TESTE ntfy - pode ignorar" | **lixo** — apagar |
+
+Ou seja: o `/admin` mostra "2 novo" e o número honesto é **1**.
+
+### O que continua aberto (decisões do Jean, itens 5-6 da ordem anterior)
+
+Nada do que foi medido hoje responde **(a)**, **(b)**, **(c)** ou **(d)** da seção abaixo —
+os quatro passos eram pré-requisito, não resposta. O que mudou é que agora a decisão **(b)**
+tem números: **322 impressões / 2 cliques / pos. 19,8 em 28 dias**, com o tráfego concentrado
+em **guias** e **zero** no vertical que é a cara do site. O teste real de pagamento **(a)**
+segue intocado e continua sendo a única coisa que não depende do Google.
+
+---
+
 ## 2026-08-07 — Prosseguir: a loja está pronta, o canal não entrega
 
 > **BLUF:** `goiania.roilabs.com.br` está **completo e no ar** — 99 URLs, dois verticais,
