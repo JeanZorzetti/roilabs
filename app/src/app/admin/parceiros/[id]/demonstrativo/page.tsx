@@ -38,7 +38,11 @@ export default async function DemonstrativoPage({
   const [negocios, fatura] = await Promise.all([
     prisma.negocioOriginado.findMany({
       where: { parceiroId: id, createdAt: { gte: inicio, lt: fim } },
-      include: { pedido: { select: { nome: true, statusPagamento: true } } },
+      // 012: negócio de webhook não tem pedido — o reembolso dele mora em VendaParceiro.
+      include: {
+        pedido: { select: { nome: true, statusPagamento: true } },
+        venda: { select: { status: true, clienteRef: true } },
+      },
       orderBy: { createdAt: 'asc' },
     }),
     prisma.faturaSuccessFee.findUnique({
@@ -58,7 +62,8 @@ export default async function DemonstrativoPage({
             taxaAplicada: Number(n.taxaAplicada),
             estagio: n.estagio,
             faturavel: n.faturavel,
-            pedidoReembolsado: n.pedido.statusPagamento === 'reembolsado',
+            // 012: `pedido` é null quando origem='webhook'.
+            pedidoReembolsado: n.pedido?.statusPagamento === 'reembolsado',
             jaFaturado: n.faturaId !== null,
           })),
         )
@@ -112,7 +117,11 @@ export default async function DemonstrativoPage({
           </thead>
           <tbody>
             {negocios.map((n) => {
-              const reemb = n.pedido.statusPagamento === 'reembolsado';
+              // 012: pedido reembolsado OU venda de gateway estornada saem da fatura.
+              const reemb =
+                n.pedido?.statusPagamento === 'reembolsado' ||
+                n.venda?.status === 'reembolsada' ||
+                n.venda?.status === 'estornada';
               const fora = !n.faturavel ? `isento — ${n.isencaoMotivo ?? 'sem motivo'}`
                 : reemb ? 'reembolsado'
                 : n.estagio !== 'ganho' ? 'em andamento'
@@ -123,7 +132,7 @@ export default async function DemonstrativoPage({
               return (
                 <tr key={n.id}>
                   <td className="num">{n.createdAt.toISOString().slice(0, 10)}</td>
-                  <td>{n.pedido.nome}</td>
+                  <td>{n.pedido?.nome ?? n.venda?.clienteRef ?? n.clienteRef ?? 'Venda no gateway do parceiro'}</td>
                   <td className="num">{brl(Number(n.valor))}</td>
                   <td>{n.classificacao ? CLASSIF_LABEL[n.classificacao] ?? n.classificacao : '—'}</td>
                   <td className="num">{pctLabel(taxa)}</td>

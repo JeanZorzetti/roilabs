@@ -1,6 +1,6 @@
 // Idempotent seed of the chair map (owner convention: seeds re-run safely).
 import { PrismaClient } from '@prisma/client';
-import { DEFAULT_SEATS } from '../src/lib/seats';
+import { DEFAULT_SEATS, PROJETOS_CADEIRA } from '../src/lib/seats';
 
 const prisma = new PrismaClient();
 
@@ -14,7 +14,33 @@ async function main() {
       await prisma.cadeira.create({ data: { ...s, ordem: i } });
     }
   }
-  console.log(`seeded ${DEFAULT_SEATS.length} cadeiras`);
+  console.log(`seeded ${DEFAULT_SEATS.length} cadeiras de nicho`);
+
+  // 012 (T051/T052/T066): as cadeiras de PROJETO. `slug` e `gateway` são metadados do SEED,
+  // não colunas — o gateway de verdade é a CredencialGateway, cadastrada por cadeira (T033).
+  // Casa por `niche` de propósito: `atma` já existe como cadeira de nicho, e criar de novo
+  // duplicaria a mesma cadeira (card ≠ projeto ≠ repositório).
+  let criadas = 0;
+  for (const p of PROJETOS_CADEIRA) {
+    const { slug: _slug, gateway: _gateway, ...dados } = p;
+    const existing = await prisma.cadeira.findFirst({ where: { niche: dados.niche } });
+    if (existing) {
+      // Só o que a 012 governa. `status`, `open` e `ordem` de cadeira já existente ficam
+      // como estão: mudá-los aqui reescreveria curadoria feita à mão no /admin.
+      await prisma.cadeira.update({
+        where: { id: existing.id },
+        data: { estado: dados.estado, daCasa: dados.daCasa, exibirDaCasa: dados.exibirDaCasa },
+      });
+    } else {
+      await prisma.cadeira.create({ data: { ...dados, open: false, ordem: DEFAULT_SEATS.length + criadas } });
+      criadas++;
+    }
+  }
+  console.log(`seeded ${PROJETOS_CADEIRA.length} cadeiras de projeto (${criadas} novas)`);
+
+  const daCasa = await prisma.cadeira.count({ where: { daCasa: true } });
+  const exibe = await prisma.cadeira.count({ where: { exibirDaCasa: true } });
+  console.log(`cadeiras da casa: ${daCasa} · exibidas como da casa: ${exibe} (FR-010a espera 3)`);
 
   // Idempotent seed of the global cost-center params (doc defaults: markup 30%, comissao 10%,
   // aliqIntermediacao 10.2%, aliqWL 6.2%). Stored as fractions [0,1].

@@ -28,8 +28,7 @@ por tipo de cadeira desarmou o gatilho da spec 011 (`research.md` §3, `spec.md`
 **Language/Version**: TypeScript, Next.js 16 App Router (`/app`), Node 22 · Astro estático
 (`/site`, `/site-goiania`)
 
-**Primary Dependencies**: Prisma (Postgres), `mercadopago`, `stripe`. **Kiwify não tem SDK** —
-webhook HTTP cru.
+**Primary Dependencies**: Prisma (Postgres), `mercadopago`, `stripe`.
 
 **Storage**: Postgres existente. **`prisma db push` é MANUAL**, de uma máquina que alcança o host
 (Constituição). `migrate diff --script` como preview seguro (lição da 010).
@@ -45,9 +44,9 @@ verificação em ambiente real. **Build local não vale** (Constituição II: On
 **Constraints**: caminho de dinheiro — idempotência no **banco**, assinatura antes de estado,
 status lido do gateway. LLM único = `claude-cli`, sem API paga.
 
-**Scale/Scope**: **7 cadeiras** na fase 1 (de 35), **2 adaptadores** de gateway, 2 tabelas novas,
-1 coluna anulada em tabela existente, 1 corte de domínio. *(Fase 0 cortou o adaptador Kiwify e a
-cadeira `orcaobra`.)*
+**Scale/Scope**: **7 cadeiras** na fase 1 (de 35), **2 adaptadores** de gateway, **3 tabelas
+novas**, 1 coluna anulada em tabela existente, **um `db push` só**, 1 corte de domínio.
+*(Fase 0 cortou o adaptador Kiwify e a cadeira `orcaobra`.)*
 
 ## Constitution Check
 
@@ -85,13 +84,14 @@ specs/012-carteira-cadeiras-ecommerce/
 ```text
 app/                                    # Next 16 — API e admin
 ├── prisma/schema.prisma                # ALTERA: NegocioOriginado, Cadeira
-│                                       # ADICIONA: VendaParceiro, CredencialGateway
+│                                       # ADICIONA: VendaParceiro, CredencialGateway,
+│                                       #           ProdutoCadeira
 ├── scripts/migrate-012-backfill.mjs    # NOVO — origem='pedido' explícito
 └── src/
     ├── lib/
     │   ├── seats.ts                    # ALTERA — estado/daCasa/exibirDaCasa no SEED
     │   ├── carteira/
-    │   │   ├── adaptadores/            # NOVO — mercadopago.ts | stripe.ts | kiwify.ts
+    │   │   ├── adaptadores/            # NOVO — mercadopago.ts | stripe.ts
     │   │   └── registrar-venda.ts      # NOVO — passos 4-6 do contrato, um lugar só
     │   └── mercadopago.ts              # REUSA verifyWebhookSignature (multi-conta)
     └── app/api/
@@ -107,8 +107,9 @@ site-goiania/                            # e-commerce (Astro) — US2/US3/US4
 ```
 
 **Structure Decision**: monorepo por app já existente, sem app novo. Os adaptadores moram em
-`app/src/lib/carteira/` porque **a lógica é uma só** — os três gateways diferem em assinatura,
-consulta e formato, e convergem no mesmo `registrar-venda.ts`. Três rotas finas, um núcleo.
+`app/src/lib/carteira/` porque **a lógica é uma só** — os dois gateways diferem em assinatura,
+consulta e formato, e convergem no mesmo `registrar-venda.ts`. **Uma rota dinâmica**
+(`[gateway]/[parceiroId]`), dois adaptadores finos, um núcleo.
 
 ## Fases
 
@@ -142,7 +143,7 @@ segura, não o `if`).
 
 ### Fase 2 — Um adaptador, uma cadeira, ponta a ponta *(P1 — US1+US2)*
 
-**Uma** cadeira, do gateway mais representativo (Mercado Pago cobre 5). Venda real com cartão
+**Uma** cadeira, do gateway mais representativo (Mercado Pago cobre 4). Venda real com cartão
 real em produção → `VendaParceiro` → `NegocioOriginado` → fee apurado. **É `SC-001`**: a receita
 provada da carteira sai de R$ 0,00 aqui, ou não sai.
 
@@ -152,7 +153,7 @@ Só depois disso os outros adaptadores — replicar antes de provar um é multip
 
 Página por cadeira com o piso de FR-014. **Conteúdo antes de quantidade**: a medição da Atma
 mostra que 86% do tráfego veio de uma página respondendo uma pergunta de preço inteira, e que
-esforço por artigo não prediz nada. Publicar 8 páginas finas é o resultado a evitar.
+esforço por artigo não prediz nada. Publicar 7 páginas finas é o resultado a evitar.
 
 Cadeira sem gateway ligado **não** oferece checkout (FR-008); cadeira não-vendável **não** gera
 URL indexável (FR-009).

@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { isAuthed } from '@/lib/auth';
 import { normalizarDoc } from '@/lib/doc';
 import { classificarNegocio } from '@/lib/classificar-negocio';
+import { validarOrigemNegocio } from '@/lib/carteira/origem-negocio';
 
 export const dynamic = 'force-dynamic';
 
@@ -19,8 +20,11 @@ export async function GET(req: NextRequest) {
     rows.map((r) => ({
       id: r.id,
       pedidoId: r.pedidoId,
-      pedidoNome: r.pedido.nome,
-      pedidoWhatsapp: r.pedido.whatsapp,
+      origem: r.origem,
+      // 012: negócio de webhook não tem pedido — `pedido` é null. Rótulo da origem em vez
+      // de string vazia: linha sem identificação nenhuma na tela é pior que sem pedido.
+      pedidoNome: r.pedido?.nome ?? (r.origem === 'webhook' ? 'Venda no gateway do parceiro' : '—'),
+      pedidoWhatsapp: r.pedido?.whatsapp ?? '',
       parceiroId: r.parceiroId,
       valor: Number(r.valor),
       estagio: r.estagio,
@@ -30,7 +34,7 @@ export async function GET(req: NextRequest) {
       clienteDoc: r.clienteDoc,
       classificacao: r.classificacao,
       taxaAplicada: Number(r.taxaAplicada),
-      pedidoReembolsado: r.pedido.statusPagamento === 'reembolsado',
+      pedidoReembolsado: r.pedido?.statusPagamento === 'reembolsado',
       createdAt: r.createdAt,
     })),
   );
@@ -77,27 +81,51 @@ export async function POST(req: NextRequest) {
   if (clienteDoc) {
     const anteriores = await prisma.negocioOriginado.findMany({
       where: { parceiroId, clienteDoc, estagio: { not: 'perdido' } },
-      include: { pedido: { select: { statusPagamento: true } } },
+      // 012: negócio de webhook não tem pedido, tem venda — o reembolso dele mora em
+      // VendaParceiro.status. Sem ler as duas, uma venda de gateway reembolsada
+      // continuaria consumindo a aquisição e o cliente seguinte cairia em recorrência
+      // (10%) quando devia ser aquisição (15%).
+      include: {
+        pedido: { select: { statusPagamento: true } },
+        venda: { select: { status: true } },
+      },
     });
-    // Negócio perdido ou pedido reembolsado não consome a aquisição (FR-008).
-    docsAnteriores = anteriores.filter((n) => n.pedido.statusPagamento !== 'reembolsado').map((n) => clienteDoc);
+    // Negócio perdido, pedido reembolsado ou venda estornada não consomem a aquisição (FR-008).
+    docsAnteriores = anteriores
+      .filter(
+        (n) =>
+          n.pedido?.statusPagamento !== 'reembolsado' &&
+          n.venda?.status !== 'reembolsada' &&
+          n.venda?.status !== 'estornada',
+      )
+      .map(() => clienteDoc);
   }
   const classificacao = classificarNegocio(clienteDoc, docsAnteriores);
   const taxaAplicada = classificacao === 'aquisicao' ? parceiro.comissaoAquisicao : parceiro.comissaoRecorrencia;
 
-  const created = await prisma.negocioOriginado.create({
-    data: {
-      pedidoId,
-      parceiroId,
-      valor,
-      estagio: 'repassado',
-      faturavel: !isento,
-      isencaoMotivo: isento ? isencaoMotivo : null,
-      clienteDoc: clienteDoc || null,
-      classificacao,
-      taxaAplicada,
-    },
-  });
+  // 012: `origem` explícita mesmo tendo @default — coluna de caminho de dinheiro não se
+  // grava por omissão, e sem ela o validador da invariante não teria o que validar.
+  const dados = {
+    pedidoId,
+    vendaId: null,
+    origem: 'pedido' as const,
+    parceiroId,
+    valor,
+    estagio: 'repassado',
+    faturavel: !isento,
+    isencaoMotivo: isento ? isencaoMotivo : null,
+    clienteDoc: clienteDoc || null,
+    classificacao,
+    taxaAplicada,
+  };
+  // Mesma guarda que o caminho do webhook usa (lib/carteira/origem-negocio.ts): os DOIS
+  // caminhos de escrita passam por ela, senão a invariante vale só num deles.
+  const invariante = validarOrigemNegocio(dados);
+  if (!invariante.ok) {
+    return NextResponse.json({ ok: false, motivo: invariante.motivo }, { status: 400 });
+  }
+
+  const created = await prisma.negocioOriginado.create({ data: dados });
 
   return NextResponse.json({ ok: true, id: created.id }, { status: 201 });
 }

@@ -20,18 +20,23 @@ const CANDIDATURAS_ENDPOINT = 'https://app.roilabs.com.br/api/candidaturas';
 // status/aberta a cada carregamento. Build-time fetch foi removido de propósito: o Docker
 // cacheia o layer do `npm run build`, então redeploy sem commit novo servia dist velho e
 // não refletia o admin. Runtime fetch é imune a esse cache e reflete a edição na hora.
-// taken/href são presentational (cadeira já ocupada + link pra venture); só o estático os usa,
-// o fetch ao vivo não os toca (casa por índice até as novas cadeiras entrarem no DB pelo seed).
-const seats: { niche: string; status: string; open: boolean; taken?: boolean; href?: string }[] = [
-  { niche: 'Revestimentos / Porcelanato', status: 'Curadoria aberta', open: true },
-  { niche: 'Materiais de construção', status: 'Em estudo', open: false },
-  { niche: 'Esquadrias / Vidraçaria', status: 'Em estudo', open: false },
-  { niche: 'Iluminação / Elétrica', status: 'Em estudo', open: false },
-  { niche: 'Marcenaria sob medida', status: 'Em estudo', open: false },
-  { niche: 'Pisos / Deck externo', status: 'Em estudo', open: false },
-  { niche: 'Fitas adesivas', status: 'Ocupada · Tapepro', open: false, taken: true, href: 'https://tapepro.roilabs.com.br/' },
-  { niche: 'Ortodontia / Alinhadores', status: 'Ocupada · Atma Aligner', open: false, taken: true, href: 'https://atma.roilabs.com.br/' },
+// href é presentational (link pra venture); só o estático o usa.
+// 012 (T054/FR-019): este array ESPELHA DEFAULT_SEATS de app/src/lib/seats.ts — mesma ordem,
+// mesmo `estado`. Divergir aqui faz o visitante sem JS ver uma carteira que não existe.
+// 012 (T055/FR-020): quem decide se a cadeira aceita candidatura é `estado === 'vaga'` E
+// `open` — nunca só `open`. Cadeira ocupada NÃO é oferecida.
+const seats: { niche: string; status: string; open: boolean; estado: string; href?: string }[] = [
+  { niche: 'Revestimentos / Porcelanato', status: 'Curadoria aberta', open: true, estado: 'vaga' },
+  { niche: 'Materiais de construção', status: 'Em estudo', open: false, estado: 'vaga' },
+  { niche: 'Esquadrias / Vidraçaria', status: 'Em estudo', open: false, estado: 'vaga' },
+  { niche: 'Iluminação / Elétrica', status: 'Em estudo', open: false, estado: 'vaga' },
+  { niche: 'Marcenaria sob medida', status: 'Em estudo', open: false, estado: 'vaga' },
+  { niche: 'Pisos / Deck externo', status: 'Em estudo', open: false, estado: 'vaga' },
+  { niche: 'Fitas adesivas', status: 'Ocupada · Tapepro', open: false, estado: 'ocupada-vendavel', href: 'https://tapepro.roilabs.com.br/' },
+  { niche: 'Ortodontia / Alinhadores', status: 'Ocupada · Atma Aligner', open: false, estado: 'ocupada-vendavel', href: 'https://atma.roilabs.com.br/' },
 ];
+const ocupada = (s: { estado: string }) => s.estado.startsWith('ocupada');
+const aceitaCandidatura = (s: { estado: string; open: boolean }) => s.estado === 'vaga' && s.open;
 
 // Nó próprio da home no @graph: o serviço Growth Partner (Base entrega Organization + WebSite).
 const jsonLdNodes = [
@@ -184,7 +189,7 @@ const jsonLdNodes = [
 
         <ul class="map__grid" role="list">
           {seats.map((s) => (
-            <li class={`seat ${s.open ? 'seat--open' : ''} ${s.taken ? 'seat--taken' : ''}`}>
+            <li class={`seat ${aceitaCandidatura(s) ? 'seat--open' : ''} ${ocupada(s) ? 'seat--taken' : ''}`}>
               {s.href ? (
                 <a class="seat__niche" href={s.href} target="_blank" rel="noopener">{s.niche} ↗</a>
               ) : (
@@ -205,15 +210,19 @@ const jsonLdNodes = [
 
     <script is:inline>
       // Mapa de cadeiras AO VIVO: busca o DB no navegador e sobrescreve o skeleton estático.
-      // ponytail: casa por índice — 6 nichos fixos, a API ordena por `ordem`. Se um dia a
-      // contagem divergir, casar por id. Falhou o fetch? mantém o skeleton (degrada limpo).
+      // ponytail: casa por índice — 8 nichos fixos, a API ordena por `ordem`. As cadeiras de
+      // PROJETO da 012 entram com ordem 8+, então não desalinham estas. Se um dia a contagem
+      // divergir, casar por id. Falhou o fetch? mantém o skeleton (degrada limpo).
       fetch('https://app.roilabs.com.br/api/cadeiras')
         .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
         .then((seats) => {
           document.querySelectorAll('.map__grid .seat').forEach((li, i) => {
             const s = seats[i];
             if (!s) return;
-            li.classList.toggle('seat--open', !!s.open);
+            // 012 FR-020: cadeira OCUPADA não é oferecida para candidatura. `s.open` sozinho
+            // não basta — a API resolve as duas condições em `aceitaCandidatura`.
+            li.classList.toggle('seat--open', !!s.aceitaCandidatura);
+            li.classList.toggle('seat--taken', String(s.estado || '').indexOf('ocupada') === 0);
             const st = li.querySelector('.seat__status');
             if (!st) return;
             st.textContent = '';

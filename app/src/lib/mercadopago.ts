@@ -85,13 +85,22 @@ export async function refund(paymentId: string): Promise<void> {
  * Validates the webhook x-signature (FR-008). MP signs the manifest
  * `id:{dataId};request-id:{xRequestId};ts:{ts};` with HMAC-SHA256 + the webhook secret.
  * x-signature header looks like `ts=1700000000,v1=<hex>`.
+ *
+ * 012: `secret` is an OPTIONAL second argument. Omitted → MERCADOPAGO_WEBHOOK_SECRET, the
+ * ROI Labs' own account — the one-argument call in /api/pagamentos/webhook keeps behaving
+ * exactly as before (FR-005a: it is the path that bills today). Passed → the partner
+ * account's secret, since MP signs per account (contract, step 2).
+ * Regression proof: test/mercadopago-assinatura-regressao.test.mjs.
  */
-export function verifyWebhookSignature(opts: {
-  xSignature?: string | null;
-  xRequestId?: string | null;
-  dataId?: string | null;
-}): boolean {
-  const secret = process.env.MERCADOPAGO_WEBHOOK_SECRET;
+export function verifyWebhookSignature(
+  opts: {
+    xSignature?: string | null;
+    xRequestId?: string | null;
+    dataId?: string | null;
+  },
+  secretOverride?: string,
+): boolean {
+  const secret = secretOverride ?? process.env.MERCADOPAGO_WEBHOOK_SECRET;
   if (!secret || !opts.xSignature || !opts.dataId) return false;
 
   const parts = Object.fromEntries(

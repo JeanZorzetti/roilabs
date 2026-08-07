@@ -4,7 +4,8 @@ import { useRouter } from 'next/navigation';
 
 export interface Negocio {
   id: string;
-  pedidoId: string;
+  // 012: null quando origem='webhook' — venda no gateway do parceiro, sem pedido interno.
+  pedidoId: string | null;
   pedidoNome: string;
   pedidoWhatsapp: string;
   valor: number;

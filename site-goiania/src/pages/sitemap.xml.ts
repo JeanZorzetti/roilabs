@@ -4,6 +4,7 @@ import { produtos, produtosDaCategoria, imgAbs } from '../data/produtos';
 import { guias } from '../data/guias';
 import { ambientes, produtosDoAmbiente } from '../data/ambientes';
 import { fitas } from '../data/fitas';
+import { cadeirasPublicadas } from '../data/cadeiras';
 
 const SITE = 'https://goiania.roilabs.com.br';
 
@@ -18,6 +19,10 @@ export const GET: APIRoute = () => {
     // Fitas — barra final obrigatória, como em toda URL nova (FR-021).
     { loc: `${SITE}/fitas/`, imgs: fitas.map((f) => f.imagem) },
     ...fitas.map((f) => ({ loc: `${SITE}/fitas/${f.slug}/`, imgs: [f.imagem] })),
+    // 012 FR-009: SÓ cadeira publicada entra. `cadeirasPublicadas()` é a mesma fonte que
+    // gera as rotas — cadeira não-vendável não tem URL e não pode ter linha aqui, senão o
+    // sitemap aponta para 404 e destrói o rastreamento que ele existe para dirigir.
+    ...cadeirasPublicadas().map((c) => ({ loc: `${SITE}/cadeira/${c.slug}/` })),
     { loc: `${SITE}/porcelanato/` },
     { loc: `${SITE}/obrigado/` },
     { loc: `${SITE}/devolucoes/` },

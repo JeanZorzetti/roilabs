@@ -52,15 +52,16 @@ export default async function ParceiroDetalhePage({ params }: { params: Promise<
         parceiroId={parceiro.id}
         negocios={negocios.map((n) => ({
           id: n.id,
+          // 012: negócio de webhook não tem pedido — `pedido` é null aqui.
           pedidoId: n.pedidoId,
-          pedidoNome: n.pedido.nome,
-          pedidoWhatsapp: n.pedido.whatsapp,
+          pedidoNome: n.pedido?.nome ?? (n.origem === 'webhook' ? 'Venda no gateway do parceiro' : '—'),
+          pedidoWhatsapp: n.pedido?.whatsapp ?? '',
           valor: Number(n.valor),
           estagio: n.estagio,
           faturavel: n.faturavel,
           isencaoMotivo: n.isencaoMotivo,
           faturaId: n.faturaId,
-          pedidoReembolsado: n.pedido.statusPagamento === 'reembolsado',
+          pedidoReembolsado: n.pedido?.statusPagamento === 'reembolsado',
         }))}
       />
 

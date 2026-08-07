@@ -1,0 +1,126 @@
+---
+import Base from '../../layouts/Base.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { cadeirasPublicadas, type Cadeira } from '../../data/cadeiras';
+
+// FR-009: só cadeira PUBLICADA gera rota. Cadeira em `em-preparacao`, sem produto ou sem
+// gateway ligado simplesmente não tem URL — não é 404 depois, é ausência antes.
+export function getStaticPaths() {
+  return cadeirasPublicadas().map((c) => ({ params: { slug: c.slug }, props: { cadeira: c } }));
+}
+
+interface Props {
+  cadeira: Cadeira;
+}
+const { cadeira } = Astro.props;
+
+const SITE = Astro.site?.href.replace(/\/$/, '') ?? 'https://goiania.roilabs.com.br';
+const url = `${SITE}/cadeira/${cadeira.slug}/`;
+
+const brl = (v: number) =>
+  v.toLocaleString('pt-BR', { style: 'currency', currency: cadeira.moeda });
+const sufixo = { unica: '', mensal: '/mês', anual: '/ano' }[cadeira.recorrencia];
+
+// FR-013 — Product/Offer com preço, dentro do @graph ÚNICO do site (o Base o monta; aqui
+// só entram os nós desta página). Duas entidades duplicadas em @graph separados é o defeito
+// que o playbook GEO da casa registra.
+const produto = {
+  '@type': 'Product',
+  '@id': `${url}#product`,
+  name: cadeira.nome,
+  description: cadeira.resumo,
+  category: cadeira.niche,
+  offers: {
+    '@type': 'Offer',
+    '@id': `${url}#offer`,
+    price: cadeira.preco,
+    priceCurrency: cadeira.moeda,
+    availability: 'https://schema.org/InStock',
+    url,
+    // De quem é a página de pagamento — declarado também no dado estruturado, não só na tela.
+    seller: { '@type': 'Organization', name: cadeira.pagoA },
+  },
+};
+
+const faqPage = {
+  '@type': 'FAQPage',
+  '@id': `${url}#faq`,
+  mainEntity: cadeira.faq.map((f) => ({
+    '@type': 'Question',
+    name: f.pergunta,
+    acceptedAnswer: { '@type': 'Answer', text: f.resposta },
+  })),
+};
+
+const externo = cadeira.modoCobranca === 'parceiro';
+---
+
+<Base
+  title={`${cadeira.nome} — preço e assinatura | ROI Labs`}
+  description={cadeira.resumo}
+  jsonLdNodes={[produto, faqPage]}
+>
+  <Header />
+
+  <main class="section">
+    <div class="wrap cadeira-wrap">
+      <nav class="crumbs" aria-label="Você está aqui">
+        <a href="/">Início</a> · <span>{cadeira.nome}</span>
+      </nav>
+
+      <header class="cadeira-head">
+        <p class="cadeira-niche">{cadeira.niche}</p>
+        <h1>{cadeira.nome}</h1>
+        {/* BLUF: a resposta primeiro. Quem chegou da busca perguntou "quanto custa". */}
+        <p class="cadeira-bluf">{cadeira.resumo}</p>
+      </header>
+
+      <section class="cadeira-preco" aria-labelledby="preco-title">
+        <h2 id="preco-title">Quanto custa</h2>
+        {/* FR-014: o preço EXPLÍCITO no corpo, em prosa — não só no Offer. É esta seção
+            que responde a pergunta que traz 86% do tráfego da página vencedora da Atma. */}
+        <p class="cadeira-valor">
+          <strong>{brl(cadeira.preco)}</strong><span class="cadeira-sufixo">{sufixo}</span>
+        </p>
+        <p>{cadeira.respostaPreco}</p>
+
+        {externo ? (
+          <>
+            <a class="btn btn--primary" href={cadeira.checkoutUrl!} rel="noopener">
+              Assinar {cadeira.nome}
+            </a>
+            {/* T041: comprador que não sabe a quem paga é chargeback. */}
+            <p class="cadeira-aviso">
+              O pagamento é processado por <strong>{cadeira.pagoA}</strong>, no ambiente de
+              checkout deles. A ROI Labs opera a cadeira e não recebe os dados do seu cartão.
+            </p>
+          </>
+        ) : (
+          <a class="btn btn--primary" href="/carrinho/">Comprar</a>
+        )}
+      </section>
+
+      {cadeira.secoes.map((s) => (
+        <section class="cadeira-secao">
+          <h2>{s.titulo}</h2>
+          {s.paragrafos.map((p) => <p>{p}</p>)}
+        </section>
+      ))}
+
+      <section class="cadeira-faq" aria-labelledby="faq-title">
+        <h2 id="faq-title">Perguntas frequentes</h2>
+        <dl>
+          {cadeira.faq.map((f) => (
+            <>
+              <dt>{f.pergunta}</dt>
+              <dd>{f.resposta}</dd>
+            </>
+          ))}
+        </dl>
+      </section>
+    </div>
+  </main>
+
+  <Footer />
+</Base>

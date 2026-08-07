@@ -11,7 +11,11 @@ export default async function PedidosPage() {
     prisma.parceiro.findMany({ where: { estagio: 'ativa' }, select: { id: true, nome: true, nicho: true } }),
     prisma.negocioOriginado.findMany({ where: { estagio: { not: 'perdido' } }, select: { pedidoId: true } }),
   ]);
-  const pedidosComRepasse = new Set(negociosAtivos.map((n) => n.pedidoId));
+  // 012: negócio de webhook tem pedidoId null — sem o filtro o Set ganha um `null` e
+  // passa a mentir sobre quantos pedidos têm repasse. `?.` não resolveria: é filtro.
+  const pedidosComRepasse = new Set(
+    negociosAtivos.map((n) => n.pedidoId).filter((id): id is string => id !== null),
+  );
 
   const brl = (v: unknown) =>
     Number(v).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });

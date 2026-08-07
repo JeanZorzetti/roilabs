@@ -72,7 +72,10 @@ export async function POST(req: NextRequest) {
     taxaAplicada: Number(n.taxaAplicada), // NOT NULL no schema — todo negócio nasce com a taxa congelada
     estagio: n.estagio,
     faturavel: n.faturavel,
-    pedidoReembolsado: n.pedido.statusPagamento === 'reembolsado',
+    // 012: `pedido` é null quando origem='webhook' (venda no gateway do parceiro, sem
+    // pedido interno). Sem o `?.` isto é TypeError na geração de fatura. `false` é a
+    // resposta correta: reembolso de venda de webhook chega por VendaParceiro.status.
+    pedidoReembolsado: n.pedido?.statusPagamento === 'reembolsado',
     jaFaturado: false,
   }));
 

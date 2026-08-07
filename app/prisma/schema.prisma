@@ -180,15 +180,115 @@ model Cupom {
 model Cadeira {
   id        String   @id @default(cuid())
   niche     String
+  // ⚠️ `status` é TEXTO DE EXIBIÇÃO ('Ocupada · Tapepro'). Nenhuma decisão de máquina
+  // pode lê-lo: casar substring de rótulo é a mesma classe de defeito que medir a
+  // palavra `GPTBot` em vez da permissão. Para decidir, use `estado` (012).
   status    String
   open      Boolean  @default(false)
   ordem     Int      @default(0)
   polo      String   @default("Goiânia")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  // 012: estado da cadeira no ciclo de vendabilidade — o campo que MÁQUINA lê.
+  estado String @default("vaga") // vaga | em-preparacao | ocupada-sem-produto | ocupada-vendavel
+
+  // 012 FR-010: marcação interna, sempre. Cadeira da casa nunca gera success fee de si mesma.
+  daCasa Boolean @default(false) @map("da_casa")
+  // 012 FR-010a: exibição pública é INDEPENDENTE da marcação interna. Não derivar um do
+  // outro — derivar apagaria a decisão do Jean. A lista de exceções (sirius/meridian/orion)
+  // é DADO, nunca condição no código.
+  exibirDaCasa Boolean @default(false) @map("exibir_da_casa")
+
+  // 012: identidade do projeto que ocupa a cadeira. A chave é a URL DO SITE, não o repo —
+  // 35 dos 36 repos têm site próprio, e é o site que se vende. Nulo = cadeira vaga
+  // (Postgres aceita múltiplos nulos em @unique).
+  siteUrl String? @unique @map("site_url")
+  // ⚠️ SEM @@unique: `goiania` e `roilabs` são o MESMO repo servindo dois sites legítimos.
+  // FR-011 vira TESTE (test/cadeira-repo-unico.test.mjs), não constraint — é lá que a
+  // decisão aparece se um dia dois sites do mesmo repo forem duas cadeiras de verdade.
+  repoUrl String? @map("repo_url")
+
   parceiros Parceiro[]
+  produto   ProdutoCadeira?
 
   @@map("cadeiras")
+}
+
+// 012 §4.5 — o que se vende naquela cadeira. Fonte do preço do Offer (FR-013).
+model ProdutoCadeira {
+  id           String   @id @default(cuid())
+  cadeiraId    String   @unique @map("cadeira_id") // ZERO OU UM por cadeira na fase 1
+  nome         String
+  descricao    String?
+  preco        Decimal  @db.Decimal(10, 2)
+  moeda        String   @default("BRL")
+  recorrencia  String   @default("unica") // unica | mensal | anual
+  modoCobranca String   @map("modo_cobranca") // carrinho | parceiro
+  // Obrigatório quando modoCobranca='parceiro'. O Prisma não declara CHECK, então a
+  // invariante é validação de servidor + teste (lib/carteira/produto.ts).
+  checkoutUrl  String?  @map("checkout_url")
+  publicado    Boolean  @default(false) // false ⇒ sem URL indexável e fora do sitemap (FR-009)
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  cadeira Cadeira @relation(fields: [cadeiraId], references: [id])
+
+  // ponytail: @unique em cadeiraId é o teto declarado — catálogo com múltiplos SKUs
+  // continua exclusivo de porcelanato e fitas (FR-001). Upgrade: dropar o @unique
+  // quando uma cadeira precisar de dois produtos; nada mais muda.
+  @@map("produtos_cadeira")
+}
+
+// 012 §2 — a venda crua reportada pelo gateway do parceiro. Tabela nova, sem backfill.
+model VendaParceiro {
+  id          String  @id @default(cuid())
+  // ⚠️ ANULÁVEL DE PROPÓSITO: null = não atribuída (FR-005, falha fechada). Com NOT NULL,
+  // "registrar como não-atribuído" não tinha onde cair e a linha nasceria atribuída ao
+  // parceiro ERRADO — exatamente o defeito que a falha fechada existe para impedir.
+  parceiroId  String? @map("parceiro_id")
+  gateway     String // mercadopago | stripe
+  eventoId    String  @map("evento_id") // id do evento NO gateway
+  pagamentoId String  @map("pagamento_id") // id do pagamento NO gateway
+  valor       Decimal @db.Decimal(10, 2) // lido DO gateway, nunca do corpo (FR-003b)
+  moeda       String  @default("BRL")
+  status      String // aprovada | reembolsada | estornada
+  recorrente  Boolean @default(false) // assinatura vs compra única — regra 1 da classificação
+  clienteDoc  String? @map("cliente_doc") // CPF/CNPJ normalizado, quando o gateway dá
+  clienteRef  String? @map("cliente_ref") // id/e-mail do cliente NO gateway
+  payload     Json // cru, como chegou — sem ele um negócio disputado não se reconstrói
+  motivoDescarte String? @map("motivo_descarte") // conta-divergente | payer-teste | null = venda boa
+  recebidoEm  DateTime @default(now()) @map("recebido_em")
+
+  parceiro Parceiro?          @relation(fields: [parceiroId], references: [id])
+  negocios NegocioOriginado[]
+
+  // ⚠️ A idempotência de FR-004 mora AQUI, no banco, não num `if` na rota: dois retries
+  // simultâneos do gateway são o comportamento NORMAL deles, e checar-antes-de-gravar
+  // é corrida entre os dois.
+  @@unique([gateway, eventoId])
+  @@index([parceiroId, clienteRef])
+  @@map("vendas_parceiro")
+}
+
+// 012 §3 — onde mora o segredo por conta de parceiro. Não em `Parceiro`: um parceiro pode
+// ter mais de uma conta, e segredo em tabela muito lida vaza em `select *`.
+model CredencialGateway {
+  id         String   @id @default(cuid())
+  parceiroId String   @map("parceiro_id")
+  gateway    String // mercadopago | stripe
+  contaRef   String   @map("conta_ref") // user_id (MP) / account (Stripe)
+  // ⚠️ O NOME da env var, NUNCA o valor. Segredo de webhook no banco é segredo num backup,
+  // num dump de debug e no `select *` de qualquer admin.
+  segredoRef String   @map("segredo_ref")
+  ativo      Boolean  @default(true)
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  parceiro Parceiro @relation(fields: [parceiroId], references: [id])
+
+  // ⚠️ Impede dois parceiros reivindicarem a mesma conta — sem isto a atribuição de uma
+  // venda vira ambígua e o fee vai para o parceiro errado.
+  @@unique([gateway, contaRef])
+  @@index([parceiroId])
+  @@map("credenciais_gateway")
 }
 
 // Parceiro (loja/prestador) que recebe repasses de uma cadeira/nicho. Camada 007.
@@ -218,6 +318,10 @@ model Parceiro {
   candidatura Candidatura?      @relation(fields: [candidaturaId], references: [id])
   negocios    NegocioOriginado[]
   faturas     FaturaSuccessFee[]
+  // 012: relações inversas das tabelas novas. Sem elas o `prisma generate` FALHA — e ele
+  // roda antes do `next build`.
+  vendas      VendaParceiro[]
+  credenciais CredencialGateway[]
 
   @@index([estagio])
   @@index([cadeiraId])
@@ -228,7 +332,13 @@ model Parceiro {
 // estagio: repassado | aceito | ganho | perdido. Repasse único por pedido (regra na rota, FR-004a).
 model NegocioOriginado {
   id             String   @id @default(cuid())
-  pedidoId       String   @map("pedido_id")
+  // ⚠️ 012: ANULÁVEL — venda de cadeira SaaS nasce sem `Pedido` interno (FR-002).
+  // Landmine conhecida desta casa: `where: { pedidoId: … }` que antes cobria 100% das
+  // linhas passa a ignorar EM SILÊNCIO todo negócio de webhook, e `include: { pedido }`
+  // passa a devolver null (`n.pedido.statusPagamento` explode). Toda leitura foi varrida
+  // em T012/T013 — ao escrever consulta nova, decidir explicitamente o que fazer com
+  // `origem='webhook'`.
+  pedidoId       String?  @map("pedido_id")
   parceiroId     String   @map("parceiro_id")
   valor          Decimal  @db.Decimal(10, 2) // snapshot: total do pedido − frete (valor de produto)
   estagio        String   @default("repassado")
@@ -239,17 +349,31 @@ model NegocioOriginado {
   classificacao  String?  // aquisicao | recorrencia | legado (backfill)
   taxaAplicada   Decimal  @db.Decimal(6, 4) @map("taxa_aplicada") // fração [0,1] cobrada neste negócio (NOT NULL — T021)
   faturaId       String?  @map("fatura_id")
+
+  // 012: de onde este negócio veio. 'pedido' = carrinho da ROI Labs (porcelanato/fitas);
+  // 'webhook' = venda no gateway do parceiro, sem pedido interno.
+  // ⚠️ O @default NÃO reescreve linha já gravada — o backfill explícito é
+  // scripts/migrate-012-backfill.mjs.
+  origem     String  @default("pedido") // pedido | webhook
+  vendaId    String? @map("venda_id") // FK para VendaParceiro quando origem='webhook'
+  // 012: chave de cliente quando o gateway não entrega documento (id/e-mail NO gateway).
+  // `clienteDoc` continua sendo a preferida; esta é o fallback do passo 2 do contrato.
+  // SEM backfill: nulo em linha antiga é o valor CORRETO.
+  clienteRef String? @map("cliente_ref")
+
   createdAt      DateTime @default(now()) @map("created_at")
   updatedAt      DateTime @updatedAt @map("updated_at")
 
-  pedido   Pedido             @relation(fields: [pedidoId], references: [id])
+  pedido   Pedido?            @relation(fields: [pedidoId], references: [id])
   parceiro Parceiro           @relation(fields: [parceiroId], references: [id])
   fatura   FaturaSuccessFee?  @relation(fields: [faturaId], references: [id])
+  venda    VendaParceiro?     @relation(fields: [vendaId], references: [id])
 
   @@index([parceiroId])
   @@index([estagio])
   @@index([pedidoId])
   @@index([parceiroId, clienteDoc]) // achar negócios anteriores do mesmo cliente+parceiro (classificação)
+  @@index([parceiroId, clienteRef]) // idem, quando o gateway não entrega documento (012)
   @@map("negocios_originados")
 }
 
