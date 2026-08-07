@@ -165,6 +165,7 @@ páginas finas é o resultado a evitar.
 - [X] T055 [US5] Implementar FR-020: cadeira ocupada **não** é oferecida para candidatura
 - [X] T056 [US5] ⚠️ Escrever `app/test/agregado-sem-casa.test.mjs` provando FR-010: **nenhum agregado de faturamento, fee ou "receita da carteira" soma cadeira da casa**
 - [X] T057 [US5] Adicionar `app/test/agregado-sem-casa.test.mjs` à lista de `test` em `app/package.json`
+- [ ] T057a [US5] 🚨 **A carteira é INVISÍVEL no institucional — descoberto 07/08 pelo Jean ("não vi diferença em `roilabs.com.br`"), e nenhuma task acima cobre.** Duas causas somadas: (a) o skeleton estático de `site/src/pages/index.astro:28-37` espelha `DEFAULT_SEATS`, então o fetch reescreve **os mesmos valores** e a página renderiza igual com a API em 200 ou em 500; (b) o laço casa **por índice** sobre os 8 `<li>` do grid (`index.astro:219`) e a API devolve **16** cadeiras — as 9 de projeto têm `ordem` ≥ 8 e **nunca são renderizadas**. `estado`, `rotulo`, `siteUrl`, `produto` e `checkout` são servidos e lidos por ninguém. **T053/T054/T055 cumpriram FR-019 ao pé da letra e mesmo assim o objetivo não aconteceu.** ⚠️ **Decisão de produto antes de código** (3 saídas no handoff) — e ao exibir, usar `rotulo`, **nunca** `daCasa`: 4 das 9 são da casa sem exibição pública (FR-010a). O `ponytail:` em `index.astro:213` já nomeou o gatilho ("se a contagem divergir, casar por id"); ela divergiu
 
 ---
 

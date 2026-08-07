@@ -1,8 +1,67 @@
 # Handoff — 012 carteira de cadeiras no e-commerce
 
 **Data**: 2026-08-07 (2ª sessão) · **Status**: **66 de 83 tasks entregues**, `npm test` 17/17,
-migração aplicada em produção. 17 em aberto — nenhuma por falta de implementação; todas por
-falta de acesso ao painel do parceiro ou de **decisão do Jean** (agora são três, não duas).
+migração aplicada em produção. **18 em aberto** — 17 por falta de acesso ao painel do parceiro
+ou de **decisão do Jean** (agora são **quatro** decisões, não duas), e **uma nova: a T057a**,
+aberta pela pergunta do Jean sobre os sites públicos. Leia o bloco 🚨 abaixo antes de tudo.
+
+---
+
+# 🚨 COMECE AQUI — "não vi diferença nenhuma nos dois sites públicos"
+
+O Jean olhou `roilabs.com.br` e `goiania.roilabs.com.br` depois da migração e não viu mudança.
+**Está certo, e as duas causas são diferentes.** Uma é comportamento esperado; a outra é um
+buraco real que nenhuma task da 012 cobre.
+
+## 1. `goiania.roilabs.com.br` — esperado, e não há o que consertar
+
+`site-goiania/src/data/cadeiras.ts` é `[]`. Sem cadeira publicada, `getStaticPaths()` gera
+**zero** páginas e o sitemap ganha **zero** entradas. Medido em produção agora:
+
+```
+sitemap.xml  → corpo começa em `<?xml version=`, 99 <loc>, ZERO /cadeira/
+/cadeira/atma/ → 404
+```
+
+Isso é a T048 aberta, não um defeito. **A 012 nunca prometeu mudar este site sem conteúdo.**
+
+## 2. `roilabs.com.br` — ⚠️ AQUI ESTÁ O BURACO: a carteira é INVISÍVEL
+
+O site já roda o script da 012 (o HTML servido contém `aceitaCandidatura` e `seat--taken`),
+o fetch voltou a dar 200, e **mesmo assim a tela é byte-idêntica**. Dois motivos somados:
+
+- **O skeleton estático ESPELHA `DEFAULT_SEATS`** — `index.astro:28-37` tem o mesmo `status` e
+  o mesmo `estado` que o banco. O script busca a API e reescreve **os mesmos valores**. A
+  página renderiza igual com a API no ar ou em 500. Foi por isso que ela "degradava limpo"
+  antes — e é por isso que consertar o 500 não mudou pixel nenhum.
+- **O laço casa por índice sobre os 8 `<li>` do grid** (`index.astro:219`). A API devolve
+  **16** cadeiras; as 9 de PROJETO entram com `ordem` 8+ e **nunca são renderizadas**. Toda a
+  carteira da 012 — `estado`, `rotulo`, `siteUrl`, `produto`, `checkout` — é servida pela API
+  e **lida por ninguém**.
+
+**Consequência que muda a leitura do projeto:** as tasks de US5 (T053/T054/T055) entregaram o
+*dado* na API e o *espelho* do skeleton, mas **nenhuma task manda o institucional DESENHAR as
+cadeiras de projeto**. FR-019 diz "exibir o estado das cadeiras a partir de `/api/cadeiras`" —
+e o site exibe, só que apenas das 8 de nicho, que já eram estáticas. **A spec passa; o
+objetivo não.**
+
+### O que fazer com isso (decisão antes de código)
+
+Não saia implementando: a pergunta é de produto, não de engenharia. O institucional vende a
+**cadeira vaga** para o ICP B2B; a carteira de 9 projetos é prova social de outro tipo. Três
+saídas, em ordem de esforço:
+
+1. **Nada.** Aceitar que a carteira só aparece no e-commerce (T048), e que o institucional
+   segue sendo o mapa de 8 nichos de Goiânia. Defensável — os dois têm público diferente.
+2. **Segunda seção no institucional** ("a carteira"), alimentada pelas cadeiras com `ordem`
+   ≥ 8, usando `rotulo` e `siteUrl` que a API **já serve**. Zero mudança de backend.
+3. Trocar o casamento por índice por casamento por `id`/`niche` e deixar o grid crescer —
+   **é o que o comentário `ponytail:` em `index.astro:213` já previu como o gatilho**
+   ("se um dia a contagem divergir, casar por id"). A contagem divergiu: 8 `<li>` × 16 linhas.
+
+⚠️ **Enquanto ninguém decide, não invente uma seção nova.** Quatro das nove cadeiras de
+projeto são `daCasa` sem exibição pública (FR-010a) — publicar a carteira crua exporia a
+curadoria interna que a projeção da API existe para esconder. Use `rotulo`, nunca `daCasa`.
 
 ---
 
@@ -57,6 +116,11 @@ T036** — só aí ele cobre a primeira venda de webhook.
 ---
 
 # As 18 tasks restantes
+
+## 0. T057a — a carteira invisível no institucional
+
+Está no bloco 🚨 do topo. **Trava numa decisão de produto, não em código**, e é a única task
+que nasceu de olhar o site em vez de ler a spec.
 
 ## A. ~~Destravadas pelo `db push`~~ — FEITAS em 07/08
 
@@ -194,6 +258,10 @@ Docker/EasyPanel ou browser em produção, output anexado. Build local não vale
    está apurada (`roihub/data/projects.json`); o que falta é o rótulo de nicho — que é a
    **chave de casamento do seed** — e a curadoria de casa. Sem os dois, cadastrar produz
    cadeira duplicada e/ou success fee de si mesma. Ver a seção E.
+4. **A carteira aparece ou não no institucional? (T057a)** É a pergunta que o "não vi
+   diferença" abriu. As três saídas estão no bloco 🚨 do topo; a nº 1 (não fazer nada) é
+   legítima. **Nenhuma linha de código antes desta resposta** — implementar a seção errada
+   custa mais que não ter seção.
 
 ---
 
@@ -293,6 +361,10 @@ venda original, `VendaParceiro.status` ficaria eternamente `'aprovada'`.
 - **Contar palavra com `sed 's/<script[^>]*>.*<\/script>//g'` mede o `sed`**: em HTML
   minificado o `.*` guloso devolve 0 palavra numa página com `<h1>`. O `--self-test` do
   `check-cadeiras` tem exatamente esse caso.
+- **★ API em 200 não prova que a TELA mudou.** Conserto de backend só é visível se alguém
+  **lê** o campo novo. Aqui o skeleton estático já servia os mesmos valores e o laço só
+  alcança os 8 primeiros de 16 — logo o 500→200 foi invisível de propósito. **Verificar
+  entrega de UI é abrir a página e comparar, nunca curlar a API que a alimenta.**
 - **Sitemap em 200 não prova deploy** — validar o corpo (`<?xml`), nunca o status.
 - **`curl -k` esconde erro de cert**: 200 no terminal, "Failed to fetch" no browser.
 - **`goiania` e `roilabs` são o mesmo repo** — card ≠ repositório; somar os dois infla a
