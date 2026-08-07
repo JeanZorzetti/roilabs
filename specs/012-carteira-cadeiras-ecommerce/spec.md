@@ -475,7 +475,10 @@ impressões / 186 cliques; `goiania` = 329 impressões, 2 cliques, posição med
 
 ## Próximo passo
 
-`clarify` — restou **1 `NEEDS CLARIFICATION` bloqueante** (FR-003: como a venda do parceiro chega
-até aqui). Ele decide se `SC-001` é apurável por máquina ou se a receita da carteira vira número
-declarado. Os outros três foram resolvidos na segunda rodada de 2026-08-07, e a resposta sobre
-pagamento **reduziu o escopo**: o caminho de dinheiro existente não é mais tocado.
+`tasks` — **zero `NEEDS CLARIFICATION` bloqueante** após três rodadas em 2026-08-07; o único
+restante (label do subdomínio) é config e não trava nada. Plano em [plan.md](./plan.md).
+
+Duas das três respostas **reduziram o escopo** em vez de aumentá-lo: pagamento por tipo de
+cadeira tirou a generalização do `ItemPedido` do caminho crítico, e webhook por gateway virou
+**3 adaptadores em vez de 8**. Começar pela **Fase 0** do plano — ela pode eliminar um adaptador
+inteiro antes da primeira linha de código.
