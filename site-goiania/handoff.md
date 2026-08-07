@@ -165,21 +165,18 @@ verdade. O `app/.tmp-lead.mjs` foi removido — não recriar.
 
 | lead | o que é |
 |---|---|
-| `cmr534je…` · 03/07 · "Orçamento WhatsApp (carrinho)" · R$ 17.878,01 | **real** — manter |
-| `cmr5g3kf…` · 03/07 · "TESTE ntfy - pode ignorar" | **lixo** — apagar |
-
-O `/admin` mostra "2 novo"; o número honesto é **1**.
+| `cmr534je…` · 03/07 · "Orçamento WhatsApp (carrinho)" · R$ 17.878,01 | **real** — mantido |
+| `cmr5g3kf…` · 03/07 · "TESTE ntfy - pode ignorar" | **lixo** — apagado em 07/08 |
 
 ---
 
 ### Decisões do Jean que continuam abertas
 
-**a) Provar o caminho do dinheiro — sim ou não?** Um pedido real, valor baixo, cartão real,
-ponta a ponta: preference → pagamento aprovado → webhook → `NegocioOriginado` → success fee
-da TapePro. Hoje **os quatro elos são teoria**. ⚠️ Não vale pagamento de teste: só o **payer**
-separa teste de receita ([[mercadopago_approved_is_not_a_sale]]).
-**Sugestão: fazer.** É a única coisa aqui que não depende do Google, e é ela que prova o
-mecanismo que o institucional vende para conquistar cadeira.
+**a) ⛔ FECHADA — o teste real de pagamento NÃO será executado.** Decisão do Jean em 07/08,
+sem discussão. **Não reabrir, não sugerir de novo, não perguntar em outra sessão.** Fica
+registrado só o efeito colateral: os quatro elos (preference → aprovado → webhook →
+`NegocioOriginado` → success fee) continuam **sem prova ponta a ponta**, e nenhum número de
+receita deste site pode ser afirmado como provado.
 
 **b) O canal, com o dado na mão.** O `0/40` + `pos. 19,8` é demanda-sem-ranking — a metade
 oposta da doença da Atma ([[atma_uma_pagina_uma_query_de_preco]]), e **mais páginas da mesma
@@ -202,9 +199,10 @@ enquanto houver 1 tenant publicado; vira urgente na 3ª cadeira.
 1. ~~Aferir a URL Inspection das 4 URLs de `/fitas/`~~ **FEITO 07/08** — 3/4 já em "Descoberta
    – não indexada". **Reaferir ~14/08** (agora é indexação, não descoberta).
 2. ~~Apagar o lead de teste~~ **FEITO 07/08.**
-3. **(a), o teste real de pagamento** — independente do Google, e o de maior retorno. **Depende
-   do Jean:** exige cartão real e um pedido de valor baixo; pagamento de teste não vale.
-4. Só então **(b)**, com o resultado da reaferição de 14/08 na mão.
+3. ~~O teste real de pagamento~~ ⛔ **CANCELADO pelo Jean em 07/08 — não reabrir.**
+4. **Spec 013 — goiania como e-commerce de toda cadeira ocupada** (`specs/013-.../`). É o
+   trabalho principal da próxima sessão; handoff próprio dentro da pasta da spec.
+5. **(b)**, com o resultado da reaferição de 14/08 na mão.
 
 ---
 
