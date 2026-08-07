@@ -1,5 +1,12 @@
 # Handoff — 012 carteira de cadeiras no e-commerce
 
+> 👉 **COMEÇANDO UMA SESSÃO NOVA? Leia
+> [handoff-proxima-sessao.md](./handoff-proxima-sessao.md) primeiro.** Ele tem os 3 itens que
+> o Jean abriu em 07/08 depois de ver a home no ar — inclusive **5 rótulos de cadeira errados**
+> (`Imobiliário / IA` não descreve o Polaris) e a armadilha de que **`niche` é a chave do
+> seed**, então renomear no arquivo duplica cadeira no banco. Este arquivo aqui é o histórico
+> da feature.
+
 **Data**: 2026-08-07 (3ª sessão) · **Status**: **68 de 84 tasks entregues**, `npm test` 17/17,
 migração aplicada em produção. **16 em aberto**, e a natureza delas mudou: **as quatro decisões
 do Jean foram respondidas** e a T057a fechou. O que sobra trava em **acesso a painel de
