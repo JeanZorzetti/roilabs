@@ -95,7 +95,7 @@ comercial acabou de tornar hipotética — exatamente o que a Constituição III
 cadeira de produto físico/único cuja unidade não seja m² nem rolo. Cadeira SaaS nova **não**
 dispara isso, por mais que se somem.
 
-⚠️ **O preço desta escolha, declarado:** para 6 das 8 cadeiras da fase 1, a ROI Labs **não vê o
+⚠️ **O preço desta escolha, declarado:** para 6 das 7 cadeiras da fase 1, a ROI Labs **não vê o
 dinheiro passar**. A apuração de receita e de success fee passa a depender de webhook do gateway
 do parceiro ou de informe dele — e "o parceiro informa" é uma fonte que esta casa já sabe que
 apodrece. Ver FR-005 e o risco em Success Criteria.
@@ -152,7 +152,8 @@ zero cadeira e não se constrói.**
 
 Exibir publicamente como parceiro uma cadeira que é da casa é **decisão de posicionamento do
 Jean**, tomada com o risco declarado: o institucional usa cadeira ocupada como **prova social**
-para o ICP B2B, e 5 das 8 cadeiras da fase 1 seriam da casa exibidas como externas. O limite
+para o ICP B2B, e **a maior parte** das cadeiras da fase 1 seria da casa exibida como externa —
+o número exato depende da curadoria `daCasa`, que é tarefa (T052) e **não está apurada aqui**. O limite
 que esta spec impõe é objetivo e não negociável: **nenhum número de faturamento, fee ou
 "receita da carteira" pode somar cadeira da casa** (FR-010). Posicionamento é escolha; número
 inflado é o mesmo defeito dos 20 pagamentos de teste da Atma.
@@ -486,7 +487,7 @@ impressões / 186 cliques; `goiania` = 329 impressões, 2 cliques, posição med
 `tasks` — **zero `NEEDS CLARIFICATION` bloqueante** após três rodadas em 2026-08-07; o único
 restante (label do subdomínio) é config e não trava nada. Plano em [plan.md](./plan.md).
 
-Duas das três respostas **reduziram o escopo** em vez de aumentá-lo: pagamento por tipo de
-cadeira tirou a generalização do `ItemPedido` do caminho crítico, e webhook por gateway virou
-**3 adaptadores em vez de 8**. Começar pela **Fase 0** do plano — ela pode eliminar um adaptador
-inteiro antes da primeira linha de código.
+**As respostas do Jean reduziram o escopo três vezes, nunca o aumentaram:** pagamento por tipo de
+cadeira tirou a generalização do `ItemPedido` do caminho crítico; webhook por gateway virou
+integração por gateway em vez de por cadeira; e a **Fase 0** cortou o adaptador Kiwify inteiro e a
+cadeira `orcaobra`. **Escopo final: 7 cadeiras, 2 adaptadores.**

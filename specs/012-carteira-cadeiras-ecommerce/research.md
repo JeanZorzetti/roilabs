@@ -2,7 +2,9 @@
 
 **Data**: 2026-08-07 · Tudo aqui é **medido**, não lembrado. Comandos e datas nas seções.
 
-## 1. Quantos gateways as 8 cadeiras da fase 1 realmente usam
+## 1. Quantos gateways as cadeiras candidatas realmente usam
+
+*(8 candidatas medidas; **7 entram** na fase 1 — `orcaobra` sai por bloqueio de produto, §1.2.)*
 
 `roihub/scripts/gateways-repo.mjs` (API do GitHub, lê `package.json` + `.env*` de 35 repos) +
 `roihub/scripts/gateways.mjs` (HTTP contra produção). Ambos zero LLM, corridos em 2026-08-07.
@@ -49,7 +51,7 @@ do que adição.
 ## 2. O que JÁ EXISTE e deve ser reusado, não reescrito
 
 `app/src/app/api/pagamentos/webhook/route.ts` (Mercado Pago, porcelanato/fitas). O padrão dele é
-correto e vira o molde dos 3 adaptadores:
+correto e vira o molde dos 2 adaptadores:
 
 1. **Verifica a assinatura ANTES de tocar estado** (`verifyWebhookSignature`), e o comentário já
    registra por que o 401 importa: ou o segredo derivou do painel — e aí pagamentos param de ser

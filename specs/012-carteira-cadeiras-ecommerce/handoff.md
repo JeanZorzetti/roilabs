@@ -40,8 +40,12 @@ Gatilho redefinido e registrado em Out of scope: generalizar quando **uma tercei
 no carrinho da própria ROI Labs** (cadeira física que não venda por m² nem rolo). Cadeira SaaS
 nova não dispara, por mais que se somem.
 
-6. **Webhook por gateway**, sem informe manual (3ª rodada). Medido: são **3 adaptadores, não 8** —
-   Mercado Pago cobre 5 cadeiras, Stripe 2–3, Kiwify 1. *Webhook por gateway ≠ por cadeira.*
+6. **Webhook por gateway**, sem informe manual (3ª rodada). *Webhook por gateway ≠ por cadeira.*
+7. **Fase 0 (resolvida antes de qualquer código):** `sirius` cobra com **Stripe** — o
+   `mercadopago` no `package.json` dele é dependência escrita e não usada. E **`orcaobra` sai da
+   fase 1**: *"acho ele um produto ruim do jeito que está"* — bloqueio de **produto**, não de
+   fiação. **Escopo final: 7 cadeiras, 2 adaptadores; Kiwify serve zero cadeira e não se
+   constrói.**
 
 ## Plano (07/08) — o que ele descobriu no código
 
@@ -60,10 +64,12 @@ nova não dispara, por mais que se somem.
 
 ## Pendências
 
-- **Fase 0 (antes de qualquer código):** confirmar com qual conta o `sirius` cobra (tem os DOIS
-  SDKs e fatura por tier no próprio banco) e se a conta Kiwify do `orcaobra` emite webhook. **Pode
-  eliminar um adaptador inteiro.**
-- Label do subdomínio: assumido `loja.roilabs.com.br`, não confirmado. Não bloqueia.
+- Label do subdomínio: assumido `loja.roilabs.com.br`, não confirmado. Não bloqueia (T058).
+- ⚠️ **Dois "8" diferentes no material** — `seats.ts` tem **8 cadeiras de nicho**; a fase 1 tinha
+  **8 projetos candidatos** (hoje 7). Contagens de coisas distintas que ficaram perto por acidente:
+  sempre dizer QUAL. Já causou uma leitura errada na revisão de consistência de 07/08.
+- ⚠️ **Quantas cadeiras são "da casa" NÃO está apurado.** A spec deixou de afirmar um número; a
+  classificação é curadoria e é a tarefa T052.
 - ⚠️ **`pedidoId` anulável quebra leitura existente em silêncio** — varrer TODA consulta de
   `NegocioOriginado` por `pedidoId` é tarefa da Fase 1, não observação. Mesma landmine do
   `freteMotivo` na 010, e esta casa já pisou nela duas vezes.

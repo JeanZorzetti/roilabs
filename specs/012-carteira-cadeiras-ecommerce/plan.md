@@ -8,7 +8,11 @@
 ## Summary
 
 Transformar as cadeiras ocupadas em produto comprável e ligar a apuração de receita da carteira,
-que hoje é **R$ 0,00 provado**. Fase 1 = 8 cadeiras vendáveis, medidas hoje.
+que hoje é **R$ 0,00 provado**. Fase 1 = **7 cadeiras** vendáveis, medidas hoje.
+
+⚠️ **Não confundir dois "8" diferentes:** `app/src/lib/seats.ts` tem **8 cadeiras de nicho**
+(mapa do marketplace, 2 ocupadas); a fase 1 tem **7 projetos vendáveis**. São contagens de coisas
+distintas que por acidente ficaram perto — sempre dizer qual.
 
 **A abordagem técnica cabe em três frases:** cadeira SaaS vende no gateway do parceiro e reporta
 por **webhook** (**2 adaptadores cobrem as 7 cadeiras** — Mercado Pago 4, Stripe 3); o negócio
@@ -179,7 +183,7 @@ produto, um a um, fora desta feature.
 | Segredo do webhook deriva do painel → venda para de ser gravada calada | **alta** | `log.warn` no 401 tem de chegar a alguém; é o único sinal |
 | Corte de domínio derruba a malha indexada | média | Fase 5 por último, 301 completo, validar corpo do sitemap |
 | Parceiro sub-reporta venda | **estrutural, não mitigável aqui** | SC-001a: publicar sempre como "vendas reportadas por webhook" |
-| `sirius`/`orcaobra` não emitem webhook utilizável | média | Fase 0 antes de construir o adaptador |
+| ~~`sirius`/`orcaobra` não emitem webhook utilizável~~ | **resolvido** | Fase 0: `sirius` = Stripe; `orcaobra` fora da fase 1 |
 | Fase 3 vira 8 páginas finas | média | piso objetivo de FR-014, medido com contador que não seja o `sed` guloso |
 
 ## Próximo passo
