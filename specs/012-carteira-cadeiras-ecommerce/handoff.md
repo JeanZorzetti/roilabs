@@ -1,63 +1,43 @@
 # Handoff — 012 carteira de cadeiras no e-commerce
 
-**Data**: 2026-08-07 · **Status**: **60 de 83 tasks entregues em código**, `npm test` 17/17.
-23 em aberto — nenhuma por falta de implementação; todas por falta de acesso (banco,
-produção, roihub) ou de decisão do Jean.
+**Data**: 2026-08-07 (2ª sessão) · **Status**: **65 de 83 tasks entregues**, `npm test` 17/17.
+18 em aberto — nenhuma por falta de implementação; todas por falta de acesso (produção do
+parceiro, roihub) ou de decisão do Jean.
 
 ---
 
-# 🚨 AÇÃO Nº 1 DA PRÓXIMA SESSÃO — antes de qualquer outra coisa
+# ✅ A migração RODOU — produção está de pé
 
-**O código JÁ ESTÁ EM `main` e o EasyPanel faz deploy automático por push. O `prisma db push`
-AINDA NÃO RODOU.** Enquanto ele não rodar, o app em produção está quebrado: as rotas leem
-colunas que não existem no banco.
+**`prisma db push` aplicado em `2.24.207.200:5443` em 07/08.** Output completo, com o SQL
+lido antes e a verificação depois: [snapshots/db-push-012.txt](./snapshots/db-push-012.txt).
+Fecha **T003a, T008, T009, T011, T072a**.
 
-**O que está quebrado agora, e por quê:**
+Conferido em produção, não no build local:
 
-| rota | sintoma | causa |
+| rota | antes | agora |
 |---|---|---|
-| `GET /api/cadeiras` | 500 | lê `estado`, `da_casa`, `exibir_da_casa`, `produtos_cadeira` |
-| `/admin/parceiros/[id]` e o demonstrativo | 500 | lê `venda_id` / relação `venda` |
-| `GET/POST /api/negocios` | 500 | grava e lê `origem` |
-| `POST /api/faturas` | 500 | lê a relação `venda` |
-| **`POST /api/pagamentos/webhook`** | **OK** | não foi tocado (FR-005a). **O checkout de porcelanato e fitas continua faturando.** |
+| `GET /api/cadeiras` | 500 | **200**, 4487 bytes, sem vazar `daCasa` |
+| `GET /api/negocios` | 500 | **401** (auth) |
+| `POST /api/pagamentos/webhook` | OK | **405** no GET — intocado, segue faturando |
 
-⚠️ O mapa de cadeiras do `roilabs.com.br` degrada limpo: o fetch de `/api/cadeiras` falha e o
-site mantém o skeleton estático. Feio, não fatal.
+**Três coisas que a migração ensinou e a spec não sabia:**
 
-**Sequência para consertar — de máquina que alcança `2.24.207.200:5443`, na ordem:**
+1. **`negocios_originados` está VAZIA em produção.** Os 6 pedidos existentes nunca originaram
+   negócio. O portão do T011 passou por **vacuidade**, não por medição — e o defeito do
+   `include: { pedido }` não tinha linha antiga para derrubar. O lado ruim é o que importa:
+   **a régua do success fee nunca foi exercida contra dado real.** A T036 é a primeira vez.
+2. **O `db push` exigiu `--accept-data-loss`,** e o aviso é vazio por construção: o único item
+   é o `@unique` em `cadeiras.site_url`, coluna criada **no mesmo diff**, logo nula em toda
+   linha — e índice único no Postgres admite N nulos. Ler a **lista** de avisos, não o flag:
+   se aparecer qualquer segunda linha, ela não é vazia e o `db push` não deve ir.
+3. **O diff real trouxe um `DropForeignKey` que o `delta-012.sql` offline não tinha.** Não é
+   perda de dado: é a FK de `pedido_id` sendo recriada com `ON DELETE SET NULL` porque a
+   coluna virou anulável. Confirma por que o passo do preview contra o **datasource** é
+   obrigatório mesmo com o SQL previsto offline.
 
-```bash
-cd "ROI Labs/app"
-
-# 1. Linha de base de SC-003 — TEM de sair antes do db push
-node --import tsx scripts/snapshot-012-sc003.mjs antes
-
-# 2. Preview seguro: LER o SQL (a lição da 010)
-npx prisma migrate diff \
-  --from-schema-datasource ./prisma/schema.prisma \
-  --to-schema-datamodel  ./prisma/schema.prisma --script
-
-# 3. Aplicar (MANUAL, nunca pelo runner standalone)
-npx prisma db push
-
-# 4. Backfill de `origem` — falha fechada se algo estiver errado
-node --import tsx scripts/migrate-012-backfill.mjs
-
-# 5. Semear estado/daCasa das cadeiras
-npx prisma db seed
-
-# 6. Fechar SC-003
-node --import tsx scripts/snapshot-012-sc003.mjs depois
-node --import tsx scripts/snapshot-012-sc003.mjs diff
-```
-
-O SQL já foi previsto offline e está em [snapshots/delta-012.sql](./snapshots/delta-012.sql):
-**tudo aditivo, um `DROP NOT NULL`, zero `DROP COLUMN`.** O passo 2 continua obrigatório
-porque o preview offline assume que o banco está igual ao `HEAD`; quem confirma isso é o
-diff contra o datasource real.
-
-Isso fecha **T003a, T008, T009, T011, T072a**.
+⚠️ **SC-003 fechou sobre a migração, não sobre a feature.** O `sc003-depois.json` foi tirado
+logo após o `db push`, com zero negócio no banco. **Reexportar o `depois` e rediffar depois da
+T036** — só aí ele cobre a primeira venda de webhook.
 
 ---
 
@@ -76,13 +56,11 @@ Isso fecha **T003a, T008, T009, T011, T072a**.
 
 ---
 
-# As 23 tasks restantes
+# As 18 tasks restantes
 
-## A. Destravadas pelo `db push` (fazer primeiro)
+## A. ~~Destravadas pelo `db push`~~ — FEITAS em 07/08
 
-**T003a · T009 · T011 · T072a** — o bloco de comandos acima. Nada mais é preciso: os scripts
-`snapshot-012-sc003.mjs` e `migrate-012-backfill.mjs` estão escritos, comentados e com portão
-de falha fechada.
+`T003a · T008 · T009 · T011 · T072a`. Ver o bloco acima.
 
 ## B. Ligar a primeira cadeira — é onde `SC-001` sai de R$ 0,00
 

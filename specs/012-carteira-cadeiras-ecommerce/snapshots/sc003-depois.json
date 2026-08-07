@@ -1,0 +1,46 @@
+{
+  "tiradoEm": "2026-08-07T11:08:07.517Z",
+  "contagem": {
+    "pedidos": 6,
+    "negocios": 0
+  },
+  "pedidos": [
+    {
+      "id": "cmrb1z88u0000qr01fkvom60m",
+      "total": "7244.45",
+      "frete": "150",
+      "status": "pendente"
+    },
+    {
+      "id": "cmrb20xs70002qr01wgd5qvju",
+      "total": "7244.45",
+      "frete": "150",
+      "status": "pendente"
+    },
+    {
+      "id": "cmrxj2x1s0000qm01xc3m0dqz",
+      "total": "2461.05",
+      "frete": "361.05",
+      "status": "pendente"
+    },
+    {
+      "id": "cmrxj3bry0003qm016iny66zd",
+      "total": "2360.73",
+      "frete": "260.73",
+      "status": "pendente"
+    },
+    {
+      "id": "cmrxk9rgh0000mp013g80twiz",
+      "total": "2361.19",
+      "frete": "261.19",
+      "status": "pendente"
+    },
+    {
+      "id": "cmrxkaum40003mp01a6ha23nr",
+      "total": "420.02",
+      "frete": "16.02",
+      "status": "pendente"
+    }
+  ],
+  "negocios": []
+}

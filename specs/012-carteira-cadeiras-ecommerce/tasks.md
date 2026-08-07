@@ -32,7 +32,7 @@ Stripe → `sirius`, `context`, `orion`. **Kiwify: zero cadeira, não construir.
 - [X] T001 Criar a árvore `app/src/lib/carteira/` e `app/src/lib/carteira/adaptadores/` conforme a Structure Decision de [plan.md](./plan.md)
 - [X] T002 [P] Registrar em `app/.env.example` os nomes das env vars de segredo por conta de parceiro (padrão `WEBHOOK_SECRET_<GATEWAY>_<PARCEIRO>`), sem valores
 - [X] T003 [P] Confirmar que `stripe` está em `app/package.json`; adicionar como dependência se ausente (o SDK hoje vive nos repos dos parceiros, não neste)
-- [ ] T003a ⚠️ **Linha de base de `SC-003`, tirada ANTES do `db push`**: exportar `id, total, frete, status` de **todos** os pedidos e `id, pedidoId, valor, taxaAplicada` de todos os `negocios_originados` para arquivo versionado, com contagem. Sem este snapshot, "zero regressão" é afirmação, não medição
+- [X] T003a ⚠️ **Linha de base de `SC-003`, tirada ANTES do `db push`**: exportar `id, total, frete, status` de **todos** os pedidos e `id, pedidoId, valor, taxaAplicada` de todos os `negocios_originados` para arquivo versionado, com contagem. Sem este snapshot, "zero regressão" é afirmação, não medição
 
 ---
 
@@ -49,9 +49,9 @@ Stripe → `sirius`, `context`, `orion`. **Kiwify: zero cadeira, não construir.
 - [X] T007 ⚠️ Tornar `NegocioOriginado.pedidoId` **anulável** e adicionar `origem` (`@default("pedido")`), `vendaId` e `clienteRef` (+ `@@index([parceiroId, clienteRef])`) em `app/prisma/schema.prisma`
 - [X] T007a ⚠️ Acrescentar as **relações inversas** que as tabelas novas exigem: `Parceiro { vendas VendaParceiro[]  credenciais CredencialGateway[] }` e `Cadeira { produto ProdutoCadeira? }`. Sem elas o `prisma generate` **falha** — e ele roda antes do `next build`
 - [X] T008 Rodar `npx prisma migrate diff --script` e **ler o SQL** antes de qualquer `db push` — preview seguro registrado na spec 010
-- [ ] T009 Aplicar o schema com `prisma db push` MANUAL, de máquina que alcança o host; anexar o output
+- [X] T009 Aplicar o schema com `prisma db push` MANUAL, de máquina que alcança o host; anexar o output — rodado em 2026-08-07, output em [snapshots/db-push-012.txt](./snapshots/db-push-012.txt). Exigiu `--accept-data-loss` pelo aviso do `@unique` em `cadeiras.site_url`: coluna **nova**, toda nula, zero duplicata possível
 - [X] T010 Escrever `app/scripts/migrate-012-backfill.mjs` gravando `origem='pedido'` explicitamente em toda linha existente de `negocios_originados` — o `@default` **não** reescreve linha já gravada
-- [ ] T011 Rodar o backfill e conferir contagem antes/depois: zero linha com `origem` nula
+- [X] T011 Rodar o backfill e conferir contagem antes/depois: zero linha com `origem` nula — `0/0`, a tabela estava **vazia** em produção (portão passou por vacuidade, ver T072a)
 
 ### ⚠️ A varredura que é tarefa, não observação
 
@@ -206,7 +206,7 @@ páginas finas é o resultado a evitar.
 - [X] T070 [P] Conferir que os **7 arquivos novos de teste** estão na lista de `test` de `app/package.json` (`negocio-origem`, `registrar-venda`, `webhook-carteira`, `mercadopago-assinatura-regressao`, `cadeira-checkout`, `agregado-sem-casa`, `cadeira-repo-unico`) e então rodar `npm test`. ⚠️ **Conferir a LISTA, não o output**: o script é cadeia de `&&` e o primeiro erro interrompe — arquivo que nunca apareceu pode ser ausência ou pode ser interrupção
 - [ ] T071 [P] Rodar `roihub/scripts/gateways.mjs` e conferir `SC-002`: ao menos 3 das 6 cadeiras que serviam preço mudaram de balde. ⚠️ Cadeira SaaS com checkout no parceiro sai como **"gateway servido"**, não "ligado" — o critério é o balde correto para o modo, não "ligado" para todas
 - [ ] T072 Verificação em ambiente real (Constituição II): Docker/EasyPanel ou browser em produção, com output anexado. Build local não vale
-- [ ] T072a ⚠️ Reexportar o snapshot de T003a e **diffar**: zero pedido com valor alterado, zero negócio com `taxaAplicada` alterada. É `SC-003`, e ele só fecha com o diff anexado
+- [X] T072a ⚠️ Reexportar o snapshot de T003a e **diffar**: zero pedido com valor alterado, zero negócio com `taxaAplicada` alterada. É `SC-003`, e ele só fecha com o diff anexado — **passou pelo `db push`**: 6 pedidos e 0 negócios, zero valor alterado ([sc003-antes.json](./snapshots/sc003-antes.json) × [sc003-depois.json](./snapshots/sc003-depois.json)). ⚠️ **Reexportar o `depois` de novo depois da T036**: este diff cobre a migração, não a primeira venda de webhook
 - [X] T073 Atualizar `specs/012-carteira-cadeiras-ecommerce/handoff.md` com o que foi feito, decisões e gotchas descobertos
 - [ ] T074 Commit + push (Constituição V)
 

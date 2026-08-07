@@ -1,0 +1,91 @@
+Migração da 012 aplicada em produção — 2026-08-07
+Host: 2.24.207.200:5443 / roilabs_db (o mesmo do .env.example)
+
+## 1. Linha de base de SC-003 (T003a) — ANTES do db push
+$ node --import tsx scripts/snapshot-012-sc003.mjs antes
+snapshot 'antes' gravado em ../specs/012-carteira-cadeiras-ecommerce/snapshots/sc003-antes.json
+  pedidos:  6
+  negócios: 0
+
+## 2. Preview do SQL (T008) — diff contra o datasource REAL, não contra o HEAD
+$ npx prisma migrate diff --from-schema-datasource ./prisma/schema.prisma \
+    --to-schema-datamodel ./prisma/schema.prisma --script
+
+Bateu com o previsto offline em delta-012.sql: tudo aditivo, um DROP NOT NULL
+(negocios_originados.pedido_id), zero DROP COLUMN. A única diferença é o par
+DropForeignKey/AddForeignKey de negocios_originados_pedido_id_fkey — consequência
+mecânica de pedido_id virar anulável (ON DELETE passa a SET NULL), não perda de dado.
+
+  ALTER TABLE "negocios_originados" DROP CONSTRAINT "negocios_originados_pedido_id_fkey";
+  ALTER TABLE "cadeiras" ADD COLUMN "da_casa" BOOLEAN NOT NULL DEFAULT false,
+    ADD COLUMN "estado" TEXT NOT NULL DEFAULT 'vaga',
+    ADD COLUMN "exibir_da_casa" BOOLEAN NOT NULL DEFAULT false,
+    ADD COLUMN "repo_url" TEXT, ADD COLUMN "site_url" TEXT;
+  ALTER TABLE "negocios_originados" ADD COLUMN "cliente_ref" TEXT,
+    ADD COLUMN "origem" TEXT NOT NULL DEFAULT 'pedido',
+    ADD COLUMN "venda_id" TEXT,
+    ALTER COLUMN "pedido_id" DROP NOT NULL;
+  CREATE TABLE "produtos_cadeira" (...);
+  CREATE TABLE "vendas_parceiro" (...);
+  CREATE TABLE "credenciais_gateway" (...);
+  CREATE UNIQUE INDEX "produtos_cadeira_cadeira_id_key" ...;
+  CREATE INDEX "vendas_parceiro_parceiro_id_cliente_ref_idx" ...;
+  CREATE UNIQUE INDEX "vendas_parceiro_gateway_evento_id_key" ...;
+  CREATE INDEX "credenciais_gateway_parceiro_id_idx" ...;
+  CREATE UNIQUE INDEX "credenciais_gateway_gateway_conta_ref_key" ...;
+  CREATE UNIQUE INDEX "cadeiras_site_url_key" ON "cadeiras"("site_url");
+  CREATE INDEX "negocios_originados_parceiro_id_cliente_ref_idx" ...;
+  + 5 AddForeignKey (produtos_cadeira, vendas_parceiro, credenciais_gateway,
+    negocios_originados.pedido_id recriada, negocios_originados.venda_id)
+
+## 3. db push (T009)
+$ npx prisma db push
+⚠️  There might be data loss when applying the changes:
+  • A unique constraint covering the columns `[site_url]` on the table `cadeiras`
+    will be added. If there are existing duplicate values, this will fail.
+Error: Use the --accept-data-loss flag to ignore the data loss warnings
+
+  → O aviso é vazio por construção: `site_url` é ADD COLUMN no MESMO diff, logo
+    nasce nula em toda linha, e índice único no Postgres admite N nulos. Não há
+    valor pré-existente que possa duplicar. Nenhuma outra linha do aviso.
+
+$ npx prisma db push --accept-data-loss
+Your database is now in sync with your Prisma schema. Done in 7.35s
+✔ Generated Prisma Client (v6.3.0)
+
+## 4. Backfill de origem (T011)
+$ node --import tsx scripts/migrate-012-backfill.mjs
+negócios no total: 0
+origem ANTES: (vazio)
+backfill 012: 0 negócio(s) atualizados
+origem DEPOIS: (vazio)
+OK: 0/0 com origem='pedido', zero nula.
+
+  ⚠️ `negocios_originados` está VAZIA em produção — o portão do T011 passou por
+     vacuidade, não por medição. Os 6 pedidos existentes nunca originaram negócio.
+     Consequência boa: o defeito do `include: { pedido }` (varredura-pedidoid.md)
+     não tem linha antiga para quebrar. Consequência ruim: a régua do success fee
+     nunca foi exercida contra dado real — a T036 é a primeira vez.
+
+## 5. Seed (T072a depende dele para estado/daCasa)
+$ npx prisma db seed
+seeded 8 cadeiras de nicho
+seeded 9 cadeiras de projeto (8 novas)
+cadeiras da casa: 8 · exibidas como da casa: 3 (FR-010a espera 3)
+
+## 6. SC-003 (T072a)
+$ node --import tsx scripts/snapshot-012-sc003.mjs depois
+$ node --import tsx scripts/snapshot-012-sc003.mjs diff
+antes:  6 pedidos · 0 negócios (2026-08-07T11:06:42.545Z)
+depois: 6 pedidos · 0 negócios (2026-08-07T11:08:07.517Z)
+novas desde o corte: 0 pedido(s) · 0 negócio(s)
+SC-003 OK: nenhuma linha pré-existente mudou de valor.
+
+## 7. Verificação em produção (Constituição II) — app.roilabs.com.br
+GET /api/cadeiras          → 200, 4487 bytes  (era 500)
+GET /api/negocios          → 401 (auth, não 500 — era 500)
+GET /api/pagamentos/webhook→ 405 (só POST; segue intocado, FR-005a)
+
+Conferido no corpo do /api/cadeiras: NENHUM campo `daCasa`/`da_casa` sai na
+resposta — só `rotulo`. A projeção campo a campo do gotcha nº 3 segurou.
+Campos novos servidos: estado, rotulo, siteUrl, produto, checkout.
