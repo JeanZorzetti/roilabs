@@ -54,6 +54,16 @@ derrube qualquer uma dessas URLs destrói o único ativo orgânico da loja** —
 aparece no build, aparece semanas depois no GSC. Por isso a generalização é **interna**: o
 comprador e o Google não podem perceber que ela aconteceu.
 
+## Clarifications
+
+### Session 2026-08-07
+
+- Q: O que acontece quando o comprador adiciona item de outra cadeira a um carrinho já ocupado? → A: Recusa — o carrinho é de uma cadeira só; o item não é adicionado e o comprador é avisado de qual cadeira o carrinho já contém.
+- Q: "Assinatura recorrente" nesta feature significa cobrança recorrente real no gateway? → A: Não — modelo completo agora, cobrança do 1º ciclo na 013; renovação automática é a spec 014 e não exige remodelagem.
+- Q: O que garante que duas cadeiras não colidam no mesmo slug de produto? → A: O prefixo de rota é campo da cadeira; o slug é único dentro da cadeira e a URL é `/<prefixo>/<slug>`, preservando as URLs atuais.
+- Q: O que acontece com as URLs e os pedidos em aberto quando o parceiro desocupa a cadeira? → A: As URLs sobrevivem em 200 com o produto indisponível e sem botão de compra; os pedidos em aberto continuam visíveis no admin até serem fechados.
+- Q: Frete e coleta de entrega são propriedade da cadeira ou da unidade de venda? → A: Separados — a unidade de venda define **se há** entrega física; a cadeira define **como cobra** o frete (por CEP, fixo ou grátis).
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - A terceira cadeira abre loja sem código novo (Priority: P1)
@@ -173,15 +183,19 @@ aparecem pelo mesmo caminho de leitura, sem ramo por vertical.
 ### Edge Cases
 
 - **Carrinho com itens de duas cadeiras**: um pedido pertence a **uma** cadeira (regra herdada
-  da 011). O que acontece quando o comprador adiciona um item de outra cadeira a um carrinho já
-  ocupado — o sistema recusa, separa em dois carrinhos, ou troca?
-- **Cadeira desocupada com pedido em aberto**: o parceiro sai, a loja dele sai do ar — e o
-  pedido pago que ainda não foi entregue? E a URL que já ranqueava (URL que vira 404 depois de
-  ranquear é destruição de ativo).
-- **Duas cadeiras vendendo o mesmo tipo de produto** (dois CRMs, duas fitas): o mesmo `slug` de
-  produto em cadeiras diferentes não pode colidir na URL nem no carrinho.
-- **Frete**: porcelanato tem modelo de frete por CEP; assinatura não tem frete nenhum. Unidade
-  de venda sem entrega física não pode herdar o formulário de entrega.
+  da 011) e o carrinho também. Adicionar item de outra cadeira a um carrinho já ocupado é
+  **recusado**: o item não entra e o comprador vê de qual cadeira o carrinho já é.
+- **Cadeira desocupada com pedido em aberto**: desocupar **não deleta** a loja. As URLs seguem
+  respondendo 200 com os produtos marcados como indisponíveis e sem caminho de compra; os
+  pedidos já pagos continuam visíveis e fecháveis no admin. Nenhuma URL vira 404 por
+  desocupação — 404 depois de ranquear é destruição de ativo.
+- **Duas cadeiras vendendo o mesmo tipo de produto** (dois CRMs, duas fitas): resolvido pelo
+  prefixo de rota da cadeira — o mesmo `slug` em cadeiras diferentes gera URLs distintas
+  (`/<prefixo>/<slug>`) e itens distintos no carrinho. Colisão só é possível **entre prefixos**,
+  e o build a recusa.
+- **Frete**: a unidade de venda diz **se há** entrega (assinatura não tem), a cadeira diz **como
+  cobra** (porcelanato mantém o cálculo por CEP). Unidade sem entrega física não herda o
+  formulário de entrega.
 - **Cupom**: `OBRA10` tem escopo porcelanato. Cupom de uma cadeira não pode descontar item de
   outra.
 - **Cadeira sem catálogo**: cadeira ocupada declarada mas com zero produto — não pode gerar
@@ -202,15 +216,34 @@ aparecem pelo mesmo caminho de leitura, sem ramo por vertical.
   quantidade é contada, como o preço é calculado), não um ramo de código. As três unidades a
   comportar na entrega: área (m²/caixa), unidade avulsa com faixa de quantidade (rolo) e
   assinatura recorrente.
+- **FR-003a**: A unidade **assinatura recorrente** DEVE nascer com o dado completo — periodicidade,
+  valor do ciclo, data de início, estado da assinatura e o identificador dela no gateway — mesmo
+  que a 013 cobre **apenas o primeiro ciclo**. Atalho deliberado (Constituição III): o teto é que
+  **não há renovação automática, dunning nem cancelamento** nesta feature; o caminho de upgrade é
+  ligar o webhook de ciclo do gateway sobre esse mesmo modelo, sem alterar tabela, carrinho ou
+  checkout — escopo da spec 014.
 - **FR-004**: O item de pedido DEVE ser **um só conceito**, capaz de registrar qualquer unidade
   de venda, incluindo o dado que **explica o preço aplicado** (faixa, piso, snapshot de
   comissão) — sem o qual um pedido antigo deixa de ser auditável.
 - **FR-005**: Um pedido DEVE pertencer a **uma única cadeira**. O sistema DEVE impedir a
   criação de pedido com itens de cadeiras diferentes.
+- **FR-005a**: O **carrinho** também DEVE pertencer a uma única cadeira: ao tentar adicionar um
+  item de outra cadeira, o sistema DEVE **recusar a adição** e informar ao comprador de qual
+  cadeira o carrinho atual é. Nenhum item existente é removido ou substituído sem ação explícita
+  do comprador (esvaziar o carrinho).
 - **FR-006**: Cadeira sem meio de cobrança configurado NÃO DEVE oferecer checkout (herdado de
   FR-008 da 012: venda feita com receita invisível é pior que venda não feita).
 - **FR-007**: Cadeira ocupada sem nenhum produto no catálogo NÃO DEVE gerar vitrine pública
   indexável.
+- **FR-007a**: Cada cadeira DEVE declarar seu **prefixo de rota** (o segmento que hoje é
+  `porcelanato` e `fitas`); a URL de um produto é `/<prefixo>/<slug>`. O `slug` DEVE ser único
+  **dentro** da cadeira e o **prefixo** DEVE ser único entre cadeiras. O build DEVE recusar
+  ambas as violações antes de publicar, junto do gate de catálogo (FR-019).
+
+- **FR-007b**: Desocupar uma cadeira DEVE **despublicar, não deletar**: suas URLs continuam
+  respondendo com sucesso, os produtos aparecem como indisponíveis e o caminho de compra
+  (carrinho e checkout) é fechado. Os pedidos já criados por essa cadeira permanecem legíveis e
+  fecháveis no admin.
 
 **O que não pode quebrar**
 
@@ -242,18 +275,24 @@ aparecem pelo mesmo caminho de leitura, sem ramo por vertical.
 - **FR-017**: O admin DEVE ler os itens de qualquer pedido por **um** caminho, sem ramo por
   cadeira.
 - **FR-018**: Cupom e frete DEVEM ter escopo por cadeira; regra de uma cadeira não se aplica a
-  itens de outra, e unidade sem entrega física não coleta dados de entrega.
+  itens de outra.
+- **FR-018a**: Entrega e frete são decididos por **dois donos distintos**: a **unidade de venda**
+  determina se existe entrega física (assinatura recorrente nunca tem); a **cadeira** determina
+  como o frete é cobrado quando existe (por CEP, valor fixo ou grátis). Unidade sem entrega
+  física NÃO DEVE coletar endereço nem exibir etapa de entrega.
 - **FR-019**: O sistema DEVE recusar catálogo com produto sem preço ou sem imagem **antes** de
   publicar, mantendo o gate que já derruba o build hoje.
 
 ### Key Entities
 
 - **Cadeira-loja**: a cadeira ocupada enquanto vendedora — a quem o catálogo pertence, qual a
-  unidade de venda, quem processa o pagamento, se está publicada.
+  unidade de venda, quem processa o pagamento, seu **prefixo de rota** (único no site) e se está
+  publicada.
 - **Catálogo**: os produtos de uma cadeira. Cada produto tem preço, imagem, descrição e o que
   sua unidade exige (dimensão, faixas, recorrência).
-- **Unidade de venda**: como se conta e se cobra — rótulo exibido, forma de calcular quantidade
-  e regra de preço (fixo, por área, por faixa de quantidade, recorrente).
+- **Unidade de venda**: como se conta e se cobra — rótulo exibido, forma de calcular quantidade,
+  regra de preço (fixo, por área, por faixa de quantidade, recorrente) e se **exige entrega
+  física**.
 - **Item de pedido**: uma linha comprada, com quantidade, unidade, preço unitário aplicado e a
   **justificativa** desse preço.
 - **Pedido**: a compra de **uma** cadeira, com comprador, entrega quando aplicável, cupom,
@@ -276,8 +315,9 @@ aparecem pelo mesmo caminho de leitura, sem ramo por vertical.
   e o número de tabelas de item de pedido cai de 2 para 1.
 - **SC-005**: **Zero** pedidos com itens de mais de uma cadeira, medido no banco depois da
   entrega.
-- **SC-006**: Uma unidade de venda que não existe hoje (assinatura recorrente) é declarada e
-  comprada **sem nenhuma linha de código novo** no carrinho ou no checkout.
+- **SC-006**: Uma unidade de venda que não existe hoje (assinatura recorrente) é declarada e o
+  **primeiro ciclo** é comprado **sem nenhuma linha de código novo** no carrinho ou no checkout,
+  com periodicidade, valor do ciclo e estado da assinatura gravados no item.
 - **SC-007**: Nenhuma tela de comprador muda de fluxo: o número de etapas para comprar
   porcelanato e para comprar fita é o mesmo de antes.
 
@@ -304,6 +344,9 @@ aparecem pelo mesmo caminho de leitura, sem ramo por vertical.
   reabrir.** Consequência aceita e registrada: o caminho pagamento → webhook → negócio →
   success fee segue **sem prova ponta a ponta**, e nenhum número de receita deste site pode ser
   afirmado como provado.
+- **Renovação automática de assinatura** (cobrança do 2º ciclo em diante, dunning, cancelamento)
+  — spec 014. A 013 modela a assinatura por inteiro e cobra o 1º ciclo; ligar a recorrência é
+  adicionar o webhook de ciclo, sem remodelar.
 - **Publicar as páginas de cadeira** e escrever o conteúdo delas — é a spec 012, aberta.
 - **Migrar o domínio** ou reposicionar `goiania` para um nome não-geográfico — spec 012, US4.
 - **Resolver a falta de ranking** (`0/40` no top 50) ou de demanda das cadeiras. Este motor
@@ -314,5 +357,5 @@ aparecem pelo mesmo caminho de leitura, sem ramo por vertical.
 
 ## Próximo passo
 
-`/speckit-clarify` para fechar as decisões das Edge Cases (carrinho misto, saída de parceiro,
-colisão de slug) e depois `/speckit-plan`.
+`/speckit-clarify` rodado em 2026-08-07: carrinho misto, assinatura, colisão de slug, saída de
+parceiro e frete estão decididos e registrados em Clarifications. Próximo: `/speckit-plan`.
