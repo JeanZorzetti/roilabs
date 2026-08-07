@@ -1,6 +1,7 @@
 # Handoff — 012 carteira de cadeiras no e-commerce
 
-**Data**: 2026-08-07 · **Status**: spec em Draft, 1 clarification bloqueante · **Próximo**: `clarify`
+**Data**: 2026-08-07 · **Status**: spec + plan fechados, zero bloqueio · **Próximo**: `tasks`
+(começando pela **Fase 0**, que pode eliminar um adaptador antes de qualquer código)
 
 ## Feito
 
@@ -39,12 +40,33 @@ Gatilho redefinido e registrado em Out of scope: generalizar quando **uma tercei
 no carrinho da própria ROI Labs** (cadeira física que não venda por m² nem rolo). Cadeira SaaS
 nova não dispara, por mais que se somem.
 
+6. **Webhook por gateway**, sem informe manual (3ª rodada). Medido: são **3 adaptadores, não 8** —
+   Mercado Pago cobre 5 cadeiras, Stripe 2–3, Kiwify 1. *Webhook por gateway ≠ por cadeira.*
+
+## Plano (07/08) — o que ele descobriu no código
+
+- **Já existe webhook de MP** (`app/src/app/api/pagamentos/webhook/route.ts`) com o padrão certo:
+  assinatura antes de estado, status lido do gateway, idempotência por id. **Vira o molde — e não
+  é tocado** (é o que fatura hoje, FR-005a). Ele é single-tenant; cadeira de parceiro tem conta e
+  segredo próprios.
+- **Bloqueio de schema achado no arquivo:** `NegocioOriginado.pedidoId` é **NOT NULL** com relação
+  obrigatória. Venda SaaS não tem `Pedido`, logo hoje **não consegue** virar negócio. `Pedido`
+  sintético foi **rejeitado** (exigiria `whatsapp` e `entrega` falsos no caminho de dinheiro).
+  Escolhido: `pedidoId` anulável + discriminador `origem` + invariante testada.
+- **Segredo de webhook NÃO vai para o banco** — `CredencialGateway.segredoRef` guarda o *nome* da
+  env var. Banco guarda ponteiro, EasyPanel guarda valor.
+- **Parceiro vai no PATH da rota**, não é descoberto pelo corpo: o segredo é por conta, então
+  descobrir pelo corpo exigiria ler entrada não autenticada antes de validar assinatura.
+
 ## Pendências
 
-- **[BLOQUEIA `plan`] FR-003: como a venda do parceiro chega até aqui** — webhook do gateway dele
-  ou informe manual? Decide se `SC-001` (receita provada sair de R$ 0,00) é apurável por máquina
-  ou vira número declarado. Esta casa já mediu o custo de número escrito à mão.
+- **Fase 0 (antes de qualquer código):** confirmar com qual conta o `sirius` cobra (tem os DOIS
+  SDKs e fatura por tier no próprio banco) e se a conta Kiwify do `orcaobra` emite webhook. **Pode
+  eliminar um adaptador inteiro.**
 - Label do subdomínio: assumido `loja.roilabs.com.br`, não confirmado. Não bloqueia.
+- ⚠️ **`pedidoId` anulável quebra leitura existente em silêncio** — varrer TODA consulta de
+  `NegocioOriginado` por `pedidoId` é tarefa da Fase 1, não observação. Mesma landmine do
+  `freteMotivo` na 010, e esta casa já pisou nela duas vezes.
 
 ## Gotchas herdados (já embutidos como FR)
 

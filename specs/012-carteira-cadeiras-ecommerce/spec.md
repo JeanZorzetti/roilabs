@@ -129,15 +129,17 @@ apodrece. Ver FR-005 e o risco em Success Criteria.
   (um label, coberto pelo cert Universal da Cloudflare). A malha de porcelanato vem junto por
   301, sob pasta própria.
 
+### Session 2026-08-07 — terceira rodada
+
+- Q: Como a venda do parceiro chega até aqui? → A: **Webhook por gateway.** Nada de informe
+  manual. Consequência medida: **são 3 integrações, não 8** — as 8 cadeiras da fase 1 usam
+  Mercado Pago (5), Stripe (3) e Kiwify (1). *Webhook por gateway ≠ webhook por cadeira.*
+
 ### Pendentes
 
 - **[NEEDS CLARIFICATION: qual o label do subdomínio?]** Não bloqueia o `plan` — assumido
   `loja.roilabs.com.br` (ver Assumptions); trocar o label é uma linha de config enquanto o corte
   não aconteceu.
-- **[NEEDS CLARIFICATION: como a venda do parceiro chega até aqui — webhook do gateway dele,
-  ou informe manual?]** **Bloqueia o `plan`**: decide se `SC-001` é apurável por máquina ou se a
-  receita da carteira passa a ser um número declarado. Esta casa já mediu o custo disso — a
-  memória guardava quatro contagens defasadas do mesmo número quando a fonte era escrita à mão.
 
 ### ⚠️ Risco registrado na decisão da cadeira da casa
 
@@ -331,12 +333,18 @@ ele aparece no admin, **não** gera URL pública indexável e **não** oferece c
   disparou (ver Contexto) e generalizar agora seria construir para necessidade hipotética.
 - **FR-002**: Cadeira **SaaS** NÃO DEVE criar `Pedido` interno. A venda vira `NegocioOriginado`
   diretamente, que já é agnóstico de unidade (specs 007/010).
-- **FR-003**: O sistema DEVE registrar a venda do parceiro **sem digitação manual**
-  — **[NEEDS CLARIFICATION: webhook do gateway do parceiro ou informe? bloqueia `plan`]**.
-- **FR-004**: O registro de venda DEVE ser **idempotente por id de evento** — retry de gateway
+- **FR-003**: A venda do parceiro DEVE chegar por **webhook do gateway**, sem digitação manual.
+  São **3 adaptadores** (Mercado Pago, Stripe, Kiwify) cobrindo as 8 cadeiras da fase 1.
+- **FR-003a**: A assinatura do webhook DEVE ser verificada **antes de tocar qualquer estado**, com
+  o segredo **daquela conta de parceiro** — não um segredo global. Assinatura inválida → 401 e log.
+- **FR-003b**: O status da venda DEVE ser lido **do gateway**, nunca do corpo da notificação —
+  o corpo é entrada não-confiável no caminho de dinheiro.
+- **FR-004**: O registro DEVE ser **idempotente por (gateway, id do evento)** — retry de gateway
   não pode duplicar negócio.
 - **FR-005**: Evento não atribuível a nenhuma cadeira DEVE **falhar fechada**: registrado como
-  não-atribuído, nunca somado a uma cadeira por aproximação.
+  não-atribuído com o payload preservado, nunca somado a uma cadeira por aproximação.
+- **FR-005a**: O webhook existente `/api/pagamentos/webhook` (porcelanato/fitas, conta da própria
+  ROI Labs) **NÃO DEVE ser alterado** — é o caminho que fatura hoje.
 - **FR-006**: Receita apurada DEVE excluir pagamento cujo payer é conta de teste, mesmo com
   `approved` + `live_mode: true`, registrando o motivo do descarte (`lib/vendas.mjs`).
 - **FR-006a**: A taxa aplicada DEVE ser congelada na **criação** do negócio (spec 010); mudar a
@@ -409,9 +417,12 @@ ele aparece no admin, **não** gera URL pública indexável e **não** oferece c
 ### Measurable Outcomes
 
 - **SC-001**: **Receita provada da carteira sai de R$ 0,00** — ao menos uma venda real (payer
-  não-teste, cadeira **não** da casa) com `NegocioOriginado` e fee apurado. ⚠️ **Depende de
-  FR-003**: se a venda do parceiro só chega por informe manual, este critério não é apurável por
-  máquina e vira número declarado.
+  não-teste, cadeira **não** da casa) com `NegocioOriginado` e fee apurado, **nascida de webhook
+  sem intervenção manual**.
+- **SC-001a**: ⚠️ **O webhook prova que a venda ocorreu, NUNCA que todas ocorreram.** O parceiro
+  controla a conta do gateway, e o incentivo dele é **sub-reportar** (o fee incide sobre o que
+  chega). Completude não é verificável por esta feature; qualquer número publicado DEVE dizer
+  "vendas reportadas por webhook", nunca "vendas do parceiro".
 - **SC-002**: Das 6 cadeiras que hoje servem preço sem gateway, **ao menos 3 passam a cobrar**,
   medidas por `roihub/scripts/gateways.mjs` — mas **o balde muda**: cadeira SaaS com checkout no
   parceiro sai como "gateway servido", não "ligado". O critério é o balde correto para o modo de
