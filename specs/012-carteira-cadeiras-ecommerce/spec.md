@@ -34,7 +34,7 @@ HTTP contra produção — idêntica à de 01/08):
 | balde | n | projetos |
 |---|---|---|
 | Gateway **ligado**, régua lendo | 1 | `atma` |
-| Gateway servido, **nenhuma régua** | 1 | `orcaobra` (Kiwify, link externo) |
+| Gateway servido, **nenhuma régua** | 1 | `orcaobra` (Kiwify) — ⚠️ **fora da fase 1**, bloqueio de produto |
 | **Serve preço, sem gateway** | 6 | `sirius`, `polarisia`, `estetiacrm`, `context`, `orion`, `vertice` |
 | Sem caminho de cobrança | 27 | o resto |
 
@@ -132,8 +132,15 @@ apodrece. Ver FR-005 e o risco em Success Criteria.
 ### Session 2026-08-07 — terceira rodada
 
 - Q: Como a venda do parceiro chega até aqui? → A: **Webhook por gateway.** Nada de informe
-  manual. Consequência medida: **são 3 integrações, não 8** — as 8 cadeiras da fase 1 usam
-  Mercado Pago (5), Stripe (3) e Kiwify (1). *Webhook por gateway ≠ webhook por cadeira.*
+  manual. *Webhook por gateway ≠ webhook por cadeira.*
+- Q: Com qual conta o `sirius` cobra (tem os dois SDKs)? → A: **Stripe.**
+- Q: O `orcaobra` entra? → A: **Não.** *"Precisa de investimento em código; acho ele um produto
+  ruim do jeito que está."* Cadeira vai para `em-preparacao` — o bloqueio é de **produto**, não de
+  fiação, e ligar checkout ali venderia algo que não deveria estar à venda.
+
+**Escopo final da fase 1: 7 cadeiras, 2 adaptadores.** Mercado Pago cobre `atma` (já ligado),
+`polarisia`, `estetiacrm` e `vertice`; Stripe cobre `sirius`, `context` e `orion`. **Kiwify serve
+zero cadeira e não se constrói.**
 
 ### Pendentes
 
@@ -334,7 +341,8 @@ ele aparece no admin, **não** gera URL pública indexável e **não** oferece c
 - **FR-002**: Cadeira **SaaS** NÃO DEVE criar `Pedido` interno. A venda vira `NegocioOriginado`
   diretamente, que já é agnóstico de unidade (specs 007/010).
 - **FR-003**: A venda do parceiro DEVE chegar por **webhook do gateway**, sem digitação manual.
-  São **3 adaptadores** (Mercado Pago, Stripe, Kiwify) cobrindo as 8 cadeiras da fase 1.
+  São **2 adaptadores** (Mercado Pago, Stripe) cobrindo as **7** cadeiras da fase 1. Adaptador
+  Kiwify NÃO DEVE ser construído enquanto nenhuma cadeira o usar.
 - **FR-003a**: A assinatura do webhook DEVE ser verificada **antes de tocar qualquer estado**, com
   o segredo **daquela conta de parceiro** — não um segredo global. Assinatura inválida → 401 e log.
 - **FR-003b**: O status da venda DEVE ser lido **do gateway**, nunca do corpo da notificação —

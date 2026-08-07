@@ -11,9 +11,10 @@ Transformar as cadeiras ocupadas em produto comprável e ligar a apuração de r
 que hoje é **R$ 0,00 provado**. Fase 1 = 8 cadeiras vendáveis, medidas hoje.
 
 **A abordagem técnica cabe em três frases:** cadeira SaaS vende no gateway do parceiro e reporta
-por **webhook** (3 adaptadores cobrem as 8 cadeiras); o negócio nasce **sem `Pedido` interno**,
-o que exige tornar `NegocioOriginado.pedidoId` anulável; e o caminho de dinheiro que fatura hoje
-— porcelanato, fitas e `/api/pagamentos/webhook` — **não é tocado**.
+por **webhook** (**2 adaptadores cobrem as 7 cadeiras** — Mercado Pago 4, Stripe 3); o negócio
+nasce **sem `Pedido` interno**, o que exige tornar `NegocioOriginado.pedidoId` anulável; e o
+caminho de dinheiro que fatura hoje — porcelanato, fitas e `/api/pagamentos/webhook` — **não é
+tocado**.
 
 **O que este plano deliberadamente NÃO faz:** generalizar `ItemPedido`. A decisão de pagamento
 por tipo de cadeira desarmou o gatilho da spec 011 (`research.md` §3, `spec.md` Contexto).
@@ -40,8 +41,9 @@ verificação em ambiente real. **Build local não vale** (Constituição II: On
 **Constraints**: caminho de dinheiro — idempotência no **banco**, assinatura antes de estado,
 status lido do gateway. LLM único = `claude-cli`, sem API paga.
 
-**Scale/Scope**: 8 cadeiras na fase 1 (de 35), 3 adaptadores de gateway, 2 tabelas novas,
-1 coluna anulada em tabela existente, 1 corte de domínio.
+**Scale/Scope**: **7 cadeiras** na fase 1 (de 35), **2 adaptadores** de gateway, 2 tabelas novas,
+1 coluna anulada em tabela existente, 1 corte de domínio. *(Fase 0 cortou o adaptador Kiwify e a
+cadeira `orcaobra`.)*
 
 ## Constitution Check
 
@@ -106,14 +108,23 @@ consulta e formato, e convergem no mesmo `registrar-venda.ts`. Três rotas finas
 
 ## Fases
 
-### Fase 0 — Confirmar as duas incógnitas que travam configuração *(sem código)*
+### Fase 0 — ✅ CONCLUÍDA em 2026-08-07 *(sem código)*
 
-- **`sirius` tem `mercadopago` E `stripe`** e fatura por tier no próprio banco. **Confirmar com
-  qual conta ele cobra** antes de criar credencial. Não presumir.
-- **`orcaobra` é Kiwify por link externo.** Confirmar que a conta emite webhook — se não emitir,
-  a cadeira dele sai da fase 1 e o adaptador Kiwify cai para 0 cadeira (adiar, não construir).
+Resolvida antes da primeira linha, e **cortou um adaptador inteiro**:
 
-*Saída: quais dos 3 adaptadores realmente entram. Pode reduzir para 2.*
+- **`sirius` = Stripe** (confirmado). O `mercadopago` no `package.json` dele é dependência escrita
+  e não usada — inventário de código dá palpite, não veredito.
+- **`orcaobra` SAI da fase 1.** O bloqueio não é fiação, é produto: *"acho ele um produto ruim do
+  jeito que está"*. Cadeira vai para `em-preparacao`; ligar checkout ali produziria uma página de
+  compra para algo que não deveria estar à venda.
+
+**Escopo final da fase 1: 7 cadeiras, 2 adaptadores.**
+
+| adaptador | cadeiras |
+|---|---|
+| **Mercado Pago** | `atma` (já ligado), `polarisia`, `estetiacrm`, `vertice` |
+| **Stripe** | `sirius`, `context`, `orion` |
+| ~~Kiwify~~ | **zero — não construir** (Constituição III: sem cadeira, é scaffolding "para depois") |
 
 ### Fase 1 — Schema e o núcleo de registro *(P1 — US1)*
 

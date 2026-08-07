@@ -7,27 +7,44 @@
 `roihub/scripts/gateways-repo.mjs` (API do GitHub, lê `package.json` + `.env*` de 35 repos) +
 `roihub/scripts/gateways.mjs` (HTTP contra produção). Ambos zero LLM, corridos em 2026-08-07.
 
-| cadeira | SDK no repo | gateway efetivo | modo de cobrança |
+| cadeira | SDK no repo | gateway efetivo | entra na fase 1? |
 |---|---|---|---|
-| `atma` | mercadopago | **Mercado Pago** | parceiro (já ligado) |
-| `sirius` | mercadopago **+ stripe** | ⚠️ ambíguo | parceiro |
-| `polarisia` | mercadopago | **Mercado Pago** | parceiro |
-| `estetiacrm` | mercadopago | **Mercado Pago** | parceiro |
-| `vertice` | mercadopago | **Mercado Pago** | parceiro |
-| `context` | stripe | **Stripe** | parceiro |
-| `orion` | stripe | **Stripe** | parceiro |
-| `orcaobra` | *nada no código* | **Kiwify** (link externo) | parceiro |
+| `atma` | mercadopago | **Mercado Pago** | ✅ (já ligado) |
+| `polarisia` | mercadopago | **Mercado Pago** | ✅ |
+| `estetiacrm` | mercadopago | **Mercado Pago** | ✅ |
+| `vertice` | mercadopago | **Mercado Pago** | ✅ |
+| `sirius` | mercadopago **+ stripe** | **Stripe** *(confirmado 07/08)* | ✅ |
+| `context` | stripe | **Stripe** | ✅ |
+| `orion` | stripe | **Stripe** | ✅ |
+| `orcaobra` | *nada no código* | Kiwify (link externo) | ❌ **fora** — ver §1.2 |
 
-**Conclusão que dimensiona o trabalho: 3 adaptadores, não 8.** Mercado Pago cobre 5 cadeiras,
-Stripe 2–3, Kiwify 1. *Webhook por gateway ≠ webhook por cadeira.*
+**Conclusão que dimensiona o trabalho: 2 adaptadores para 7 cadeiras.** Mercado Pago cobre 4,
+Stripe cobre 3. *Webhook por gateway ≠ webhook por cadeira.*
 
-⚠️ **`sirius` tem os dois SDKs** e nada no HTML servido diz qual cobra — ele fatura por tier de
-organização no próprio banco, e nenhuma página dele carregaria gateway. **Não presumir**: a
-cadeira do `sirius` exige confirmar com que conta ele cobra antes de configurar webhook.
+### 1.1 A ambiguidade do `sirius`, resolvida
 
-⚠️ **`orcaobra` não tem SDK nenhum** — Kiwify por link externo não deixa dependência no
-`package.json`. Um inventário só de código nunca o veria. É o caso que prova por que as duas
-metades (repo × HTML servido) têm de ser cruzadas.
+Ele tem os **dois** SDKs no `package.json` e nada no HTML servido diz qual cobra — fatura por tier
+de organização no próprio banco, e nenhuma página dele carregaria gateway. **Confirmado pelo Jean
+em 2026-08-07: Stripe.** O `mercadopago` no `package.json` é dependência escrita e não usada —
+**inventário de código dá palpite, não veredito.**
+
+### 1.2 🚩 `orcaobra` SAI da fase 1 — e o motivo não é técnico
+
+Ele estava no balde "gateway servido e nenhuma régua lendo", que parece um problema de fiação.
+**Não é.** Decisão do Jean (07/08): *"precisa de investimento em código, eu fiz ele em um dia,
+acho ele um produto ruim do jeito que está."*
+
+Ligar cobrança num produto que o dono considera ruim não produz receita — produz uma página de
+checkout para algo que não deveria estar à venda. Ele volta para o balde de **"transformar em
+vendável"**, junto com os 27, e a cadeira dele fica `em-preparacao`.
+
+**Consequência direta: o adaptador Kiwify serve ZERO cadeira e não se constrói.** Fica registrado
+para quando `orcaobra` ou outra cadeira Kiwify voltar — construir adaptador sem cadeira é o
+scaffolding "para depois" que a Constituição III proíbe.
+
+**Esta é a segunda vez que a resposta do Jean ENCOLHE o escopo** (a primeira tirou a generalização
+do `ItemPedido`). O padrão vale registrar: perguntar antes de construir tem devolvido mais corte
+do que adição.
 
 ## 2. O que JÁ EXISTE e deve ser reusado, não reescrito
 
