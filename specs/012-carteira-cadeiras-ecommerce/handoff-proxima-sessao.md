@@ -31,23 +31,26 @@ com **16 cards no HTML inicial**, zero duplicado, `#carteira` ausente, `daCasa` 
 comentário · `site-goiania` builda 105 páginas. O teste novo foi conferido **falhando** antes
 de conferido passando (dessincronizei o skeleton de propósito).
 
-## 🚨 O ÚNICO passo que falta — e por que o push está segurado
+## ✅ T072b FECHADA — o seed rodou em produção
 
 `niche` é editável no `/admin`, então quem manda na tela é o **BANCO**: o laço JS reescreve o
-rótulo dos 16 cards com o que `/api/cadeiras` devolve. **O banco ainda tem os rótulos velhos.**
+rótulo dos 16 cards com o que `/api/cadeiras` devolve. Por isso o seed tinha de vir ANTES do
+deploy — publicar o site com o banco velho colocaria `Imobiliário / IA` dentro da vitrine.
 
-Deployar agora colocaria `Imobiliário / IA` e os outros 4 **dentro da vitrine** — exatamente o
-que a ordem deste handoff existia para impedir. Não há `.env` com `DATABASE_URL` neste
-ambiente, então o seed em produção não roda daqui.
+⚠️ **A `DATABASE_URL` passada primeiro era a do banco ERRADO** (`roihub_db@…:5445`, que tem
+`hub_tasks`/`seo_projects`/`crm_leads` e **nenhuma** tabela `Cadeira`). O seed ali teria criado
+o schema inteiro da 012 num banco de outro projeto. O banco do `app` é o que
+[app/.env.example](../../app/.env.example) documenta: **`roilabs_db@2.24.207.200:5443`** — mesma
+senha, host igual, porta e base diferentes. Conferido lendo as 16 linhas ANTES de escrever.
 
-**Duas formas de destravar, as duas do Jean:**
+Resultado, medido depois de `npm run db:seed`:
 
-1. `cd app && npm run db:seed` com a `DATABASE_URL` de produção — aplica os 5 rótulos **e**
-   fecha a **T072b** que já estava pendente (`daCasa` de `vertice`/`orcaobra` + `estado` de
-   `Fitas adesivas`, hoje `vaga` no ar contra `ocupada-vendavel` no arquivo).
-2. Renomear os 5 à mão no `/admin` (é um `<input>`) — instantâneo, sem seed e sem deploy.
-
-**Depois de qualquer uma das duas: `git push` (= deploy).** O commit já está pronto.
+- **`seeded 9 cadeiras de projeto (0 novas)`** — a chave por `siteUrl` casou todas. **Zero
+  duplicata**, que era o risco inteiro do item 1. Total continua **16**, `siteUrl` repetido: 0.
+- Os **5 rótulos** estão no banco e já saem de `/api/cadeiras`.
+- **T072b junto**: `Fitas adesivas` saiu de `vaga` para `ocupada-vendavel` (divergia do site) e
+  `daCasa` de `vertice`/`orcaobra` virou `false` — as duas **entram na régua do success fee**
+  agora. `cadeiras da casa: 6 · exibidas como da casa: 3`, como FR-010a espera.
 
 ---
 
