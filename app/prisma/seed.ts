@@ -35,6 +35,23 @@ async function main() {
   // O fallback por `niche` existe para UM caso e se auto-cura na primeira rodada: `atma` já
   // nasceu como cadeira de NICHO (SEED de 011, sem siteUrl). Achada por niche, o update
   // abaixo grava o siteUrl dela; da segunda rodada em diante ela casa pela chave nova.
+  // `polo` explícito (07/08): sem isto toda cadeira de projeto herdava o default `Goiânia` do
+  // schema, e o /admin somava a carteira inteira no card do polo — "16 cadeiras" num polo que
+  // tem 3. Cadeira de projeto não fica num polo geográfico; fica na carteira.
+  // ⚠️ A exceção é a MESMA regra do gen-carteira: projeto cujo `niche` já é cadeira de nicho
+  // (a `atma`) É uma cadeira do mapa de Goiânia e não pode ser movida daqui.
+  const nichosGoiania = new Set<string>(DEFAULT_SEATS.map((s) => s.niche));
+  const poloDe = (niche: string) => (nichosGoiania.has(niche) ? 'Goiânia' : 'Carteira');
+
+  // 🚨 Cadeira de projeto NOVA entra no FIM da fila, nunca em `DEFAULT_SEATS.length + criadas`.
+  // Aquela conta acompanhava o tamanho do mapa de nichos: encolhido para 3, a próxima cadeira
+  // criada nasceria com `ordem: 3` e a API (que ordena por `ordem`) a serviria ANTES do bloco
+  // 8..15 — enquanto o skeleton da home a desenha por último. O laço ao vivo casa por índice,
+  // então TODOS os cards receberiam o dado do vizinho. Só vale porque projeto novo é anexado
+  // ao fim de PROJETOS_CADEIRA; inserir no meio do array continua exigindo reordenar à mão.
+  const { _max } = await prisma.cadeira.aggregate({ _max: { ordem: true } });
+  let proximaOrdem = (_max.ordem ?? DEFAULT_SEATS.length - 1) + 1;
+
   let criadas = 0;
   for (const p of PROJETOS_CADEIRA) {
     const { slug: _slug, gateway: _gateway, ...dados } = p;
@@ -63,10 +80,13 @@ async function main() {
           exibirDaCasa: dados.exibirDaCasa,
           siteUrl: dados.siteUrl,
           repoUrl: dados.repoUrl,
+          polo: poloDe(dados.niche),
         },
       });
     } else {
-      await prisma.cadeira.create({ data: { ...dados, open: false, ordem: DEFAULT_SEATS.length + criadas } });
+      await prisma.cadeira.create({
+        data: { ...dados, open: false, polo: poloDe(dados.niche), ordem: proximaOrdem++ },
+      });
       criadas++;
     }
   }

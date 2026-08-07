@@ -25,13 +25,12 @@ assert.deepEqual(semSite, [], `projetos sem siteUrl caem no fallback por niche e
 // o visitante sem JS vê rótulo velho e o card fica byte-idêntico com a API em 200 ou em 500.
 // Regerar: `cd app && npm run gen:carteira`.
 const nichos = new Set(DEFAULT_SEATS.map((s) => s.niche));
-const esperado = PROJETOS_CADEIRA.filter((p) => !nichos.has(p.niche)).map((p, i) => ({
+const esperado = PROJETOS_CADEIRA.filter((p) => !nichos.has(p.niche)).map((p) => ({
   niche: p.niche,
   estado: p.estado,
   rotulo: rotuloPublico(p),
   nome: nomeExibido(p.status),
   siteUrl: p.siteUrl,
-  ordem: DEFAULT_SEATS.length + i,
 }));
 assert.deepEqual(carteira, esperado, 'site/src/data/carteira.ts desatualizado — rode `npm run gen:carteira`');
 

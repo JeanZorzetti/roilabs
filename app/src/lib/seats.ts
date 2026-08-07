@@ -3,19 +3,17 @@
 // so /admin edits reflect without a rebuild. This list seeds the DB and mirrors the
 // site's no-JS fallback in site/src/pages/index.astro; live data wins when JS runs.
 //
-// ⚠️ 012: NÃO confundir os dois "8". Aqui há 8 cadeiras de NICHO (o mapa do marketplace de
-// Goiânia, 2 ocupadas). A fase 1 da 012 tem 7 PROJETOS vendáveis — outra contagem, de outra
-// coisa, que por acidente ficou perto. Os projetos vivem em PROJETOS_CADEIRA, abaixo.
+// ⚠️ 07/08/2026 (decisão do Jean): os 5 nichos de construção em ESTUDO saíram do mapa —
+// `Materiais de construção`, `Esquadrias / Vidraçaria`, `Iluminação / Elétrica`,
+// `Marcenaria sob medida` e `Pisos / Deck externo`. Nenhum tinha parceiro, produto ou
+// candidatura. Restam 3 cadeiras de nicho, das quais só `Revestimentos / Porcelanato` está
+// em curadoria aberta. 🚨 O SEED NÃO DELETA: tirar daqui não tira do banco, e a home lê o
+// banco ao vivo — a remoção no banco foi por script (ver handoff-limpeza-construcao.md).
 //
 // `estado` é o campo que MÁQUINA lê (vaga | em-preparacao | ocupada-sem-produto |
 // ocupada-vendavel). `status` continua sendo texto de exibição e nenhuma decisão o lê.
 export const DEFAULT_SEATS = [
   { niche: 'Revestimentos / Porcelanato', status: 'Curadoria aberta', open: true, estado: 'vaga', daCasa: false, exibirDaCasa: false },
-  { niche: 'Materiais de construção', status: 'Em estudo', open: false, estado: 'vaga', daCasa: false, exibirDaCasa: false },
-  { niche: 'Esquadrias / Vidraçaria', status: 'Em estudo', open: false, estado: 'vaga', daCasa: false, exibirDaCasa: false },
-  { niche: 'Iluminação / Elétrica', status: 'Em estudo', open: false, estado: 'vaga', daCasa: false, exibirDaCasa: false },
-  { niche: 'Marcenaria sob medida', status: 'Em estudo', open: false, estado: 'vaga', daCasa: false, exibirDaCasa: false },
-  { niche: 'Pisos / Deck externo', status: 'Em estudo', open: false, estado: 'vaga', daCasa: false, exibirDaCasa: false },
   // Primeira cadeira ocupada: Tapepro (fitas adesivas personalizadas, B2B). open:false = fora
   // de curadoria (já preenchida). O link/estado visual "ocupada" vive no site (presentational).
   // daCasa:false — Tapepro é parceiro externo (spec 011), e a venda dela GERA success fee.

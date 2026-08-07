@@ -62,7 +62,10 @@ const jsonLdNodes = [
     '@type': 'WebPage',
     '@id': 'https://roilabs.com.br/polo-goiania/#webpage',
     url: 'https://roilabs.com.br/polo-goiania/',
-    name: 'Polo Goiânia — porcelanato: o que a cadeira ocupada recebe',
+    // ⚠️ 07/08: "cadeira ocupada" saiu de toda esta página. No banco a cadeira de porcelanato
+    // é `estado: vaga, open: true` — é a ÚNICA em curadoria aberta, e o mapa da home diz isso.
+    // As duas páginas são públicas: enquanto esta afirmava "ocupada", elas se contradiziam.
+    name: 'Polo Goiânia — porcelanato: o que a cadeira recebe',
     isPartOf: { '@id': 'https://roilabs.com.br/#website' },
     about: { '@id': 'https://roilabs.com.br/#service' },
     inLanguage: 'pt-BR',
@@ -81,7 +84,7 @@ const jsonLdNodes = [
 
 <Base
   title="Polo Goiânia — porcelanato: o case vivo | ROI Labs"
-  description="O que a cadeira ocupada recebe na prática: 98 páginas no ar, malha de intenção local, catálogo de 30 produtos, calculadora, comparador e feed Merchant Center. Fatos do build, sem promessa."
+  description="O que a cadeira de porcelanato recebe na prática: 98 páginas no ar, malha de intenção local, catálogo de 30 produtos, calculadora, comparador e feed Merchant Center. Fatos do build, sem promessa."
   jsonLdNodes={jsonLdNodes}
 >
   <Header />
@@ -94,8 +97,9 @@ const jsonLdNodes = [
           <span class="eyebrow">Polo 1 · case vivo</span>
           <h1 id="polo-title">Polo Goiânia — porcelanato: o que a cadeira recebe.</h1>
           <p class="section__lead">
-            A cadeira de porcelanato de Goiânia está ocupada e a operação está
-            no ar em <a href={POLO + '/'} target="_blank" rel="noopener" style="color:inherit">goiania.roilabs.com.br</a>.
+            A operação de porcelanato de Goiânia já está no ar em
+            <a href={POLO + '/'} target="_blank" rel="noopener" style="color:inherit">goiania.roilabs.com.br</a>
+            — e a cadeira dela segue em <strong>curadoria aberta</strong>.
             Esta página lista <strong>o que existe de verdade no build de jul/2026</strong>
             — páginas, catálogo, ferramentas — sem métrica inventada de venda ou
             tráfego. É a infraestrutura que a ROI Labs banca e que o próximo
@@ -128,7 +132,7 @@ const jsonLdNodes = [
       <div class="wrap">
         <div class="section__head">
           <span class="eyebrow">O inventário</span>
-          <h2 id="ativos-title">8 ativos que a cadeira ocupada recebe.</h2>
+          <h2 id="ativos-title">8 ativos que quem senta na cadeira recebe.</h2>
           <p class="section__lead">
             Cada item abaixo está no ar e é clicável. É o pacote de tecnologia
             que o parceiro não paga para construir — o custo é 100% da ROI Labs,
@@ -155,8 +159,8 @@ const jsonLdNodes = [
           <span class="eyebrow">A próxima cadeira</span>
           <h2 id="proximo-title">Isso, no seu nicho, sem custo fixo.</h2>
           <p class="section__lead">
-            O porcelanato ocupou a primeira cadeira de Goiânia. As demais —
-            outros nichos de material de alto padrão — seguem em curadoria.
+            A máquina de porcelanato já está construída e no ar — e a cadeira dela
+            é a única de Goiânia em curadoria aberta hoje.
             Entenda <a href="/modelo/" style="color:inherit">o modelo em profundidade</a>
             ou faça a conta com os seus números.
           </p>

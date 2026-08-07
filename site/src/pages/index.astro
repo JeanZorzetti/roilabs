@@ -31,11 +31,6 @@ const CANDIDATURAS_ENDPOINT = 'https://app.roilabs.com.br/api/candidaturas';
 // `open` — nunca só `open`. Cadeira ocupada NÃO é oferecida.
 const seats: { niche: string; status: string; open: boolean; estado: string; href?: string }[] = [
   { niche: 'Revestimentos / Porcelanato', status: 'Curadoria aberta', open: true, estado: 'vaga' },
-  { niche: 'Materiais de construção', status: 'Em estudo', open: false, estado: 'vaga' },
-  { niche: 'Esquadrias / Vidraçaria', status: 'Em estudo', open: false, estado: 'vaga' },
-  { niche: 'Iluminação / Elétrica', status: 'Em estudo', open: false, estado: 'vaga' },
-  { niche: 'Marcenaria sob medida', status: 'Em estudo', open: false, estado: 'vaga' },
-  { niche: 'Pisos / Deck externo', status: 'Em estudo', open: false, estado: 'vaga' },
   { niche: 'Fitas adesivas', status: 'Ocupada · Tapepro', open: false, estado: 'ocupada-vendavel', href: 'https://tapepro.roilabs.com.br/' },
   { niche: 'Ortodontia / Alinhadores', status: 'Ocupada · Atma Aligner', open: false, estado: 'ocupada-vendavel', href: 'https://atma.roilabs.com.br/' },
 ];
@@ -211,7 +206,7 @@ const jsonLdNodes = [
             </li>
           ))}
           {carteira.map((c) => (
-            <li class={`seat ${ocupada(c) ? 'seat--taken' : ''}`}>
+            <li class={`seat ${ocupada(c) ? 'seat--taken' : ''}`} data-projeto>
               <a class="seat__niche" href={c.siteUrl} target="_blank" rel="noopener">{c.niche} ↗</a>
               <span class="seat__status">
                 <span class="seat__ring" aria-hidden="true"></span>
@@ -229,7 +224,8 @@ const jsonLdNodes = [
     <script is:inline>
       // Mapa de cadeiras AO VIVO: busca o DB no navegador e sobrescreve o skeleton estático.
       // ponytail: casa por ÍNDICE — a API ordena por `ordem`, e o skeleton renderiza na mesma
-      // ordem (8 nichos de Goiânia 0..7 + as cadeiras de projeto 8..15, geradas de seats.ts).
+      // ordem (os nichos de Goiânia primeiro, depois as cadeiras de projeto geradas de
+      // seats.ts). O VALOR de `ordem` não é lido aqui; só a sequência importa.
       // Falhou o fetch? mantém o skeleton (degrada limpo) — que agora é o grid inteiro, e não
       // mais meia seção em branco.
       //
@@ -254,15 +250,18 @@ const jsonLdNodes = [
             ring.className = 'seat__ring';
             ring.setAttribute('aria-hidden', 'true');
             st.appendChild(ring);
-            // Cadeira de PROJETO (ordem 8+) tem outra legenda: `estado · nome`, e o selo
-            // "Da casa" SÓ quando `rotulo === 'casa'` (decisão do Jean, 07/08 — opção C).
+            // Cadeira de PROJETO tem outra legenda: `estado · nome`, e o selo "Da casa" SÓ
+            // quando `rotulo === 'casa'` (decisão do Jean, 07/08 — opção C).
+            // ⚠️ Quem é cadeira de projeto vem do `data-projeto` que o skeleton marca — o
+            // Astro já sabe (são as do `carteira.map`). Comparar `s.ordem >= 8` era constante
+            // escrita à mão que quebrava sozinha ao mudar o tamanho do mapa de nichos.
             // O nome sai do `status` do /admin ("Ocupada · Polaris IA"), o mesmo lugar de onde
             // o skeleton o extrai em `nomeExibido`; mudar um sem o outro faz a legenda piscar.
             // ⚠️ FR-010a: `rotulo`, NUNCA `daCasa`. Sem selo agora SIGNIFICA parceiro — é o
             // preço da opção C, e é como os cards de nicho (Tapepro, Atma) já se apresentam.
             const nome = String(s.status || '').split('·').pop().trim();
             const texto =
-              s.ordem >= 8
+              li.dataset.projeto !== undefined
                 ? (ESTADO[s.estado] || s.estado) +
                   (nome ? ' · ' + nome : '') +
                   (s.rotulo === 'casa' ? ' · Da casa' : '')
@@ -510,11 +509,6 @@ const jsonLdNodes = [
               <label for="f-cat">Categoria / nicho</label>
               <select id="f-cat" name="categoria">
                 <option>Revestimentos / Porcelanato</option>
-                <option>Materiais de construção</option>
-                <option>Esquadrias / Vidraçaria</option>
-                <option>Iluminação / Elétrica</option>
-                <option>Marcenaria sob medida</option>
-                <option>Pisos / Deck externo</option>
                 <option>Outro</option>
               </select>
             </div>

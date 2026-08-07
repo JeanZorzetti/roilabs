@@ -1,5 +1,32 @@
 # Handoff — limpar construção + o "1 ocupada" do /admin (07/08/2026, fim do dia)
 
+> ## ✅ EXECUTADO em 07/08/2026 — este handoff está FECHADO
+>
+> **Decisões do Jean:** (a) OrçaObra **FICA** · (b) os **9 posts ficam** · (d) a cadeira de
+> porcelanato é **"curadoria aberta"** (o banco manda) · escopo = itens 1 **e** 2.
+>
+> **Banco, medido depois:** `Cadeira: 11` · polos `Goiânia: 3` / `Carteira: 8` ·
+> `ordem: 0,1,2,8..15` · `ProdutoCadeira: 0` · `Parceiro: 1` · `Candidatura: 0`.
+> As 5 cadeiras (`seat-1`..`seat-5`) foram deletadas por script, com guarda fail-closed
+> (aborta se qualquer uma tivesse parceiro, produto ou não estivesse `vaga`). O script foi
+> apagado depois. `npm test` 18/18, `npx tsc --noEmit` limpo, `npx astro build` com
+> **11 `<li class="seat">`** no HTML gerado e o `<select>` com 2 `<option>`.
+>
+> **O que foi ALÉM do combinado, e por quê:**
+> - **`ordem` saiu do skeleton gerado** (`site/src/data/carteira.ts`). Ninguém no `site` a
+>   lia, e ela era derivada de `DEFAULT_SEATS.length` — com o mapa em 3, passaria a dizer
+>   3..10 contra os 8..15 do banco. O que alinha card com linha é a POSIÇÃO no grid.
+> - **O seed passou a criar cadeira de projeto com `max(ordem)+1`.** `DEFAULT_SEATS.length +
+>   criadas` daria `ordem: 3` na próxima cadeira nova: a API ordena por `ordem` e a serviria
+>   ANTES do bloco 8..15, enquanto o skeleton a desenha por último — o laço ao vivo casa por
+>   índice, então TODOS os cards receberiam o dado do vizinho.
+> - **`polo` explícito nas cadeiras de projeto** (`'Carteira'`), com a mesma exceção do
+>   `gen-carteira`: projeto cujo `niche` já é cadeira de nicho (a `atma`) continua em Goiânia.
+>
+> **O que continua aberto:** `ProdutoCadeira` vazia — **0 de 11 cadeiras conseguem receber
+> pagamento**, e agora o painel diz isso na cara. Nenhuma linha de código conserta isso;
+> é cadastro de produto + credencial de gateway.
+
 > Arquivo NOVO. Não confundir com [handoff.md](./handoff.md) (histórico da feature),
 > [handoff-proxima-sessao.md](./handoff-proxima-sessao.md) (fechado) nem com
 > [handoff-nomes-e-ocupacao.md](./handoff-nomes-e-ocupacao.md) — **aquele está fechado**:

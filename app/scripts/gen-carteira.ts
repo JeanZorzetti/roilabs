@@ -25,7 +25,7 @@ import { nomeExibido, rotuloPublico } from '../src/lib/carteira/produto';
 // próprio — ele ocupa a linha do mapa de Goiânia. Derivar isso daqui evita o card duplicado
 // que uma lista escrita à mão produziria na primeira distração.
 const nichos = new Set<string>(DEFAULT_SEATS.map((s) => s.niche));
-const carteira = PROJETOS_CADEIRA.filter((p) => !nichos.has(p.niche)).map((p, i) => ({
+const carteira = PROJETOS_CADEIRA.filter((p) => !nichos.has(p.niche)).map((p) => ({
   niche: p.niche,
   estado: p.estado,
   // FR-010a: `rotulo` resolvido, NUNCA `daCasa` — a mesma projeção que /api/cadeiras aplica.
@@ -35,8 +35,10 @@ const carteira = PROJETOS_CADEIRA.filter((p) => !nichos.has(p.niche)).map((p, i)
   // JÁ resolvido porque `site/` não consegue importar de `app/` (o Docker copia só site/).
   nome: nomeExibido(p.status),
   siteUrl: p.siteUrl,
-  // `ordem` é o que alinha este card com o índice do array de /api/cadeiras no navegador.
-  ordem: DEFAULT_SEATS.length + i,
+  // ⚠️ `ordem` NÃO é emitida (07/08): ninguém no `site` a lia, e ela era um valor derivado de
+  // `DEFAULT_SEATS.length` que passou a divergir do banco assim que o mapa de nichos encolheu
+  // (skeleton diria 3..10, banco serve 8..15). O que alinha card com linha é a POSIÇÃO no
+  // grid, não o número — o laço ao vivo de index.astro casa por índice do DOM.
 }));
 
 const destino = fileURLToPath(new URL('../../site/src/data/carteira.ts', import.meta.url));
@@ -54,7 +56,6 @@ export const carteira: {
   rotulo: 'casa' | 'parceiro';
   nome: string;
   siteUrl: string;
-  ordem: number;
 }[] = ${JSON.stringify(carteira, null, 2)};
 `,
   'utf8'

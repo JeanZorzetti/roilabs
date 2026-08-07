@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
 import { derivarOcupacao } from '@/lib/ocupacao';
+import { decidirCheckout } from '@/lib/carteira/produto';
 import { breakdownOrigem, bucketOrigem } from '@/lib/origem';
 
 export const dynamic = 'force-dynamic';
@@ -42,7 +43,14 @@ export default async function PainelPage() {
       _count: { id: true },
     }),
     prisma.pedido.count({ where: { statusPagamento: 'pago', statusFulfillment: 'aguardando' } }),
-    prisma.cadeira.findMany({ select: { polo: true, parceiros: { select: { estagio: true, contratoEm: true } } } }),
+    prisma.cadeira.findMany({
+      select: {
+        polo: true,
+        estado: true,
+        produto: true,
+        parceiros: { select: { estagio: true, contratoEm: true, nome: true, _count: { select: { credenciais: true } } } },
+      },
+    }),
     prisma.pedido.count({ where: { statusPagamento: 'pago', createdAt: { gte: d7 } } }),
     prisma.leadConsumidor.count({ where: { createdAt: { gte: d7 } } }),
     prisma.leadConsumidor.findMany({
@@ -62,14 +70,33 @@ export default async function PainelPage() {
   const gmvPagoMes = Number(gmvMes._sum.total ?? 0);
   const pedidosPagosMes = gmvMes._count.id;
 
-  const polosMap = new Map<string, { ocupadas: number; prospeccao: number; abertas: number }>();
+  // ⚠️ TRÊS RÉGUAS, e o card mostrava só a primeira sem dizer que era uma escolha:
+  //   `Parceiro.contratoEm` → quantas têm CONTRATO assinado (é o que `derivarOcupacao` lê,
+  //   e é a régua do success fee — não trocar por `estado`);
+  //   `estado === 'ocupada-vendavel'` → quantas a curadoria MARCOU como vendáveis;
+  //   `decidirCheckout` → quantas conseguem RECEBER dinheiro hoje. Esta é a que decide o mês,
+  //   e em 07/08 dava 0 em 16 (ProdutoCadeira vazia). É a mesma função que /api/cadeiras
+  //   chama, com as mesmas entradas — import, não regra nova.
+  type Contagem = { ocupadas: number; prospeccao: number; abertas: number; vendaveis: number; recebem: number };
+  const polosMap = new Map<string, Contagem>();
   for (const cadeira of cadeiraGroups) {
-    if (!polosMap.has(cadeira.polo)) polosMap.set(cadeira.polo, { ocupadas: 0, prospeccao: 0, abertas: 0 });
+    if (!polosMap.has(cadeira.polo))
+      polosMap.set(cadeira.polo, { ocupadas: 0, prospeccao: 0, abertas: 0, vendaveis: 0, recebem: 0 });
     const entry = polosMap.get(cadeira.polo)!;
     const estado = derivarOcupacao(cadeira.parceiros);
     if (estado === 'ocupada') entry.ocupadas += 1;
     else if (estado === 'prospeccao') entry.prospeccao += 1;
     else entry.abertas += 1;
+
+    if (cadeira.estado === 'ocupada-vendavel') entry.vendaveis += 1;
+    const ativo = cadeira.parceiros.find((p) => p.estagio === 'ativa') ?? null;
+    const checkout = decidirCheckout({
+      estado: cadeira.estado,
+      produto: cadeira.produto ? { ...cadeira.produto, preco: Number(cadeira.produto.preco) } : null,
+      parceiroNome: ativo?.nome ?? null,
+      gatewayLigado: (ativo?._count.credenciais ?? 0) > 0,
+    });
+    if (checkout.tipo !== 'indisponivel') entry.recebem += 1;
   }
   const polos = [...polosMap.entries()].map(([polo, c]) => ({ polo, ...c }));
 
@@ -191,13 +218,18 @@ export default async function PainelPage() {
               <div className="cc-note">Execute db:seed para carregar o mapa inicial</div>
             </div>
           ) : (
-            polos.map(({ polo, ocupadas, prospeccao, abertas }) => (
+            polos.map(({ polo, ocupadas, prospeccao, abertas, vendaveis, recebem }) => (
               <Link key={polo} href="/admin/cadeiras" className="cc-card painel-card-link">
                 <div className="cc-card__label">Ocupação · {polo}</div>
                 <div className="cc-card__value">
-                  <span style={{ color: '#166534' }}>{ocupadas}</span> ocupadas{' '}
+                  <span style={{ color: '#166534' }}>{ocupadas}</span> com contrato{' '}
                   · <span className="painel-estudo">{prospeccao}</span> em prospecção{' '}
-                  · <span className="painel-abertas">{abertas}</span> abertas
+                  · <span className="painel-abertas">{abertas}</span> sem parceiro
+                </div>
+                <div className="cc-card__value" style={{ fontSize: '0.9rem', marginTop: '0.25rem' }}>
+                  {vendaveis} marcadas vendáveis ·{' '}
+                  <span className={recebem === 0 ? 'painel-alert' : undefined}>{recebem}</span> conseguem
+                  receber pagamento
                 </div>
                 <div className="cc-note">{ocupadas + prospeccao + abertas} cadeiras no total</div>
               </Link>
