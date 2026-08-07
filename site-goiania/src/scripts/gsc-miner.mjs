@@ -7,6 +7,9 @@
 //   2. Quase lá (striking distance) — páginas dedicadas em posição 8–30: interlink/conteúdo
 //      empurra pro top; são as vitórias mais baratas.
 //
+// Faz também UMA escrita: reenvia o sitemap (ver o fim do arquivo). O Google aposentou o
+// endpoint de ping em 2023 e a API do Search Console virou o único jeito programático.
+//
 // Auth: service account (JSON inteiro no env GSC_SA_KEY) com acesso de leitura à
 // propriedade — setup passo a passo em Docs/Obsidian/80-dev/gsc-miner-setup.md.
 // SEM GSC_SA_KEY o script é no-op (exit 0) — o cron roda sem quebrar até a chave existir.
@@ -35,7 +38,8 @@ const b64 = (o) => Buffer.from(JSON.stringify(o)).toString('base64url');
 const now = Math.floor(Date.now() / 1000);
 const unsigned = `${b64({ alg: 'RS256', typ: 'JWT' })}.${b64({
   iss: sa.client_email,
-  scope: 'https://www.googleapis.com/auth/webmasters.readonly',
+  // `webmasters` e não `.readonly`: o reenvio do sitemap no fim do arquivo é um PUT.
+  scope: 'https://www.googleapis.com/auth/webmasters',
   aud: 'https://oauth2.googleapis.com/token',
   iat: now,
   exp: now + 3600,
@@ -203,3 +207,23 @@ ${quaseLa.map(linha).join('\n') || '| — | nenhuma na faixa ainda | | | |'}
 );
 
 console.log(`gsc-miner: ${novas.length} candidatas a página nova, ${quaseLa.length} em striking distance → ${path.relative(ROOT, NOTE)}`);
+
+// ── Reenvio do sitemap. 🚨 Em 07/08/2026 o Google tinha baixado o sitemap UMA vez, em
+// 03/07, com 75 URLs. As fitas subiram em 22/07 e as 4 URLs delas nunca entraram na cópia
+// que ele lê: URL Inspection devolvia "O Google não reconhece o URL" nas quatro, com o
+// site em 200 e linkado da home indexada. Nada no deploy avisava o Google — o `postbuild`
+// só fala com o IndexNow (Bing/Yandex). Um PUT por semana é o preço de nunca mais
+// publicar uma malha inteira para um índice que não sabe que ela existe.
+// ponytail: mora aqui em vez de virar script próprio porque o token já está nesta linha
+// de execução e este é o único cron com a chave. Vira arquivo separado se ganhar 2º uso.
+const SITEMAP = process.env.GSC_SITEMAP ?? 'https://goiania.roilabs.com.br/sitemap.xml';
+const ping = await fetch(
+  `https://www.googleapis.com/webmasters/v3/sites/${encodeURIComponent(SITE)}/sitemaps/${encodeURIComponent(SITEMAP)}`,
+  { method: 'PUT', headers: { Authorization: `Bearer ${token}` } }
+);
+// Non-fatal de propósito: a medição da semana já está escrita e vale mesmo sem o reenvio.
+console.log(
+  ping.ok
+    ? `gsc-miner: sitemap reenviado (${SITEMAP})`
+    : `gsc-miner: reenvio do sitemap falhou — HTTP ${ping.status} (a SA tem permissão de escrita na propriedade?)`
+);
