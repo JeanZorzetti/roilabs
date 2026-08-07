@@ -61,7 +61,7 @@ E o corolário desagradável: **para as cadeiras da doença (A), esta feature li
 não traz cliente.** Isso é aceito de propósito — ligar a cobrança é pré-requisito de faturar,
 não substituto de demanda. Ver "Out of scope".
 
-### 🚩 O teto da spec 011 foi atingido — e ela previu isto
+### 🚩 O teto da spec 011 NÃO disparou — e a decisão de pagamento é o motivo
 
 A spec 011 (fitas Tapepro) travou "vertical paralelo" e registrou o teto em antecipação:
 
@@ -69,14 +69,36 @@ A spec 011 (fitas Tapepro) travou "vertical paralelo" e registrou o teto em ante
 > torna a duplicação insustentável**. O caminho de upgrade — generalizar o item de pedido —
 > fica registrado para quando isso acontecer (Constituição III)."*
 
-**Este é o momento.** Das 8 cadeiras vendáveis da fase 1, **seis são SaaS de assinatura
-recorrente** (`sirius`, `polarisia`, `estetiacrm`, `context`, `orion`, `vertice`). Assinatura
-é a terceira unidade — e é pior que a terceira, porque é a primeira **recorrente**:
-`porcelanato` vende m², `fitas` vende rolo, ambos uma vez. Um terceiro `ItemPedidoX` copiado
-viraria 35 tabelas.
+A primeira leitura desta spec foi que o teto tinha sido atingido: seis das oito cadeiras da
+fase 1 são **SaaS de assinatura recorrente**, e assinatura seria a terceira unidade. **A decisão
+de pagamento por tipo de cadeira (2026-08-07) desarma isso**, e vale registrar por quê — porque
+o raciocínio se repete a cada cadeira nova.
 
-**Esta spec executa o caminho de upgrade que a 011 registrou.** Não é reabertura da decisão da
-011 — é o gatilho dela disparando, na condição que ela mesma nomeou.
+**São dois eixos independentes, e só um deles é o `ItemPedido`:**
+
+| eixo | o que decide | quem toca |
+|---|---|---|
+| **Unidade de venda** | m² · rolo · assinatura | `ItemPedido` — só existe se houver pedido interno |
+| **Quem processa** | carrinho da ROI Labs × gateway do parceiro | fluxo de checkout |
+
+Com "físico → ROI Labs cobra, SaaS → parceiro cobra", o carrinho da ROI Labs serve **exatamente
+porcelanato (m²) e fitas (rolo)** — as duas unidades que já existem. As cadeiras SaaS **nunca
+criam pedido interno**: o cliente compra no gateway do parceiro e o que nasce aqui é um
+`NegocioOriginado`, que já é agnóstico de unidade (specs 007/010).
+
+**Logo: nenhuma terceira unidade entra no `ItemPedido`, e o atalho da 011 continua válido.**
+Generalizar o caminho de dinheiro agora seria construir para uma necessidade que a decisão
+comercial acabou de tornar hipotética — exatamente o que a Constituição III proíbe.
+
+**O gatilho fica registrado, redefinido com precisão:** generalizar o item de pedido quando
+**uma terceira unidade entrar no carrinho da própria ROI Labs** — isto é, quando surgir uma
+cadeira de produto físico/único cuja unidade não seja m² nem rolo. Cadeira SaaS nova **não**
+dispara isso, por mais que se somem.
+
+⚠️ **O preço desta escolha, declarado:** para 6 das 8 cadeiras da fase 1, a ROI Labs **não vê o
+dinheiro passar**. A apuração de receita e de success fee passa a depender de webhook do gateway
+do parceiro ou de informe dele — e "o parceiro informa" é uma fonte que esta casa já sabe que
+apodrece. Ver FR-005 e o risco em Success Criteria.
 
 ## Clarifications
 
@@ -93,73 +115,99 @@ viraria 35 tabelas.
   tópica. → A: **Reposicionar o domínio.** Deixa de ter recorte geográfico; porcelanato vira uma
   vertical entre outras.
 
-### Pendentes (bloqueiam `plan`)
+### Session 2026-08-07 — segunda rodada (decisões do Jean, não reabrir)
 
-- **[NEEDS CLARIFICATION: qual o domínio/subdomínio de destino do e-commerce reposicionado?]**
-  Decide os redirects, os certificados e o que acontece com as 41 páginas pSEO + 5 guias hoje
-  indexadas em `goiania.roilabs.com.br`. ⚠️ Cert Universal da Cloudflare cobre apex + **um**
-  label — subdomínio de segundo nível quebra no handshake.
-- **[NEEDS CLARIFICATION: quem processa o pagamento da cadeira SaaS — a ROI Labs (marketplace
-  cobra e repassa) ou o parceiro (checkout dele, ROI Labs fatura o fee depois)?]** Muda tudo:
-  a primeira exige split/repasse e responsabilidade fiscal; a segunda mantém o modelo atual de
-  `NegocioOriginado` + `FaturaSuccessFee` e é muito mais barata.
-- **[NEEDS CLARIFICATION: cadeira ocupada por projeto DA PRÓPRIA CASA conta como parceiro?]**
-  `sirius`, `polarisia` e `estetiacrm` são da ROI Labs. Cobrar success fee de si mesmo infla
-  faturamento com dinheiro que não existe — o mesmo defeito dos 20 pagamentos de teste da Atma.
+- Q: Quem processa o pagamento da cadeira SaaS? → A: **Depende do tipo de cadeira.** Produto
+  físico → carrinho da ROI Labs (porcelanato, fitas). SaaS → **gateway do parceiro**; a ROI Labs
+  registra o negócio e fatura o success fee depois. Consequência de engenharia registrada acima:
+  isto **desarma** a generalização do `ItemPedido`.
+- Q: Cadeira ocupada por projeto da própria casa conta como parceiro? → A: **Marcada como "da
+  casa" SEMPRE no dado interno** (nunca gera success fee de si mesma). **No site público, exibida
+  como parceiro**, com **três exceções que aparecem como "da casa" também publicamente:
+  `sirius`, `meridian` e `orion`.**
+- Q: Para onde vai o e-commerce reposicionado? → A: **Subdomínio novo em `roilabs.com.br`**
+  (um label, coberto pelo cert Universal da Cloudflare). A malha de porcelanato vem junto por
+  301, sob pasta própria.
+
+### Pendentes
+
+- **[NEEDS CLARIFICATION: qual o label do subdomínio?]** Não bloqueia o `plan` — assumido
+  `loja.roilabs.com.br` (ver Assumptions); trocar o label é uma linha de config enquanto o corte
+  não aconteceu.
+- **[NEEDS CLARIFICATION: como a venda do parceiro chega até aqui — webhook do gateway dele,
+  ou informe manual?]** **Bloqueia o `plan`**: decide se `SC-001` é apurável por máquina ou se a
+  receita da carteira passa a ser um número declarado. Esta casa já mediu o custo disso — a
+  memória guardava quatro contagens defasadas do mesmo número quando a fonte era escrita à mão.
+
+### ⚠️ Risco registrado na decisão da cadeira da casa
+
+Exibir publicamente como parceiro uma cadeira que é da casa é **decisão de posicionamento do
+Jean**, tomada com o risco declarado: o institucional usa cadeira ocupada como **prova social**
+para o ICP B2B, e 5 das 8 cadeiras da fase 1 seriam da casa exibidas como externas. O limite
+que esta spec impõe é objetivo e não negociável: **nenhum número de faturamento, fee ou
+"receita da carteira" pode somar cadeira da casa** (FR-010). Posicionamento é escolha; número
+inflado é o mesmo defeito dos 20 pagamentos de teste da Atma.
 
 ## User Scenarios & Testing *(mandatory)*
 
-### User Story 1 - Um item de pedido que serve qualquer unidade (Priority: P1)
+### User Story 1 - A venda da cadeira SaaS chega até a carteira (Priority: P1)
 
-Como operador da carteira, quero um caminho de dinheiro que aceite **qualquer unidade de venda**
-— m², rolo, assinatura mensal, licença — para que ocupar uma cadeira nova não exija uma tabela
-nova, um cálculo novo e uma tela nova a cada vez.
+Como operador da carteira, quero que uma compra feita no **gateway do parceiro** vire um
+`NegocioOriginado` aqui — sem pedido interno e sem eu digitar nada — para que o success fee seja
+apurável por máquina em vez de declarado.
 
-**Why this priority**: é o teto registrado na 011 disparando. Sem isso, cada uma das 33 cadeiras
-restantes custa uma duplicação do caminho de dinheiro. É o alicerce de todas as outras histórias
-e o único item desta spec que é irreversível se feito errado.
+**Why this priority**: é o que a decisão de pagamento por tipo de cadeira criou. Seis das oito
+cadeiras da fase 1 vendem fora do carrinho da ROI Labs; se a venda não chega até aqui
+automaticamente, **a receita da carteira vira um número escrito à mão** — e esta casa já mediu o
+que acontece com número escrito à mão (quatro contagens defasadas do mesmo fato no corpus).
+Sem esta história, `SC-001` não é verificável.
 
-**Independent Test**: criar um pedido com um item em unidade "assinatura mensal" e outro em
-"rolo" no mesmo schema, fechar os dois, e conferir que o snapshot de preço, o subtotal e a
-auditoria funcionam para ambos sem código específico de vertical.
+**Independent Test**: completar uma compra real no gateway de **uma** cadeira SaaS e ver o
+`NegocioOriginado` nascer sozinho, classificado e com a taxa congelada — sem intervenção manual.
 
 **Acceptance Scenarios**:
 
-1. **Given** o caminho de dinheiro generalizado, **When** um pedido é fechado com item em
-   unidade arbitrária, **Then** `quantidade`, `precoUnitario` e `subtotal` ficam persistidos
-   como snapshot e o subtotal é recalculado no servidor.
-2. **Given** os pedidos de porcelanato e de fitas já existentes, **When** a generalização entra,
-   **Then** **nenhum pedido histórico muda de valor** e a auditoria de faixa das fitas continua
-   reconstruível.
-3. **Given** um preço vindo do cliente, **When** o servidor monta o item, **Then** o preço do
-   cliente é **ignorado** e a autoridade de preço é do servidor.
+1. **Given** uma cadeira SaaS ligada, **When** um cliente completa a compra no gateway do
+   parceiro, **Then** nasce um `NegocioOriginado` com taxa congelada na criação (spec 010), sem
+   `Pedido` interno.
+2. **Given** o mesmo evento entregue duas vezes (retry do gateway), **When** processado,
+   **Then** o negócio **não** duplica — caminho de dinheiro é idempotente por id do evento.
+3. **Given** um pagamento aprovado em `live_mode` cujo payer é conta de teste, **When** a régua
+   apura receita, **Then** ele **NÃO** conta como venda (`lib/vendas.mjs`), com o motivo do
+   descarte na saída.
+4. **Given** um evento que a ROI Labs não consegue atribuir a nenhuma cadeira, **When**
+   recebido, **Then** ele é registrado como não-atribuído e **falha fechada** — nunca somado a
+   uma cadeira por aproximação.
+5. **Given** uma cadeira **da casa**, **When** uma venda dela é registrada, **Then** ela entra
+   como receita direta e **não** gera success fee (FR-010).
 
 ---
 
-### User Story 2 - Uma cadeira ocupada vira produto com checkout (Priority: P1)
+### User Story 2 - Uma cadeira ocupada vira produto comprável (Priority: P1)
 
 Como cliente final, quero abrir a página de uma cadeira ocupada, ver o que é, quanto custa e
-comprar ali — para que a ROI Labs origine o negócio e o parceiro receba o cliente.
+comprar — sem descobrir no meio do caminho que ali não se compra nada.
 
 **Why this priority**: é o objetivo declarado da feature. Sem isso, a carteira continua com
 **receita provada de R$ 0,00** e seis cadeiras que publicam preço e não cobram.
 
-**Independent Test**: publicar **uma** cadeira (a de menor risco entre as 6 que já servem preço),
-completar uma compra de ponta a ponta em produção com cartão real, e ver o `NegocioOriginado`
-nascer com a taxa de aquisição correta.
+**Independent Test**: publicar **uma** cadeira entre as 6 que já servem preço, completar uma
+compra de ponta a ponta em produção com cartão real, e ver o `NegocioOriginado` nascer com a
+taxa de aquisição correta.
 
 **Acceptance Scenarios**:
 
-1. **Given** uma cadeira ocupada com preço publicado, **When** o cliente completa o checkout,
-   **Then** nasce um `NegocioOriginado` classificado como **aquisição** com a taxa congelada na
-   criação (spec 010).
-2. **Given** um segundo pedido do **mesmo** cliente com o mesmo parceiro, **When** o checkout
-   fecha, **Then** o negócio é classificado como **recorrência** e cobra a taxa menor.
-3. **Given** um pagamento aprovado em `live_mode` cujo payer é conta de teste, **When** a régua
-   apura receita, **Then** ele **NÃO** é contado como venda (`lib/vendas.mjs`, motivo do descarte
-   na saída).
-4. **Given** uma cadeira sem gateway ligado, **When** alguém abre a página, **Then** ela **não**
-   oferece checkout — nunca um botão que leva a lugar nenhum.
+1. **Given** uma cadeira de **produto físico**, **When** o cliente compra, **Then** o fluxo é o
+   carrinho da ROI Labs e nasce um `Pedido` — sem mudança no caminho de dinheiro existente.
+2. **Given** uma cadeira **SaaS**, **When** o cliente clica em comprar, **Then** ele é levado ao
+   gateway do parceiro com atribuição que permita ligar a venda de volta à cadeira (US1).
+3. **Given** um segundo negócio do **mesmo** cliente com o mesmo parceiro, **When** ele fecha,
+   **Then** é classificado como **recorrência** e cobra a taxa menor (spec 010).
+4. **Given** uma cadeira **sem** gateway ligado, **When** alguém abre a página, **Then** ela
+   **não** oferece checkout — nunca um botão que leva a lugar nenhum.
+5. **Given** o cliente sai para o gateway do parceiro, **When** a transição acontece, **Then**
+   fica explícito de quem é a página de pagamento — comprador que não sabe a quem está pagando
+   é chargeback.
 
 ---
 
@@ -278,18 +326,21 @@ ele aparece no admin, **não** gera URL pública indexável e **não** oferece c
 
 **Caminho de dinheiro (P1)**
 
-- **FR-001**: O sistema DEVE representar item de pedido em **unidade arbitrária**
-  (`unidade`, `quantidade`, `precoUnitario`, `subtotal`), executando o caminho de upgrade
-  registrado na spec 011.
-- **FR-002**: A migração DEVE preservar **valor e auditoria** de todo pedido histórico de
-  porcelanato e de fitas — incluindo a faixa aplicada das fitas.
-- **FR-003**: O `precoUnitario` DEVE ser **snapshot** no fechamento; mudança de tabela posterior
-  não altera pedido fechado.
-- **FR-004**: A autoridade de preço DEVE ser do **servidor**; valor vindo do cliente é ignorado.
-- **FR-005**: O sistema DEVE suportar unidade **recorrente** (assinatura), distinguindo-a de
-  unidade de compra única — é o que separa aquisição de recorrência na spec 010.
+- **FR-001**: O caminho de dinheiro de porcelanato e de fitas **NÃO muda**. `ItemPedido` (m²) e
+  `ItemPedidoFita` (rolo) permanecem como estão — o gatilho de generalização da spec 011 não
+  disparou (ver Contexto) e generalizar agora seria construir para necessidade hipotética.
+- **FR-002**: Cadeira **SaaS** NÃO DEVE criar `Pedido` interno. A venda vira `NegocioOriginado`
+  diretamente, que já é agnóstico de unidade (specs 007/010).
+- **FR-003**: O sistema DEVE registrar a venda do parceiro **sem digitação manual**
+  — **[NEEDS CLARIFICATION: webhook do gateway do parceiro ou informe? bloqueia `plan`]**.
+- **FR-004**: O registro de venda DEVE ser **idempotente por id de evento** — retry de gateway
+  não pode duplicar negócio.
+- **FR-005**: Evento não atribuível a nenhuma cadeira DEVE **falhar fechada**: registrado como
+  não-atribuído, nunca somado a uma cadeira por aproximação.
 - **FR-006**: Receita apurada DEVE excluir pagamento cujo payer é conta de teste, mesmo com
-  `approved` + `live_mode: true`, registrando o motivo do descarte.
+  `approved` + `live_mode: true`, registrando o motivo do descarte (`lib/vendas.mjs`).
+- **FR-006a**: A taxa aplicada DEVE ser congelada na **criação** do negócio (spec 010); mudar a
+  taxa do parceiro depois só afeta negócios futuros.
 
 **Cadeira e catálogo (P1/P3)**
 
@@ -297,25 +348,39 @@ ele aparece no admin, **não** gera URL pública indexável e **não** oferece c
   distinga ao menos: vaga · em preparação · ocupada sem produto publicado · ocupada e vendável.
 - **FR-008**: Cadeira sem gateway ligado NÃO DEVE oferecer checkout.
 - **FR-009**: Cadeira em estado não-vendável NÃO DEVE gerar URL pública indexável.
-- **FR-010**: Cadeira ocupada por projeto **da própria casa** DEVE ser distinguível de cadeira
-  ocupada por parceiro externo, em dado e na exibição.
-- **FR-011**: O sistema DEVE impedir que o mesmo repositório seja contado como duas cadeiras.
+- **FR-010**: Cadeira da casa DEVE ser marcada como tal **no dado, sempre**, e **nunca gerar
+  success fee de si mesma** — a receita dela entra como receita direta. **Nenhum agregado de
+  faturamento, fee ou "receita da carteira" pode somar cadeira da casa.**
+- **FR-010a**: A exibição pública é **independente** da marcação interna: cadeira da casa é
+  exibida como parceiro, **exceto `sirius`, `meridian` e `orion`**, que aparecem como "da casa"
+  também publicamente. A lista de exceções é dado, não condição no código.
+- **FR-011**: O sistema DEVE impedir que o mesmo repositório seja contado como duas cadeiras
+  (`goiania` e `roilabs` são o mesmo repo).
 
 **Página pública (P1)**
 
 - **FR-012**: A página de cadeira DEVE servir conteúdo substantivo no **HTML inicial**.
 - **FR-013**: A página DEVE trazer `Product`/`Offer` com preço e `FAQPage` dentro do `@graph`
   único do site.
-- **FR-014**: A página DEVE ter conteúdo rico e design premium (Constituição IV) —
-  **[NEEDS CLARIFICATION: qual o piso objetivo? a Atma venceu com ~870 linhas de conteúdo denso;
-  a spec precisa de um critério que não seja "parece bom"]**.
+- **FR-014**: A página DEVE ter conteúdo rico e design premium (Constituição IV), com **piso
+  objetivo**: ≥ 800 palavras no HTML inicial, a pergunta de preço respondida **explicitamente**
+  no corpo (não só no `Offer`), e ≥ 6 pares de FAQ. É **piso contra página fina, não promessa de
+  ranking** — a medição da Atma provou que esforço por artigo não prediz tráfego (o vencedor é o
+  6º maior de 22). Contar palavra **não** se faz com `sed 's/<script[^>]*>.*<\/script>//g'`: em
+  HTML minificado o `.*` guloso come até o último `</script>` e devolve 0 palavra em página com
+  `<h1>`.
 
 **Domínio (P2)**
 
 - **FR-015**: Toda URL indexada hoje em `goiania.roilabs.com.br` DEVE responder **301** para a
-  equivalente no destino — nunca 404, nunca 302.
-- **FR-016**: O sitemap do destino DEVE ser submetido e baixado com `errors: 0`.
-- **FR-017**: O host de destino DEVE completar handshake TLS antes do corte.
+  equivalente no subdomínio de destino — nunca 404, nunca 302.
+- **FR-016**: O sitemap do destino DEVE ser submetido e baixado com `errors: 0`. ⚠️ Status 200 no
+  sitemap **não** prova deploy: validar o corpo (`<?xml`), nunca o status.
+- **FR-017**: O host de destino DEVE completar handshake TLS **antes** do corte, verificado sem
+  `curl -k` — a flag esconde exatamente o erro de cert que derruba o browser.
+- **FR-017a**: O destino DEVE ser um subdomínio de **um label** sob `roilabs.com.br` (cert
+  Universal da Cloudflare cobre apex + um label; um segundo nível quebra no handshake, como já
+  acontece com `www.sirius` e `www.goiania`).
 - **FR-018**: A malha pSEO de porcelanato (41 páginas + 5 guias) DEVE permanecer intacta em
   conteúdo — ela é a moeda de troca que vende a cadeira vaga (spec 011).
 
@@ -330,29 +395,37 @@ ele aparece no admin, **não** gera URL pública indexável e **não** oferece c
 - **Cadeira**: um nicho da carteira. Atributos: nicho, estado, projeto/parceiro que a ocupa,
   origem (casa × externo), produto vendável associado. Hoje vive em `app/src/lib/seats.ts`
   (SEED) + banco (fonte de verdade).
-- **Produto de cadeira**: o que se vende naquela cadeira. Atributos: unidade de venda, preço,
-  recorrência, gateway. **Zero ou um por cadeira na fase 1** (produto único; catálogo com
-  múltiplos SKUs continua exclusivo de porcelanato e fitas).
-- **ItemPedido generalizado**: `unidade` + `quantidade` + `precoUnitario` + `subtotal` + snapshot
-  de auditoria. Substitui a duplicação `ItemPedido` (m²) × `ItemPedidoFita` (rolo).
+- **Produto de cadeira**: o que se vende naquela cadeira. Atributos: preço, recorrência, **modo
+  de cobrança** (carrinho da ROI Labs × gateway do parceiro) e destino do checkout. **Zero ou um
+  por cadeira na fase 1**; catálogo com múltiplos SKUs continua exclusivo de porcelanato e fitas.
+- **`ItemPedido` / `ItemPedidoFita`**: **inalterados**. Continuam servindo só as cadeiras de
+  produto físico com carrinho próprio.
 - **NegocioOriginado / FaturaSuccessFee**: já existem (specs 007/010). Esta feature **não**
-  redefine a regra de comissão — só passa a alimentá-la a partir de mais cadeiras.
+  redefine a regra de comissão — passa a alimentá-la a partir de mais cadeiras, e a **excluir**
+  cadeira da casa dela (FR-010).
 
 ## Success Criteria *(mandatory)*
 
 ### Measurable Outcomes
 
-- **SC-001**: **Receita provada da carteira sai de R$ 0,00** — ao menos uma venda real
-  (payer não-teste) originada pelo e-commerce, com `NegocioOriginado` e fee apurado.
-- **SC-002**: Das 6 cadeiras que hoje servem preço sem gateway, **ao menos 3 passam a cobrar**
-  medidas por `roihub/scripts/gateways.mjs` no balde "gateway ligado".
-- **SC-003**: **Zero regressão de valor** em pedido histórico após a generalização do item de
-  pedido, conferida pedido a pedido antes e depois.
-- **SC-004**: Após o reposicionamento de domínio, **zero URL antes indexada respondendo 404**, e
-  as impressões da malha de porcelanato voltam ao patamar pré-corte em 30 dias.
-- **SC-005**: Ocupar uma cadeira nova com produto de unidade já suportada **não exige migração de
-  schema** — verificado ocupando a segunda cadeira depois da primeira.
-- **SC-006**: Nenhuma página de cadeira publicada serve **zero palavra** no HTML inicial.
+- **SC-001**: **Receita provada da carteira sai de R$ 0,00** — ao menos uma venda real (payer
+  não-teste, cadeira **não** da casa) com `NegocioOriginado` e fee apurado. ⚠️ **Depende de
+  FR-003**: se a venda do parceiro só chega por informe manual, este critério não é apurável por
+  máquina e vira número declarado.
+- **SC-002**: Das 6 cadeiras que hoje servem preço sem gateway, **ao menos 3 passam a cobrar**,
+  medidas por `roihub/scripts/gateways.mjs` — mas **o balde muda**: cadeira SaaS com checkout no
+  parceiro sai como "gateway servido", não "ligado". O critério é o balde correto para o modo de
+  cobrança, não o balde "ligado" para todas.
+- **SC-003**: **Zero regressão** nos caminhos de dinheiro existentes: nenhum pedido de porcelanato
+  ou de fitas muda de valor, conferido pedido a pedido antes e depois.
+- **SC-004**: Após o reposicionamento, **zero URL antes indexada respondendo 404**, e as
+  impressões da malha de porcelanato voltam ao patamar pré-corte em 30 dias.
+- **SC-005**: Ocupar a **segunda** cadeira SaaS depois da primeira **não exige migração de
+  schema** nem código específico daquela cadeira.
+- **SC-006**: Nenhuma página de cadeira publicada serve menos que o piso de FR-014 no HTML
+  inicial, medido com contador que não seja o `sed` guloso.
+- **SC-007**: Evento de venda entregue duas vezes produz **um** negócio (FR-004), verificado
+  reenviando o mesmo evento em produção.
 
 **Baseline para comparar (GSC, 28d fechando 2026-08-04):** carteira inteira = 11.696
 impressões / 186 cliques; `goiania` = 329 impressões, 2 cliques, posição mediana 59.
@@ -360,12 +433,14 @@ impressões / 186 cliques; `goiania` = 329 impressões, 2 cliques, posição med
 
 ## Assumptions
 
+- **Subdomínio de destino assumido: `loja.roilabs.com.br`.** Um label, coberto pelo cert
+  Universal. Trocar o label é config enquanto o corte não aconteceu.
 - O gateway das cadeiras SaaS será Mercado Pago ou Stripe conforme o que cada projeto já tem no
   `package.json` — 10 dos 35 já têm SDK escrito e nunca ligado; esta feature **liga**, não
   escolhe stack nova.
 - A regra de success fee (15%/10%, spec 010) e a camada de parceiro (spec 007) **não mudam**.
-- A spec 011 (fitas) fecha antes ou é migrada junto — não se generaliza um item de pedido cuja
-  segunda metade ainda está sendo escrita.
+- A spec 011 (fitas) segue independente: como `ItemPedido` não é mais tocado, esta spec **não
+  bloqueia nem é bloqueada** por ela.
 - Os 27 projetos sem caminho de cobrança **não ganham página pública** nesta feature.
 - Ligar cobrança **não cria demanda de busca**: para as cadeiras da doença (A), o resultado
   esperado é conversão do tráfego que já existe, não crescimento de tráfego.
@@ -379,11 +454,17 @@ impressões / 186 cliques; `goiania` = 329 impressões, 2 cliques, posição med
 - **Transformar os 27 em vendáveis.** É o "depois" da decisão travada — um projeto por vez.
 - Catálogo com múltiplos SKUs, filtros e comparador para cadeira nova (continua exclusivo de
   porcelanato e fitas).
-- Reabrir a decisão de vertical paralelo da spec 011 — esta spec **executa o caminho de upgrade
-  que ela registrou**, na condição que ela nomeou.
+- **Generalizar `ItemPedido` para unidade arbitrária.** Adiado com gatilho explícito: fazer
+  quando **uma terceira unidade entrar no carrinho da própria ROI Labs** — cadeira de produto
+  físico cuja unidade não seja m² nem rolo. Cadeira SaaS nova **não** dispara, por mais que se
+  somem *(Constituição III: atalho deliberado, teto e caminho de upgrade registrados)*.
+- Split payment, repasse e responsabilidade fiscal sobre o total transacionado — consequência do
+  modelo "ROI Labs cobra e repassa", que **não** foi escolhido.
 - Renomear a marca ROI Labs. Só o posicionamento do host do e-commerce está em jogo.
 
 ## Próximo passo
 
-`clarify` — há **4 `NEEDS CLARIFICATION`** e três deles (domínio de destino, quem processa o
-pagamento, cadeira da própria casa) mudam o plano inteiro. Não seguir para `plan` antes.
+`clarify` — restou **1 `NEEDS CLARIFICATION` bloqueante** (FR-003: como a venda do parceiro chega
+até aqui). Ele decide se `SC-001` é apurável por máquina ou se a receita da carteira vira número
+declarado. Os outros três foram resolvidos na segunda rodada de 2026-08-07, e a resposta sobre
+pagamento **reduziu o escopo**: o caminho de dinheiro existente não é mais tocado.
