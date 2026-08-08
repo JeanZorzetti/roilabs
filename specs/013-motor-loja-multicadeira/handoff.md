@@ -256,7 +256,7 @@ lê esse campo.
 
 ---
 
-## 2026-08-08 (sessão 2) — migração aplicada em produção, dinheiro confere; falta só o merge
+## 2026-08-08 (sessão 2) — migração aplicada, merge em main feito, deploy PRECISA conferência visual
 
 > **BLUF:** a armadilha 1 era maior do que a sessão anterior descreveu — `4547e82` não só
 > removeu `itensFita`, **removeu também `caixas`/`m2`/`precoM2` de `ItemPedido`**, colunas que
@@ -291,14 +291,19 @@ lê esse campo.
 | | |
 |---|---|
 | banco de produção | ✅ schema novo aplicado, backfill rodado, dinheiro conferido |
-| branch `fix/013-build` | commit local pendente com o fix do schema + tasks.md — **NÃO pushada, NÃO mergeada** |
-| `main` | ainda roda a imagem pré-013 (schema antigo + código antigo coexistiam até aqui; agora o banco já tem as colunas novas, mas a imagem em produção ainda não as usa) |
+| `fix/013-build` → `main` | ✅ fast-forward merge, `74581da`, **pushado para `origin/main`** |
+| deploy EasyPanel | 🟡 push feito (dispara build automático); `https://app.roilabs.com.br/api/health` e `https://goiania.roilabs.com.br/` respondem 200 pós-push, mas **isso não prova que é o build novo** — nenhum agente teve acesso à API/dashboard do EasyPanel nesta sessão para confirmar o build/rollout. **Confira visualmente no EasyPanel antes de considerar isto encerrado.** |
 
 ### Próxima sessão / próximo passo imediato
 
-`git merge fix/013-build` em `main` + push é DEPLOY (EasyPanel) — só falta isso. Depois do
-merge, **conferir o deploy no EasyPanel** (não assumir) e então marcar no `tasks.md` o que o
-deploy efetivamente ligou.
+1. Abrir o EasyPanel e confirmar que o build de `74581da` (ou posterior) rodou e está `running`,
+   não em erro.
+2. Se o deploy estourar (ex.: algum caminho do app ainda espera `caixas`/`m2`/`precoM2`
+   NOT NULL que este handoff não pegou), o rollback é reverter `main` para `ea78877` — o banco
+   já migrado não quebra o código antigo, já que as colunas legadas continuam presentes e as
+   novas são todas anuláveis.
+3. Só depois de confirmar o deploy, marcar no `tasks.md` o que ele efetivamente ligou (Fases
+   1/3/4/5 continuam sem auditoria nesta sessão).
 
 ### Não reabrir
 
