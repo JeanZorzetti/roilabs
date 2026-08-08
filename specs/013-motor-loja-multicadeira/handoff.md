@@ -480,3 +480,51 @@ automaticamente, este handoff é o detalhe técnico.
 - **`git push` em `main` é DEPLOY.** Trabalhar em branch; encostar em `main` só com a
   verificação na mão.
 - As **99 URLs** do sitemap continuam sendo a restrição dominante — nenhuma pode mover.
+
+---
+
+## 2026-08-08 (sessão 4) — T024 fechado; T023, merge e a 014 continuam pendentes
+
+> **BLUF:** a cadeira `teste-saas` foi removida dos 2 espelhos + catálogo + `catalogMap` do
+> `check-lojas.mjs`. Loja volta ao estado de 2 cadeiras (porcelanato, fitas), sitemap continua
+> em 99 URLs, todos os builds/testes verdes. **Só T024 foi executado nesta sessão** — o Jean
+> escolheu explicitamente não decidir T023 nem mergear `fix/013-assinatura` agora.
+
+### O que foi feito
+
+Removida a entrada `id: 'teste-saas'` de `site-goiania/src/data/lojas.ts` e `app/src/lib/lojas.ts`
+(os 2 espelhos), deletado `site-goiania/src/data/teste-saas.ts`, e removido o parse textual do
+catálogo + a linha `testeSaas` do `catalogMap` em `site-goiania/src/scripts/check-lojas.mjs`.
+`app/src/lib/precos-assinatura.ts` **não foi tocado** — é a autoridade de preço da unidade
+`assinatura` (T016j), infraestrutura permanente do motor, não código específico da cadeira de
+teste; o próprio arquivo já registra que fica ocioso até a próxima cadeira de assinatura real.
+
+### Verificado, com evidência
+
+- `node src/scripts/check-lojas.mjs` → `[OK] 2 cadeira(s) validadas` (era 3)
+- `npx astro build` → 105 páginas, sitemap com **99 URLs** (idêntico ao baseline pré-teste-saas)
+- `npx tsc --noEmit` (app) → 0 erros
+- `npm test` (app) → todas as suítes verdes, incluindo `loja-config.test.mjs`
+- `npx next build` (app) → verde
+- `git diff --name-only` → só os 4 arquivos acima (nenhum arquivo de rota/carrinho/checkout/schema)
+
+### Estado exato
+
+| | |
+|---|---|
+| branch `fix/013-assinatura` | 4 commits da sessão 3 + T024 desta sessão, **não commitado ainda** — working tree tem as 4 mudanças acima |
+| banco de produção | inalterado: as 3 linhas de `Pedido` com `vertical='teste-saas'` da sessão 3 continuam lá (T024 é código/config, não limpeza de dado) |
+| T023 | continua em aberto — decisão de produto (loja-config.md aspiracional × reescrito), não tomada nesta sessão por escolha do Jean |
+| merge para `main` | continua pendente — decisão de quem revisar |
+
+### Não reabrir
+
+⛔ Teste de venda real com cartão real. Segue valendo.
+
+### Próxima sessão
+
+1. Decidir T023 (loja-config.md aspiracional vs. reescrito) antes de fechar a Fase 4 como "done".
+2. `git merge fix/013-assinatura` → `main` é decisão de quem revisar — dispara deploy no EasyPanel.
+3. Só depois: abrir a 014 (amarrar recorrência de verdade no Mercado Pago).
+4. Opcional, sem urgência: decidir se as 3 linhas de `Pedido` de teste em produção devem ser
+   apagadas (DELETE manual pelos ids, ou pelo `/admin/pedidos`).

@@ -43,11 +43,6 @@ const fitasCatalog = fitaSlugs.map((slug, i) => ({
   preco: fitaPrecos.find((_, idx) => idx >= 0) > 0 ? fitaPrecos[0] : 0, // any preco > 0 suffices
 }));
 
-// Teste-saas (013, T021): mesmo parse textual, campos já batem com o shape genérico abaixo.
-const testeSaasSrc = readFileSync(join(DATA, 'teste-saas.ts'), 'utf8');
-const testeSaasCatalog = [...testeSaasSrc.matchAll(/slug:\s*'([^']+)'.*?preco:\s*([\d.]+).*?imagem:\s*'([^']+)'/g)]
-  .map(([, slug, preco, imagem]) => ({ slug, preco: parseFloat(preco), imagem }));
-
 // ── Read lojas.ts by text parse ─────────────────────────────────────────────
 
 const lojasSrc = readFileSync(join(DATA, 'lojas.ts'), 'utf8');
@@ -89,7 +84,6 @@ const lojas = lojaBlocks.map((block) => ({
 const catalogMap = {
   produtos: porcelanatos,
   fitas: fitasCatalog,
-  testeSaas: testeSaasCatalog,
 };
 
 // ── Read unidades.ts for valid IDs ──────────────────────────────────────────
