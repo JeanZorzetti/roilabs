@@ -613,7 +613,7 @@ não traria informação nova.
 |---|---|
 | `main` | `bdfa0e4`, pushado para `origin/main` |
 | `fix/013-assinatura` | mesma ponta, agora ancestral de `main` — pode ser deletada quando quiser |
-| deploy EasyPanel | **NÃO confirmado por esta sessão** — sem acesso à ferramenta. Precisa conferência visual, igual sessão 2 |
+| deploy EasyPanel | ✅ **confirmado pelo Jean** — commit `bdfa0e4` no ar |
 | banco de produção | inalterado — schema e backfill já estavam aplicados desde a sessão 2; este merge só publica código que já rodava contra ele na branch |
 | Fase 4 (T021–T024) | ✅ fechada |
 | T023 | ✅ fechado (sessão 5, exceção aceita) |
@@ -629,9 +629,9 @@ Reverter `main` para `db4ed9c` (o commit anterior a este merge). O banco não pr
 
 ### Próxima sessão
 
-1. **Confirmar no EasyPanel** que o deploy do commit `bdfa0e4` subiu — não assumir a partir do
-   push.
-2. Depois de confirmado: abrir a 014 (amarrar recorrência de verdade no Mercado Pago).
+1. **Deploy confirmado pelo Jean** — commit `bdfa0e4` no ar. **A 013 está encerrada** (Fases 1–4
+   completas, T023/T024 fechados, merge no ar).
+2. Abrir a 014 (amarrar recorrência de verdade no Mercado Pago) — já desbloqueada.
 3. Opcional: alinhar `spec.md:307` (SC-001) com o contrato de 3 arquivos.
 4. Opcional: apagar a branch `fix/013-assinatura` (já mergeada) e as 3 linhas de `Pedido` de
    teste em produção (`vertical='teste-saas'`, sessão 3).
