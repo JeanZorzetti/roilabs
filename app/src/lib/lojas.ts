@@ -72,6 +72,22 @@ export const lojas: LojaConfig[] = [
     },
     publicada: true,
   },
+  {
+    id: 'teste-saas',
+    prefixoRota: 'teste-saas',
+    unidade: 'assinatura',
+    recorrencia: 'mensal',
+    modoCobranca: 'roilabs',
+    checkoutUrl: null,
+    pagoA: 'ROI Labs',
+    frete: 'nenhum',
+    docObrigatorio: false,
+    cupomEscopo: 'teste-saas',
+    linhaFixa: null,
+    // Cadeira de validação do motor (T021/T022), não uma cadeira real — despublicada de
+    // propósito.
+    publicada: false,
+  },
 ];
 
 export const lojasById = new Map(lojas.map((l) => [l.id, l]));

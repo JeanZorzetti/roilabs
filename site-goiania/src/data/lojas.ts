@@ -8,6 +8,7 @@
 
 import { produtos, type Produto } from './produtos';
 import { fitas, type Fita } from './fitas';
+import { testeSaas } from './teste-saas';
 import { unidadesById, type Unidade } from './unidades';
 
 // ── Tipos ───────────────────────────────────────────────────────────────────
@@ -72,6 +73,23 @@ export const lojas: Loja[] = [
       isentoSeJaComprou: true,
     },
     publicada: true,
+  },
+  {
+    id: 'teste-saas',
+    prefixoRota: 'teste-saas',
+    unidade: 'assinatura',
+    recorrencia: 'mensal',
+    catalogo: testeSaas,
+    modoCobranca: 'roilabs',
+    checkoutUrl: null,
+    pagoA: 'ROI Labs',
+    frete: 'nenhum',
+    docObrigatorio: false,
+    cupomEscopo: 'teste-saas',
+    linhaFixa: null,
+    // Cadeira de validação do motor (T021/T022), não uma cadeira real — despublicada de
+    // propósito. FR-009: sem publicada=true, nenhuma rota .astro é gerada para ela.
+    publicada: false,
   },
 ];
 
