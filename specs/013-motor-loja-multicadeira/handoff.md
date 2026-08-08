@@ -292,19 +292,105 @@ lê esse campo.
 |---|---|
 | banco de produção | ✅ schema novo aplicado, backfill rodado, dinheiro conferido |
 | `fix/013-build` → `main` | ✅ fast-forward merge, `74581da`, **pushado para `origin/main`** |
-| deploy EasyPanel | 🟡 push feito (dispara build automático); `https://app.roilabs.com.br/api/health` e `https://goiania.roilabs.com.br/` respondem 200 pós-push, mas **isso não prova que é o build novo** — nenhum agente teve acesso à API/dashboard do EasyPanel nesta sessão para confirmar o build/rollout. **Confira visualmente no EasyPanel antes de considerar isto encerrado.** |
+| deploy EasyPanel | ✅ **confirmado pelo Jean em 08/08** ("subiu sim"). O rollout arrastou junto tudo que estava represado desde `4547e82` — a 013 inteira **e** commits da 012 que nunca tinham ido ao ar. |
 
-### Próxima sessão / próximo passo imediato
+### Rollback, se algo aparecer depois
 
-1. Abrir o EasyPanel e confirmar que o build de `74581da` (ou posterior) rodou e está `running`,
-   não em erro.
-2. Se o deploy estourar (ex.: algum caminho do app ainda espera `caixas`/`m2`/`precoM2`
-   NOT NULL que este handoff não pegou), o rollback é reverter `main` para `ea78877` — o banco
-   já migrado não quebra o código antigo, já que as colunas legadas continuam presentes e as
-   novas são todas anuláveis.
-3. Só depois de confirmar o deploy, marcar no `tasks.md` o que ele efetivamente ligou (Fases
-   1/3/4/5 continuam sem auditoria nesta sessão).
+Reverter `main` para `ea78877`. O banco migrado **não** quebra o código antigo: as colunas
+legadas continuam presentes e as 7 novas são todas anuláveis.
 
 ### Não reabrir
 
 ⛔ Teste de venda real com cartão real. Segue valendo.
+
+---
+
+## PRÓXIMA SESSÃO — T016(j) · T021 · T022 (a unidade `assinatura`)
+
+> **BLUF:** o motor da 013 está no ar, mas ele sabe precificar **duas** das três unidades. A
+> `assinatura` cai fora do laço de precificação **em silêncio** e o comprador leva
+> `?erro=vazio`. Essas 3 tasks fecham o buraco — e **a 014 inteira está bloqueada por elas**:
+> a spec 014 assume que a 013 cobra o 1º ciclo, e ela não cobra. **Não abrir a 014 antes disto.**
+> As armadilhas abaixo foram achadas lendo o código em 08/08, não estão no texto das tasks.
+
+### O defeito, exato
+
+[`app/src/app/api/pedidos/route.ts:91-125`](../../app/src/app/api/pedidos/route.ts#L91-L125) é
+um `if (loja.unidade === 'm2') … else if (loja.unidade === 'rolo') …`. Sem `else`. Cadeira de
+assinatura entra no laço, não casa nenhum ramo, **nenhum item é empilhado**, e três linhas
+depois `if (itens.length === 0) return backTo(origin, 'vazio')`. Falha silenciosa no caminho de
+dinheiro: nada loga, nada alerta, o comprador só vê "carrinho vazio".
+
+### O que JÁ está pronto (não reconstruir)
+
+| | |
+|---|---|
+| `precificarAssinatura` | ✅ escrito e completo em [`site-goiania/src/data/unidades.ts:65`](../../site-goiania/src/data/unidades.ts#L65) — devolve `{ precoUnitario: produto.preco, detalhe: {} }` |
+| unidade `assinatura` registrada | ✅ `unidades.ts:91` — `entregaFisica: false`, rótulo "mês/meses" |
+| colunas do banco | ✅ `recorrencia`, `assinaturaRef`, `assinaturaEstado` **já existem em produção**, anuláveis (migração de 08/08). **Zero trabalho de banco nestas tasks.** |
+| teste da invariante | ✅ `app/test/item-unificado.test.mjs` já cobre as 3 unidades, assinatura inclusa |
+
+### 🚩 As 5 armadilhas que o texto das tasks não conta
+
+**1. T021 e T022 se contradizem.** T021 manda declarar a cadeira de teste com `publicada=false`.
+T022 manda percorrer o checkout dela. Mas a rota barra na entrada:
+`if (!loja.publicada) return backTo(origin, 'indisponivel')` ([route.ts:41](../../app/src/app/api/pedidos/route.ts#L41)).
+Com `publicada=false` o T022 **não roda**. Decidir antes de começar: `publicada=true` temporário
+(e tirar depois), ou um bypass explícito. Não descobrir isso no meio do teste.
+
+**2. O servidor não tem catálogo da cadeira nova — este é o bloqueio real.**
+`app/src/lib/lojas.ts` diz, em comentário, que **não importa catálogo de propósito**: o preço no
+servidor vem de `@/lib/precos` (porcelanato) e `@/lib/precos-fitas` (fitas), duas libs
+hardcoded por vertical. Uma cadeira `teste-saas` **não tem de onde a rota tirar preço**. Sem
+resolver isto, T016(j) não tem o que precificar e T022 não tem o que comprar. É a decisão de
+design que abre a sessão, não um detalhe de implementação.
+
+**3. `unidades.ts` mora no site e o servidor não pode importar dele.** São dois containers e dois
+deploys — o próprio `lojas.ts` do app registra isso. Então T016(d) ("recálculo de preço via
+`unidades.ts`") é **irrealizável ao pé da letra** através da fronteira. Ou o servidor ganha seu
+espelho de `unidades.ts` (mesma duplicação deliberada que já existe para `lojas.ts`, com teste
+de paridade), ou o ramo de assinatura é escrito inline na rota. Escolher conscientemente.
+
+**4. `recorrencia` não é campo de cadeira em lugar nenhum.** T021 pede a cadeira com
+`recorrencia: 'mensal'`, mas nem `Loja` (site, `lojas.ts:24`) nem `LojaConfig`
+(servidor, `app/src/lib/lojas.ts:26`) têm esse campo. Tem de entrar **nos dois espelhos** — e
+os dois têm de continuar batendo.
+
+**5. 🧊 O gate de build passa VAZIO para a cadeira nova.** `check-lojas.mjs` tem
+`catalogMap = { produtos, fitas }` **hardcoded**. Catálogo que não esteja nesse mapa vira `[]`, e
+aí as regras 2 (slug único), 4 (catálogo não vazio) e 5 (preço > 0 e imagem) passam **por
+vacuidade** — o gate fica verde sem ter conferido nada. Registrar `teste-saas` no `catalogMap`
+faz parte da task, senão o "check-lojas OK" não é evidência de coisa alguma.
+(Mesma família de [[amostra_procurada_fora_do_percentual]] / portão que passa por base vazia.)
+
+### Ordem sugerida
+
+1. **Decidir** as armadilhas 2 e 3 (de onde vem o preço no servidor) — trava tudo.
+2. **T016(j)**: ramo `assinatura` na rota — grava `unidade='assinatura'`, `quantidade=1`,
+   `precoUnitario` = valor do ciclo, `recorrencia`, `assinaturaEstado='ativa'`. Cobra **só o 1º
+   ciclo**. Junto: (i) unidade sem entrega física ⇒ sem endereço, `frete=0`.
+3. **T021**: cadeira `teste-saas` + catálogo fictício, nos dois espelhos de `lojas.ts`, mais o
+   `catalogMap` do `check-lojas.mjs`.
+4. **T022**: percorrer vitrine → carrinho → checkout até a intenção de pagamento (**sem pagar**).
+   Conferir no banco: `unidade`, `recorrencia`, `assinaturaEstado`, `precoUnitario`. Conferir na
+   tela que **nenhuma etapa de entrega/frete aparece** (FR-018a).
+5. **T023** fecha a fase: `git diff --name-only` deve mostrar **só** os arquivos da cadeira.
+   Qualquer arquivo de rota/carrinho/checkout no diff **é a SC-001 reprovando** — o motor não
+   provou que abre loja sem código novo.
+
+### O que NÃO é destas tasks
+
+- **`assinaturaRef` fica `null`** e está certo: `createPreference` do MP é pagamento avulso, não
+  assinatura recorrente. Amarrar recorrência de verdade no gateway **é a 014**. T016(j) cobra o
+  ciclo 1 e para aí.
+- ⛔ Teste com cartão real — cancelado, segue valendo. Verificação de dinheiro é **soma no
+  banco**, nunca pagamento.
+
+### Verificação (as travas deste repo)
+
+- `npm test` no `app` · `npx astro build` no `site-goiania` — **nunca `npm run build`**, que
+  submete ao IndexNow.
+- **Build local não prova nada** (OneDrive corrompe `node_modules`): a prova é em ambiente real.
+- **`git push` em `main` é DEPLOY.** Trabalhar em branch; encostar em `main` só com a
+  verificação na mão.
+- As **99 URLs** do sitemap continuam sendo a restrição dominante — nenhuma pode mover.
