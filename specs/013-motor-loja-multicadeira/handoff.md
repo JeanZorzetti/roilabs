@@ -528,3 +528,60 @@ teste; o próprio arquivo já registra que fica ocioso até a próxima cadeira d
 3. Só depois: abrir a 014 (amarrar recorrência de verdade no Mercado Pago).
 4. Opcional, sem urgência: decidir se as 3 linhas de `Pedido` de teste em produção devem ser
    apagadas (DELETE manual pelos ids, ou pelo `/admin/pedidos`).
+
+---
+
+## 2026-08-08 (sessão 5) — T023 fechado por exceção aceita; Fase 4 concluída
+
+> **BLUF:** o Jean decidiu T023: **exceção aceita**, não reescrita de arquitetura.
+> `contracts/loja-config.md` foi reescrito de "dois arquivos, nada além" para três — os dois
+> espelhos de `lojas.ts` (site + servidor) mais o catálogo — documentando a duplicação
+> servidor/site como deliberada (dois containers, dois deploys) em vez de como dívida a pagar.
+> Nenhum código mudou. **A Fase 4 está fechada.** Merge para `main` e a 014 continuam pendentes,
+> por escolha explícita do Jean de não decidir isso ainda.
+
+### O que foi feito
+
+Só documentação, `contracts/loja-config.md`:
+- "Dois arquivos, nada além" → "três arquivos, nada além", com nota explicando o porquê (site
+  Astro estático não importa do app) e o teto de extração já registrado em `app/src/lib/lojas.ts`
+  (>5 cadeiras ou divergência na prática → `packages/lojas`).
+- Adicionada a seção 2 (entrada em `app/src/lib/lojas.ts`) que faltava no contrato original.
+- Critério de medição do SC-001 atualizado: `git diff --name-only` agora espera 3 arquivos, não 2.
+- Registrada uma lacuna encontrada no processo: **não existe** teste de paridade automático
+  entre os 2 espelhos de `lojas.ts` hoje, apesar do comentário no código prever um (padrão
+  `check-matrix.mjs`). Não criei o teste — não era o escopo desta decisão, só documentei que
+  falta.
+
+`tasks.md`: T023 marcado `[x]` com a decisão registrada.
+
+### ⚠️ Não resolvido, fora do escopo desta sessão
+
+`spec.md:307` (SC-001) ainda descreve o custo como "**1 catálogo + 1 configuração de cadeira**",
+frase que fica em tensão com o contrato agora dizendo 3 arquivos (2 configurações + 1 catálogo).
+Não toquei em `spec.md` — é o documento formalmente aprovado da feature, e reescrever um
+critério de sucesso é uma decisão maior que "documentar T023 como exceção". Se quiser alinhar a
+letra, é uma edição pequena e isolada em `spec.md:307`.
+
+### Estado exato
+
+| | |
+|---|---|
+| `contracts/loja-config.md` | reescrito, reflete a realidade de 3 arquivos |
+| `spec.md` SC-001 | **não alterado** — ainda fala em "1 configuração", tensão registrada acima |
+| teste de paridade `lojas.ts` (site × servidor) | **não existe**, lacuna documentada, não construída |
+| branch `fix/013-assinatura` | commit desta sessão a fazer (doc-only) |
+| merge para `main` | continua pendente — decisão de quem revisar |
+| 014 | continua bloqueada até o merge acontecer (ela assume a 013 no ar) |
+
+### Não reabrir
+
+⛔ Teste de venda real com cartão real. Segue valendo.
+
+### Próxima sessão
+
+1. `git merge fix/013-assinatura` → `main` — decisão de quem revisar, dispara deploy no EasyPanel.
+2. Opcional: alinhar `spec.md:307` (SC-001) com o contrato de 3 arquivos.
+3. Opcional, sem urgência: construir o teste de paridade entre os 2 `lojas.ts`, ou aceitar a
+   lacuna como está.
+4. Só depois do merge: abrir a 014.
