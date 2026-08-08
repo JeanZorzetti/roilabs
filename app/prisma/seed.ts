@@ -15,7 +15,17 @@ async function main() {
       // produção: `Fitas adesivas` servia `status: 'Ocupada · Tapepro'` com `estado: 'vaga'`,
       // divergindo do skeleton no-JS de site/src/pages/index.astro. `status`/`open` continuam
       // fora: esses o /admin curou à mão. `estado` é do SEED, como nas cadeiras de projeto.
-      await prisma.cadeira.update({ where: { id: existing.id }, data: { ordem: i, estado: s.estado } });
+      //
+      // ⚠️ 08/08: `daCasa` entrou pela MESMA razão, e a armadilha se repetiu inteira. Só as
+      // cadeiras de nicho que também aparecem em PROJETOS_CADEIRA (a `atma`, casada por
+      // `siteUrl`) tinham `daCasa` escrito; `Revestimentos / Porcelanato` e `Fitas adesivas`
+      // vivem SÓ aqui, então nenhuma rodada de seed jamais tocou o `daCasa` delas — corrigir
+      // seats.ts não chegava no banco. Campo novo em DEFAULT_SEATS que MÁQUINA lê entra
+      // neste update, senão fica no default para sempre.
+      await prisma.cadeira.update({
+        where: { id: existing.id },
+        data: { ordem: i, estado: s.estado, daCasa: s.daCasa },
+      });
     } else {
       await prisma.cadeira.create({ data: { ...s, ordem: i } });
     }

@@ -13,7 +13,12 @@
 // `estado` é o campo que MÁQUINA lê (vaga | em-preparacao | ocupada-sem-produto |
 // ocupada-vendavel). `status` continua sendo texto de exibição e nenhuma decisão o lê.
 export const DEFAULT_SEATS = [
-  { niche: 'Revestimentos / Porcelanato', status: 'Curadoria aberta', open: true, estado: 'vaga', daCasa: false, exibirDaCasa: false },
+  // CORRIGIDA (Jean, 08/08): DA CASA. O porcelanato é vendido pelo carrinho da própria ROI
+  // Labs (`modoCobranca: 'roilabs'` em site-goiania/src/data/lojas.ts) — não há parceiro, e
+  // receita própria nunca entra na régua do success fee. `estado: 'vaga'` não contradiz:
+  // a cadeira segue em curadoria aberta, e vira `daCasa: false` no dia que um parceiro a
+  // ocupar, exatamente como a `Fitas adesivas` fez com a Tapepro.
+  { niche: 'Revestimentos / Porcelanato', status: 'Curadoria aberta', open: true, estado: 'vaga', daCasa: true, exibirDaCasa: false },
   // Primeira cadeira ocupada: Tapepro (fitas adesivas personalizadas, B2B). open:false = fora
   // de curadoria (já preenchida). O link/estado visual "ocupada" vive no site (presentational).
   // daCasa:false — Tapepro é parceiro externo (spec 011), e a venda dela GERA success fee.
