@@ -124,3 +124,132 @@ sitemap baixado pelo Google com 0 erro · 3 dos 4 SKUs de fita saíram de "URL d
 "Descoberta – não indexada" · **reaferir indexação ~14/08** · GSC 28 dias: 322 impressões, 2
 cliques, posição 19,8, 0/43 no top 50 · LCP 2,5 s (resolvido, não é gargalo) · `LeadConsumidor`
 = 1 (o de teste foi apagado em 07/08).
+
+---
+
+## 2026-08-08 — a 013 nunca buildou; o build está consertado e a migração é o próximo passo
+
+> **BLUF:** o commit `4547e82` ("feat: unificar motor de loja multicadeira") **nunca foi
+> buildado nem deployado**. App e site estavam quebrados desde ele, então produção continua
+> rodando a imagem pré-013 — e é por isso que a loja segue faturando. Esta sessão consertou os
+> dois builds na branch **`fix/013-build`** (2 commits, tudo verde). **A branch NÃO foi
+> mergeada de propósito:** o código novo exige colunas que não existem no banco, e o merge
+> dispara deploy. **A próxima sessão começa na MIGRAÇÃO, não em código.**
+
+### Estado exato
+
+| | |
+|---|---|
+| `main` (pushada, `ea78877`) | fixes de `daCasa` da 012 — ver [handoff da 012](../012-carteira-cadeiras-ecommerce/handoff.md) |
+| branch `fix/013-build` | `11b0f57` + `a590fd9`. **Não mergeada, não pushada.** Working tree limpo |
+| build app | ✅ `tsc` 0 erros · `npm test` exit 0 · `next build` exit 0 |
+| build site | ✅ `npx astro build` exit 0 · `check-lojas` OK · **sitemap 99 URLs** (FR-008 intacto) |
+| banco de produção | ❌ **schema ANTIGO.** `itens_pedido_fita` existe (8 linhas); as 7 colunas da 013 **não existem** |
+| `tasks.md` | 0/30 marcados — e está **correto**, não desatualizado |
+
+### 🚨 A ordem é obrigatória: migrar ANTES de mergear
+
+O merge na `main` é deploy (EasyPanel). Deployar este código contra o banco atual quebra o
+caminho de dinheiro, e isso **não é inferência** — está demonstrado. Qualquer leitura de
+`itens` com o client novo contra o banco de hoje devolve:
+
+```
+P2022: The column `itens_pedido.unidade` does not exist in the current database
+```
+
+Consequência do deploy sem migrar: `/api/pedidos` não cria pedido nenhum, e
+`/api/pagamentos/webhook` nunca marca pagamento como `pago`. **O build quebrado vinha, sem
+querer, servindo de trava de segurança.**
+
+### 🚩 As duas armadilhas JÁ ARMADAS na migração
+
+**1. Os dois scripts de migração não rodam.** `verify-013-sums.mjs` e
+`migrate-013-backfill.mjs` fazem `include: { itensFita: true }`, e o `4547e82` apagou o modelo
+`ItemPedidoFita` do schema. Prisma devolve *Unknown field `itensFita`*. É um ovo-e-galinha: o
+backfill precisa LER a tabela antiga, e o schema que permitiria lê-la foi removido no mesmo
+commit. **A 013 removeu o modelo na fase errada** — o `tasks.md` põe isso em T026, na limpeza,
+DEPOIS da migração.
+
+Conserto (escolher um, antes de rodar qualquer coisa):
+- **(a)** devolver `ItemPedidoFita` + a relação `itensFita` ao schema, migrar, e só então
+  aplicar T026/T027 — é a ordem que o próprio `tasks.md` desenhou; ou
+- **(b)** reescrever os dois scripts para ler `itens_pedido_fita` por `$queryRaw`.
+
+**2. A primeira corrida mede o CHECK, não o dado.** Nenhum dos dois scripts jamais rodou.
+Trate a primeira saída como teste do script; quem fecha é a segunda via.
+
+### Baseline medido HOJE (08/08), por SQL cru
+
+```
+porcelanato | pendente | 7244.45      porcelanato | pendente | 7244.45
+fitas       | pendente | 2461.05      fitas       | pendente | 2360.73
+fitas       | pendente | 2361.19      fitas       | pendente |  420.02
+
+Pedidos=6   SOMA=22091.89   PAGOS=0   mpPaymentId=0
+itens_pedido = 2 linhas  ·  itens_pedido_fita = 8 linhas
+```
+
+**Depois do backfill, `itens_pedido` tem de ter 10 linhas.** Guarde os dois números: total
+igual com item faltando dentro é o falso-verde clássico desta migração.
+
+### Como alcançar o banco a partir da máquina de dev
+
+O `DATABASE_URL` do `.env` da raiz aponta para o host **interno** do Docker
+(`doc_crm_roilabs_db:5432`) e ainda tem um `]` colado no fim — nas **3** ocorrências. Receita:
+
+```bash
+cd app
+DB=$(grep -m1 "^DATABASE_URL" ../.env | sed 's/^DATABASE_URL=//' | sed 's/\]$//' \
+     | sed 's#@doc_crm_roilabs_db:5432#@2.24.207.200:5443#')
+DATABASE_URL="$DB" node --import tsx scripts/verify-013-sums.mjs
+```
+
+⚠️ `:5445` é o **`roihub_db`**, projeto errado. O da loja é `:5443`.
+
+### Sequência da próxima sessão
+
+1. Consertar os scripts (armadilha 1) — sem isto nada roda
+2. `verify-013-sums.mjs` → salvar `antes.txt`
+3. `prisma db push` **manual** contra `2.24.207.200:5443` (o runner standalone não aplica)
+4. `migrate-013-backfill.mjs --dry-run`, ler, então rodar de verdade
+5. `verify-013-sums.mjs` → `depois.txt` e `diff` contra o `antes.txt`; conferir 10 linhas
+6. Só então `git merge fix/013-build` + push, e **conferir o deploy no EasyPanel** (não assumir)
+7. Marcar o `tasks.md` do que de fato foi feito
+
+### O que esta sessão consertou (com evidência, não afirmação)
+
+Três defeitos que o build quebrado escondia, além dos imports:
+
+- **`pedidos/route.ts`** importava `cotarFrete`, `SLUG_PERSONALIZADA` e `SLUG_CLICHE` de
+  `precos-fitas`, que nunca os exportou. O `cotarFrete` mora em `frete-fitas`; os dois `SLUG_*`
+  eram consts locais antes da 013 e **não foram movidos para lugar nenhum**. O
+  `SLUG_PERSONALIZADA` nem era usado. `LinhaFixa` ganhou `slug` e `rotulo` nos dois espelhos —
+  o slug que DISPARA e o da linha CRIADA são coisas diferentes.
+- **`pagamentos/webhook`** ainda consultava `prisma.itemPedidoFita` (modelo apagado) e
+  `item.caixas` (coluna apagada). Agora é uma leitura só, e quem decide a exibição é a
+  `unidade` do item, não o vertical do pedido.
+- **`const itens = []` era `any[]`**, então a rota empurrava `caixas`/`m2`/`precoM2` para o
+  `create` do Prisma sem o compilador ver. **O primeiro pedido após qualquer deploy teria
+  estourado**, no caminho de dinheiro, com build verde. Tipar o array revelou mais dois: a
+  cotação de frete de fita lia `detalhe.caixas`, campo que naquela cadeira nunca existe.
+- **O site também não buildava:** `favoritos.astro` importava `encodeItems`, removido pela
+  reescrita do carrinho. Restaurado como função de verdade (codifica lista arbitrária) e o
+  `encodeCart` passou a delegar para ela.
+
+Pedido criado ANTES da migração tem `unidade` nula: todos os renderizadores omitem a medida em
+vez de escrever "undefined caixa(s)" para quem pagou. O endpoint de status continua servindo
+`caixas` (derivado de `detalhe`, não coluna) porque o site é outro deploy e a página publicada
+lê esse campo.
+
+### Descobertas colaterais (não são desta feature)
+
+- **A 014 não tem premissa.** Ela assume que a 013 cobra o 1º ciclo de assinatura. Não cobra: o
+  dispatch de preço trata `m2` e `rolo`, e `assinatura` cai fora do laço em silêncio → `?erro=vazio`.
+  T016(j)/T021/T022 nunca foram feitas.
+- **A carteira da 012 não tem de quem cobrar.** Com `atma` e `porcelanato` corrigidos para
+  `daCasa`, a TapePro é a única cadeira fora da casa — e ela vende pelo carrinho da ROI Labs,
+  sem passar pela carteira. Detalhe no handoff da 012.
+
+### Não reabrir
+
+⛔ **Teste de venda real com cartão real — cancelado pelo Jean em 07/08.** Segue valendo.
