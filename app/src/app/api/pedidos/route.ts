@@ -8,7 +8,7 @@ import { precoPorQuantidade, temPrecoPublico } from '@/lib/precos-fitas';
 import { cotarFrete } from '@/lib/frete-fitas';
 import { getProdutoAssinatura } from '@/lib/precos-assinatura';
 import { validarCupom } from '@/lib/cupons';
-import { createPreference } from '@/lib/mercadopago';
+import { createPreference, createPreapproval } from '@/lib/mercadopago';
 import { normalizarDoc, validarDoc } from '@/lib/doc';
 import { sendAlert } from '@/lib/email';
 import { log } from '@/lib/log';
@@ -56,6 +56,11 @@ export async function POST(req: NextRequest) {
     return backTo(origin, 'documento', cadeiraId);
   }
   const compradorDoc = validarDoc(docDigits) ? docDigits : null;
+
+  // 014: Preapproval EXIGE payer_email (Checkout Pro não) — regra fixa por unidade, sem
+  // campo novo em LojaConfig (YAGNI: hoje só esta unidade precisaria dele).
+  const email = cap(form.get('email'), 200) || null;
+  if (loja.unidade === 'assinatura' && !email) return backTo(origin, 'validacao', cadeiraId);
 
   // ── Parse dos Itens ────────────────────────────────────────────────────────
 
@@ -224,7 +229,7 @@ export async function POST(req: NextRequest) {
     data: {
       nome,
       whatsapp,
-      email: cap(form.get('email'), 200) || null,
+      email,
       compradorDoc,
       vertical: loja.id,
       entrega,
@@ -246,7 +251,27 @@ export async function POST(req: NextRequest) {
 
   try {
     const appOrigin = req.nextUrl.origin;
-    
+    const backBaseAssinatura = origin.startsWith('http') ? origin : 'https://goiania.roilabs.com.br';
+
+    // 014 (contracts/checkout-assinatura.md): unidade='assinatura' cobra por Preapproval
+    // (autorização recorrente), não por Preference (cobrança única) — é a única forma de
+    // cobrar os ciclos seguintes sem o comprador reentrar o cartão (FR-001, research.md D1).
+    if (loja.unidade === 'assinatura') {
+      const item = pedido.itens[0];
+      const preapproval = await createPreapproval({
+        externalReference: pedido.id,
+        reason: item.slug,
+        payerEmail: email!, // validado obrigatório acima quando unidade === 'assinatura'
+        transactionAmount: Number(item.subtotal),
+        frequency: loja.recorrencia === 'anual' ? 12 : 1,
+        frequencyType: 'months',
+        backUrl: `${backBaseAssinatura}/obrigado?pedido=${pedido.id}`,
+        notificationUrl: `${appOrigin}/api/pagamentos/webhook`,
+      });
+      await prisma.itemPedido.update({ where: { id: item.id }, data: { assinaturaRef: preapproval.id } });
+      return NextResponse.redirect(preapproval.initPoint, 303);
+    }
+
     // O MP não tem linha negativa. O desconto é rateado entre as linhas de forma que
     // Σ linhas + frete = total do pedido. A última linha absorve a diferença acumulada.
     const alvoProduto = money(Math.max(0, totalProduto - desconto));

@@ -1,6 +1,8 @@
+import crypto from 'crypto';
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getPayment, verifyWebhookSignature } from '@/lib/mercadopago';
+import { dataProximoCiclo, novoCancelToken, decidirRenovacao } from '@/lib/assinaturas';
 import { resolverParametros, resolverPiso, resolverModalidade, type CamadasConfig } from '@/lib/centros-custo';
 import { sendEmail, sendAlert, escapeHtml } from '@/lib/email';
 import { log } from '@/lib/log';
@@ -36,8 +38,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'invalid signature' }, { status: 401 });
   }
 
-  // We only care about payment notifications.
-  if (bodyType && bodyType !== 'payment') return NextResponse.json({ ok: true });
+  // We only care about payment notifications. 014 (research.md — risco do nome do evento):
+  // uma cobrança de renovação de assinatura pode chegar como 'subscription_authorized_payment'
+  // em vez de 'payment' — o recurso buscado abaixo (getPayment) é sempre um Payment normal.
+  if (bodyType && !['payment', 'subscription_authorized_payment'].includes(bodyType)) {
+    return NextResponse.json({ ok: true });
+  }
   if (!dataId) return NextResponse.json({ ok: true });
 
   // MP is the source of truth for status — never trust the notification body.
@@ -54,9 +60,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: true });
   }
 
-  if (payment.status === 'approved') {
+  if (payment.status === 'approved' && pedido.statusPagamento === 'pendente') {
     // Advance only (never pago → pendente). Reserva: fulfillment stays "aguardando" (FR-012).
-    if (pedido.statusPagamento === 'pendente') {
+    {
       // Freeze per-item snapshot of cost-center params at payment time (US4 / FR-010).
       // Load all DB layers once for the whole order, then resolve per slug.
       const [paramRows, skuRows] = await Promise.all([
@@ -65,7 +71,7 @@ export async function POST(req: NextRequest) {
         // justificativa de preço e mora em `detalhe`, não em coluna própria.
         prisma.itemPedido.findMany({
           where: { pedidoId: pedido.id },
-          select: { id: true, slug: true, subtotal: true, unidade: true, quantidade: true, detalhe: true },
+          select: { id: true, slug: true, subtotal: true, unidade: true, quantidade: true, detalhe: true, recorrencia: true, assinaturaRef: true },
         }),
       ]);
       const globalRow = paramRows.find((r) => r.escopo === 'global') ?? null;
@@ -78,6 +84,39 @@ export async function POST(req: NextRequest) {
         : null;
       const linhasMap = new Map(linhaRows.map((r) => [r.chave, { markup: toNum(r.markup), comissao: toNum(r.comissao), aliqIntermediacao: toNum(r.aliqIntermediacao), aliqWL: toNum(r.aliqWL) }]));
       const skuMap = new Map(skuConfigs.map((r) => [r.slug, { piso: toNum(r.piso), modalidadeAlvo: r.modalidadeAlvo ?? null, linha: r.linha ?? null, markup: toNum(r.markup), comissao: toNum(r.comissao), aliqIntermediacao: toNum(r.aliqIntermediacao), aliqWL: toNum(r.aliqWL) }]));
+
+      // 014 (contracts/webhook-assinatura.md, "Caminho do 1º ciclo"): a Assinatura nasce
+      // dentro da MESMA transação que marca o pedido pago — nunca fora dela. IDs gerados
+      // aqui (não pelo @default do Prisma) porque o create de Assinatura e o de
+      // CicloCobranca precisam do MESMO id sem depender do resultado um do outro dentro
+      // do array de operações do $transaction.
+      const assinaturaTokens = new Map<string, string>(); // itemId → cancelToken (usado no e-mail abaixo)
+      const assinaturaExtras = skuRows.flatMap((item) => {
+        if (item.unidade !== 'assinatura' || !item.assinaturaRef) return [];
+        const assinaturaId = crypto.randomUUID();
+        const cancelToken = novoCancelToken();
+        assinaturaTokens.set(item.id, cancelToken);
+        return [
+          prisma.assinatura.create({
+            data: {
+              id: assinaturaId,
+              itemPedidoId: item.id,
+              pedidoId: pedido.id,
+              slug: item.slug,
+              lojaId: pedido.vertical,
+              mpPreapprovalId: item.assinaturaRef,
+              recorrencia: item.recorrencia ?? 'mensal',
+              estado: 'ativa',
+              proximaCobranca: dataProximoCiclo(item.recorrencia ?? 'mensal'),
+              cancelToken,
+            },
+          }),
+          prisma.cicloCobranca.create({
+            data: { assinaturaId, resultado: 'sucesso', mpPaymentId: paymentId },
+          }),
+          prisma.itemPedido.update({ where: { id: item.id }, data: { assinaturaEstado: 'ativa' } }),
+        ];
+      });
 
       await prisma.$transaction([
         prisma.pedido.update({
@@ -103,6 +142,7 @@ export async function POST(req: NextRequest) {
             },
           });
         }),
+        ...assinaturaExtras,
       ]);
 
       // The single most valuable line in the log: an order actually got paid and the
@@ -143,11 +183,24 @@ export async function POST(req: NextRequest) {
       const temPersonalizada = !!lf && skuRows.some((i) => i.slug === lf.quandoSlug);
       const clicheCobrado = !!lf && skuRows.some((i) => i.slug === lf.slug);
       const WA = 'https://wa.me/5562993265713';
+      // 014: unidade='assinatura' não é entrega física — e-mail próprio, com o link de
+      // cancelamento (contracts/webhook-assinatura.md: "ganha, só para assinatura, o link").
+      const cancelToken = [...assinaturaTokens.values()][0] ?? null;
       if (pedido.email) {
         sendEmail(
           pedido.email,
-          ehFitas ? 'Pedido confirmado — fitas adesivas | ROI Labs' : 'Pedido confirmado — porcelanato Goiânia | ROI Labs',
-          `<p>Olá, ${escapeHtml(pedido.nome)}!</p>
+          cancelToken
+            ? 'Assinatura confirmada | ROI Labs'
+            : ehFitas ? 'Pedido confirmado — fitas adesivas | ROI Labs' : 'Pedido confirmado — porcelanato Goiânia | ROI Labs',
+          cancelToken
+            ? `<p>Olá, ${escapeHtml(pedido.nome)}!</p>
+               <p>Sua assinatura foi confirmada. As próximas cobranças acontecem automaticamente —
+               você não precisa fazer nada nem informar o cartão de novo.</p>
+               <ul>${itensHtml}</ul>
+               <p><strong>Valor do ciclo: ${brl(pedido.total)}</strong></p>
+               <p>Quer cancelar? <a href="https://app.roilabs.com.br/assinatura/cancelar?token=${cancelToken}">Cancelar assinatura</a></p>
+               <p>— ROI Labs</p>`
+            : `<p>Olá, ${escapeHtml(pedido.nome)}!</p>
            <p>Recebemos a confirmação do seu pagamento. Seu pedido está reservado e o
            ${ehFitas ? 'fabricante já foi acionado' : 'fornecedor do polo de Goiânia já foi acionado'}.</p>
            <ul>${itensHtml}</ul>
@@ -189,8 +242,69 @@ export async function POST(req: NextRequest) {
       where: { id: pedido.id },
       data: { statusPagamento: 'reembolsado', statusFulfillment: 'reembolsado', mpPaymentId: paymentId },
     });
+  } else if (pedido.statusPagamento === 'pago') {
+    // 014 (contracts/webhook-assinatura.md, "Caminho de RENOVAÇÃO"): notificação de um
+    // ciclo seguinte de uma assinatura — aprovado ou não. Pedido sem Assinatura (notificação
+    // duplicada num pedido normal já pago) → no-op, comportamento atual.
+    const assinatura = await prisma.assinatura.findFirst({ where: { pedidoId: pedido.id } });
+    if (assinatura) {
+      const jaProcessado = !!(await prisma.cicloCobranca.findUnique({ where: { mpPaymentId: paymentId } }));
+      const decisao = decidirRenovacao(
+        { estado: assinatura.estado, recorrencia: assinatura.recorrencia },
+        payment.status,
+        jaProcessado,
+      );
+
+      if (decisao.acao === 'sucesso') {
+        await prisma.$transaction([
+          prisma.cicloCobranca.create({ data: { assinaturaId: assinatura.id, resultado: 'sucesso', mpPaymentId: paymentId } }),
+          prisma.assinatura.update({
+            where: { id: assinatura.id },
+            data: {
+              estado: decisao.novoEstado,
+              proximaCobranca: decisao.proximaCobranca,
+              ...(decisao.limparJanela ? { janelaFalhaDesde: null } : {}),
+            },
+          }),
+          prisma.itemPedido.update({ where: { id: assinatura.itemPedidoId }, data: { assinaturaEstado: decisao.novoEstado } }),
+        ]);
+        log.info({ assinaturaId: assinatura.id, paymentId }, 'webhook: ciclo de renovação pago');
+      } else if (decisao.acao === 'falha') {
+        await prisma.$transaction([
+          prisma.cicloCobranca.create({
+            data: { assinaturaId: assinatura.id, resultado: 'falha', motivo: payment.status, mpPaymentId: paymentId },
+          }),
+          prisma.assinatura.update({
+            where: { id: assinatura.id },
+            data: {
+              estado: decisao.novoEstado,
+              ...(decisao.setarJanela ? { janelaFalhaDesde: new Date() } : {}),
+            },
+          }),
+          prisma.itemPedido.update({ where: { id: assinatura.itemPedidoId }, data: { assinaturaEstado: decisao.novoEstado } }),
+        ]);
+        log.warn({ assinaturaId: assinatura.id, paymentId, status: payment.status }, 'webhook: ciclo de renovação falhou');
+
+        // FR-004: só avisa na 1ª falha da sequência (setarJanela) — falhas seguintes dentro
+        // da mesma janela já foram avisadas.
+        if (decisao.setarJanela && pedido.email) {
+          sendEmail(
+            pedido.email,
+            'Não conseguimos cobrar sua assinatura | ROI Labs',
+            `<p>Olá, ${escapeHtml(pedido.nome)}!</p>
+             <p>A cobrança deste ciclo da sua assinatura <strong>${escapeHtml(assinatura.slug)}</strong> não foi
+             aprovada. Vamos tentar novamente automaticamente nos próximos dias — verifique se o cartão
+             cadastrado está válido na sua página de assinatura do Mercado Pago.</p>
+             <p>Prefere cancelar? O acesso ao período já pago continua valendo até o fim do ciclo, sem reembolso:</p>
+             <p><a href="https://app.roilabs.com.br/assinatura/cancelar?token=${assinatura.cancelToken}">Cancelar assinatura</a></p>
+             <p>— ROI Labs</p>`,
+          );
+        }
+      }
+      // decisao.acao === 'ignorar' (FR-006, dedupe) → no-op.
+    }
   }
-  // pending/in_process/rejected/cancelled → keep pendente (cart preserved).
+  // pending/in_process/rejected/cancelled sem pedido pago → keep pendente (cart preserved).
 
   return NextResponse.json({ ok: true });
 }

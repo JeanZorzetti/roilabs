@@ -57,6 +57,53 @@ export async function createPreference(input: PreferenceInput): Promise<{ id: st
   return { id: data.id, initPoint: data.init_point };
 }
 
+export interface PreapprovalInput {
+  externalReference: string; // = pedido.id
+  reason: string; // rótulo da assinatura na página MP (slug do produto)
+  payerEmail: string; // Preapproval EXIGE payer_email (Checkout Pro não)
+  transactionAmount: number;
+  frequency: number; // 1 (mensal) | 12 (anual) — ver frequencyType
+  frequencyType: 'months';
+  backUrl: string;
+  notificationUrl: string;
+}
+
+/** Cria uma autorização recorrente (Preapproval). Cobra o 1º ciclo e todos os seguintes
+ *  sem o comprador reentrar o cartão (FR-001, research.md D1). */
+export async function createPreapproval(input: PreapprovalInput): Promise<{ id: string; initPoint: string }> {
+  const res = await fetch(`${API}/preapproval`, {
+    method: 'POST',
+    headers: authHeaders(),
+    body: JSON.stringify({
+      external_reference: input.externalReference,
+      reason: input.reason,
+      payer_email: input.payerEmail,
+      back_url: input.backUrl,
+      notification_url: input.notificationUrl,
+      auto_recurring: {
+        frequency: input.frequency,
+        frequency_type: input.frequencyType,
+        transaction_amount: Number(input.transactionAmount.toFixed(2)),
+        currency_id: 'BRL',
+      },
+    }),
+  });
+  if (!res.ok) throw new Error(`MP preapproval failed: ${res.status} ${await res.text()}`);
+  const data = await res.json();
+  return { id: data.id, initPoint: data.init_point };
+}
+
+/** Cancela uma autorização recorrente no MP. Chamar SEMPRE antes de marcar `cancelada` no
+ *  banco (data-model.md — ordem importa: se isto falhar, o estado local não muda). */
+export async function cancelPreapproval(preapprovalId: string): Promise<void> {
+  const res = await fetch(`${API}/preapproval/${preapprovalId}`, {
+    method: 'PUT',
+    headers: authHeaders(),
+    body: JSON.stringify({ status: 'cancelled' }),
+  });
+  if (!res.ok) throw new Error(`MP cancelPreapproval failed: ${res.status} ${await res.text()}`);
+}
+
 export interface MpPayment {
   id: number;
   status: string; // approved | pending | in_process | rejected | refunded | charged_back | cancelled

@@ -1,0 +1,16 @@
+# Sweep diário de assinaturas inadimplentes (014, FR-009). Cancela quem esgotou a janela de
+# retry — a AUTORIDADE de "cancelada" é este cron, nunca o webhook do MP (research.md D2).
+name: cobranca-assinaturas
+
+on:
+  schedule:
+    - cron: '0 10 * * *'
+  workflow_dispatch:
+
+jobs:
+  sweep:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          curl -sf -X POST "https://app.roilabs.com.br/api/cron/assinaturas" \
+            -H "X-Cron-Secret: ${{ secrets.CRON_SECRET }}"

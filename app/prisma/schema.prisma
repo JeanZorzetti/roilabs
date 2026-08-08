@@ -102,7 +102,7 @@ model ItemPedido {
   detalhe           Json?                                        // justificativa do preço (FR-004)
   recorrencia       String?                                      // mensal | anual; null = avulso
   assinaturaRef     String?  @map("assinatura_ref")              // id da assinatura no gateway
-  assinaturaEstado  String?  @map("assinatura_estado")           // ativa | cancelada
+  assinaturaEstado  String?  @map("assinatura_estado")           // ativa | inadimplente | cancelada
 
   // Snapshot congelado quando o pedido vira 'pago' (US4). NULL = pedido anterior à feature.
   pisoSnapshot              Decimal? @db.Decimal(10, 2) @map("piso_snapshot")
@@ -388,6 +388,48 @@ model NegocioOriginado {
   @@index([parceiroId, clienteDoc]) // achar negócios anteriores do mesmo cliente+parceiro (classificação)
   @@index([parceiroId, clienteRef]) // idem, quando o gateway não entrega documento (012)
   @@map("negocios_originados")
+}
+
+// 014: vínculo recorrente (Key Entity da spec). Nasce dentro da MESMA transação que marca
+// o Pedido do 1º ciclo como pago (webhook) — nunca antes. itemPedidoId/pedidoId/lojaId são
+// denormalizados de propósito, SEM @relation: evita join a mais nas leituras do admin; a
+// fonte de verdade continua sendo itemPedidoId (ItemPedido não ganha coluna nova).
+model Assinatura {
+  id               String    @id @default(cuid())
+  itemPedidoId     String    @unique @map("item_pedido_id")
+  pedidoId         String    @map("pedido_id")
+  slug             String
+  lojaId           String    @map("loja_id")
+  mpPreapprovalId  String    @unique @map("mp_preapproval_id")
+  recorrencia      String // mensal | anual — snapshot, nunca relido da config da loja
+  estado           String    @default("ativa") // ativa | inadimplente | cancelada (máquina de estado, data-model.md)
+  proximaCobranca  DateTime? @map("proxima_cobranca") // null quando cancelada
+  janelaFalhaDesde DateTime? @map("janela_falha_desde") // marcado na 1ª falha da sequência; limpo em sucesso
+  cancelToken      String    @unique @map("cancel_token") // opaco, gerado 1x, nunca rotacionado (D3)
+  canceladaEm      DateTime? @map("cancelada_em")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+
+  ciclos CicloCobranca[]
+
+  @@index([estado]) // o cron filtra por estado='inadimplente' todo dia
+  @@map("assinaturas")
+}
+
+// 014: uma linha por tentativa de cobrança (inclui o 1º ciclo) — nunca deletado, é o
+// registro financeiro (FR-007).
+model CicloCobranca {
+  id            String   @id @default(cuid())
+  assinaturaId  String   @map("assinatura_id")
+  dataTentativa DateTime @default(now()) @map("data_tentativa")
+  resultado     String // sucesso | falha
+  motivo        String? // status/detalhe do Payment quando falha; null em sucesso
+  mpPaymentId   String   @unique @map("mp_payment_id") // idempotência (FR-006)
+
+  assinatura Assinatura @relation(fields: [assinaturaId], references: [id])
+
+  @@index([assinaturaId])
+  @@map("ciclos_cobranca")
 }
 
 // Fatura mensal de success fee por parceiro + cobrança Asaas. Camada 007.
