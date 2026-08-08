@@ -74,6 +74,7 @@ model Pedido {
   freteMotivo String? @map("frete_motivo")
 
   itens     ItemPedido[]
+  itensFita ItemPedidoFita[]
   negocios  NegocioOriginado[]
   createdAt DateTime     @default(now()) @map("created_at")
   updatedAt DateTime     @updatedAt @map("updated_at")
@@ -86,6 +87,9 @@ model ItemPedido {
   id       String  @id @default(cuid())
   pedidoId String  @map("pedido_id")
   slug     String
+  caixas   Int?
+  m2       Decimal? @db.Decimal(10, 2)
+  precoM2  Decimal? @db.Decimal(10, 2) @map("preco_m2") // snapshot do preço/m² na compra — legado, NULL em pedidos pós-013; conferência cruzada até T027
   subtotal Decimal @db.Decimal(10, 2)
 
   // 013: colunas do item unificado. ANULÁVEIS de propósito — @default NÃO reescreve linha
@@ -111,6 +115,24 @@ model ItemPedido {
 
   @@index([pedidoId])
   @@map("itens_pedido")
+}
+
+// Item de pedido de FITA (011). Tabela legada — a 013 unifica em ItemPedido; esta tabela
+// e a relação acima só existem até o backfill copiar os dados e T026 remover ambos.
+model ItemPedidoFita {
+  id        String  @id @default(cuid())
+  pedidoId  String  @map("pedido_id")
+  slug      String
+  rolos     Int
+  precoRolo Decimal @db.Decimal(10, 2) @map("preco_rolo") // snapshot do unitário da faixa aplicada
+  faixaMin  Int     @map("faixa_min") // faixa aplicada — sem isto um pedido antigo não permite
+  faixaMax  Int?    @map("faixa_max") // reconstruir POR QUE cobrou aquele unitário
+  subtotal  Decimal @db.Decimal(10, 2)
+
+  pedido Pedido @relation(fields: [pedidoId], references: [id], onDelete: Cascade)
+
+  @@index([pedidoId])
+  @@map("itens_pedido_fita")
 }
 
 

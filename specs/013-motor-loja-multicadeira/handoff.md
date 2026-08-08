@@ -253,3 +253,53 @@ lê esse campo.
 ### Não reabrir
 
 ⛔ **Teste de venda real com cartão real — cancelado pelo Jean em 07/08.** Segue valendo.
+
+---
+
+## 2026-08-08 (sessão 2) — migração aplicada em produção, dinheiro confere; falta só o merge
+
+> **BLUF:** a armadilha 1 era maior do que a sessão anterior descreveu — `4547e82` não só
+> removeu `itensFita`, **removeu também `caixas`/`m2`/`precoM2` de `ItemPedido`**, colunas que
+> `migrate-013-backfill.mjs` e `verify-013-sums.mjs` leem diretamente. Um `db push` do schema
+> como estava teria **dropado** as duas fontes que o backfill precisa ler, na frente da
+> migração. Corrigido, migração rodada em produção, dinheiro bate exato. **A branch
+> `fix/013-build` NÃO foi mergeada — falta só isso.**
+
+### O que foi feito
+
+1. Restaurado em `app/prisma/schema.prisma`: `caixas`/`m2`/`precoM2` em `ItemPedido` (como
+   `Int?`/`Decimal?` — nullable, não como estavam antes, porque `pedidos/route.ts` já grava
+   pedidos novos sem preenchê-las) + modelo `ItemPedidoFita` + relação `itensFita` em `Pedido`.
+2. `prisma generate`, `tsc --noEmit`, `npm test`, `next build`, `astro build` — todos verdes.
+3. Baseline conferido por SQL cru contra produção: idêntico ao registrado em 07/08 (6 pedidos,
+   R$ 22.091,89, 0 pagos).
+4. `prisma db push` — aditivo, sem prompt de perda de dado, confirmado no banco certo
+   (`roilabs_db@2.24.207.200:5443`).
+5. `verify-013-sums.mjs` pós-push/pré-backfill = baseline (2 itens com `unidade IS NULL`, 8
+   fitas não copiadas — esperado).
+6. `migrate-013-backfill.mjs --dry-run` conferido linha a linha, depois rodado de verdade: 2
+   UPDATEs (porcelanato) + 8 INSERTs (fita).
+7. `verify-013-sums.mjs` pós-backfill: **R$ 22.091,89 nos dois lados, totais por pedido
+   idênticos byte a byte, 0 `unidade IS NULL`, 0 invariante quebrada, 0 fita não copiada.**
+   `itens_pedido` foi de 2 para **10 linhas**, como previsto.
+8. `tasks.md`: T007–T012 marcados (schema, os dois scripts, os 3 testes da Fase 2) — únicos
+   marcados porque foram os únicos re-verificados nesta sessão; Fases 1/3/4/5 continuam `[ ]`
+   por falta de auditoria, não por estarem incompletas.
+
+### Estado exato
+
+| | |
+|---|---|
+| banco de produção | ✅ schema novo aplicado, backfill rodado, dinheiro conferido |
+| branch `fix/013-build` | commit local pendente com o fix do schema + tasks.md — **NÃO pushada, NÃO mergeada** |
+| `main` | ainda roda a imagem pré-013 (schema antigo + código antigo coexistiam até aqui; agora o banco já tem as colunas novas, mas a imagem em produção ainda não as usa) |
+
+### Próxima sessão / próximo passo imediato
+
+`git merge fix/013-build` em `main` + push é DEPLOY (EasyPanel) — só falta isso. Depois do
+merge, **conferir o deploy no EasyPanel** (não assumir) e então marcar no `tasks.md` o que o
+deploy efetivamente ligou.
+
+### Não reabrir
+
+⛔ Teste de venda real com cartão real. Segue valendo.
