@@ -494,3 +494,84 @@ por mais que se somem.
 | Sem caminho de cobrança | 27 | o resto |
 
 **A leitura é "faltam 2", não "faltam 34".** E nem a única ligada faturou.
+
+---
+
+## 2026-08-08 — a Atma é DA CASA, e com isso a carteira fica sem nenhum ocupante que gere fee
+
+> **BLUF:** a sessão começou para fechar T033/T034 (ligar o gateway da primeira cadeira) e
+> terminou provando que **T033/T034 não têm alvo que fature**. A `atma` estava marcada
+> `daCasa: false` — errado, e é o mesmo defeito que o `vertice` teve e que foi corrigido em
+> 07/08. Corrigida para `true` no código e **em produção** (seed rodado). Com ela da casa,
+> **toda** cadeira de gateway próprio é da casa, e FR-010 zera o success fee de todas.
+
+### O que foi medido em produção (`roilabs_db`, leitura direta, 08/08)
+
+| tabela | linhas | leitura |
+|---|---|---|
+| `Parceiro` | **1** | só TapePro (comissões 0,15/0,10, contrato 22/07) |
+| `CredencialGateway` | **0** | **nada ligado, em nenhuma cadeira** |
+| `ProdutoCadeira` | **0** | nas 11 cadeiras |
+| `Cadeira` | 11 | `daCasa` 8 → **9** depois da correção |
+
+### 🚩 "Gateway ligado" quer dizer duas coisas diferentes
+
+A tabela da seção anterior diz *"Gateway **ligado**, régua lendo | 1 | `atma`"*. Isso veio do
+`roihub/scripts/gateways.mjs`, que mede **o site do projeto servindo um gateway** — não uma
+`CredencialGateway` na carteira. As duas leituras discordam: no banco, `CredencialGateway` tem
+**zero** linhas. Nenhuma venda de parceiro jamais entrou pela carteira.
+
+É a mesma classe de erro do `GEO-01` medindo a palavra `GPTBot` em vez da permissão: o script
+media o balde certo para a pergunta dele, e a palavra "ligado" foi lida como se fosse a outra.
+
+### Por que a Atma é da casa
+
+`siteUrl` é `atma.roilabs.com.br` (subdomínio da própria ROI Labs) e o repo é
+`JeanZorzetti/Atma` — os dois marcadores que valem para `vertice`, `orion` e `meridian`, todos
+`daCasa: true`. O comentário antigo afirmava "parceiro externo, gateway já ligado (o único da
+carteira em 07/08)": **as duas metades eram falsas.** Vale a regra fail-closed do próprio
+`seats.ts`: na dúvida, `true`, porque o erro para `false` faz a ROI Labs cobrar fee de si mesma
+e INFLAR a receita da carteira, enquanto o erro para `true` só sub-reporta.
+
+### A consequência que muda o roadmap
+
+| cadeira | gateway próprio | `daCasa` | gera fee? |
+|---|---|---|---|
+| `atma` | MP | **true** (corrigido 08/08) | não — FR-010 |
+| `polarisia`, `estetiacrm`, `vertice`, `sirius`, `context`, `orion` | MP/Stripe | true | não — FR-010 |
+| **TapePro** (único `Parceiro` real) | — vende pelo **carrinho da ROI Labs** | false | não usa a carteira |
+
+**A carteira está construída, correta, testada — e sem cliente.** O success fee das duas taxas
+(010) e o webhook das duas contas (012) não têm de quem cobrar hoje. O que a 012 ainda entrega
+de real é **visibilidade de receita própria**, não faturamento novo. Isso não é motivo para
+desfazer nada: é o número honesto para decidir o que vem depois.
+
+### Cards que apodreceram (conferidos contra o banco, não contra o texto)
+
+- **T033** ("cadastrar a `CredencialGateway` da primeira cadeira") esconde 4 bloqueios: a FK
+  exige um `Parceiro` que não existe para nenhuma cadeira da casa; `ProdutoCadeira` está vazia
+  e `decidirCheckout` devolve `sem-produto` **antes** de olhar o gateway; **não existe caminho
+  de escrita** (nem tela nem script) para `Parceiro`/`ProdutoCadeira`/`CredencialGateway`; e o
+  pagamento resultante não geraria fee (`registrar-venda.ts:159`, `semNegocio: 'da-casa'`).
+- **T048** (publicar `/cadeira/sirius/`) depende de T033, mas mesmo com T033 fechada a página
+  não venderia: sem `ProdutoCadeira`, o checkout é `indisponivel`.
+- **T072b** manda conferir `vertice` com `daCasa=false`. **O card está defasado**: a T052
+  corrigiu o `vertice` para `true` no fim do dia 07/08. O seed de hoje deixou 9 da casa.
+
+### Feito nesta sessão
+
+1. `app/src/lib/seats.ts` — `atma` para `daCasa: true` nas **duas** listas (`DEFAULT_SEATS` e
+   `PROJETOS_CADEIRA`), com os comentários falsos reescritos. `npm test` verde (exit 0).
+2. **Seed rodado contra produção.** Diff antes/depois medido linha a linha: mudou **um campo
+   de uma linha** (`ordem=2`, `daCasa` false→true) e o total 8→9. Nada mais se moveu.
+   Isso fecha a parte (a) da T072b.
+
+### Próxima sessão — a pergunta, não a tarefa
+
+Não é "como ligar o gateway". É **"existe alguém de quem cobrar success fee?"**. Se a resposta
+for não, a 012 já entregou o que dava, e T033/T034/T036/T037 devem ser fechadas como
+*sem ocupante* em vez de ficarem abertas parecendo trabalho pendente.
+
+⚠️ `DATABASE_URL` do `.env` da raiz aponta para o host **interno** do Docker
+(`doc_crm_roilabs_db:5432`) e tem um `]` colado no fim das **3** ocorrências. Para alcançar o
+banco daqui, trocar o host por `2.24.207.200:5443` e tirar o `]`.

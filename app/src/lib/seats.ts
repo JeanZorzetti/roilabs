@@ -18,8 +18,11 @@ export const DEFAULT_SEATS = [
   // de curadoria (já preenchida). O link/estado visual "ocupada" vive no site (presentational).
   // daCasa:false — Tapepro é parceiro externo (spec 011), e a venda dela GERA success fee.
   { niche: 'Fitas adesivas', status: 'Ocupada · Tapepro', open: false, estado: 'ocupada-vendavel', daCasa: false, exibirDaCasa: false },
-  // Atma Aligner: parceiro externo, gateway já ligado (o único da carteira em 07/08).
-  { niche: 'Ortodontia / Alinhadores', status: 'Ocupada · Atma Aligner', open: false, estado: 'ocupada-vendavel', daCasa: false, exibirDaCasa: false },
+  // CORRIGIDA (Jean, 08/08): a Atma é DA CASA — mesmo erro que o `vertice` teve e que já
+  // foi corrigido abaixo. O comentário anterior afirmava duas coisas falsas: "parceiro
+  // externo" (o site é subdomínio `atma.roilabs.com.br` e o repo é da própria ROI Labs) e
+  // "gateway já ligado" (`CredencialGateway` tem ZERO linhas em produção, conferido 08/08).
+  { niche: 'Ortodontia / Alinhadores', status: 'Ocupada · Atma Aligner', open: false, estado: 'ocupada-vendavel', daCasa: true, exibirDaCasa: false },
 ] as const;
 
 /**
@@ -47,7 +50,11 @@ export const DEFAULT_SEATS = [
  */
 export const PROJETOS_CADEIRA = [
   // ── Fase 1: Mercado Pago (4 cadeiras) ──────────────────────────────────────
-  { slug: 'atma', niche: 'Ortodontia / Alinhadores', status: 'Ocupada · Atma Aligner', estado: 'ocupada-vendavel', gateway: 'mercadopago', daCasa: false, exibirDaCasa: false, siteUrl: 'https://atma.roilabs.com.br/', repoUrl: 'https://github.com/JeanZorzetti/Atma' },
+  // T052 CORRIGIDA (Jean, 08/08): `atma` é DA CASA, pela mesma leitura que corrigiu o
+  // `vertice` — e classificá-la como parceiro externo a colocava na régua do success fee,
+  // fazendo a ROI Labs cobrar fee de si mesma e INFLAR a receita da carteira (FR-010).
+  // Vale a regra fail-closed do bloco acima: na dúvida, `true`.
+  { slug: 'atma', niche: 'Ortodontia / Alinhadores', status: 'Ocupada · Atma Aligner', estado: 'ocupada-vendavel', gateway: 'mercadopago', daCasa: true, exibirDaCasa: false, siteUrl: 'https://atma.roilabs.com.br/', repoUrl: 'https://github.com/JeanZorzetti/Atma' },
   // ⚠️ `niche` aqui é RÓTULO DE EXIBIÇÃO, não chave (o seed casa por `siteUrl`). Cada um
   // saiu do que o próprio site diz de si, lido no ar em 07/08 — 5 dos 8 descreviam produto
   // que não existe mais (o `polarisia` não tinha uma palavra sobre imóvel na página inteira).
