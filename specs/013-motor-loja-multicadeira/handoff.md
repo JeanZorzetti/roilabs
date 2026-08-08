@@ -396,7 +396,8 @@ faz parte da task, senão o "check-lojas OK" não é evidência de coisa alguma.
 > etapa de entrega. **A 014 está desbloqueada.** Mas o SC-001 do jeito que `contracts/
 > loja-config.md` promete ("só 2 arquivos") não é atingível hoje — o servidor mantém um
 > registro de cadeiras separado do site, e isso não estava no texto das tasks. Branch
-> `fix/013-assinatura`, 3 commits, **não mergeada, não pushada.**
+> `fix/013-assinatura` (4 commits), **pushada para `origin`, não mergeada** — abrir PR ou
+> mergear fica pra quem revisar: `https://github.com/JeanZorzetti/roilabs/pull/new/fix/013-assinatura`.
 
 ### O que foi feito
 
@@ -466,6 +467,10 @@ manual pelos 3 ids (estão no log desta sessão) ou pelo admin `/admin/pedidos`.
    bloqueada por esta sessão, agora não está mais.
 4. `git merge fix/013-assinatura` continua pendente — branch não tem nada que precise de
    deploy imediato (a cadeira de teste está despublicada), mas o merge é decisão de quem revisar.
+
+📌 Memória de longo prazo (`project_013_motor_loja_multicadeira.md`, fora deste repo) já foi
+atualizada com o resumo desta sessão — uma sessão nova em outro chat carrega esse contexto
+automaticamente, este handoff é o detalhe técnico.
 
 ### Verificação (as travas deste repo)
 
