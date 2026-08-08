@@ -386,6 +386,87 @@ faz parte da task, senão o "check-lojas OK" não é evidência de coisa alguma.
 - ⛔ Teste com cartão real — cancelado, segue valendo. Verificação de dinheiro é **soma no
   banco**, nunca pagamento.
 
+---
+
+## 2026-08-08 (sessão 3) — T016(j)/T021/T022 fechados; T023 não fecha ao pé da letra
+
+> **BLUF:** a unidade `assinatura` agora precifica de verdade — `teste-saas-pro` foi comprado
+> até a intenção de pagamento real (Mercado Pago devolveu `init_point`, `mpPreferenceId`
+> gravado), com `unidade=assinatura`, `recorrencia=mensal`, `assinaturaEstado=ativa`, sem
+> etapa de entrega. **A 014 está desbloqueada.** Mas o SC-001 do jeito que `contracts/
+> loja-config.md` promete ("só 2 arquivos") não é atingível hoje — o servidor mantém um
+> registro de cadeiras separado do site, e isso não estava no texto das tasks. Branch
+> `fix/013-assinatura`, 3 commits, **não mergeada, não pushada.**
+
+### O que foi feito
+
+1. **T016(j)** — `app/src/lib/precos-assinatura.ts` (autoridade de preço server-side, só os 2
+   produtos de teste) + 3º ramo no dispatch de `pedidos/route.ts`. `quantidade` fixa em 1 por
+   item (um ciclo, não empilha); `assinaturaEstado='ativa'`; `assinaturaRef` fica `null` de
+   propósito (amarrar no gateway é a 014). `LojaConfig`/`Loja` ganharam `recorrencia?` nos dois
+   espelhos.
+2. **T021** — cadeira `teste-saas` declarada em **3** arquivos, não 2: os dois `lojas.ts`
+   (servidor E site — ver armadilha abaixo) + `check-lojas.mjs` (registrar o catálogo no
+   `catalogMap`, senão os checks 2/4/5 passam vazios) + o catálogo novo `teste-saas.ts`.
+   `check-lojas.mjs`: 3 cadeiras validadas. `astro build`: sitemap continua com **99 URLs**,
+   zero menção a `teste-saas` (`publicada=false`, nenhuma rota nasceu).
+3. **T022** — subi `next dev` local (porta 3011) contra o **banco de produção** via
+   `app/.env.local` temporário (git-ignorado, apagado no fim da sessão) com `publicada=true`
+   temporário nos dois espelhos. `POST /api/pedidos` direto (mesmo shape que o form do
+   `carrinho.astro` manda) com `cadeira=teste-saas`, `itens=[{slug:'teste-saas-pro',
+   quantidade:1}]`. Resultado, conferido por SQL: ver tasks.md T022. `publicada` voltou a
+   `false` nos dois espelhos **antes do commit**.
+
+### 🚩 A armadilha que não estava no texto das tasks: dois registros, não um
+
+`contracts/loja-config.md` promete "Dois arquivos. Nada além." para abrir uma cadeira. É
+falso hoje: **o servidor tem o próprio `LojaConfig[]` em `app/src/lib/lojas.ts`**, duplicado
+de propósito do `Loja[]` do site (comentário no próprio arquivo já avisava — "Duplicação
+deliberada... Teto: > 5 cadeiras → packages/lojas"). Sem uma entrada lá, `getLoja('teste-saas')`
+em `/api/pedidos` devolve `null` e o checkout nunca resolve a cadeira — T022 literalmente não
+roda sem esse arquivo. `check-lojas.mjs` também precisou de uma linha nova (armadilha 5 do
+handoff anterior, confirmada na prática).
+
+**Consequência:** T023 (`git diff --name-only` == só 2 arquivos) não fecha. O `Purpose` da
+Fase 4 (linha 93 do tasks.md — "nenhum arquivo de rota, carrinho, checkout ou schema
+alterado") **continua verdadeiro** — os 2 arquivos extras são config, não código de negócio.
+Mas o critério literal do SC-001/T023 está desatualizado. Deixei o achado registrado em
+T023 no tasks.md; não decidi sozinho se o contrato deve ser reescrito ou se vira exceção
+aceita — é decisão de produto, não technicality de código.
+
+### Efeitos colaterais no banco de produção (esperados, não são bug)
+
+3 linhas de `Pedido` com `vertical='teste-saas'`, todas `statusPagamento='pendente'`, nenhum
+pagamento feito:
+- 1 com `mpPreferenceId` válido (o teste que fechou, `teste-saas-pro`, R$ 149,90)
+- 2 sem `mpPreferenceId` (tentativas com `origin` `http://localhost` — a MP recusa
+  `auto_return` sem `back_url.success` https; corrigido usando `origin=https://
+  goiania.roilabs.com.br` na 3ª tentativa). Artefato do meu tooling de teste (PowerShell
+  `Invoke-WebRequest`, não curl — o Bash deste ambiente não alcança `localhost` por algum
+  motivo de rede IPv4/IPv6, só funcionou via PowerShell), não um bug do dispatch.
+
+Não limpei essas linhas — não tinha instrução para isso e apagar pedido não é uma operação
+trivial neste schema (cascade em `ItemPedido`). Se quiser sumir com elas, é uma DELETE
+manual pelos 3 ids (estão no log desta sessão) ou pelo admin `/admin/pedidos`.
+
+### Não reabrir
+
+⛔ Teste de venda real com cartão real. Segue valendo — T022 parou na intenção de pagamento.
+
+### Próxima sessão
+
+1. **Decidir T023**: aceitar `loja-config.md` como aspiracional (documentar o registro duplo
+   como exceção permanente) ou reescrevê-lo para refletir os 2 registros — antes de fechar a
+   Fase 4 como "done".
+2. **T024**: remover a cadeira `teste-saas` (os 2 espelhos + `teste-saas.ts` + a linha do
+   `catalogMap`) e conferir que a loja volta ao estado anterior — não fiz porque o pedido desta
+   sessão era só T016(j)/T021/T022 (texto do handoff anterior), e remover agora destruiria a
+   evidência do T022 antes de alguém revisar.
+3. Só depois disso: **abrir a 014** (amarrar recorrência de verdade no Mercado Pago) — estava
+   bloqueada por esta sessão, agora não está mais.
+4. `git merge fix/013-assinatura` continua pendente — branch não tem nada que precise de
+   deploy imediato (a cadeira de teste está despublicada), mas o merge é decisão de quem revisar.
+
 ### Verificação (as travas deste repo)
 
 - `npm test` no `app` · `npx astro build` no `site-goiania` — **nunca `npm run build`**, que
