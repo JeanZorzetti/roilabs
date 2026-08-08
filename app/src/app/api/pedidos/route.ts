@@ -6,6 +6,7 @@ import { getProduto } from '@/lib/precos';
 import { calcFrete, type Entrega } from '@/lib/frete';
 import { precoPorQuantidade, temPrecoPublico } from '@/lib/precos-fitas';
 import { cotarFrete } from '@/lib/frete-fitas';
+import { getProdutoAssinatura } from '@/lib/precos-assinatura';
 import { validarCupom } from '@/lib/cupons';
 import { createPreference } from '@/lib/mercadopago';
 import { normalizarDoc, validarDoc } from '@/lib/doc';
@@ -83,6 +84,8 @@ export async function POST(req: NextRequest) {
     precoUnitario: number;
     detalhe: Prisma.InputJsonValue;
     subtotal: number;
+    recorrencia?: string | null;
+    assinaturaEstado?: string | null;
   }
   const itens: ItemNovo[] = [];
 
@@ -121,6 +124,23 @@ export async function POST(req: NextRequest) {
         precoUnitario: faixa.precoRolo,
         detalhe: { faixaMin: faixa.min, faixaMax: faixa.max },
         subtotal,
+      });
+    } else if (loja.unidade === 'assinatura') {
+      const p = getProdutoAssinatura(i.slug);
+      if (!p) return backTo(origin, 'vazio', cadeiraId);
+
+      // Um item = um ciclo (T016j). `quantidade` do carrinho é ignorada de propósito:
+      // a unidade assinatura não empilha ciclos, cobra só o 1º — a 014 amarra recorrência
+      // de verdade no gateway.
+      itens.push({
+        slug: i.slug,
+        unidade: 'assinatura',
+        quantidade: 1,
+        precoUnitario: p.preco,
+        detalhe: {},
+        subtotal: p.preco,
+        recorrencia: loja.recorrencia ?? null,
+        assinaturaEstado: 'ativa',
       });
     }
   }

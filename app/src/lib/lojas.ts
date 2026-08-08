@@ -27,6 +27,7 @@ export interface LojaConfig {
   id: string;
   prefixoRota: string;
   unidade: string;           // 'm2' | 'rolo' | 'assinatura'
+  recorrencia?: string;       // só para unidade='assinatura': 'mensal' | 'anual'
   modoCobranca: 'roilabs' | 'parceiro';
   checkoutUrl: string | null;
   pagoA: string;

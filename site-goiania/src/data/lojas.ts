@@ -24,6 +24,7 @@ export interface Loja {
   id: string;
   prefixoRota: string;
   unidade: string;           // id de Unidade (m2 | rolo | assinatura)
+  recorrencia?: string;      // só para unidade='assinatura': 'mensal' | 'anual'
   catalogo: Array<Produto | Fita | Record<string, unknown>>;
   modoCobranca: 'roilabs' | 'parceiro';
   checkoutUrl: string | null;
