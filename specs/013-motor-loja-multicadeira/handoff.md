@@ -585,3 +585,53 @@ letra, é uma edição pequena e isolada em `spec.md:307`.
 3. Opcional, sem urgência: construir o teste de paridade entre os 2 `lojas.ts`, ou aceitar a
    lacuna como está.
 4. Só depois do merge: abrir a 014.
+
+---
+
+## 2026-08-08 (sessão 6) — merge feito; deploy PRECISA conferência visual (não assumir)
+
+> **BLUF:** o Jean autorizou explicitamente o merge. `fix/013-assinatura` → `main` foi
+> **fast-forward** (`db4ed9c` → `bdfa0e4`, sem conflito — `main` não havia se movido desde a
+> sessão 2), pushado para `origin/main`. **O push já é o deploy** (EasyPanel observa `main`).
+> Esta sessão não tem acesso ao EasyPanel para confirmar o rollout — a mesma conferência visual
+> que a sessão 2 registrou ("subiu sim") precisa acontecer de novo.
+
+### O que foi feito
+
+`git fetch` confirmou `main` local = `origin/main`, sem divergência. `git merge-base main
+fix/013-assinatura` == HEAD de `main`, então o merge foi fast-forward puro — nada para
+resolver, nenhum commit de merge novo. `git push origin main` publicou `bdfa0e4`.
+
+Nenhum código foi re-testado nesta sessão além do merge em si: a árvore de arquivos em
+`bdfa0e4` é bit-idêntica ao que já foi testado na branch (sessões 4 e 5 — `tsc`, `npm test`,
+`next build`, `astro build`, todos verdes). Reexecutar os mesmos comandos contra a mesma árvore
+não traria informação nova.
+
+### Estado exato
+
+| | |
+|---|---|
+| `main` | `bdfa0e4`, pushado para `origin/main` |
+| `fix/013-assinatura` | mesma ponta, agora ancestral de `main` — pode ser deletada quando quiser |
+| deploy EasyPanel | **NÃO confirmado por esta sessão** — sem acesso à ferramenta. Precisa conferência visual, igual sessão 2 |
+| banco de produção | inalterado — schema e backfill já estavam aplicados desde a sessão 2; este merge só publica código que já rodava contra ele na branch |
+| Fase 4 (T021–T024) | ✅ fechada |
+| T023 | ✅ fechado (sessão 5, exceção aceita) |
+
+### Rollback, se algo aparecer depois
+
+Reverter `main` para `db4ed9c` (o commit anterior a este merge). O banco não precisa de rollback
+— nada mudou nele nesta sessão.
+
+### Não reabrir
+
+⛔ Teste de venda real com cartão real. Segue valendo.
+
+### Próxima sessão
+
+1. **Confirmar no EasyPanel** que o deploy do commit `bdfa0e4` subiu — não assumir a partir do
+   push.
+2. Depois de confirmado: abrir a 014 (amarrar recorrência de verdade no Mercado Pago).
+3. Opcional: alinhar `spec.md:307` (SC-001) com o contrato de 3 arquivos.
+4. Opcional: apagar a branch `fix/013-assinatura` (já mergeada) e as 3 linhas de `Pedido` de
+   teste em produção (`vertical='teste-saas'`, sessão 3).
