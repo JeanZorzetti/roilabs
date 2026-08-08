@@ -3,7 +3,8 @@ import { prisma } from '@/lib/prisma';
 import { isAuthed } from '@/lib/auth';
 import { getProduto } from '@/lib/precos';
 import { calcFrete, type Entrega } from '@/lib/frete';
-import { precoPorQuantidade, temPrecoPublico, cotarFrete, SLUG_PERSONALIZADA, SLUG_CLICHE } from '@/lib/precos-fitas';
+import { precoPorQuantidade, temPrecoPublico } from '@/lib/precos-fitas';
+import { cotarFrete } from '@/lib/frete-fitas';
 import { validarCupom } from '@/lib/cupons';
 import { createPreference } from '@/lib/mercadopago';
 import { normalizarDoc, validarDoc } from '@/lib/doc';
@@ -139,7 +140,7 @@ export async function POST(req: NextRequest) {
       
       if (!isento) {
         itens.push({
-          slug: SLUG_CLICHE,
+          slug: loja.linhaFixa.slug,
           unidade: loja.unidade, // herda a unidade da loja, mesmo sendo 1 rolo/1 item abstrato
           quantidade: 1,
           precoUnitario: loja.linhaFixa.valor,
@@ -227,8 +228,9 @@ export async function POST(req: NextRequest) {
       const unitPrice = isLast ? money(alvoProduto - acc) : money((i.subtotal * alvoProduto) / totalProduto);
       acc = money(acc + unitPrice);
       
-      const title = i.slug === SLUG_CLICHE 
-        ? 'Clichê (arte personalizada)' 
+      const lf = loja.linhaFixa;
+      const title = lf && i.slug === lf.slug
+        ? lf.rotulo
         : loja.unidade === 'm2'
           ? `${i.detalhe?.caixas} cx — ${i.slug}`
           : `${i.quantidade} ${loja.unidade}(s) — ${i.slug}`;

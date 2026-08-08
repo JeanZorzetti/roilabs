@@ -117,7 +117,10 @@ const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
     statusFulfillment: string;
     entrega: string;
     createdAt: string;
-    itens: { slug: string; caixas: number }[];
+    // 013: a tabela de itens unificou. `caixas` continua vindo (derivado de `detalhe`) para
+    // não quebrar quem já tem esta página em cache, mas quem manda é `unidade`/`quantidade` —
+    // é o que faz pedido de fita finalmente listar item em vez de lista vazia.
+    itens: { slug: string; unidade: string | null; quantidade: number | null; caixas: number | null }[];
   };
 
   function render(p: Status) {
@@ -170,9 +173,20 @@ const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
       const li = document.createElement('li');
       const nome = item.slug.replace(/-/g, ' ');
       li.textContent = `${nome} `;
-      const em = document.createElement('em');
-      em.textContent = `— ${item.caixas} caixa(s)`;
-      li.appendChild(em);
+      // m² conta em caixas para o comprador; as demais unidades contam na própria unidade.
+      // Sem nenhum dos dois (pedido anterior à 013), some a medida em vez de imprimir
+      // "undefined caixa(s)" na tela de quem está acompanhando o pedido.
+      const medida =
+        item.caixas != null
+          ? `${item.caixas} caixa(s)`
+          : item.quantidade != null
+            ? `${item.quantidade} ${item.unidade ?? 'un'}(s)`
+            : null;
+      if (medida) {
+        const em = document.createElement('em');
+        em.textContent = `— ${medida}`;
+        li.appendChild(em);
+      }
       ul.appendChild(li);
     }
 

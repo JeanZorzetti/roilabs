@@ -4,6 +4,7 @@ import { getPayment, verifyWebhookSignature } from '@/lib/mercadopago';
 import { resolverParametros, resolverPiso, resolverModalidade, type CamadasConfig } from '@/lib/centros-custo';
 import { sendEmail, sendAlert, escapeHtml } from '@/lib/email';
 import { log } from '@/lib/log';
+import { getLoja } from '@/lib/lojas';
 
 export const dynamic = 'force-dynamic';
 
@@ -60,7 +61,12 @@ export async function POST(req: NextRequest) {
       // Load all DB layers once for the whole order, then resolve per slug.
       const [paramRows, skuRows] = await Promise.all([
         prisma.parametroCentroCusto.findMany(),
-        prisma.itemPedido.findMany({ where: { pedidoId: pedido.id }, select: { id: true, slug: true, subtotal: true, caixas: true } }),
+        // 013: a tabela é UMA só. `caixas` saiu do schema — a contagem de caixas agora é
+        // justificativa de preço e mora em `detalhe`, não em coluna própria.
+        prisma.itemPedido.findMany({
+          where: { pedidoId: pedido.id },
+          select: { id: true, slug: true, subtotal: true, unidade: true, quantidade: true, detalhe: true },
+        }),
       ]);
       const globalRow = paramRows.find((r) => r.escopo === 'global') ?? null;
       const linhaRows = paramRows.filter((r) => r.escopo === 'linha');
@@ -107,27 +113,35 @@ export async function POST(req: NextRequest) {
       // Pós-pagamento (fire-and-forget, nunca quebra o webhook): confirmação ao
       // cliente (recibo nosso, além do MP) + alerta interno de pedido novo.
       const brl = (v: unknown) => Number(v).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-      // 011: pedido de fita não tem linha em ItemPedido — sem isto o comprador recebe
-      // uma confirmação com a lista de itens VAZIA.
-      const fitaRows =
-        pedido.vertical === 'fitas'
-          ? await prisma.itemPedidoFita.findMany({ where: { pedidoId: pedido.id }, select: { slug: true, rolos: true, subtotal: true } })
-          : [];
-      const itensHtml = [
-        ...skuRows.map((i) => `<li>${escapeHtml(i.slug)} — ${i.caixas} caixa(s) · ${brl(i.subtotal)}</li>`),
-        ...fitaRows.map((i) =>
-          i.slug === 'cliche-arte'
-            ? `<li>Clichê da arte personalizada · ${brl(i.subtotal)}</li>`
-            : `<li>${escapeHtml(i.slug)} — ${i.rolos} rolo(s) · ${brl(i.subtotal)}</li>`,
-        ),
-      ].join('');
+      // 013: `itens_pedido_fita` não existe mais — TODOS os itens vêm de `skuRows`. O que
+      // decide a exibição passou a ser a `unidade` do item, não o vertical do pedido, e é
+      // por isso que a lista deixou de ser duas somadas. O bug que a 011 remendava aqui
+      // (confirmação com lista VAZIA para fita) some por construção: há uma tabela só.
+      const lojaPedido = getLoja(pedido.vertical ?? 'porcelanato');
+      const lf = lojaPedido?.linhaFixa ?? null;
+      const medida = (i: (typeof skuRows)[number]): string | null => {
+        // m² conta em CAIXAS para o comprador, e a contagem virou justificativa de preço.
+        const caixas = (i.detalhe as { caixas?: unknown } | null)?.caixas;
+        if (i.unidade === 'm2' && caixas != null) return `${Number(caixas)} caixa(s)`;
+        if (i.quantidade != null) return `${Number(i.quantidade)} ${i.unidade ?? 'un'}(s)`;
+        // Pedido criado ANTES da migração da 013 não tem `unidade`: omitir a medida em vez
+        // de escrever "undefined caixa(s)" no e-mail de quem pagou.
+        return null;
+      };
+      const itensHtml = skuRows
+        .map((i) => {
+          if (lf && i.slug === lf.slug) return `<li>${escapeHtml(lf.rotulo)} · ${brl(i.subtotal)}</li>`;
+          const m = medida(i);
+          return `<li>${escapeHtml(i.slug)}${m ? ` — ${m}` : ''} · ${brl(i.subtotal)}</li>`;
+        })
+        .join('');
       const ehFitas = pedido.vertical === 'fitas';
       // 011.1: pedido com arte precisa que o cliente ENVIE a logo — a arte é coletada
       // pelo WhatsApp após o pagamento (não há campo de upload no checkout). Deriva do
       // que foi persistido: a personalizada no pedido e se o clichê foi cobrado (arte nova)
       // ou isento (recorrente).
-      const temPersonalizada = fitaRows.some((i) => i.slug === 'fita-transparente-personalizada');
-      const clicheCobrado = fitaRows.some((i) => i.slug === 'cliche-arte');
+      const temPersonalizada = !!lf && skuRows.some((i) => i.slug === lf.quandoSlug);
+      const clicheCobrado = !!lf && skuRows.some((i) => i.slug === lf.slug);
       const WA = 'https://wa.me/5562993265713';
       if (pedido.email) {
         sendEmail(

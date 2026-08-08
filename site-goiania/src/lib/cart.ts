@@ -274,10 +274,22 @@ const b64urlEncode = (s: string) =>
 const b64urlDecode = (s: string) =>
   atob(s.replace(/-/g, '+').replace(/_/g, '/') + '='.repeat((4 - (s.length % 4)) % 4));
 
+/**
+ * Token a partir de uma lista ARBITRÁRIA de itens — não do carrinho atual. É o que a página
+ * de favoritos precisa: montar link compartilhável sem tocar no carrinho de quem clica.
+ * A 013 removeu esta função ao reescrever o carrinho, mas o chamador continuou importando —
+ * e é por isso que o site parou de buildar.
+ */
+export function encodeItems(cadeira: string, itens: Array<{ slug: string; quantidade: number }>): string {
+  return b64urlEncode(JSON.stringify({ v: 2, ts: Date.now(), cadeira, itens }));
+}
+
 export function encodeCart(): string {
   const state = getCart();
-  const minimalItens = state.itens.map((i) => ({ slug: i.slug, quantidade: i.quantidade }));
-  return b64urlEncode(JSON.stringify({ v: 2, ts: Date.now(), cadeira: state.cadeira, itens: minimalItens }));
+  return encodeItems(
+    state.cadeira,
+    state.itens.map((i) => ({ slug: i.slug, quantidade: i.quantidade })),
+  );
 }
 
 /** Aceita v1 (array de {slug, caixas}) e v1_fitas, ou v2 ({cadeira, itens}) */

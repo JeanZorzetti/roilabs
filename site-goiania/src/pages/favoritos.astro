@@ -114,7 +114,9 @@ const favData = produtos.map((p) => ({
   whatsBtn.addEventListener('click', () => {
     const favoritos = getFavoritos().map((slug) => bySlug.get(slug)).filter((p): p is FavProduto => !!p);
     if (favoritos.length === 0) return;
-    const token = encodeItems(favoritos.map((p) => ({ slug: p.slug, caixas: 1 })));
+    // Favoritos é página de porcelanato (o catálogo vem de data/produtos), então a cadeira
+    // do token é `porcelanato` — e `caixas` virou `quantidade` no carrinho unificado.
+    const token = encodeItems('porcelanato', favoritos.map((p) => ({ slug: p.slug, quantidade: 1 })));
     const cartUrl = `${location.origin}/carrinho/?c=${token}`;
     const nomes = favoritos.map((p) => p.titulo).join(', ');
     const texto = `Olá! Quero um orçamento dos meus porcelanatos favoritos (${nomes}):\n${cartUrl}`;

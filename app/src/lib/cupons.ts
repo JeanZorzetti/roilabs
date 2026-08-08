@@ -69,6 +69,6 @@ export async function validarCupom(
         escopo: (row.escopo as Escopo) ?? 'porcelanato',
       }
     : null;
-  const r = avaliarCupom(c, subtotalProduto, vertical);
+  const r = avaliarCupom(c, subtotalProduto, escopoAtual);
   return r.ok ? { ok: true, codigo: codigoNorm, tipo: r.tipo, desconto: r.desconto } : r;
 }

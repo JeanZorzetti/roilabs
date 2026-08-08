@@ -77,11 +77,15 @@ export default async function PedidosPage() {
                 {p.itens.map((it) => (
                   <div key={it.id} style={{ fontSize: '0.78rem', lineHeight: 1.5 }}>
                     {it.unidade === 'm2' ? (
-                      <>{(it.detalhe as any)?.caixas ?? it.caixas}cx · {Number(it.quantidade ?? it.m2).toFixed(2)}m² · {it.slug}</>
+                      <>{(it.detalhe as { caixas?: number } | null)?.caixas ?? '—'}cx · {Number(it.quantidade ?? 0).toFixed(2)}m² · {it.slug}</>
                     ) : it.unidade === 'rolo' ? (
                       <>{it.quantidade} rolo(s) · {brl(it.precoUnitario)}/rolo · {it.slug}</>
-                    ) : (
+                    ) : it.unidade ? (
                       <>{it.quantidade} unid · {it.slug}</>
+                    ) : (
+                      // Pedido anterior à migração da 013: `unidade` nula. Mostrar slug e
+                      // subtotal é honesto; "0 unid" seria número inventado na tela.
+                      <>{it.slug} · {brl(it.subtotal)}</>
                     )}
                   </div>
                 ))}

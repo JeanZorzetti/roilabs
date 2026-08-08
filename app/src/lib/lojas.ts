@@ -9,7 +9,16 @@
 // documento, clichê, cupom), não o catálogo de display.
 
 export interface LinhaFixa {
+  /** Slug que DISPARA a linha fixa quando está no carrinho. */
   quandoSlug: string;
+  /**
+   * Slug da linha que é CRIADA. Não confundir com `quandoSlug`: um é o gatilho, o outro é o
+   * item que nasce. Era a constante `SLUG_CLICHE` solta na rota; hardcodá-la faria a segunda
+   * cadeira com linha fixa criar um item chamado 'cliche-arte'.
+   */
+  slug: string;
+  /** Rótulo exibido no checkout do gateway. */
+  rotulo: string;
   valor: number;
   isentoSeJaComprou: boolean;
 }
@@ -54,6 +63,9 @@ export const lojas: LojaConfig[] = [
     cupomEscopo: 'fitas',
     linhaFixa: {
       quandoSlug: 'fita-transparente-personalizada',
+      slug: 'cliche-arte',
+      rotulo: 'Clichê (arte personalizada)',
+      // ponytail: knob do operador — "a partir de R$80" da tabela Tapepro.
       valor: 80,
       isentoSeJaComprou: true,
     },

@@ -13,7 +13,9 @@ import { unidadesById, type Unidade } from './unidades';
 // ── Tipos ───────────────────────────────────────────────────────────────────
 
 export interface LinhaFixa {
-  quandoSlug: string;    // slug do produto que dispara a linha fixa
+  quandoSlug: string;    // slug do produto que DISPARA a linha fixa
+  slug: string;          // slug da linha CRIADA — o gatilho e o item são coisas diferentes
+  rotulo: string;        // rótulo exibido no checkout do gateway
   valor: number;         // R$ do clichê (80 hoje)
   isentoSeJaComprou: boolean; // true ⇒ comprador recorrente não paga
 }
@@ -63,6 +65,8 @@ export const lojas: Loja[] = [
     cupomEscopo: 'fitas',
     linhaFixa: {
       quandoSlug: 'fita-transparente-personalizada',
+      slug: 'cliche-arte',
+      rotulo: 'Clichê (arte personalizada)',
       valor: 80,
       isentoSeJaComprou: true,
     },

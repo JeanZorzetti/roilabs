@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getProduto } from '@/lib/precos';
 import { precoPorQuantidade } from '@/lib/precos-fitas';
-import { validarCupom, type Vertical } from '@/lib/cupons';
+// 013 renomeou o tipo `Vertical` para `Escopo` (cupom passou a valer por cadeira, FR-018).
+// O NOME NO FIO continua `vertical`: o carrinho já publicado está em cache no browser do
+// comprador e envia esse campo — renomear aqui quebraria cupom de quem não recarregou.
+import { validarCupom, type Escopo } from '@/lib/cupons';
 
 export const dynamic = 'force-dynamic';
 
@@ -18,7 +21,7 @@ export async function POST(req: NextRequest) {
   const codigo = (typeof form.get('codigo') === 'string' ? (form.get('codigo') as string) : '').slice(0, 40);
   // Ausente ⇒ porcelanato: o carrinho já publicado (e em cache no browser do comprador)
   // não envia este campo e precisa continuar funcionando igual.
-  const vertical: Vertical = form.get('vertical') === 'fitas' ? 'fitas' : 'porcelanato';
+  const vertical: Escopo = form.get('vertical') === 'fitas' ? 'fitas' : 'porcelanato';
 
   // Recompute the product subtotal on the server (never trust client money, FR-017).
   let parsed: unknown;

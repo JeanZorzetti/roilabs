@@ -18,9 +18,19 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
       statusFulfillment: true,
       entrega: true,
       createdAt: true,
-      itens: { select: { slug: true, caixas: true } },
+      itens: { select: { slug: true, unidade: true, quantidade: true, detalhe: true } },
     },
   });
   if (!pedido) return NextResponse.json({ error: 'não encontrado' }, { status: 404, headers: CORS });
-  return NextResponse.json(pedido, { headers: CORS });
+
+  // 013: `caixas` deixou de ser coluna, mas CONTINUA no corpo — derivada de `detalhe`. O
+  // site que consome isto é outro deploy e o que está publicado lê `item.caixas`; tirar o
+  // campo junto com a coluna escreveria "undefined caixa(s)" na tela de quem acompanha.
+  const itens = pedido.itens.map((i) => ({
+    slug: i.slug,
+    unidade: i.unidade,
+    quantidade: i.quantidade,
+    caixas: (i.detalhe as { caixas?: number } | null)?.caixas ?? null,
+  }));
+  return NextResponse.json({ ...pedido, itens }, { headers: CORS });
 }
