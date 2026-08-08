@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import type { Prisma } from '@prisma/client';
 import { isAuthed } from '@/lib/auth';
 import { getProduto } from '@/lib/precos';
 import { calcFrete, type Entrega } from '@/lib/frete';
@@ -72,8 +73,19 @@ export async function POST(req: NextRequest) {
 
   if (crus.length === 0) return backTo(origin, 'vazio', cadeiraId);
 
-  const itens = [];
-  
+  // ⚠️ TIPADO de propósito. Enquanto era `[]` (inferido `any[]`), o `create` do Prisma
+  // recebia `caixas`/`m2`/`precoM2` — colunas que a 013 tirou do schema — e o compilador
+  // não via nada. Todo pedido novo estouraria em runtime, no caminho de dinheiro.
+  interface ItemNovo {
+    slug: string;
+    unidade: string;
+    quantidade: number;
+    precoUnitario: number;
+    detalhe: Prisma.InputJsonValue;
+    subtotal: number;
+  }
+  const itens: ItemNovo[] = [];
+
   // Dispatch mínimo de precificação baseado na unidade da loja (T017)
   for (const i of crus) {
     if (loja.unidade === 'm2') {
@@ -93,8 +105,6 @@ export async function POST(req: NextRequest) {
         precoUnitario: p.preco,
         detalhe: { caixas, m2PorCaixa: p.m2_caixa },
         subtotal,
-        // Legado (será dropado na próxima fase)
-        caixas, m2, precoM2: p.preco,
       });
     } else if (loja.unidade === 'rolo') {
       if (!temPrecoPublico(i.slug)) return backTo(origin, 'item_orcamento', cadeiraId);
@@ -111,8 +121,6 @@ export async function POST(req: NextRequest) {
         precoUnitario: faixa.precoRolo,
         detalhe: { faixaMin: faixa.min, faixaMax: faixa.max },
         subtotal,
-        // Legado
-        caixas: 0, m2: 0, precoM2: 0,
       });
     }
   }
@@ -146,8 +154,6 @@ export async function POST(req: NextRequest) {
           precoUnitario: loja.linhaFixa.valor,
           detalhe: { isencao: false },
           subtotal: loja.linhaFixa.valor,
-          // Legado
-          caixas: 0, m2: 0, precoM2: 0,
         });
       }
     }
@@ -170,7 +176,9 @@ export async function POST(req: NextRequest) {
       entrega = frete === null ? 'a_combinar' : 'entrega';
     } else if (loja.frete === 'cotacao') {
       // Para fitas, a cotação depende do peso abstrato
-      const rolosParaCotar = itens.map(i => ({ slug: i.slug, rolos: i.detalhe?.caixas || Math.floor(i.quantidade) }));
+      // Nesta cadeira a `quantidade` JÁ é a contagem de rolos — `detalhe` aqui guarda a
+      // faixa de preço, não caixas. Ler `detalhe.caixas` era herança do ramo de porcelanato.
+      const rolosParaCotar = itens.map((i) => ({ slug: i.slug, rolos: Math.floor(i.quantidade) }));
       const cot = await cotarFrete(cep ?? '', rolosParaCotar);
       frete = cot.ok ? cot.valor : null;
       freteMotivo = cot.ok ? null : cot.motivo;
@@ -232,7 +240,7 @@ export async function POST(req: NextRequest) {
       const title = lf && i.slug === lf.slug
         ? lf.rotulo
         : loja.unidade === 'm2'
-          ? `${i.detalhe?.caixas} cx — ${i.slug}`
+          ? `${(i.detalhe as { caixas?: number }).caixas} cx — ${i.slug}`
           : `${i.quantidade} ${loja.unidade}(s) — ${i.slug}`;
           
       return { title, unitPrice };
