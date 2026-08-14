@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { isAuthed } from '@/lib/auth';
 import { refund } from '@/lib/mercadopago';
+import { log } from '@/lib/log';
 
 export const dynamic = 'force-dynamic';
 
@@ -34,11 +35,17 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     if (!pedido.mpPaymentId) {
       return NextResponse.json({ error: 'sem mp_payment_id para estornar' }, { status: 409 });
     }
-    await refund(pedido.mpPaymentId);
+    try {
+      await refund(pedido.mpPaymentId);
+    } catch (err) {
+      log.error({ err, pedidoId: id, mpPaymentId: pedido.mpPaymentId }, 'pedidos/acao: refund MP falhou');
+      return NextResponse.json({ error: 'falha ao estornar no gateway, tente novamente' }, { status: 502 });
+    }
     const updated = await prisma.pedido.update({
       where: { id },
       data: { statusPagamento: 'reembolsado', statusFulfillment: 'reembolsado' },
     });
+    log.info({ pedidoId: id, mpPaymentId: pedido.mpPaymentId }, 'pedidos/acao: pedido reembolsado');
     return NextResponse.json(updated);
   }
 

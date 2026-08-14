@@ -4,6 +4,7 @@ import { isAuthed } from '@/lib/auth';
 import { normalizarDoc } from '@/lib/doc';
 import { classificarNegocio } from '@/lib/classificar-negocio';
 import { validarOrigemNegocio } from '@/lib/carteira/origem-negocio';
+import { log } from '@/lib/log';
 
 export const dynamic = 'force-dynamic';
 
@@ -126,6 +127,10 @@ export async function POST(req: NextRequest) {
   }
 
   const created = await prisma.negocioOriginado.create({ data: dados });
+  log.info(
+    { negocioId: created.id, pedidoId, parceiroId, valor, classificacao, taxaAplicada },
+    'negocios: repasse manual criado',
+  );
 
   return NextResponse.json({ ok: true, id: created.id }, { status: 201 });
 }

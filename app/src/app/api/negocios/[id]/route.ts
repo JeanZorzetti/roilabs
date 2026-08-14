@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { isAuthed } from '@/lib/auth';
+import { log } from '@/lib/log';
 
 export const dynamic = 'force-dynamic';
 
@@ -30,5 +31,8 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   if (body.isencaoMotivo !== undefined) data.isencaoMotivo = body.isencaoMotivo || null;
 
   await prisma.negocioOriginado.update({ where: { id }, data });
+  if (typeof data.estagio === 'string' && data.estagio !== existing.estagio) {
+    log.info({ negocioId: id, de: existing.estagio, para: data.estagio }, 'negocios: estágio alterado');
+  }
   return NextResponse.json({ ok: true });
 }
