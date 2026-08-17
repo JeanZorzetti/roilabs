@@ -4,39 +4,63 @@
 // direct metragem, or the room-by-room simulator (SimuladorM2) — toggled, never replaced.
 import SimuladorM2 from './SimuladorM2.astro';
 interface Props {
-  slug: string;
-  m2Caixa: number;
-  preco: number;
+  slug?: string;
+  m2Caixa?: number;
+  preco?: number;
+  // Modo "peça" (015 T015): variação de tamanho/cor. O sku é dinâmico — lido em tempo
+  // real do #sv-sku-atual que o SeletorVariacao mantém, nunca fixado em build.
+  cadeira?: string;
+  skuInicial?: string;
 }
-const { slug, m2Caixa, preco } = Astro.props;
+const { slug, m2Caixa, preco, cadeira, skuInicial } = Astro.props;
+const modoPeca = Boolean(cadeira && skuInicial);
 ---
-<div class="add-cart" data-slug={slug} data-m2caixa={m2Caixa} data-preco={preco}>
-  <div class="add-cart__modes" role="tablist">
-    <button type="button" class="add-cart__mode is-active" data-mode="direto" aria-selected="true">Tenho a metragem</button>
-    <button type="button" class="add-cart__mode" data-mode="ambiente" aria-selected="false">Calcular por ambiente</button>
-  </div>
-
-  <div class="add-cart__pane" data-pane="direto">
-    <label class="add-cart__label" for={`m2-${slug}`}>Metragem da obra (m²)</label>
+{modoPeca ? (
+  <div class="add-cart add-cart--peca" data-cadeira={cadeira}>
+    <label class="add-cart__label" for="add-cart-peca-qtd">Quantidade</label>
     <div class="add-cart__row">
       <input
-        id={`m2-${slug}`}
-        class="add-cart__input"
+        id="add-cart-peca-qtd"
+        class="add-cart__input add-cart__input--peca"
         type="number"
-        inputmode="decimal"
-        min="0.1"
-        step="0.1"
-        placeholder="ex: 25"
+        inputmode="numeric"
+        min="1"
+        step="1"
+        value="1"
       />
-      <button type="button" class="btn btn--primary add-cart__btn">Adicionar ao carrinho</button>
+      <button type="button" class="btn btn--primary add-cart__btn add-cart__btn--peca">Adicionar ao carrinho</button>
     </div>
-    <p class="add-cart__preview" aria-live="polite"></p>
+    <p class="add-cart__preview add-cart__preview--peca" aria-live="polite"></p>
   </div>
+) : (
+  <div class="add-cart" data-slug={slug} data-m2caixa={m2Caixa} data-preco={preco}>
+    <div class="add-cart__modes" role="tablist">
+      <button type="button" class="add-cart__mode is-active" data-mode="direto" aria-selected="true">Tenho a metragem</button>
+      <button type="button" class="add-cart__mode" data-mode="ambiente" aria-selected="false">Calcular por ambiente</button>
+    </div>
 
-  <div class="add-cart__pane" data-pane="ambiente" hidden>
-    <SimuladorM2 slug={slug} m2Caixa={m2Caixa} preco={preco} />
+    <div class="add-cart__pane" data-pane="direto">
+      <label class="add-cart__label" for={`m2-${slug}`}>Metragem da obra (m²)</label>
+      <div class="add-cart__row">
+        <input
+          id={`m2-${slug}`}
+          class="add-cart__input"
+          type="number"
+          inputmode="decimal"
+          min="0.1"
+          step="0.1"
+          placeholder="ex: 25"
+        />
+        <button type="button" class="btn btn--primary add-cart__btn">Adicionar ao carrinho</button>
+      </div>
+      <p class="add-cart__preview" aria-live="polite"></p>
+    </div>
+
+    <div class="add-cart__pane" data-pane="ambiente" hidden>
+      <SimuladorM2 slug={slug} m2Caixa={m2Caixa} preco={preco} />
+    </div>
   </div>
-</div>
+)}
 
 <style>
   .add-cart { margin-bottom: 1.2rem; }
@@ -77,7 +101,7 @@ const { slug, m2Caixa, preco } = Astro.props;
     return n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
   }
 
-  document.querySelectorAll<HTMLElement>('.add-cart').forEach((root) => {
+  document.querySelectorAll<HTMLElement>('.add-cart:not(.add-cart--peca)').forEach((root) => {
     const slug = root.dataset.slug!;
     const m2Caixa = Number(root.dataset.m2caixa);
     const preco = Number(root.dataset.preco);
@@ -110,7 +134,7 @@ const { slug, m2Caixa, preco } = Astro.props;
   });
 
   // Mode toggle: direct m² ⇄ room simulator (both panes coexist).
-  document.querySelectorAll<HTMLElement>('.add-cart').forEach((root) => {
+  document.querySelectorAll<HTMLElement>('.add-cart:not(.add-cart--peca)').forEach((root) => {
     const modes = root.querySelectorAll<HTMLButtonElement>('.add-cart__mode');
     modes.forEach((mode) =>
       mode.addEventListener('click', () => {
@@ -124,5 +148,29 @@ const { slug, m2Caixa, preco } = Astro.props;
         });
       }),
     );
+  });
+
+  // Modo "peça" (015): sku lido AO VIVO do SeletorVariacao no clique — nunca guardado
+  // em estado local, então não há corrida com o script do seletor (qualquer ordem de
+  // carregamento funciona, e a leitura reflete sempre a combinação atual).
+  document.querySelectorAll<HTMLElement>('.add-cart--peca').forEach((root) => {
+    const cadeira = root.dataset.cadeira!;
+    const input = root.querySelector<HTMLInputElement>('.add-cart__input--peca')!;
+    const btn = root.querySelector<HTMLButtonElement>('.add-cart__btn--peca')!;
+    const preview = root.querySelector<HTMLElement>('.add-cart__preview--peca')!;
+
+    btn.addEventListener('click', () => {
+      const skuEl = document.getElementById('sv-sku-atual') as HTMLInputElement | null;
+      const sku = skuEl?.value;
+      const esgotado = skuEl?.dataset.esgotado === 'true';
+      if (!sku || esgotado) {
+        preview.textContent = 'Escolha uma combinação disponível antes de adicionar.';
+        return;
+      }
+      const qtd = Math.max(1, Math.floor(Number(input.value)) || 1);
+      addItem(cadeira, sku, qtd);
+      const res = resolveCart();
+      preview.innerHTML = `Adicionado! <a href="/carrinho/">Ver carrinho (${res.lines.length})</a>`;
+    });
   });
 </script>

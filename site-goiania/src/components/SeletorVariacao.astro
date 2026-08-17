@@ -1,0 +1,243 @@
+---
+// Seletor de tamanho × cor de uma variação Maná (015 T014). Renderiza no HTML inicial
+// (não pode entrar no caminho do LCP) — o script só MARCA o que está esgotado via
+// /api/estoque; nenhuma decisão de estoque acontece no cliente (data-model.md D4).
+//
+// Dois radiogroup (tamanho, cor), padrão WAI-ARIA: role="radiogroup" + aria-labelledby,
+// cada opção é role="radio" com roving tabindex e navegação por setas. Esgotado nunca é
+// só cor: aria-disabled + texto associado (visível E para leitor de tela).
+import type { VariacaoMana } from '../data/mana';
+
+interface Props {
+  variacoes: VariacaoMana[];
+}
+const { variacoes } = Astro.props;
+
+const tamanhos = [...new Set(variacoes.map((v) => v.tamanho))];
+const cores = [...new Set(variacoes.map((v) => v.cor))];
+const skuInicial = variacoes[0]?.sku ?? '';
+
+const dataVariacoes = JSON.stringify(
+  variacoes.map((v) => ({ sku: v.sku, tamanho: v.tamanho, cor: v.cor })),
+);
+---
+
+<div class="seletor-variacao" data-variacoes={dataVariacoes}>
+  <input type="hidden" id="sv-sku-atual" value={skuInicial} data-esgotado="false" />
+
+  <fieldset class="seletor-variacao__grupo">
+    <legend id="sv-tamanho-label" class="seletor-variacao__legend">Tamanho</legend>
+    <div role="radiogroup" aria-labelledby="sv-tamanho-label" class="seletor-variacao__opcoes" data-dimensao="tamanho">
+      {tamanhos.map((t, i) => (
+        <button
+          type="button"
+          role="radio"
+          aria-checked={i === 0 ? 'true' : 'false'}
+          tabindex={i === 0 ? 0 : -1}
+          class="seletor-variacao__opcao"
+          data-valor={t}
+        >
+          {t}
+          <span class="seletor-variacao__opcao-esgotado sr-only" hidden> — esgotado</span>
+        </button>
+      ))}
+    </div>
+  </fieldset>
+
+  {cores.length > 1 ? (
+    <fieldset class="seletor-variacao__grupo">
+      <legend id="sv-cor-label" class="seletor-variacao__legend">Cor</legend>
+      <div role="radiogroup" aria-labelledby="sv-cor-label" class="seletor-variacao__opcoes" data-dimensao="cor">
+        {cores.map((c, i) => (
+          <button
+            type="button"
+            role="radio"
+            aria-checked={i === 0 ? 'true' : 'false'}
+            tabindex={i === 0 ? 0 : -1}
+            class="seletor-variacao__opcao"
+            data-valor={c}
+          >
+            {c}
+            <span class="seletor-variacao__opcao-esgotado sr-only" hidden> — esgotado</span>
+          </button>
+        ))}
+      </div>
+    </fieldset>
+  ) : (
+    <p class="seletor-variacao__cor-fixa">Cor: <strong>{cores[0]}</strong></p>
+  )}
+
+  <p class="seletor-variacao__esgotado" data-msg-esgotado role="status" hidden>
+    Essa combinação está esgotada no momento. Escolha outro tamanho ou cor.
+  </p>
+</div>
+
+<style>
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+  .seletor-variacao__grupo {
+    border: 0;
+    padding: 0;
+    margin: 0 0 1.1rem;
+  }
+  .seletor-variacao__legend {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--d-muted);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    padding: 0;
+  }
+  .seletor-variacao__opcoes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .seletor-variacao__opcao {
+    min-width: 3rem;
+    padding: 0.5rem 0.9rem;
+    border: 1px solid var(--d-line-strong);
+    border-radius: 8px;
+    background: var(--ink-2);
+    color: var(--d-text);
+    font: inherit;
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
+  .seletor-variacao__opcao[aria-checked='true'] {
+    border-color: var(--mana-accent, var(--hivis));
+    background: color-mix(in srgb, var(--mana-accent, var(--hivis)) 18%, var(--ink-2));
+    font-weight: 700;
+  }
+  .seletor-variacao__opcao:focus-visible {
+    outline: 2px solid var(--mana-accent, var(--hivis));
+    outline-offset: 2px;
+  }
+  .seletor-variacao__opcao[aria-disabled='true'] {
+    opacity: 0.45;
+    text-decoration: line-through;
+    cursor: not-allowed;
+  }
+  .seletor-variacao__cor-fixa {
+    font-size: 0.9rem;
+    color: var(--d-muted);
+    margin: 0 0 1.1rem;
+  }
+  .seletor-variacao__esgotado {
+    font-size: 0.86rem;
+    color: var(--d-text);
+    background: color-mix(in srgb, #dc2626 20%, var(--ink-2));
+    border: 1px solid color-mix(in srgb, #dc2626 40%, transparent);
+    border-radius: 8px;
+    padding: 0.6rem 0.8rem;
+    margin: 0 0 1.1rem;
+  }
+</style>
+
+<script>
+  // Falha fechada (D4): se /api/estoque não responder (ainda não existe até a Fase 3),
+  // nada é marcado como esgotado — a vitrine mostra as variações normalmente e o
+  // servidor recusa no checkout.
+  document.querySelectorAll<HTMLElement>('.seletor-variacao').forEach((root) => {
+    const variacoes: { sku: string; tamanho: string; cor: string }[] = JSON.parse(
+      root.dataset.variacoes || '[]',
+    );
+    const porChave = new Map(variacoes.map((v) => [`${v.tamanho}::${v.cor}`, v.sku]));
+    const skuAtual = root.querySelector<HTMLInputElement>('#sv-sku-atual')!;
+    const msgEsgotado = root.querySelector<HTMLElement>('[data-msg-esgotado]')!;
+    const grupos = Array.from(root.querySelectorAll<HTMLElement>('[role="radiogroup"]'));
+
+    let estoque: Record<string, number> | null = null;
+
+    function valorSelecionado(dimensao: string): string {
+      const grupo = grupos.find((g) => g.dataset.dimensao === dimensao);
+      const ativo = grupo?.querySelector<HTMLElement>('[aria-checked="true"]');
+      return ativo?.dataset.valor ?? '';
+    }
+
+    function esgotado(sku: string | undefined): boolean {
+      if (!sku || !estoque) return false;
+      return !(sku in estoque) || estoque[sku] <= 0;
+    }
+
+    function refresh() {
+      const tamanho = valorSelecionado('tamanho');
+      const cor = valorSelecionado('cor') || variacoes[0]?.cor || '';
+      const sku = porChave.get(`${tamanho}::${cor}`);
+
+      skuAtual.value = sku ?? '';
+      const skuEsgotado = esgotado(sku);
+      skuAtual.dataset.esgotado = String(skuEsgotado);
+      msgEsgotado.hidden = !skuEsgotado;
+
+      // Marca cada opção esgotada NA COMBINAÇÃO ATUAL do outro eixo (D4: nunca só cor).
+      for (const grupo of grupos) {
+        const dimensao = grupo.dataset.dimensao!;
+        const outraDimensao = dimensao === 'tamanho' ? 'cor' : 'tamanho';
+        const outroValor = dimensao === 'tamanho' ? cor : tamanho;
+        grupo.querySelectorAll<HTMLElement>('[role="radio"]').forEach((btn) => {
+          const valor = btn.dataset.valor!;
+          const chave = dimensao === 'tamanho' ? `${valor}::${outroValor}` : `${outroValor}::${valor}`;
+          const skuOpcao = porChave.get(chave);
+          const opcaoEsgotada = esgotado(skuOpcao);
+          btn.setAttribute('aria-disabled', String(opcaoEsgotada));
+          btn.querySelector<HTMLElement>('.seletor-variacao__opcao-esgotado')!.hidden = !opcaoEsgotada;
+        });
+      }
+    }
+
+    function selecionar(grupo: HTMLElement, btn: HTMLElement) {
+      grupo.querySelectorAll<HTMLElement>('[role="radio"]').forEach((b) => {
+        b.setAttribute('aria-checked', String(b === btn));
+        b.tabIndex = b === btn ? 0 : -1;
+      });
+      btn.focus();
+      refresh();
+    }
+
+    for (const grupo of grupos) {
+      const opcoes = Array.from(grupo.querySelectorAll<HTMLElement>('[role="radio"]'));
+
+      opcoes.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          if (btn.getAttribute('aria-disabled') === 'true') return;
+          selecionar(grupo, btn);
+        });
+      });
+
+      grupo.addEventListener('keydown', (e) => {
+        const atual = opcoes.findIndex((b) => b === document.activeElement);
+        if (atual === -1) return;
+        let alvo = -1;
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') alvo = (atual + 1) % opcoes.length;
+        else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') alvo = (atual - 1 + opcoes.length) % opcoes.length;
+        else if (e.key === 'Home') alvo = 0;
+        else if (e.key === 'End') alvo = opcoes.length - 1;
+        else return;
+        e.preventDefault();
+        selecionar(grupo, opcoes[alvo]);
+      });
+    }
+
+    refresh();
+
+    fetch('/api/estoque?cadeira=mana')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (data?.ok && data.estoque) {
+          estoque = data.estoque;
+          refresh();
+        }
+      })
+      .catch(() => {
+        // Endpoint fora do ar (ou ainda não existe, Fase 2) — falha fechada: não marca nada.
+      });
+  });
+</script>

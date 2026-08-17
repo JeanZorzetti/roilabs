@@ -226,13 +226,28 @@ export function resolveCart(): CartResolved {
   let total = 0;
 
   for (const it of state.itens) {
-    const p = loja.catalogo.find((x: any) => x.slug === it.slug) as any;
-    if (!p) continue;
+    // Unidade 'peca' (015): o item do carrinho guarda o SKU da variação, não o slug do
+    // produto — o catálogo da loja é uma lista de produtos com `variacoes[]`, então a
+    // busca precisa achatar e casar pelo sku. `precificar` da unidade 'peca' espera a
+    // VARIAÇÃO (tem `.preco`), não o produto pai.
+    let p: any;
+    let nome: string;
+    if (loja.unidade === 'peca') {
+      const produto = (loja.catalogo as any[]).find((prod) =>
+        (prod.variacoes ?? []).some((v: any) => v.sku === it.slug),
+      );
+      const variacao = produto?.variacoes.find((v: any) => v.sku === it.slug);
+      if (!produto || !variacao) continue;
+      p = { ...variacao, produtoSlug: produto.slug };
+      nome = `${produto.nome} — ${variacao.tamanho}/${variacao.cor}`;
+    } else {
+      p = loja.catalogo.find((x: any) => x.slug === it.slug) as any;
+      if (!p) continue;
+      // Resolve nome: padrão de porcelanato ("marca nome") ou só nome
+      nome = p.atributos?.marca && p.nome ? `${p.atributos.marca} ${p.nome}` : p.nome ?? it.slug;
+    }
 
-    // Resolve nome: padrão de porcelanato ("marca nome") ou só nome
-    const nome = p.atributos?.marca && p.nome ? `${p.atributos.marca} ${p.nome}` : p.nome ?? it.slug;
-
-    // IMPORTANTE: O front no caso do porcelanato ainda pensa em "caixas" no carrinho, 
+    // IMPORTANTE: O front no caso do porcelanato ainda pensa em "caixas" no carrinho,
     // mas o `precificar` do `unidades.ts` recebe "quantidade na unidade da loja" (m²).
     // Então, se a unidade é m², a quantidade armazenada aqui é caixas, precisamos passar
     // os m² reais para o precificador.

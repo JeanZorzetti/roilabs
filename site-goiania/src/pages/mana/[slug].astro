@@ -1,0 +1,130 @@
+---
+// Página de produto da Maná Moda Social (015 T017). SeletorVariacao + AddToCart entram
+// no HTML, mas o caminho de compra só aparece se `loja.publicada` — enquanto a cadeira
+// está despublicada (Fase 2-6), a página é 100% vitrine, sem botão de compra (T023).
+import Base from '../../layouts/Base.astro';
+import HeaderMana from '../../components/HeaderMana.astro';
+import FooterMana from '../../components/FooterMana.astro';
+import SeletorVariacao from '../../components/SeletorVariacao.astro';
+import AddToCart from '../../components/AddToCart.astro';
+import { produtosMana, menorPreco, formatPreco, type ProdutoMana } from '../../data/mana';
+import { lojasById } from '../../data/lojas';
+
+export function getStaticPaths() {
+  return produtosMana.map((p) => ({ params: { slug: p.slug }, props: { produto: p } }));
+}
+
+interface Props {
+  produto: ProdutoMana;
+}
+const { produto } = Astro.props;
+
+const SITE_MANA = 'https://mana.roilabs.com.br';
+const url = `${SITE_MANA}/mana/${produto.slug}/`;
+const loja = lojasById.get('mana')!;
+const preco = menorPreco(produto);
+
+// Sem `offers` enquanto a cadeira não publica — anunciar preço de compra pra um SKU sem
+// caminho de checkout seria fabricar oferta comercial (mesmo cuidado de cadeiras.ts).
+const produtoLd = {
+  '@type': 'Product',
+  '@id': `${url}#product`,
+  name: produto.nome,
+  description: produto.seoDescription,
+  image: `${SITE_MANA}${produto.imagens[0]}`,
+  category: produto.categoria,
+  brand: { '@type': 'Brand', name: 'Maná Moda Social' },
+  additionalProperty: produto.specs.map((s) => ({
+    '@type': 'PropertyValue',
+    name: s.label,
+    value: s.valor,
+  })),
+  ...(loja.publicada
+    ? {
+        offers: {
+          '@type': 'Offer',
+          priceCurrency: 'BRL',
+          price: preco,
+          availability: 'https://schema.org/InStock',
+          url,
+        },
+      }
+    : {}),
+};
+---
+
+<Base title={produto.seoTitle} description={produto.seoDescription} siteBase={SITE_MANA} jsonLdNodes={[produtoLd]}>
+  <HeaderMana />
+
+  <main class="section">
+    <div class="wrap mana-produto-wrap">
+      <nav class="crumbs" aria-label="Você está aqui">
+        <a href="/mana/">Maná Moda Social</a> · <span>{produto.nome}</span>
+      </nav>
+
+      <div class="mana-produto-grid">
+        <div class="mana-produto-media">
+          <img
+            src={produto.imagens[0]}
+            alt={produto.alt}
+            width="700"
+            height="700"
+            fetchpriority="high"
+            decoding="async"
+          />
+        </div>
+
+        <div class="mana-produto-info">
+          <span class="mana-produto-categoria">{produto.categoria}</span>
+          <h1>{produto.h1}</h1>
+          <p class="mana-produto-preco">{formatPreco(preco)}</p>
+
+          {produto.copyComercial.map((p) => <p class="mana-produto-copy">{p}</p>)}
+
+          <SeletorVariacao variacoes={produto.variacoes} />
+
+          {loja.publicada && <AddToCart cadeira="mana" skuInicial={produto.variacoes[0].sku} />}
+        </div>
+      </div>
+
+      <section class="mana-produto-bloco">
+        <h2>Ficha técnica</h2>
+        <table class="mana-produto-specs">
+          <tbody>
+            {produto.specs.map((s) => (
+              <tr>
+                <th scope="row">{s.label}</th>
+                <td>{s.valor}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </section>
+    </div>
+  </main>
+
+  <FooterMana />
+</Base>
+
+<style>
+  .mana-produto-wrap { max-width: 1080px; }
+  .crumbs { font-size: 0.82rem; color: var(--d-muted); margin-bottom: 1.6rem; }
+  .crumbs a { color: inherit; }
+  .crumbs a:hover { color: var(--mana-accent, var(--hivis)); }
+  .mana-produto-grid { display: grid; grid-template-columns: 1fr 1.15fr; gap: 2.5rem; align-items: start; }
+  @media (max-width: 820px) { .mana-produto-grid { grid-template-columns: 1fr; } }
+  .mana-produto-media img { width: 100%; height: auto; border-radius: 12px; border: 1px solid var(--d-line); background: var(--ink-2); }
+  .mana-produto-categoria {
+    display: inline-block; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em;
+    color: var(--d-muted); margin-bottom: 0.6rem;
+  }
+  .mana-produto-info h1 { font-size: clamp(1.6rem, 3.2vw, 2.3rem); margin-bottom: 0.6rem; }
+  .mana-produto-preco { font-size: 1.4rem; font-weight: 700; color: var(--d-text); margin: 0 0 1.2rem; }
+  .mana-produto-copy { color: var(--d-muted); margin-bottom: 0.9rem; max-width: 60ch; }
+  .mana-produto-bloco { margin-top: 3rem; }
+  .mana-produto-bloco h2 { font-size: 1.3rem; margin-bottom: 0.9rem; }
+  .mana-produto-specs { width: 100%; max-width: 520px; border-collapse: collapse; font-size: 0.92rem; }
+  .mana-produto-specs th, .mana-produto-specs td { text-align: left; padding: 0.55rem 0.7rem; border-bottom: 1px solid var(--d-line); }
+  .mana-produto-specs th { color: var(--d-muted); font-weight: 600; width: 45%; }
+  .mana-produto-specs td { color: var(--d-text); }
+</style>
