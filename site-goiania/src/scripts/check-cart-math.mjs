@@ -146,18 +146,25 @@ const ASSINATURA_PRECO = 199;
 assert.equal(money(1 * ASSINATURA_PRECO), 199, 'assinatura: 1 × 199 = 199');
 // Múltiplas assinaturas no mesmo carrinho (cenário futuro) — ainda linear
 assert.equal(money(3 * ASSINATURA_PRECO), 597, 'assinatura: 3 × 199 = 597');
-// A invariante unificada: quantidade × precoUnitario = subtotal para as 3 unidades
+// A invariante unificada: quantidade × precoUnitario = subtotal para as 4 unidades
 // m²: caixas × m2_caixa × preco/m² = subtotal (já testado acima em (b))
 // rolo: rolos × precoRolo = subtotal (já testado em (f))
 // assinatura: ciclos × valorCiclo = subtotal (testado aqui)
+// peça: quantidade × preco da variação = subtotal (015, testado aqui)
 const unificado = [
   { unidade: 'm2', quantidade: 5.5, precoUnitario: 98.99, subtotal: money(5.5 * 98.99) },
   { unidade: 'rolo', quantidade: 20, precoUnitario: 16.2, subtotal: money(20 * 16.2) },
   { unidade: 'assinatura', quantidade: 1, precoUnitario: 199, subtotal: money(1 * 199) },
+  { unidade: 'peca', quantidade: 3, precoUnitario: 160, subtotal: money(3 * 160) },
 ];
 for (const u of unificado) {
   assert.equal(money(u.quantidade * u.precoUnitario), u.subtotal,
     `invariante unificada: ${u.unidade} — ${u.quantidade} × ${u.precoUnitario} = ${u.subtotal}`);
 }
 
-console.log('[OK] cart math: m²→caixas, Σ subtotais==total, folga 5–20%, cupom (≥0, produto-only), link round-trip+expiração, rolos×faixa + fronteiras de faixa, assinatura × valor = subtotal, invariante unificada 3 unidades');
+// ── (h) unidade PEÇA (015) — quantidade é SEMPRE inteira ≥ 1, peça fracionária não existe ──
+assert.equal(money(1 * 80), 80, 'peça: 1 × 80 = 80');
+assert.equal(money(4 * 700), 2800, 'peça: 4 ternos × 700 = 2800');
+assert.ok(Number.isInteger(3), 'quantidade de peça precisa ser inteira (contrato da unidade)');
+
+console.log('[OK] cart math: m²→caixas, Σ subtotais==total, folga 5–20%, cupom (≥0, produto-only), link round-trip+expiração, rolos×faixa + fronteiras de faixa, assinatura × valor = subtotal, peça × valor = subtotal (quantidade inteira), invariante unificada 4 unidades');

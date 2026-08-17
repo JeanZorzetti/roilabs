@@ -70,6 +70,20 @@ function precificarAssinatura(produto: unknown, _quantidade: number): ResultadoP
   };
 }
 
+/**
+ * Peça (015) — preço fixo por variação (tamanho × cor). `produto` aqui é a VARIAÇÃO, não
+ * o produto pai: cada SKU tem seu próprio `preco`. `quantidade` é inteiro ≥ 1 — peça
+ * fracionária não existe. `detalhe` carrega tamanho/cor porque é ele que reconstrói o que
+ * foi vendido depois que o catálogo já mudou — mesmo papel de `{caixas, m2PorCaixa}`.
+ */
+function precificarPeca(variacao: unknown, _quantidade: number): ResultadoPrecificacao {
+  const v = variacao as { preco?: number; produtoSlug?: string; tamanho?: string; cor?: string };
+  return {
+    precoUnitario: v?.preco ?? 0,
+    detalhe: { produtoSlug: v?.produtoSlug ?? null, tamanho: v?.tamanho ?? null, cor: v?.cor ?? null },
+  };
+}
+
 // ── Registro ────────────────────────────────────────────────────────────────
 
 export const unidades: Unidade[] = [
@@ -93,6 +107,13 @@ export const unidades: Unidade[] = [
     rotuloPlural: 'meses',
     entregaFisica: false,
     precificar: precificarAssinatura,
+  },
+  {
+    id: 'peca',
+    rotulo: 'peça',
+    rotuloPlural: 'peças',
+    entregaFisica: true,
+    precificar: precificarPeca,
   },
 ];
 

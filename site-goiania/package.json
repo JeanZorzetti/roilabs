@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "astro dev",
-    "prebuild": "node src/scripts/check-matrix.mjs && node src/scripts/check-cart-math.mjs && node src/scripts/check-lojas.mjs && node src/scripts/check-cadeiras.mjs --self-test",
+    "prebuild": "node src/scripts/check-matrix.mjs && node src/scripts/check-cart-math.mjs && node src/scripts/check-lojas.mjs && node src/scripts/check-mana.mjs && node src/scripts/check-cadeiras.mjs --self-test",
     "build": "astro build",
     "postbuild": "node src/scripts/check-cadeiras.mjs && node src/scripts/check-feed.mjs && node src/scripts/indexnow.mjs",
     "check-cadeiras": "node src/scripts/check-cadeiras.mjs",

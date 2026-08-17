@@ -24,3 +24,7 @@ open-seo/
 
 # brand source files (raw Gemini exports / large originals) — kept locally, not deployed
 brand-assets/
+
+# 015: fotos brutas repassadas pelo Jean (SVG com C2PA embutido, até 46MB cada) — a versão
+# que importa é a otimizada em site-goiania/public/img/mana/ (~150-265KB, essa vai pro git)
+specs/015-ecommerce-mana-moda/fotos/

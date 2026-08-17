@@ -23,16 +23,26 @@ export interface LinhaFixa {
   isentoSeJaComprou: boolean;
 }
 
+/** Split no gateway (015) — comissão retida NO ATO, na conta do parceiro. `null` = caminho
+ * de hoje (cobra na conta da ROI Labs). NÃO deriva de `modoCobranca`: são eixos diferentes
+ * (quem opera a loja × qual conta recebe) — a 012 já pagou o preço de confundir os dois. */
+export interface Split {
+  gateway: 'mercadopago';
+  comissaoPct: number; // (0, 1]
+}
+
 export interface LojaConfig {
   id: string;
   prefixoRota: string;
-  unidade: string;           // 'm2' | 'rolo' | 'assinatura'
+  unidade: string;           // 'm2' | 'rolo' | 'assinatura' | 'peca'
   recorrencia?: string;       // só para unidade='assinatura': 'mensal' | 'anual'
   modoCobranca: 'roilabs' | 'parceiro';
   checkoutUrl: string | null;
   pagoA: string;
   frete: 'tabela-cep' | 'cotacao' | 'nenhum';
   docObrigatorio: boolean;
+  emailObrigatorio: boolean; // booleano explícito, sem default implícito (015)
+  split: Split | null; // 015 — ver comentário acima
   cupomEscopo: string;
   linhaFixa: LinhaFixa | null;
   publicada: boolean;
@@ -48,6 +58,8 @@ export const lojas: LojaConfig[] = [
     pagoA: 'ROI Labs',
     frete: 'tabela-cep',
     docObrigatorio: false,
+    emailObrigatorio: false,
+    split: null,
     cupomEscopo: 'porcelanato',
     linhaFixa: null,
     publicada: true,
@@ -61,6 +73,8 @@ export const lojas: LojaConfig[] = [
     pagoA: 'Tapepro',
     frete: 'cotacao',
     docObrigatorio: true,
+    emailObrigatorio: false,
+    split: null,
     cupomEscopo: 'fitas',
     linhaFixa: {
       quandoSlug: 'fita-transparente-personalizada',
@@ -71,6 +85,22 @@ export const lojas: LojaConfig[] = [
       isentoSeJaComprou: true,
     },
     publicada: true,
+  },
+  {
+    id: 'mana',
+    prefixoRota: 'mana',
+    unidade: 'peca',
+    modoCobranca: 'roilabs',
+    checkoutUrl: null,
+    pagoA: 'Maná Moda',
+    frete: 'cotacao',
+    docObrigatorio: true,
+    emailObrigatorio: true,
+    split: { gateway: 'mercadopago', comissaoPct: 0.1 },
+    cupomEscopo: 'mana',
+    linhaFixa: null,
+    // 015 Fase 1: dado existe, nada vende ainda. Fase 7 vira true.
+    publicada: false,
   },
 ];
 
