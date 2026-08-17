@@ -16,6 +16,8 @@
 //   4. publicada=true ⇒ catálogo não vazio
 //   5. todo produto com preco > 0 e imagem
 //   6. unidade existe em unidades.ts
+//   7. (015) split != null ⇒ comissaoPct em (0,1] e gateway conhecido
+//   8. (015) emailObrigatorio presente e booleano em toda cadeira
 //
 // Run: node src/scripts/check-lojas.mjs
 
@@ -43,6 +45,18 @@ const fitasCatalog = fitaSlugs.map((slug, i) => ({
   preco: fitaPrecos.find((_, idx) => idx >= 0) > 0 ? fitaPrecos[0] : 0, // any preco > 0 suffices
 }));
 
+// Maná (015): produto tem `variacoes[]` com preço próprio, não `preco` no topo — usa a
+// MENOR variação como proxy (produto sem nenhuma variação falha corretamente com NaN).
+// Checagem SKU a SKU de verdade é o check-mana.mjs; aqui só garante slug único + imagem.
+const manaSrc = readFileSync(join(DATA, 'mana.ts'), 'utf8');
+const manaBlocks = manaSrc.split(/\n {2}\{\n {4}slug:/).slice(1);
+const manaCatalog = manaBlocks.map((block) => {
+  const slug = block.match(/^\s*'([^']+)'/)?.[1] ?? null;
+  const imagem = block.match(/imagens:\s*\[\s*'([^']+)'/)?.[1] ?? null;
+  const precos = [...block.matchAll(/preco:\s*([\d.]+)/g)].map((m) => parseFloat(m[1]));
+  return { slug, imagem, preco: precos.length ? Math.min(...precos) : NaN };
+});
+
 // ── Read lojas.ts by text parse ─────────────────────────────────────────────
 
 const lojasSrc = readFileSync(join(DATA, 'lojas.ts'), 'utf8');
@@ -65,6 +79,17 @@ function extractString(block, field) {
   if (m && m[0].includes('null')) return null;
   return m ? m[1] : null;
 }
+/** true|false|null (ausente) — distingue "campo faltando" de "campo é false" (invariante 8). */
+function extractBoolOrAbsent(block, field) {
+  const match = block.match(new RegExp(`${field}:\\s*(true|false)`));
+  return match ? match[1] === 'true' : null;
+}
+/** `{ gateway: '...', comissaoPct: N }` ou `null` (015). */
+function extractSplit(block) {
+  if (new RegExp(`split:\\s*null`).test(block)) return null;
+  const m = block.match(/split:\s*\{\s*gateway:\s*'([^']*)',\s*comissaoPct:\s*([\d.]+)/);
+  return m ? { gateway: m[1], comissaoPct: parseFloat(m[2]) } : undefined; // undefined = campo ausente
+}
 
 const lojas = lojaBlocks.map((block) => ({
   id: extractField(block, 'id'),
@@ -73,6 +98,8 @@ const lojas = lojaBlocks.map((block) => ({
   modoCobranca: extractField(block, 'modoCobranca'),
   checkoutUrl: extractString(block, 'checkoutUrl'),
   publicada: extractBool(block, 'publicada'),
+  emailObrigatorio: extractBoolOrAbsent(block, 'emailObrigatorio'),
+  split: extractSplit(block),
   // Determine catalog reference by looking at the catalogo field
   catalogoRef: (() => {
     const m = block.match(/catalogo:\s*(\w+)/);
@@ -84,6 +111,7 @@ const lojas = lojaBlocks.map((block) => ({
 const catalogMap = {
   produtos: porcelanatos,
   fitas: fitasCatalog,
+  produtosMana: manaCatalog,
 };
 
 // ── Read unidades.ts for valid IDs ──────────────────────────────────────────
@@ -156,6 +184,29 @@ for (const loja of lojas) {
 for (const loja of lojas) {
   if (!unidadeIds.has(loja.unidade)) {
     fail(`${loja.id}: unidade '${loja.unidade}' não existe em unidades.ts`);
+  }
+}
+
+// 7. (015) split != null ⇒ comissaoPct em (0,1] e gateway conhecido
+const GATEWAYS_CONHECIDOS = new Set(['mercadopago']);
+for (const loja of lojas) {
+  if (loja.split === undefined) {
+    fail(`${loja.id}: campo 'split' ausente (precisa ser um objeto ou null explícito)`);
+  } else if (loja.split !== null) {
+    const { comissaoPct, gateway } = loja.split;
+    if (!(comissaoPct > 0 && comissaoPct <= 1)) {
+      fail(`${loja.id}: split.comissaoPct fora de (0,1] (tem ${comissaoPct})`);
+    }
+    if (!GATEWAYS_CONHECIDOS.has(gateway)) {
+      fail(`${loja.id}: split.gateway '${gateway}' desconhecido`);
+    }
+  }
+}
+
+// 8. (015) emailObrigatorio presente e booleano em toda cadeira (sem default implícito)
+for (const loja of lojas) {
+  if (loja.emailObrigatorio === null) {
+    fail(`${loja.id}: campo 'emailObrigatorio' ausente (precisa ser true/false explícito)`);
   }
 }
 

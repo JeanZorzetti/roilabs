@@ -8,6 +8,7 @@
 
 import { produtos, type Produto } from './produtos';
 import { fitas, type Fita } from './fitas';
+import { produtosMana, type ProdutoMana } from './mana';
 import { unidadesById, type Unidade } from './unidades';
 
 // ── Tipos ───────────────────────────────────────────────────────────────────
@@ -20,17 +21,27 @@ export interface LinhaFixa {
   isentoSeJaComprou: boolean; // true ⇒ comprador recorrente não paga
 }
 
+/** Split no gateway (015) — comissão retida NO ATO, na conta do parceiro. `null` = caminho
+ * de hoje (cobra na conta da ROI Labs). NÃO deriva de `modoCobranca`: são eixos diferentes
+ * (quem opera a loja × qual conta recebe). */
+export interface Split {
+  gateway: 'mercadopago';
+  comissaoPct: number; // (0, 1]
+}
+
 export interface Loja {
   id: string;
   prefixoRota: string;
-  unidade: string;           // id de Unidade (m2 | rolo | assinatura)
+  unidade: string;           // id de Unidade (m2 | rolo | assinatura | peca)
   recorrencia?: string;      // só para unidade='assinatura': 'mensal' | 'anual'
-  catalogo: Array<Produto | Fita | Record<string, unknown>>;
+  catalogo: Array<Produto | Fita | ProdutoMana | Record<string, unknown>>;
   modoCobranca: 'roilabs' | 'parceiro';
   checkoutUrl: string | null;
   pagoA: string;
   frete: 'tabela-cep' | 'cotacao' | 'nenhum';
   docObrigatorio: boolean;
+  emailObrigatorio: boolean; // booleano explícito, sem default implícito (015)
+  split: Split | null; // 015 — ver comentário acima
   cupomEscopo: string;
   linhaFixa: LinhaFixa | null;
   publicada: boolean;
@@ -49,6 +60,8 @@ export const lojas: Loja[] = [
     pagoA: 'ROI Labs',
     frete: 'tabela-cep',
     docObrigatorio: false,
+    emailObrigatorio: false,
+    split: null,
     cupomEscopo: 'porcelanato',
     linhaFixa: null,
     publicada: true,
@@ -63,6 +76,8 @@ export const lojas: Loja[] = [
     pagoA: 'Tapepro',
     frete: 'cotacao',
     docObrigatorio: true,
+    emailObrigatorio: false,
+    split: null,
     cupomEscopo: 'fitas',
     linhaFixa: {
       quandoSlug: 'fita-transparente-personalizada',
@@ -72,6 +87,23 @@ export const lojas: Loja[] = [
       isentoSeJaComprou: true,
     },
     publicada: true,
+  },
+  {
+    id: 'mana',
+    prefixoRota: 'mana',
+    unidade: 'peca',
+    catalogo: produtosMana,
+    modoCobranca: 'roilabs',
+    checkoutUrl: null,
+    pagoA: 'Maná Moda',
+    frete: 'cotacao',
+    docObrigatorio: true,
+    emailObrigatorio: true,
+    split: { gateway: 'mercadopago', comissaoPct: 0.1 },
+    cupomEscopo: 'mana',
+    linhaFixa: null,
+    // 015 Fase 1: dado existe, nada vende ainda. Fase 7 vira true.
+    publicada: false,
   },
 ];
 
