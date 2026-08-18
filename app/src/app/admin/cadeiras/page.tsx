@@ -1,20 +1,18 @@
 import { prisma } from '@/lib/prisma';
 import { SeatRow } from './seat-row';
-import { derivarOcupacao } from '@/lib/ocupacao';
 
 export const dynamic = 'force-dynamic';
 
 export default async function CadeirasPage() {
-  const seats = await prisma.cadeira.findMany({
-    orderBy: { ordem: 'asc' },
-    include: { parceiros: { select: { estagio: true, contratoEm: true, nome: true } } },
-  });
+  // Sem `include: { parceiros }`: esta tela exibe `estado` (012), não a régua de success fee.
+  // Ver o bloco 012 em lib/ocupacao.ts para por que `derivarOcupacao` não serve aqui.
+  const seats = await prisma.cadeira.findMany({ orderBy: { ordem: 'asc' } });
 
   return (
     <div className="page">
       <div className="page__head">
         <h1>Mapa de cadeiras — Goiânia</h1>
-        <p>Abra/feche cadeiras e edite o status. O site estático só reflete após rebuild (ver handoff.md).</p>
+        <p>Edite o nicho, o texto de status e quem aceita candidaturas. O estado da cadeira é só leitura aqui — ele vem do seed (<span className="mono">npm run db:seed</span>).</p>
       </div>
 
       {seats.length === 0 && (
@@ -22,18 +20,12 @@ export default async function CadeirasPage() {
       )}
 
       <div className="seats">
-        {seats.map((s) => {
-          const ocupacao = derivarOcupacao(s.parceiros);
-          const contratado = s.parceiros.find((p) => p.contratoEm !== null)?.nome ?? null;
-          return (
-            <SeatRow
-              key={s.id}
-              seat={{ id: s.id, niche: s.niche, status: s.status, open: s.open }}
-              ocupacao={ocupacao}
-              contratado={contratado}
-            />
-          );
-        })}
+        {seats.map((s) => (
+          <SeatRow
+            key={s.id}
+            seat={{ id: s.id, niche: s.niche, status: s.status, open: s.open, estado: s.estado }}
+          />
+        ))}
       </div>
     </div>
   );
