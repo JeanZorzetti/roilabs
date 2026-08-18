@@ -1,5 +1,12 @@
 # Implementation Plan: E-commerce Maná Moda Social Masculina
 
+> 🚩 **ESTE PLANO ESTÁ DESATUALIZADO desde 18/08/2026 — leia o [handoff.md](./handoff.md) primeiro.**
+> A Maná saiu do build do `site-goiania` e virou projeto próprio (`JeanZorzetti/mana`), no formato
+> do Tapepro. A Estrutura, a decisão D1 do [research.md](./research.md) (prefixo `/mana/`) e as tasks
+> T012–T072 do [tasks.md](./tasks.md) assumem a arquitetura antiga, em que os dois sites dividiam
+> um container e um `root` de nginx — que foi exatamente o defeito. O handoff tem o estado real,
+> a fila do que falta e os comandos de verificação.
+
 **Branch**: `015-ecommerce-mana-moda` (trabalho em branch; `main` é deploy) | **Date**: 2026-08-17 | **Spec**: [spec.md](./spec.md)
 
 **Input**: Feature specification from `/specs/015-ecommerce-mana-moda/spec.md`
