@@ -33,6 +33,10 @@ const seats: { niche: string; status: string; open: boolean; estado: string; hre
   { niche: 'Revestimentos / Porcelanato', status: 'Curadoria aberta', open: true, estado: 'vaga' },
   { niche: 'Fitas adesivas', status: 'Ocupada · Tapepro', open: false, estado: 'ocupada-vendavel', href: 'https://tapepro.roilabs.com.br/' },
   { niche: 'Ortodontia / Alinhadores', status: 'Ocupada · Atma Aligner', open: false, estado: 'ocupada-vendavel', href: 'https://atma.roilabs.com.br/' },
+  // 015 (Jean, 18/08): entra em `ordem: 3` no banco — a faixa 3..7 ficou vaga desde a
+  // remoção dos nichos de construção (07/08), então cai sozinha na posição certa. Vira
+  // 'ocupada-vendavel' só no dia em que o checkout fechar (015 fase B), nunca antes.
+  { niche: 'Moda social masculina', status: 'Em preparação · Maná Moda', open: false, estado: 'em-preparacao', href: 'https://mana.roilabs.com.br/' },
 ];
 const ocupada = (s: { estado: string }) => s.estado.startsWith('ocupada');
 const aceitaCandidatura = (s: { estado: string; open: boolean }) => s.estado === 'vaga' && s.open;

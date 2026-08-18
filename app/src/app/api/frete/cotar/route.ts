@@ -1,15 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cotarFrete } from '@/lib/frete-fitas';
 import { temPrecoPublico } from '@/lib/precos-fitas';
+import { corsHeaders } from '@/lib/cors';
 
 export const dynamic = 'force-dynamic';
 
-// Segundo endpoint lido cross-origin pelo site estático → mesmo padrão já resolvido em
-// /api/cupom/validar: urlencoded (requisição simples, sem preflight) e origin fixo.
-// O site é estático: cotar no browser vazaria MELHOR_ENVIO_TOKEN no bundle.
-const SITE_ORIGIN = 'https://goiania.roilabs.com.br';
-const CORS = { 'Access-Control-Allow-Origin': SITE_ORIGIN };
-
+// Segundo endpoint lido cross-origin pelos sites estáticos → mesmo padrão de
+// /api/cupom/validar: urlencoded (requisição simples, sem preflight), origem pela allowlist
+// (015 D8 — dois hosts agora, goiania e mana). O site é estático: cotar no browser vazaria
+// MELHOR_ENVIO_TOKEN no bundle.
 const brl = (n: number) => n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
 const AVISO: Record<string, string> = {
@@ -19,6 +18,7 @@ const AVISO: Record<string, string> = {
 };
 
 export async function POST(req: NextRequest) {
+  const CORS = corsHeaders(req.headers.get('origin'));
   const form = await req.formData();
   const cep = (typeof form.get('cep') === 'string' ? (form.get('cep') as string) : '').slice(0, 12);
 

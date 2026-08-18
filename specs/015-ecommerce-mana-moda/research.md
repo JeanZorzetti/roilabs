@@ -233,6 +233,29 @@ precisa ser conferido contra frete real antes de a cadeira publicar.
 
 ---
 
+## D10 — Correção pós-A3: a loja não mora mais no `site-goiania` (18/08)
+
+**Decisão:** D1 está **superada**. A Maná saiu do build do `site-goiania` (A3, 18/08) e virou
+projeto próprio (`JeanZorzetti/mana`, Vercel), no formato do Tapepro — ver handoff.md §1-2. As
+páginas `/mana/**`, `HeaderMana`/`FooterMana`, `SeletorVariacao` e `mana.ts` do `site-goiania`
+foram **removidos**; o espelho real do catálogo agora é `Mana/src/data/mana.ts` (repo irmão).
+
+**Consequência para D3-D9:** nenhuma mudança — são todas do lado do servidor (`app/`), que
+continua dono do checkout independente de qual site serve a vitrine.
+
+**Consequência para o carrinho (decisão do Jean, 18/08):** o motor de carrinho multicadeira da
+013 (`site-goiania/src/lib/cart.ts`, `AddToCart.astro`, `CartCount.astro`, `MiniCart.astro`,
+`carrinho.astro` — 656 linhas) é **portado** para o repo da Maná, na fatia da cadeira `mana`
+apenas — não copiado inteiro (a Maná não tem porcelanato nem fitas no carrinho). `carrinho.astro`
+vira mais simples: uma cadeira fixa (`mana`), sem o roteamento por `?cadeira=` que o goiania
+precisa para 3 lojas. O formato do item (`{slug, quantidade}`, D3) e o form-POST para
+`app/api/pedidos` **não mudam** — é o mesmo contrato de sempre, só migra de host.
+
+**Teto:** se um 2º parceiro precisar do mesmo carrinho fora do goiania, aí sim vale extrair
+`packages/loja-motor` (já cogitado em D1 e rejeitado por escopo insuficiente com 3 cadeiras).
+
+---
+
 ## O que já estava resolvido e não precisou de decisão
 
 | Requisito | Já satisfeito por |

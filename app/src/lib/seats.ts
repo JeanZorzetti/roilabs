@@ -28,6 +28,13 @@ export const DEFAULT_SEATS = [
   // externo" (o site é subdomínio `atma.roilabs.com.br` e o repo é da própria ROI Labs) e
   // "gateway já ligado" (`CredencialGateway` tem ZERO linhas em produção, conferido 08/08).
   { niche: 'Ortodontia / Alinhadores', status: 'Ocupada · Atma Aligner', open: false, estado: 'ocupada-vendavel', daCasa: true, exibirDaCasa: false },
+  // 015 (Jean, 18/08): Maná Moda Social entra em `ordem: 3` — a faixa 3..7 ficou VAGA depois
+  // da remoção dos 5 nichos de construção em 07/08 (comentário acima), então a Maná cai
+  // sozinha no lugar certo sem reordenar nada. `daCasa: false`: é parceiro externo e a venda
+  // gera success fee (`lojas.ts`: `pagoA: 'Maná Moda'`, `split.comissaoPct: 0.1`), mesma
+  // leitura da Tapepro. `estado: 'em-preparacao'` até o checkout fechar (015 fase B) —
+  // vira `ocupada-vendavel` só nesse dia, nunca antes.
+  { niche: 'Moda social masculina', status: 'Em preparação · Maná Moda', open: false, estado: 'em-preparacao', daCasa: false, exibirDaCasa: false, siteUrl: 'https://mana.roilabs.com.br/' },
 ] as const;
 
 /**

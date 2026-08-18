@@ -1,6 +1,6 @@
 # Handoff — 015 Maná Moda Social
 
-**Ponto de entrada para continuar em outra sessão.** Última atualização: **18/08/2026 (A3 concluída)**.
+**Ponto de entrada para continuar em outra sessão.** Última atualização: **18/08/2026 (A3, B parcial e C concluídas — falta D e a Fase 4/split para vender de verdade)**.
 
 A arquitetura da feature mudou: a Maná **saiu do build do site-goiania** e virou projeto
 próprio, no formato do Tapepro. Este documento substitui o handoff da Fase 1 e as tasks
@@ -183,81 +183,45 @@ antes da 015) · `node check-lojas.mjs` + `check-matrix.mjs` + `check-cart-math.
 🚨 `npm run build` no site-goiania **submete ao IndexNow** (está no `Dockerfile`). Build
 exploratório é sempre `npx astro build`.
 
-### ⬜ B. Ligar o checkout — o trabalho está no `app`, não no site novo
+### ✅ B (parcial). Ligar o checkout — feito em 18/08, `LOJA_PUBLICADA` segue `false`
 
-`Mana/src/data/loja.ts` tem `LOJA_PUBLICADA = false`, e por isso o `@graph` do produto sai
-**sem `offers`** (preço sem caminho de checkout é oferta fabricada). Virar `true` sem os
-itens abaixo publica uma loja que não vende.
+Itens 1-4 abaixo foram implementados e verificados; item 5 (o lembrete) continua valendo.
+`EstoqueVariacao` foi aplicado em produção (`prisma db push`, confirmado por query direta).
+`app/src/lib/cors.ts` substitui os `SITE_ORIGIN` hard-coded em `frete/cotar` e
+`cupom/validar`, e `app/src/lib/lojas.ts` ganhou `hostPadrao` por cadeira — o open redirect
+de `pedidos/route.ts` (qualquer `origin` começando com "http" passava) fechou nos 3 pontos
+que liam esse campo. Teste: `app/test/cors-allowlist.test.mjs`.
 
-1. **`/api/estoque` não existe.** `SeletorVariacao` já o chama e falha fechado (nada é
-   marcado como esgotado). Criar em `app/src/app/api/estoque/route.ts`, aceitando
-   `?cadeira=mana` e devolvendo `{ ok: true, estoque: { "<sku>": <qtd> } }`.
-2. **O CORS fixa o host errado.** Duas rotas com a origem escrita à mão:
-   - `app/src/app/api/frete/cotar/route.ts:10` → `const SITE_ORIGIN = 'https://goiania.roilabs.com.br'`
-   - `app/src/app/api/cupom/validar/route.ts:13` → idem
+O carrinho (item 4) foi portado para `Mana/src/lib/cart.ts` + `AddToCart.astro` +
+`CartCount.astro` + `carrinho.astro` — versão enxuta (1 cadeira, 1 unidade, sem simulador
+m², sem link compartilhável, sem orçamento por WhatsApp: nada disso existe no catálogo da
+Maná). `astro build` e `npm test` verdes nos dois repos (`app` e `Mana`).
 
-   De `mana.roilabs.com.br` o browser **bloqueia as duas chamadas**. Precisa virar allowlist
-   (goiania + mana), com o header refletindo a origem do request quando ela estiver na lista.
-3. 🚨 **Open redirect pré-existente**, adjacente e consertado pela mesma allowlist:
-   `app/src/app/api/pedidos/route.ts:25` monta o retorno com
-   `origin.startsWith('http') ? origin : 'https://goiania.roilabs.com.br'` — qualquer
-   `origin` vindo do formulário que comece com `http` vira destino de redirect.
-4. **O carrinho em si — decisão em aberto, não tomada.** O
-   `site-goiania/src/pages/carrinho.astro` (656 linhas) é o motor multicadeira da 013.
-   Ou porta-se para o projeto da Maná só a fatia da cadeira `mana`, ou a compra fica no
-   goiania. O Jean escolheu "e-commerce próprio no site da Maná" em 18/08, o que aponta para
-   portar — mas o corte do motor não foi feito.
-5. 🚩 A frase que precisa sobreviver: **sandbox verde do MP prova a fiação, não prova que
-   dinheiro real chega.** Cartão real segue vetado.
+⚠️ **Ainda falta para vender de verdade** (fora do escopo desta rodada, é a Fase 4 do
+plan.md): o débito de estoque não está ligado ao webhook (`estoque.ts` só tem a leitura,
+não o débito condicional — sem caller ainda), e o split no Mercado Pago (token da conta da
+Maná, OAuth, `marketplace_fee`) não existe. `LOJA_PUBLICADA` em `Mana/src/data/loja.ts`
+continua `false` de propósito — virar `true` sem isso publica uma loja que não cobra certo.
 
-### ⬜ C. Cadeira da Maná na roilabs.com.br
+### ✅ C. Cadeira da Maná na roilabs.com.br — feito em 18/08
 
-Hoje a Maná não tem card na home. **É mais simples do que a versão anterior deste doc
-dizia** — conferido em 18/08 contra `/api/cadeiras`:
+Linha inserida em produção (`Cadeira`, `ordem: 3`, `estado: 'em-preparacao'`,
+`siteUrl: 'https://mana.roilabs.com.br/'`, `daCasa: false`), idempotente por `siteUrl`.
+`app/src/lib/seats.ts` (`DEFAULT_SEATS`, 4º item) e `site/src/pages/index.astro` (`seats`,
+4º item) atualizados na mesma entrega — 12 `<li>` no grid (4 nichos + 8 projetos),
+conferido no `dist/index.html` depois de `npx astro build`. Card aparece como "Em
+preparação · Maná Moda"; vira `'ocupada-vendavel'` só no dia em que a Fase 4 fechar.
 
-```
-nichos:   ordem 0, 1, 2   (polo Goiânia)
-projetos: ordem 8 .. 15   (polo Carteira)
--> a faixa 3..7 está VAGA, sobrou dos 5 nichos de construção removidos em 07/08
-```
+### ⬜ D. Pendências de marca da Maná — bloqueado, não tentado nesta rodada
 
-Então a Maná entra em **`ordem: 3`** e cai sozinha no lugar certo, **sem reordenar nada**.
-E o `s.ordem >= 8` que classificava nicho vs. projeto **já foi removido** — quem decide hoje
-é o `data-projeto` que o template marca.
+Os 4 itens exigem ativo de design ou acesso de conta que esta sessão não tem: favicon e
+imagem OG próprias pedem arte (não é algo pra gerar como placeholder — ficaria pior que não
+ter), a verificação do Bing Webmaster exige login na conta do Jean, e a identidade visual já
+está marcada no handoff como "trabalho de design à parte". Preparar quando houver a arte ou
+o acesso.
 
-Mas continua sendo **mudança atômica** (banco + código no mesmo deploy):
-`site/src/pages/index.astro` renderiza `seats` (3 nichos) e `carteira` (8 projetos) no
-**mesmo `<ul>`**, e o script ao vivo casa cada card com `/api/cadeiras` **por índice**
-(`seats[i]`). São 11 cards ↔ 11 linhas. Só código = 12 cards contra 11 linhas, e o card novo
-passa a exibir o dado do vizinho.
-
-Os três lugares:
-
-1. **Banco** (`roilabs_db @ 2.24.207.200:5443`) — uma linha em `Cadeira`:
-   `ordem: 3`, `polo: 'Goiânia'`, `niche: 'Moda social masculina'`, `open: false`,
-   `estado: 'em-preparacao'`, `status: 'Em preparação · Maná Moda'`,
-   `siteUrl: 'https://mana.roilabs.com.br/'`, `daCasa: false`, `exibirDaCasa: false`.
-   `daCasa: false` porque a Maná é parceiro externo e a venda **gera success fee** — é o que
-   `lojas.ts` já diz (`pagoA: 'Maná Moda'`, `split.comissaoPct: 0.1`), mesma leitura da
-   Tapepro. (A regra geral é fail-closed para `true`; aqui não há dúvida.)
-2. `app/src/lib/seats.ts` → `DEFAULT_SEATS`, como **4º** item.
-3. `site/src/pages/index.astro` → array `seats`, como **4º** item, com
-   `href: 'https://mana.roilabs.com.br/'`.
-
-Não precisa de `npm run gen:carteira` — aquilo regenera `carteira.ts` a partir de
-`PROJETOS_CADEIRA`, que não muda aqui.
-
-**Estado honesto**: `em-preparacao` enquanto o checkout não fecha. Vira `'ocupada-vendavel'`
-/ `'Ocupada · Maná Moda'` no dia em que **B** fechar — não antes.
-
-### ⬜ D. Pendências de marca da Maná (baratas, nenhuma bloqueia)
-
-- `Mana/public/favicon.png` ainda é o ícone da ROI Labs.
-- Sem imagem OG própria — o default é a foto do terno.
-- Sem verificação do host no Bing Webmaster. Sem ela o **IndexNow devolve 403** (a
-  verificação é por host; a do goiania não vale aqui).
-- O visual ainda é o tema escuro do porcelanato com um accent novo. **Identidade visual
-  própria da Maná não foi feita** — é trabalho de design à parte.
+🚩 A frase que precisa sobreviver, de B item 5 do texto original: **sandbox verde do MP
+prova a fiação, não prova que dinheiro real chega.** Cartão real segue vetado.
 
 ---
 

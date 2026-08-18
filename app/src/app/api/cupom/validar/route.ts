@@ -5,18 +5,17 @@ import { precoPorQuantidade } from '@/lib/precos-fitas';
 // O NOME NO FIO continua `vertical`: o carrinho já publicado está em cache no browser do
 // comprador e envia esse campo — renomear aqui quebraria cupom de quem não recarregou.
 import { validarCupom, type Escopo } from '@/lib/cupons';
+import { corsHeaders } from '@/lib/cors';
 
 export const dynamic = 'force-dynamic';
 
-// The only endpoint the static site reads cross-origin → needs CORS (D2). Simple urlencoded
-// request (no preflight). Display only; the charge re-validates at checkout (FR-014).
-const SITE_ORIGIN = 'https://goiania.roilabs.com.br';
-const CORS = { 'Access-Control-Allow-Origin': SITE_ORIGIN };
-
+// Lido cross-origin pelos sites estáticos → origem pela allowlist (015 D8, dois hosts).
+// Simple urlencoded request (no preflight). Display only; the charge re-validates at checkout (FR-014).
 const money = (n: number) => Math.round(n * 100) / 100;
 const brl = (n: number) => n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
 export async function POST(req: NextRequest) {
+  const CORS = corsHeaders(req.headers.get('origin'));
   const form = await req.formData();
   const codigo = (typeof form.get('codigo') === 'string' ? (form.get('codigo') as string) : '').slice(0, 40);
   // Ausente ⇒ porcelanato: o carrinho já publicado (e em cache no browser do comprador)

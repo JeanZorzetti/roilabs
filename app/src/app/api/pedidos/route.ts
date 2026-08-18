@@ -13,6 +13,7 @@ import { normalizarDoc, validarDoc } from '@/lib/doc';
 import { sendAlert } from '@/lib/email';
 import { log } from '@/lib/log';
 import { getLoja } from '@/lib/lojas';
+import { originValido } from '@/lib/cors';
 
 export const dynamic = 'force-dynamic';
 
@@ -21,8 +22,12 @@ const cap = (v: FormDataEntryValue | null, max: number) =>
 
 const money = (n: number) => Math.round(n * 100) / 100;
 
-function backTo(origin: string, erro: string, cadeira: string = 'porcelanato') {
-  const base = origin.startsWith('http') ? origin : 'https://goiania.roilabs.com.br';
+// `origin` vem do form do cliente, não do header HTTP — nunca confiar nele sem checar contra
+// a allowlist (era open redirect: qualquer valor começando com "http" passava). Fora da
+// allowlist cai no host padrão DA CADEIRA, nunca fixo em goiania — pra Maná esse é o host errado.
+function backTo(origin: string, erro: string, cadeiraId: string = 'porcelanato') {
+  const hostPadrao = getLoja(cadeiraId)?.hostPadrao ?? 'https://goiania.roilabs.com.br';
+  const base = originValido(origin) ?? hostPadrao;
   // O site-goiania novo unificou a rota em /carrinho (suporta qualquer cadeira por URL/localStorage)
   return NextResponse.redirect(`${base}/carrinho?erro=${erro}`, 303);
 }
@@ -251,7 +256,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const appOrigin = req.nextUrl.origin;
-    const backBaseAssinatura = origin.startsWith('http') ? origin : 'https://goiania.roilabs.com.br';
+    const backBaseAssinatura = originValido(origin) ?? loja.hostPadrao;
 
     // 014 (contracts/checkout-assinatura.md): unidade='assinatura' cobra por Preapproval
     // (autorização recorrente), não por Preference (cobrança única) — é a única forma de
@@ -291,7 +296,7 @@ export async function POST(req: NextRequest) {
       return { title, unitPrice };
     });
     
-    const backBase = origin.startsWith('http') ? origin : 'https://goiania.roilabs.com.br';
+    const backBase = originValido(origin) ?? loja.hostPadrao;
     
     // modoCobranca parceiro seria redirecionado aqui, mas roilabs abre MP (T028 lida com isso depois).
     if (loja.modoCobranca === 'parceiro' && loja.checkoutUrl) {

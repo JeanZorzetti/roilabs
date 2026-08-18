@@ -46,6 +46,10 @@ export interface LojaConfig {
   cupomEscopo: string;
   linhaFixa: LinhaFixa | null;
   publicada: boolean;
+  /** Host de fallback para redirect (carrinho, back_url do MP) quando o `origin` do form não
+   * está na allowlist de cors.ts. NUNCA 'https://goiania.roilabs.com.br' fixo — pra Maná isso
+   * é o host errado (open redirect + destino errado, ambos corrigidos pela mesma allowlist). */
+  hostPadrao: string;
 }
 
 export const lojas: LojaConfig[] = [
@@ -63,6 +67,7 @@ export const lojas: LojaConfig[] = [
     cupomEscopo: 'porcelanato',
     linhaFixa: null,
     publicada: true,
+    hostPadrao: 'https://goiania.roilabs.com.br',
   },
   {
     id: 'fitas',
@@ -76,6 +81,7 @@ export const lojas: LojaConfig[] = [
     emailObrigatorio: false,
     split: null,
     cupomEscopo: 'fitas',
+    hostPadrao: 'https://goiania.roilabs.com.br',
     linhaFixa: {
       quandoSlug: 'fita-transparente-personalizada',
       slug: 'cliche-arte',
@@ -101,6 +107,7 @@ export const lojas: LojaConfig[] = [
     linhaFixa: null,
     // 015 Fase 1: dado existe, nada vende ainda. Fase 7 vira true.
     publicada: false,
+    hostPadrao: 'https://mana.roilabs.com.br',
   },
 ];
 

@@ -117,6 +117,19 @@ model ItemPedido {
   @@map("itens_pedido")
 }
 
+// 015: estoque por SKU de variação. Catálogo continua em arquivo (013); ESTADO mora aqui,
+// porque arquivo não debita. A chave é (cadeira, sku) — nunca o rótulo tamanho/cor.
+model EstoqueVariacao {
+  id         String   @id @default(cuid())
+  cadeira    String // 'mana' — mesmo espaço de nome de Pedido.vertical
+  sku        String // = ItemPedido.slug quando a unidade é 'peca'
+  quantidade Int      @default(0) // NUNCA negativo: a guarda é o WHERE do débito condicional
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@unique([cadeira, sku])
+  @@map("estoque_variacao")
+}
+
 // Item de pedido de FITA (011). Tabela legada — a 013 unifica em ItemPedido; esta tabela
 // e a relação acima só existem até o backfill copiar os dados e T026 remover ambos.
 model ItemPedidoFita {
