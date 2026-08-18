@@ -263,9 +263,10 @@ Não precisa de `npm run gen:carteira` — aquilo regenera `carteira.ts` a parti
 
 ## 4. Armadilhas que atravessam tudo
 
-- 🚨 `git push` em `main` no repo `roilabs` **é deploy**. Já o branch
-  `015-ecommerce-mana-moda` **não** builda sozinho — a produção do goiania sai dele por
-  deploy manual.
+- 🚨 `git push` em `main` no repo `roilabs` **é deploy** — inclui `site-goiania`. Confirmado
+  em 18/08 na entrega da A3: push em `main` bastou, sem redeploy manual no EasyPanel (o
+  parágrafo anterior deste doc, dizendo que só o branch `015-ecommerce-mana-moda` publicava
+  e que exigia deploy manual, estava desatualizado/errado — corrigido aqui).
 - 🚨 `npm run build` no `site-goiania` **submete ao IndexNow**. Use `npx astro build`.
   O projeto da Maná não tem esse gatilho.
 - ⚠️ Banco: `2.24.207.200:5443/roilabs_db`. `:5445` é o `roihub_db` — schema errado.
