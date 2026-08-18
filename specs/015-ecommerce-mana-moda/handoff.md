@@ -1,6 +1,6 @@
 # Handoff — 015 Maná Moda Social
 
-**Ponto de entrada para continuar em outra sessão.** Última atualização: **18/08/2026**.
+**Ponto de entrada para continuar em outra sessão.** Última atualização: **18/08/2026 (A2 concluída)**.
 
 A arquitetura da feature mudou: a Maná **saiu do build do site-goiania** e virou projeto
 próprio, no formato do Tapepro. Este documento substitui o handoff da Fase 1 e as tasks
@@ -112,22 +112,46 @@ curl -s -o /dev/null -w "%{http_code}\n" https://goiania.roilabs.com.br/porcelan
 (Docker parado, WSL sem sudo) — a conferência foi manual: chaves balanceadas, 2 `server{}`,
 16 `location`, toda linha terminando em `;`, `{` ou `}`.
 
-### ⬜ A2. Subir o site próprio · *desbloqueia: A3 e C*
+### ✅ A2. Subir o site próprio · feito em 18/08, **mudou de EasyPanel para Vercel**
 
-1. Novo serviço no EasyPanel apontando para **`JeanZorzetti/mana`**, branch `main`, build
-   path `/` (o `Dockerfile` está na raiz do repo).
-2. Mover o domínio `mana.roilabs.com.br` do serviço do goiania para o novo.
-   DNS e certificado **já existem** — não deletar o registro.
-   🚨 Cert emitido contra NXDOMAIN não se re-emite sozinho (custou caro na 012).
+O plano original (novo serviço EasyPanel + `Dockerfile`) foi trocado por deploy na Vercel — o
+`Dockerfile`/`nginx.conf` do repo **ficaram sem uso em produção**, mas continuam servindo de
+referência/fallback local. O que foi feito:
 
-Aceite:
+1. Clone de deploy em `C:\dev\mana` (fora do OneDrive — `vercel --prod` falha de dentro dele,
+   ver [[vercel_deploy_fails_under_onedrive]]).
+2. `vercel.json` criado e **commitado no repo** (`JeanZorzetti/mana@main`), traduzindo a lógica
+   do `nginx.conf`: `framework: astro`, `outputDirectory: dist`, redirect
+   `/mana/(.*) → /$1` (**regex, não `:path*`** — `:path*` não casa o `/` final, ficava 404 em
+   `/mana/algo/`), rewrite `/sitemap.xml → /sitemap-index.xml`.
+3. Projeto `jean-zorzettis-projects/mana` linkado ao GitHub — push em `main` já dispara deploy
+   sozinho, sem passo manual.
+4. Domínio adicionado ao projeto (`vercel domains add`), DNS trocado no Cloudflare (zona
+   `roilabs.com.br`, record `mana`, `A 2.24.207.200 → 76.76.21.21`, **DNS-only**) via API com
+   token temporário do Jean (revogado depois de confirmar).
+5. Cert HTTPS **não saiu sozinho** depois do DNS — precisou `vercel certs issue
+   mana.roilabs.com.br` manual (mesma fricção do [[vercel_cert_stuck_after_nxdomain]], mesmo
+   sem ter passado por NXDOMAIN desta vez). Antes disso HTTP/80 já respondia 200 (`Server:
+   Vercel`) mas HTTPS/443 dava falha de handshake total, não erro de cert — é o sintoma a
+   procurar se isso se repetir noutro domínio.
+
+Aceite (rodado e verde em 18/08):
 ```bash
-curl -s https://mana.roilabs.com.br/ | grep -o "<title>[^<]*</title>"    # título da Maná
+curl -s https://mana.roilabs.com.br/ | grep -o "<title>[^<]*</title>"    # título da Maná ✓
 curl -s -o /dev/null -w "%{http_code} %{redirect_url}\n" \
-     https://mana.roilabs.com.br/mana/terno-poliviscose/                 # 301 -> /terno-poliviscose/
-curl -s https://mana.roilabs.com.br/sitemap.xml | head -3                # sitemap-index
-curl -s https://mana.roilabs.com.br/ | grep -c porcelanato               # 0
+     https://mana.roilabs.com.br/mana/terno-poliviscose/                 # 308 -> /terno-poliviscose/ ✓
+curl -s https://mana.roilabs.com.br/sitemap.xml | head -3                # sitemap-index ✓
+curl -s https://mana.roilabs.com.br/ | grep -c porcelanato               # 0 ✓
+curl -s -o /dev/null -w "%{http_code}\n" https://goiania.roilabs.com.br/porcelanato/  # 200 ✓ (A1 intacta)
 ```
+Nota: os 308 (não 301) são a Vercel preservando método no redirect — equivalente a 301 para SEO,
+Google trata os dois como permanentes.
+
+⚠️ **Consequência para A3**: como o host não passa mais pelo container do goiania, a
+contenção da A1 (`nginx.conf` do `site-goiania`) virou vestigial para este domínio — mas
+**continua existindo no branch `015-ecommerce-mana-moda`** e não foi removida. A3 (remover
+`src/pages/mana/**` etc. do `site-goiania`) segue como próximo passo lógico, agora desbloqueado,
+mas não foi executada nesta sessão.
 
 ### ⬜ A3. Remover a Maná do site-goiania · *só DEPOIS que A2 estiver servindo*
 
