@@ -1,6 +1,6 @@
 # Handoff — 015 Maná Moda Social
 
-**Ponto de entrada para continuar em outra sessão.** Última atualização: **18/08/2026 (A2 concluída)**.
+**Ponto de entrada para continuar em outra sessão.** Última atualização: **18/08/2026 (A3 concluída)**.
 
 A arquitetura da feature mudou: a Maná **saiu do build do site-goiania** e virou projeto
 próprio, no formato do Tapepro. Este documento substitui o handoff da Fase 1 e as tasks
@@ -147,30 +147,39 @@ curl -s -o /dev/null -w "%{http_code}\n" https://goiania.roilabs.com.br/porcelan
 Nota: os 308 (não 301) são a Vercel preservando método no redirect — equivalente a 301 para SEO,
 Google trata os dois como permanentes.
 
-⚠️ **Consequência para A3**: como o host não passa mais pelo container do goiania, a
-contenção da A1 (`nginx.conf` do `site-goiania`) virou vestigial para este domínio — mas
-**continua existindo no branch `015-ecommerce-mana-moda`** e não foi removida. A3 (remover
-`src/pages/mana/**` etc. do `site-goiania`) segue como próximo passo lógico, agora desbloqueado,
-mas não foi executada nesta sessão.
+⚠️ **Consequência para A3** (já resolvida — ver abaixo): como o host não passa mais pelo
+container do goiania, a contenção da A1 (`nginx.conf` do `site-goiania`) virou vestigial
+para este domínio.
 
-### ⬜ A3. Remover a Maná do site-goiania · *só DEPOIS que A2 estiver servindo*
+### ✅ A3. Remover a Maná do site-goiania · feito em 18/08
 
-Remover antes deixa a loja no escuro. Apagar de `site-goiania`: `src/pages/mana/**`,
-`src/components/HeaderMana.astro`, `FooterMana.astro`, `SeletorVariacao.astro`,
-`src/data/mana.ts`, `src/scripts/check-mana.mjs` (e a entrada dele no `prebuild`), o 2º
-`server{}` do `nginx.conf`, e a prop `siteBase` do `Base.astro`.
+Removido de `site-goiania`: `src/pages/mana/**` (5 arquivos), `src/components/HeaderMana.astro`,
+`FooterMana.astro`, `SeletorVariacao.astro`, `src/data/mana.ts`, `src/scripts/check-mana.mjs`
+(e a entrada dele no `prebuild`), o 2º `server{}` do `nginx.conf`, e a prop `siteBase` do
+`Base.astro`. `src/data/lojas.ts` perdeu a entrada `mana` (e o import de `produtosMana`).
 
-Ao remover, o `location /mana/` que sobra no host do goiania passa a apontar **direto** para
-`https://mana.roilabs.com.br/$1` — hoje encadearia dois 301.
+O `location /mana/` que sobra no host do goiania agora é regex (`~ ^/mana/(.*)$`) e aponta
+**direto** para `https://mana.roilabs.com.br/$1` — antes encadearia dois 301 (goiania → mana
+com `/mana/` → mana sem prefixo).
 
-⚠️ O **app continua dono do checkout**: a cadeira em `app/src/lib/lojas.ts` e o
-`app/src/lib/precos-mana.ts` **ficam**. Some só o espelho do site
-(`site-goiania/src/data/lojas.ts` perde a entrada `mana`). Isso quebra o `check-mana.mjs`,
-que comparava os dois espelhos — por isso ele sai junto, e a paridade passa a ser guardada
-por `app/test/mana-paridade.test.mjs`, que já existe e já roda no `npm test`.
+`check-lojas.mjs` também precisou de ajuste (não estava na lista original): lia
+`data/mana.ts` por parse textual para validar o catálogo; essa leitura saiu junto, senão o
+prebuild quebra com `ENOENT`.
 
-Aceite: `npx astro build` no site-goiania com **99 `<loc>`** no sitemap (o número de antes
-da 015) e `npm test` verde no `app`.
+⚠️ O **app continua dono do checkout**: `app/src/lib/lojas.ts` e `app/src/lib/precos-mana.ts`
+ficam intactos. `app/test/mana-paridade.test.mjs` **não podia só "continuar rodando"** como o
+handoff anterior previa — ele lia `site-goiania/src/data/mana.ts` como a fonte "site" da
+paridade, e esse arquivo deixou de existir. Corrigido para ler `../Mana/src/data/mana.ts`
+(repo `JeanZorzetti/mana`, sibling fora deste git) em vez disso — é o espelho real agora.
+Igual ao padrão já usado em `check-mana.mjs` para `precos-mana.ts`: `existsSync` com aviso em
+vez de falha dura, porque esse repo irmão só existe no checkout local do Jean, não em
+CI/deploy do `app`.
+
+Verificado: `npx astro build` no site-goiania → **99 `<loc>`** no sitemap (igual ao número de
+antes da 015) · `node check-lojas.mjs` + `check-matrix.mjs` + `check-cart-math.mjs` +
+`check-cadeiras.mjs --self-test` verdes (prebuild completo, rodado manualmente porque
+`npx astro build` não dispara os hooks do npm) · `npm test` verde no `app` (paridade real:
+24 SKUs contra `Mana/src/data/mana.ts`).
 🚨 `npm run build` no site-goiania **submete ao IndexNow** (está no `Dockerfile`). Build
 exploratório é sempre `npx astro build`.
 

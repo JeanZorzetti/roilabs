@@ -12,9 +12,6 @@ interface Props {
    *  parsear o corpo, e ela entra na fila atrás dos scripts de analytics —
    *  era 41% do LCP da malha (Load Delay 1,56s). Só passe se ela estiver na 1ª dobra. */
   preloadImage?: string;
-  /** 015: host que serve a página quando não é o goiania (ex: mana.roilabs.com.br).
-   *  Sem a prop, comportamento idêntico ao de hoje — deriva de Astro.site. */
-  siteBase?: string;
 }
 
 const {
@@ -25,10 +22,9 @@ const {
   jsonLdNodes = [],
   noindex = false,
   preloadImage,
-  siteBase,
 } = Astro.props;
 
-const site = siteBase ? new URL(siteBase) : (Astro.site ?? new URL('https://goiania.roilabs.com.br'));
+const site = Astro.site ?? new URL('https://goiania.roilabs.com.br');
 const canonical = new URL(Astro.url.pathname, site);
 // Caminho local resolve no site; URL absoluta passa intacta.
 // Dimensões 1200×630 só valem pras imagens de social (estática + open-graph
@@ -65,22 +61,17 @@ const graph = {
       '@type': 'WebSite',
       '@id': `${site.origin}/#website`,
       url: `${site.origin}/`,
-      name: siteBase ? 'Maná Moda Social Masculina' : 'ROI Labs — Fitas adesivas e porcelanato',
+      name: 'ROI Labs — Fitas adesivas e porcelanato',
       inLanguage: 'pt-BR',
       publisher: { '@id': ORG_ID },
-      // Busca interna (SiteSearch) só existe no goiania — o host da Maná não tem o componente.
-      ...(siteBase
-        ? {}
-        : {
-            potentialAction: {
-              '@type': 'SearchAction',
-              target: {
-                '@type': 'EntryPoint',
-                urlTemplate: `${site.origin}/?q={search_term_string}`,
-              },
-              'query-input': 'required name=search_term_string',
-            },
-          }),
+      potentialAction: {
+        '@type': 'SearchAction',
+        target: {
+          '@type': 'EntryPoint',
+          urlTemplate: `${site.origin}/?q={search_term_string}`,
+        },
+        'query-input': 'required name=search_term_string',
+      },
     },
     ...jsonLdNodes,
   ],

@@ -45,18 +45,6 @@ const fitasCatalog = fitaSlugs.map((slug, i) => ({
   preco: fitaPrecos.find((_, idx) => idx >= 0) > 0 ? fitaPrecos[0] : 0, // any preco > 0 suffices
 }));
 
-// Maná (015): produto tem `variacoes[]` com preço próprio, não `preco` no topo — usa a
-// MENOR variação como proxy (produto sem nenhuma variação falha corretamente com NaN).
-// Checagem SKU a SKU de verdade é o check-mana.mjs; aqui só garante slug único + imagem.
-const manaSrc = readFileSync(join(DATA, 'mana.ts'), 'utf8');
-const manaBlocks = manaSrc.split(/\n {2}\{\n {4}slug:/).slice(1);
-const manaCatalog = manaBlocks.map((block) => {
-  const slug = block.match(/^\s*'([^']+)'/)?.[1] ?? null;
-  const imagem = block.match(/imagens:\s*\[\s*'([^']+)'/)?.[1] ?? null;
-  const precos = [...block.matchAll(/preco:\s*([\d.]+)/g)].map((m) => parseFloat(m[1]));
-  return { slug, imagem, preco: precos.length ? Math.min(...precos) : NaN };
-});
-
 // ── Read lojas.ts by text parse ─────────────────────────────────────────────
 
 const lojasSrc = readFileSync(join(DATA, 'lojas.ts'), 'utf8');
@@ -111,7 +99,6 @@ const lojas = lojaBlocks.map((block) => ({
 const catalogMap = {
   produtos: porcelanatos,
   fitas: fitasCatalog,
-  produtosMana: manaCatalog,
 };
 
 // ── Read unidades.ts for valid IDs ──────────────────────────────────────────

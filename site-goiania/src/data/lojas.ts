@@ -8,7 +8,6 @@
 
 import { produtos, type Produto } from './produtos';
 import { fitas, type Fita } from './fitas';
-import { produtosMana, type ProdutoMana } from './mana';
 import { unidadesById, type Unidade } from './unidades';
 
 // ── Tipos ───────────────────────────────────────────────────────────────────
@@ -34,7 +33,7 @@ export interface Loja {
   prefixoRota: string;
   unidade: string;           // id de Unidade (m2 | rolo | assinatura | peca)
   recorrencia?: string;      // só para unidade='assinatura': 'mensal' | 'anual'
-  catalogo: Array<Produto | Fita | ProdutoMana | Record<string, unknown>>;
+  catalogo: Array<Produto | Fita | Record<string, unknown>>;
   modoCobranca: 'roilabs' | 'parceiro';
   checkoutUrl: string | null;
   pagoA: string;
@@ -87,23 +86,6 @@ export const lojas: Loja[] = [
       isentoSeJaComprou: true,
     },
     publicada: true,
-  },
-  {
-    id: 'mana',
-    prefixoRota: 'mana',
-    unidade: 'peca',
-    catalogo: produtosMana,
-    modoCobranca: 'roilabs',
-    checkoutUrl: null,
-    pagoA: 'Maná Moda',
-    frete: 'cotacao',
-    docObrigatorio: true,
-    emailObrigatorio: true,
-    split: { gateway: 'mercadopago', comissaoPct: 0.1 },
-    cupomEscopo: 'mana',
-    linhaFixa: null,
-    // 015 Fase 1: dado existe, nada vende ainda. Fase 7 vira true.
-    publicada: false,
   },
 ];
 
