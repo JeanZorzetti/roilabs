@@ -244,6 +244,13 @@ arco fechado vira saia.
 grosso, pomba 10% maior): a marca completa empastela abaixo de ~48px. Mesmo motivo do
 `icon.svg` do potencial-arquitetado.
 
+🚨 **O tamanho do texto do lockup não significa nada sozinho.** A marca preenche os 64 de
+altura do `viewBox`, então cada unidade de `font-size` vale `altura_renderizada / 64` px.
+Na primeira entrega o kicker estava em 9 unidades num header de 40px = **5,6px na tela,
+ilegível** — e passou porque eu estava julgando num preview de 512px. Hoje: header a 48px,
+`Maná` = 21px, `MODA SOCIAL` = 9,8px (medido no HTML de produção). Mexeu em `K.lockup`?
+**Screenshot da página construída**, nenhum teste pega isso.
+
 ⚠️ A OG foi renderizada nesta máquina com `sharp`/librsvg, que não tem a Archivo instalada
 no SO — o texto dela caiu no fallback (Segoe UI). O site em si continua em Archivo de
 verdade. Se isso incomodar, é instalar a fonte e rodar o gerador de novo.
