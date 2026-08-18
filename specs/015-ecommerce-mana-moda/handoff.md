@@ -1,6 +1,6 @@
 # Handoff — 015 Maná Moda Social
 
-**Ponto de entrada para continuar em outra sessão.** Última atualização: **18/08/2026 (A3, B parcial e C concluídas — falta D e a Fase 4/split para vender de verdade)**.
+**Ponto de entrada para continuar em outra sessão.** Última atualização: **18/08/2026 (A3, B parcial, C e a marca da D concluídas — falta o Bing e a Fase 4/split para vender de verdade)**.
 
 A arquitetura da feature mudou: a Maná **saiu do build do site-goiania** e virou projeto
 próprio, no formato do Tapepro. Este documento substitui o handoff da Fase 1 e as tasks
@@ -212,13 +212,45 @@ Linha inserida em produção (`Cadeira`, `ordem: 3`, `estado: 'em-preparacao'`,
 conferido no `dist/index.html` depois de `npx astro build`. Card aparece como "Em
 preparação · Maná Moda"; vira `'ocupada-vendavel'` só no dia em que a Fase 4 fechar.
 
-### ⬜ D. Pendências de marca da Maná — bloqueado, não tentado nesta rodada
+### 🟡 D. Marca da Maná — 3 de 4 feitos em 18/08; falta só o Bing
 
-Os 4 itens exigem ativo de design ou acesso de conta que esta sessão não tem: favicon e
-imagem OG próprias pedem arte (não é algo pra gerar como placeholder — ficaria pior que não
-ter), a verificação do Bing Webmaster exige login na conta do Jean, e a identidade visual já
-está marcada no handoff como "trabalho de design à parte". Preparar quando houver a arte ou
-o acesso.
+O que destravou: o Jean forneceu o logo do cliente em
+`specs/015-ecommerce-mana-moda/logo/Design sem nome (13).svg`. **Cuidado: aquilo não é
+vetor.** São 947KB de SVG embrulhando um JPEG 2560² (`<image xlink:href="data:image/jpeg">`)
+— não escala, não muda de cor, e o wordmark dele diz **"Mana", sem acento**.
+
+Daí saiu uma marca vetorial nova, no padrão do `tape-vision-ai-92` e do
+`potencial-arquitetado`: gerador paramétrico + `Logo.astro` com variantes.
+
+| Item | Estado |
+|---|---|
+| Favicon próprio | ✅ `public/favicon.svg` + `icon-32.png` + `apple-touch-icon.png` |
+| Imagem OG própria | ✅ `public/og/default.png` (1200×630) + `og/logo.svg` |
+| Identidade visual | ✅ `--mana-accent` virou o dourado do logo (`#f5c451`, amostrado do anel) |
+| Verificação Bing Webmaster | ⬜ **continua bloqueado** — exige login na conta do Jean |
+
+**O acento vem do TEXTO, não do desenho.** O lockup põe "Maná" num `<text>` com a fonte do
+site (Archivo), então o navegador compõe o acento que a arte original não tem. É por isso
+que o wordmark não foi vetorizado junto da pomba — e é o que o teste novo
+`marca: assets gerados no dist e wordmark acentuado` protege.
+
+Regeração: `node scripts/build-logo.mjs` no repo `Mana` reescreve os 6 arquivos a partir
+dos knobs em `K`. A receita completa está no cabeçalho do script. Duas armadilhas já
+pagas e anotadas lá: as primárias da asa têm que pesar **na ponta** (`t**0.8`) — invertido
+vira mariposa; e a cauda tem que ser **penas individuais** (traços com ponta arredondada) —
+arco fechado vira saia.
+
+⚠️ O `favicon.svg` é uma variante **simplificada** de propósito (sem raios, anel mais
+grosso, pomba 10% maior): a marca completa empastela abaixo de ~48px. Mesmo motivo do
+`icon.svg` do potencial-arquitetado.
+
+⚠️ A OG foi renderizada nesta máquina com `sharp`/librsvg, que não tem a Archivo instalada
+no SO — o texto dela caiu no fallback (Segoe UI). O site em si continua em Archivo de
+verdade. Se isso incomodar, é instalar a fonte e rodar o gerador de novo.
+
+Verificado: `npx astro build` verde (7 páginas) · `npx astro check` 0 erros · `npm test`
+**6/6** · SVG do header extraído do `dist/index.html` e renderizado — o acento chega ao
+HTML publicado.
 
 🚩 A frase que precisa sobreviver, de B item 5 do texto original: **sandbox verde do MP
 prova a fiação, não prova que dinheiro real chega.** Cartão real segue vetado.
