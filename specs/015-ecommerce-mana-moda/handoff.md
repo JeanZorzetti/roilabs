@@ -1,81 +1,119 @@
-# Handoff — 015 Maná Moda Social, fim da Fase 1
+# Handoff — 015 Maná Moda Social
 
-**Status em 17/08/2026**: Fase 1 completa, commitada e pushada no branch `015-ecommerce-mana-moda`.
-Fases 2–8 pendentes. Este documento é para a **próxima sessão continuar a partir da Fase 2** —
-não é o `handoff.md` final (esse é a T072, escrito no fechamento da Fase 8, e vai reescrever
-este arquivo com o estado completo da feature).
+**Status em 18/08/2026**: a arquitetura da feature MUDOU. A Maná saiu do build do
+site-goiania e virou **projeto próprio**, no formato do Tapepro. Este documento substitui
+o handoff de fim da Fase 1 e é o ponto de entrada da próxima sessão.
 
-Leia primeiro: [tasks.md](./tasks.md) (a lista de tasks) e [plan.md](./plan.md) (o porquê da
-ordem das fases). Este handoff só resume o que já existe e o que vem a seguir.
+## O que estava errado (verificado em produção, 18/08)
 
-## O que existe agora (Fase 1 — "o dado, sem vender nada")
+A Fase 2 (T012–T023) pôs a Maná dentro do build do `site-goiania`: um container, um `root`
+de nginx, dois `server{}`. O host novo herdou o site inteiro do porcelanato.
 
-Nenhuma rota nova, nenhum host novo, nenhum schema. O site no ar está **idêntico** ao de antes
-desta feature — confirmado pelo `astro build` com exatamente 99 `<loc>` no sitemap (as URLs da
-Maná não entram ainda) e por `git diff --stat` não tocar `pages/porcelanato/**`, `pages/fitas/**`,
-`api/pedidos/route.ts` nem `schema.prisma`.
+| URL | O que respondia |
+|---|---|
+| `mana.roilabs.com.br/` | **200** — a home de *fitas adesivas* da ROI Labs |
+| `mana.roilabs.com.br/porcelanato/` | 200 — guias de porcelanato, sob a marca Maná |
+| `mana.roilabs.com.br/carrinho/` | 200 |
+| `mana.roilabs.com.br/mana/**` | 200 — as únicas páginas que eram da Maná |
 
-Criado/alterado:
-- `site-goiania/src/data/unidades.ts` — unidade `peca` (peça inteira ≥ 1)
-- `site-goiania/src/data/mana.ts` **(novo)** — catálogo real: 4 produtos, 24 SKUs
-- `app/src/lib/precos-mana.ts` **(novo)** — espelho servidor, autoridade de preço/peso
-- `site-goiania/src/data/lojas.ts` + `app/src/lib/lojas.ts` — cadeira `mana` registrada com
-  `publicada: false`; campos novos `emailObrigatorio`/`split` em **todas** as cadeiras
-  (porcelanato/fitas com `split: null` — comportamento de hoje intocado byte a byte)
-- `site-goiania/src/scripts/check-mana.mjs` **(novo gate)**, registrado no `prebuild`
-- `check-lojas.mjs` e `check-cart-math.mjs` estendidos com as invariantes da unidade `peca`/`split`
-- `app/test/mana-paridade.test.mjs` **(novo)**, no `npm test`
-- `site-goiania/public/img/mana/*.jpg` — 4 fotos reais, otimizadas (eram até 46MB em SVG com
-  C2PA embutido; extraídas e redimensionadas para ≤265KB cada com `sharp`)
+E o `Base.astro` compartilhado carimbava a marca errada dentro das páginas da Maná:
 
-Gate da Fase 1 (T011) — tudo verde nesta sessão: `check-lojas` · `check-mana` · `check-cart-math`
-· `astro build` (99 URLs) · `tsc --noEmit` · `npm test` (26 arquivos) · prova negativa do diff.
+- `<link rel="alternate">` → *"Guias de porcelanato — ROI Labs Goiânia"*;
+- `Organization` do `@graph` se descrevendo como *"fitas adesivas... porcelanato"*;
+- o botão flutuante de WhatsApp, **na página do terno**, abrindo com
+  *"Olá! Estou no site de porcelanato de Goiânia e quero uma ajuda."*
 
-## Catálogo v1 — de onde veio e o que falta
+O `research.md` D1 tratou o prefixo `/mana/` como compromisso aceitável do build
+compartilhado. Ele não era o problema — era o sintoma. O problema era o build compartilhado.
 
-O catálogo **não veio de um sistema de produto** — a Maná não tinha um. Foi montado nesta sessão
-a partir de (a) scraping do Instagram `@manamodasocial` (alt-text OCR de posts promocionais) e
-(b) fotos e preços reais que o Jean repassou de um catálogo de WhatsApp/loja física. É
-**deliberadamente enxuto**: 4 produtos, todos com tamanhos únicos `P/M/G/GG` (decisão do Jean —
-não há tabela de disponibilidade por tamanho ainda) e **peso pesquisado, não medido**
-(pesquisa de peso médio de roupa social — camisa 200-300g, calça 400-600g, terno 1000-1500g —
-ponto médio de cada faixa). Isso é um **knob de operador**, não fato: a T038/T064 já preveem
-recalibrar o peso contra o Melhor Envio real antes da Fase 7 (publicar). Se a Maná quiser
-crescer o catálogo antes da Fase 7, é só adicionar produtos em `mana.ts` + `precos-mana.ts`
-(mesmo formato, `check-mana.mjs` valida a paridade automaticamente).
+## O que existe agora
 
-## Próximo passo: Fase 2 — o host e a vitrine (T012–T023)
+### 1. Projeto próprio da Maná — FEITO
 
-Primeira fase que **toca produção**: registro DNS de `mana.roilabs.com.br` no Cloudflare,
-alteração do `nginx.conf` do site que está no ar, e deploy do host novo. **Não é seguro
-autoexecutar sem confirmação explícita do Jean** — são ações em sistema compartilhado, difíceis
-de reverter na hora (cert emitido contra NXDOMAIN não se re-emite sozinho — já custou caro na 012).
+`C:\Users\jeanz\OneDrive\Desktop\ROI Labs\Mana` · repo **`JeanZorzetti/mana`** (privado) ·
+Astro estático + nginx próprio, o mesmo formato do Tapepro.
 
-Ordem interna que importa (tasks.md §Dependências): **T021 (DNS) antes de T023 (gate)** — o
-cert TLS depende do DNS já resolver. T017 depende de T012+T014+T015.
+- A Maná mora na **raiz**: `/`, `/terno-poliviscose/`. O `nginx.conf` do projeto faz
+  `301 /mana/** → /**`, preservando o sinal das URLs já indexadas.
+- `Base.astro` reescrito: `@graph` com a **Maná** como entidade, sem Clarity e sem o
+  tracker himetrica (instrumentação de outra marca), GA4 atrás de env var.
+- `global.css` com os ~10 tokens e 6 primitivas que as páginas usam, no lugar das 1125
+  linhas do design system do porcelanato.
+- `--mana-accent` **definido** (`#c8a45c`). Dentro do goiania o token nunca existiu, então
+  todo destaque da Maná caía no fallback e a loja de moda social pintava no laranja de obra.
+- `test/build.test.mjs` roda contra o `dist/` e falha se marca de outra loja ou o prefixo
+  `/mana/` voltarem. **5/5 verdes**; `astro build` verde; `astro check` 0 erros.
 
-Antes de começar, ler:
-- [quickstart.md §Fase 2](./quickstart.md) — comandos e output esperado de cada prova
-- [research.md](./research.md) D1 — por que a URL fica `mana.roilabs.com.br/mana/<produto>/`
-  (prefixo redundante, decisão deliberada) e o que custaria tirar o prefixo
+### 2. Contenção do host antigo — COMMITADA, NÃO PUBLICADA
 
-## Avisos que atravessam a feature inteira (não só a Fase 2)
+`site-goiania/nginx.conf` (commit `46dea4f`, branch `015-ecommerce-mana-moda`) transforma o
+host da Maná em allowlist: só `/mana/**` + assets respondem, o resto é 404, e `/` faz
+**302** (não 301 — o redirect inverte quando o site próprio subir) para `/mana/`.
 
-- 🚨 `git push` em `main` é **deploy**. Este trabalho fica no branch `015-ecommerce-mana-moda`
-  até o gate da fase correspondente fechar — merge só depois.
-- 🚨 `npm run build` no `site-goiania` **submete ao IndexNow**. Build exploratório é
-  `npx astro build`.
-- ⚠️ Banco: `2.24.207.200:5443/roilabs_db`. `:5445` é o `roihub_db` — schema errado se apontar lá.
-- ⚠️ O `DATABASE_URL` do `.env` da raiz aponta para o host interno do Docker e tem um `]` colado
-  no fim — usar o endpoint externo sem o `]` (quickstart.md §0).
-- 🚩 A frase que precisa sobreviver até o fim: **sandbox verde do MP (Fase 4) prova a fiação,
-  não prova que dinheiro real chega.** Cartão real segue vetado.
+🚩 **Está no GitHub e NÃO está no ar.** Conferido 3× após o push: `/porcelanato/` ainda
+responde 200 em `mana.roilabs.com.br`. O EasyPanel não builda este branch sozinho —
+a produção do goiania roda deste branch por deploy manual (a `origin/main` não tem uma
+linha sequer sobre mana no nginx). **Precisa de redeploy manual do serviço do goiania.**
 
-## Estado das fotos
+## O que falta
 
-As fotos originais (repassadas em `specs/015-ecommerce-mana-moda/fotos/`, até 46MB cada, SVG
-com C2PA embutido) **não foram commitadas** — estão no `.gitignore` porque bloariam o repo. A
-versão que o site usa é a otimizada em `site-goiania/public/img/mana/` (essa está no git). Se
-o catálogo crescer, o fluxo é: receber a foto → extrair/otimizar com `sharp` (mesmo script usado
-nesta sessão, `resize-mana-photos.mjs`, ficou no scratchpad da sessão — não está no repo) →
-salvar direto em `public/img/mana/`.
+### A. Publicar (ordem importa)
+
+1. **Redeploy manual do goiania no EasyPanel** → contenção entra no ar.
+2. **Criar o serviço da Maná no EasyPanel** apontando para `JeanZorzetti/mana`, e mover o
+   host `mana.roilabs.com.br` para ele. O DNS já existe e o cert já está emitido.
+3. Só **depois** que o host novo estiver servindo o projeto novo: remover
+   `pages/mana/**`, `components/HeaderMana|FooterMana|SeletorVariacao`, `data/mana.ts` e o
+   2º `server{}` do `site-goiania`. Remover antes deixa a Maná no escuro.
+4. Ao remover, o `location /mana/` que sobra no host do goiania deve apontar **direto**
+   para `https://mana.roilabs.com.br/$1` — hoje encadearia dois 301.
+
+### B. Checkout — bloqueado no `app`, não neste site
+
+`src/data/loja.ts` mantém `LOJA_PUBLICADA = false`, e por isso o `@graph` do produto sai
+**sem `offers`**. Ligar depende de duas coisas no `app/`:
+
+1. **`/api/estoque` não existe.** `SeletorVariacao` já o chama e falha fechado.
+2. **CORS fixa o host errado.** `app/src/app/api/frete/cotar/route.ts` e
+   `.../cupom/validar/route.ts` têm `const SITE_ORIGIN = 'https://goiania.roilabs.com.br'`
+   escrito à mão. De `mana.roilabs.com.br` o browser bloqueia as duas chamadas. Precisa
+   virar allowlist de origens.
+3. ⚠️ Achado adjacente, **pré-existente**: `app/src/app/api/pedidos/route.ts` monta o
+   redirect de volta com `origin.startsWith('http') ? origin : <default>` — qualquer
+   `origin` vindo do formulário que comece com `http` vira destino de redirect. É open
+   redirect. A mesma allowlist do item 2 resolve.
+
+### C. Cadeira na roilabs.com.br — PREPARADA, NÃO APLICADA
+
+A Maná não tem card na home da ROI Labs. Adicionar **não é mudança só de código**:
+
+`site/src/pages/index.astro` renderiza `seats` (3 nichos) e `carteira` (8 projetos) no
+**mesmo `<ul>`**, e o script ao vivo casa cada card com `/api/cadeiras` **por índice**
+(`seats[i]`). Hoje são 11 cards ↔ 11 linhas, alinhados. Inserir a Maná como 4º nicho só no
+código empurra todos os projetos uma posição — o card da Maná exibiria o status do Polaris,
+e assim por diante.
+
+Então a mudança é atômica: linha `Cadeira` no `roilabs_db` com `ordem = 3` + reordenar os
+8 projetos para 4..11 + `DEFAULT_SEATS` + o espelho estático + `npm run gen:carteira`.
+
+Estado honesto enquanto o site não vende: `estado: 'em-preparacao'`,
+`status: 'Em preparação · Maná Moda'`. Vira `ocupada-vendavel` quando o checkout fechar.
+
+## Avisos que continuam valendo
+
+- 🚨 `npm run build` no `site-goiania` **submete ao IndexNow** (está no `Dockerfile`, roda
+  em todo deploy). Build exploratório é `npx astro build`. O projeto da Maná não tem isso.
+- 🚨 `git push` em `main` no repo `roilabs` é deploy.
+- ⚠️ Banco: `2.24.207.200:5443/roilabs_db`. `:5445` é o `roihub_db`.
+- 🚩 **Sandbox verde do MP prova a fiação, não prova que dinheiro real chega.** Cartão real
+  segue vetado.
+- Pendências de marca da Maná: `favicon.png` ainda é o ícone da ROI Labs, não há imagem OG
+  própria, e o host não tem verificação no Bing (sem ela o IndexNow devolve 403 — é por host).
+- O visual ainda é o tema escuro do porcelanato com um accent novo. Identidade visual
+  própria da Maná é trabalho de design à parte, não foi feito.
+
+## Fotos
+
+Originais (até 46MB, SVG com C2PA embutido) seguem fora do git. A versão que o site usa
+está em `Mana/public/img/mana/` (no repo novo). Fluxo para catálogo novo: receber a foto →
+extrair/otimizar com `sharp` → salvar em `public/img/mana/` → adicionar em `src/data/mana.ts`.
