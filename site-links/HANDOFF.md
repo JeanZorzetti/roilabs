@@ -19,8 +19,8 @@ O que a página mostra hoje:
   `.convite` — mais altos de propósito, com uma frase de 2 linhas + a marca
   embaixo na letra do subtítulo: **ROI LABS** (site) e **SIRIUS CRM**
   (siriuscrm.com.br).
-- Selo "Em breve · dd/mm" em 3 botões: Sirius CRM (01/09), operação no ar
-  (05/09) e simulador (20/09). Os links continuam clicáveis.
+- Selo "Em breve · dd/mm" **verde piscando** em 3 botões: Sirius CRM (01/09),
+  operação no ar (05/09) e simulador (20/09). Os links continuam clicáveis.
 - Instagram, LinkedIn, e-mail + rodapé
 
 A prévia que aparece ao compartilhar (`assets/og-image.jpg`) repete esses três
