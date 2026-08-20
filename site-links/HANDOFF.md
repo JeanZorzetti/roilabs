@@ -15,9 +15,10 @@ O que a página mostra hoje:
 - Título: **ROI Labs**
 - Subtítulo (mono, caixa alta): **PARCEIRO DE CRESCIMENTO**
 - Promessa: "Construímos sua venda online. / Você paga quando vende."
-- 7 botões em pílula, só o do WhatsApp em laranja. O primeiro (`.convite`)
-  é mais alto de propósito: "Conheça seu novo parceiro de crescimento e
-  tecnologia." + **ROI LABS** embaixo, na mesma letra do subtítulo.
+- 7 botões em pílula, só o do WhatsApp em laranja. Os dois primeiros são
+  `.convite` — mais altos de propósito, com uma frase de 2 linhas + a marca
+  embaixo na letra do subtítulo: **ROI LABS** (site) e **SIRIUS CRM**
+  (siriuscrm.com.br).
 - Instagram, LinkedIn, e-mail + rodapé
 
 A prévia que aparece ao compartilhar (`assets/og-image.jpg`) repete esses três
@@ -47,8 +48,10 @@ página. Ver "Trocar o texto da página" abaixo.
   nenhuma requisição externa. São variable fonts: um arquivo por família cobre
   todos os pesos (67 KB somados).
 - 7 botões, um só laranja (WhatsApp — a regra é: um destaque por página).
-  Links reais tirados do `/site`: home, `/modelo/`, `goiania.roilabs.com.br`,
-  `/simulador/`, `wa.me/5562993265713`, `/#candidatar`, `/blog/`.
+  Links reais tirados do `/site`: home, `siriuscrm.com.br`,
+  `goiania.roilabs.com.br`, `/simulador/`, `wa.me/5562993265713`,
+  `/#candidatar`, `/blog/`. O `/modelo/` saiu quando o 2º botão virou o
+  convite do Sirius CRM (20/08/2026) — se quiser de volta, é um botão novo.
 - Sociais: Instagram `roilabs.curadoria`, LinkedIn `roi-labs-curadoria`,
   e-mail `parceria@roilabs.com.br` (os mesmos do `sameAs` do Base.astro).
 - **UTM** `utm_source=linkinbio&utm_medium=bio&utm_campaign=links` nos links pro
@@ -159,8 +162,8 @@ estático qualquer na pasta (`npx serve .`).
 - **320px, 360px, 390px e 1366px**: `document.scrollWidth == innerWidth` nos
   quatro, zero scroll horizontal.
 - O título ("ROI Labs") cabe em uma linha em qualquer largura.
-- Os 6 últimos botões ficam com a mesma altura (o rótulo é uma linha só); o
-  primeiro é o `.convite`, mais alto — cabe em 2 linhas até em 320px.
+- Os 5 botões simples ficam com a mesma altura (o rótulo é uma linha só); os
+  2 `.convite` são mais altos — cabem em 2 linhas até em 320px.
 - Zero 404: os 4 caminhos locais (`/favicon.png`, `/assets/roilabs-icon.png` e
   os 2 `.woff2`) existem e carregam. JSON-LD parseia. Nenhum `href="#"`.
 - Em produção: `<h1>` e subtítulo corretos, cache dos assets e fallback de URL
