@@ -58,11 +58,35 @@ e do LinkedIn. Um arquivo `index.html` + a pasta `assets/`. **Não tem build.**
 - **`assets/` com cache de 30 dias, não 1 ano.** Os nomes dos arquivos não têm
   hash — com cache de 1 ano, trocar o logo exigiria renomear o arquivo.
 
-## Deploy (EasyPanel — manual, eu não tenho acesso ao painel)
-1. Novo App a partir do repo `JeanZorzetti/roilabs`.
-2. **Build path = `/site-links`**, builder = Dockerfile, porta 80.
-3. Domínio `links.roilabs.com.br` + registro DNS apontando pra EasyPanel.
+## Deploy — Vercel (manual, eu não tenho acesso ao painel)
+
+⚠️ **Ao contrário do resto do repo, esta página NÃO vai pra EasyPanel.**
+`roilabs.com.br` e `goiania.roilabs.com.br` estão na EasyPanel (nginx,
+`2.24.207.200`). O `links.` já estava apontado pro **Vercel** (`76.76.21.21`,
+DNS na Cloudflare) servindo uma página antiga, de 1,8 KB, que **não existe em
+lugar nenhum deste repo** — foi publicada fora do git. Como o domínio já estava
+validado lá, a decisão (Jean, 20/08/2026) foi ficar no Vercel em vez de mexer
+em DNS.
+
+Passos no painel do Vercel:
+1. New Project → importar `JeanZorzetti/roilabs`.
+2. **Root Directory = `site-links`**, Framework Preset = **Other**,
+   Build Command e Output Directory **vazios** (é HTML estático puro).
+3. No projeto ANTIGO que tem o domínio: Settings → Domains → remover
+   `links.roilabs.com.br`. Aí adicionar o domínio no projeto novo.
 4. Colar `https://links.roilabs.com.br` na bio do Instagram e do LinkedIn.
+
+Depois disso todo push no `main` republica a página sozinho.
+
+O `vercel.json` refaz o que o `nginx.conf` fazia: cache de 30 dias em
+`/assets/` e o fallback de qualquer URL pro `index.html`.
+**Não verificado por mim** (não tenho acesso ao painel): se com Root Directory
+apontando pra subpasta o Vercel ignorar o `vercel.json`, é porque ele espera o
+arquivo na raiz do repo — é o primeiro lugar pra olhar se o cache não pegar.
+
+O `Dockerfile` + `nginx.conf` ficaram na pasta de propósito: se um dia o
+`links.` voltar pra EasyPanel, é só criar o App com build path `/site-links` e
+trocar o registro A na Cloudflare de `76.76.21.21` pra `2.24.207.200`.
 
 Pra testar antes de subir, é só abrir o `index.html` no navegador — só os
 caminhos absolutos (`/assets/...`) não resolvem assim; nesse caso rode um
