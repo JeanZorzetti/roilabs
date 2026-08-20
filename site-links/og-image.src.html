@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="robots" content="noindex" />
+<title>fonte do assets/og-image.jpg</title>
+
+<!-- ==========================================================================
+     FONTE DO assets/og-image.jpg — esta página não é linkada de lugar nenhum.
+
+     É daqui que sai a prévia que aparece no WhatsApp/LinkedIn. Se você mexer no
+     <h1>, no subtítulo ou na promessa do index.html, mexa aqui também e regere:
+
+       node serve.js .                  (qualquer servidor estático na pasta)
+       chrome --headless=new --window-size=1200,630 \
+              --screenshot=og.png http://localhost:PORTA/og-image.src.html
+       e converta og.png -> assets/og-image.jpg (qualidade ~84)
+
+     Os valores de cor/fonte são os mesmos do index.html; se mudarem lá, mudam
+     aqui. Mantenha 1200x630: é o tamanho que o og:image espera.
+     ========================================================================== -->
+
+<style>
+@font-face{
+  font-family:"Plus Jakarta Sans";
+  font-style:normal; font-weight:200 800; font-display:block;
+  src:url(/assets/plus-jakarta-sans-latin.woff2) format("woff2");
+}
+@font-face{
+  font-family:"JetBrains Mono";
+  font-style:normal; font-weight:100 800; font-display:block;
+  src:url(/assets/jetbrains-mono-latin.woff2) format("woff2");
+}
+:root{
+  --breu:#101318;
+  --carvao:#1A1E25;
+  --laranja:#F5551E;
+  --nevoa:#F1F3F7;
+  --nevoa-media:#B9C0CC;
+  --nevoa-fraca:#98A1AF;
+}
+*,*::before,*::after{ box-sizing:border-box }
+html,body{ margin:0; padding:0 }
+body{
+  width:1200px; height:630px;
+  overflow:hidden;
+  position:relative;
+  background:
+    radial-gradient(64% 62% at 50% 12%, rgba(245,85,30,.22) 0%, rgba(245,85,30,0) 62%),
+    linear-gradient(176deg, var(--carvao) 0%, var(--breu) 58%, #0B0D11 100%);
+  color:var(--nevoa);
+  font-family:"Plus Jakarta Sans", sans-serif;
+  -webkit-font-smoothing:antialiased;
+  display:flex; align-items:center; justify-content:center;
+}
+
+/* as mesmas ondas concêntricas do logo, centradas no bloco */
+.ondas{ position:absolute; inset:0; overflow:hidden }
+.ondas span{
+  position:absolute; left:50%; top:44%;
+  width:1180px; aspect-ratio:1;
+  translate:-50% -50%;
+  border-radius:50%;
+  border:1px solid rgba(245,85,30,.30);
+  scale:calc(.2 + var(--n) * .2);
+  opacity:calc(.62 - var(--n) * .12);
+}
+
+.coluna{
+  position:relative; z-index:2;
+  width:940px;
+  display:flex; flex-direction:column; align-items:center;
+  text-align:center;
+  gap:22px;
+}
+
+.marca{
+  width:112px; height:112px;
+  border-radius:32px;
+  overflow:hidden;
+  background:#20242C;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.08),
+    0 18px 44px rgba(0,0,0,.55),
+    0 0 70px rgba(245,85,30,.20);
+}
+.marca img{ display:block; width:100%; height:100% }
+
+h1{
+  margin:0;
+  font-size:68px;
+  font-weight:700;
+  letter-spacing:-.028em;
+  line-height:1.08;
+  color:#fff;
+}
+
+.assinatura{
+  margin:0;
+  font-family:"JetBrains Mono", monospace;
+  font-size:17px;
+  font-weight:400;
+  text-transform:uppercase;
+  letter-spacing:.19em;
+  color:var(--nevoa-fraca);
+}
+
+.promessa{
+  margin:2px 0 0;
+  font-size:29px;
+  font-weight:400;
+  line-height:1.4;
+  color:var(--nevoa-media);
+}
+.promessa b{ color:var(--nevoa); font-weight:600 }
+
+/* a mesma pílula laranja do botão de destaque, aqui assinando o domínio */
+.dominio{
+  margin-top:6px;
+  display:inline-flex; align-items:center; gap:12px;
+  padding:14px 30px;
+  border-radius:999px;
+  background:linear-gradient(180deg, #FF6A33 0%, var(--laranja) 55%, #DE440F 100%);
+  border:1px solid rgba(255,255,255,.16);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.34),
+    0 14px 34px rgba(245,85,30,.30);
+  font-family:"JetBrains Mono", monospace;
+  font-size:19px;
+  letter-spacing:.02em;
+  color:#fff;
+}
+</style>
+</head>
+<body>
+
+<div class="ondas">
+  <span style="--n:0"></span>
+  <span style="--n:1"></span>
+  <span style="--n:2"></span>
+  <span style="--n:3"></span>
+  <span style="--n:4"></span>
+</div>
+
+<div class="coluna">
+  <div class="marca"><img src="/assets/roilabs-icon.png" alt="" /></div>
+
+  <!-- estes 3 blocos são cópia do topo do index.html — mantenha iguais -->
+  <h1>ECOSSISTEMA ROI&nbsp;Labs</h1>
+  <p class="assinatura">Centralize suas vendas agora</p>
+  <p class="promessa">Construímos sua venda online. <b>Você paga quando vende.</b></p>
+
+  <span class="dominio">links.roilabs.com.br</span>
+</div>
+
+</body>
+</html>
