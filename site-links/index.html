@@ -7,7 +7,7 @@
 <title>ROI Labs — todos os links</title>
 <meta name="description" content="Growth Partner para fornecedores regionais de alto padrão. Site, modelo, operação no ar em Goiânia, simulador e contato direto — tudo em um lugar." />
 <link rel="canonical" href="https://links.roilabs.com.br/" />
-<meta name="theme-color" content="#14171d" />
+<meta name="theme-color" content="#101318" />
 
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="ROI Labs" />
@@ -21,8 +21,8 @@
 <link rel="icon" href="/favicon.png" type="image/png" />
 <link rel="apple-touch-icon" href="/assets/roilabs-icon.png" />
 
-<link rel="preload" href="/assets/archivo-latin.woff2" as="font" type="font/woff2" crossorigin />
-<link rel="preload" href="/assets/hanken-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="/assets/plus-jakarta-sans-latin.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="/assets/jetbrains-mono-latin.woff2" as="font" type="font/woff2" crossorigin />
 
 <script type="application/ld+json">
 {
@@ -86,76 +86,47 @@
 
   </header>
 
-  <!-- TROCAR: os botões. Em cada um: o href, o texto do .rotulo e o .apoio
-       (a linha cinza menor de baixo — pode apagar a linha inteira se não quiser).
+  <!-- TROCAR: os botões. Em cada um: o href e o texto do .rotulo.
 
-       O .apoio é fonte monoespaçada: passando de ~30 caracteres ele quebra em
-       duas linhas no celular e o botão fica mais alto que os vizinhos.
-       Não quebra nada, só fica menos alinhado. -->
+       O rótulo é uma linha só, centralizada. Passando de ~28 caracteres ele
+       quebra em duas linhas no celular e o botão fica mais alto que os
+       vizinhos — não quebra nada, só desalinha a pilha. -->
   <nav class="pilha" aria-label="Links da ROI Labs">
 
     <a class="vidro" href="https://roilabs.com.br/?utm_source=linkinbio&amp;utm_medium=bio&amp;utm_campaign=links">
       <span class="brilho" aria-hidden="true"></span>
-      <span class="texto">
-        <span class="rotulo">Site da ROI Labs</span>
-        <span class="apoio">quem somos e o que fazemos</span>
-      </span>
-      <span class="seta" aria-hidden="true">→</span>
+      <span class="rotulo">Site da ROI Labs</span>
     </a>
 
     <a class="vidro" href="https://roilabs.com.br/modelo/?utm_source=linkinbio&amp;utm_medium=bio&amp;utm_campaign=links">
       <span class="brilho" aria-hidden="true"></span>
-      <span class="texto">
-        <span class="rotulo">Como funciona o modelo</span>
-        <span class="apoio">sócio de performance</span>
-      </span>
-      <span class="seta" aria-hidden="true">→</span>
+      <span class="rotulo">Como funciona o modelo</span>
     </a>
 
     <a class="vidro" href="https://goiania.roilabs.com.br/?utm_source=linkinbio&amp;utm_medium=bio&amp;utm_campaign=links" target="_blank" rel="noopener">
       <span class="brilho" aria-hidden="true"></span>
-      <span class="texto">
-        <span class="rotulo">Ver a operação no ar</span>
-        <span class="apoio">polo 1 · porcelanato goiânia</span>
-      </span>
-      <span class="seta" aria-hidden="true">→</span>
+      <span class="rotulo">Ver a operação no ar</span>
     </a>
 
     <a class="vidro" href="https://roilabs.com.br/simulador/?utm_source=linkinbio&amp;utm_medium=bio&amp;utm_campaign=links">
       <span class="brilho" aria-hidden="true"></span>
-      <span class="texto">
-        <span class="rotulo">Simulador de receita</span>
-        <span class="apoio">quanto sobra pra você</span>
-      </span>
-      <span class="seta" aria-hidden="true">→</span>
+      <span class="rotulo">Simulador de receita</span>
     </a>
 
     <!-- TROCAR: o número do WhatsApp está dentro do próprio link (5562993265713) -->
     <a class="vidro destaque" href="https://wa.me/5562993265713?text=Vim%20pela%20p%C3%A1gina%20de%20links%20e%20quero%20saber%20mais%20sobre%20a%20cadeira" target="_blank" rel="noopener">
       <span class="brilho" aria-hidden="true"></span>
-      <span class="texto">
-        <span class="rotulo">Falar no WhatsApp</span>
-        <span class="apoio">canal direto · resposta em 48h</span>
-      </span>
-      <span class="seta" aria-hidden="true">→</span>
+      <span class="rotulo">Falar no WhatsApp</span>
     </a>
 
     <a class="vidro" href="https://roilabs.com.br/#candidatar">
       <span class="brilho" aria-hidden="true"></span>
-      <span class="texto">
-        <span class="rotulo">Candidatar minha empresa</span>
-        <span class="apoio">uma cadeira por nicho</span>
-      </span>
-      <span class="seta" aria-hidden="true">→</span>
+      <span class="rotulo">Candidatar minha empresa</span>
     </a>
 
     <a class="vidro" href="https://roilabs.com.br/blog/?utm_source=linkinbio&amp;utm_medium=bio&amp;utm_campaign=links">
       <span class="brilho" aria-hidden="true"></span>
-      <span class="texto">
-        <span class="rotulo">Blog</span>
-        <span class="apoio">vender alto padrão online</span>
-      </span>
-      <span class="seta" aria-hidden="true">→</span>
+      <span class="rotulo">Blog</span>
     </a>
 
   </nav>
@@ -183,51 +154,43 @@
 
 <!-- ==========================================================================
      DAQUI PRA BAIXO É O VISUAL — não precisa mexer.
-     Cores e fontes são as mesmas de roilabs.com.br (site/src/styles/global.css).
+
+     Cores, fontes e botões vieram do protótipo em
+     `Desktop/Pasta das empresa/linkbio`. ATENÇÃO: é de propósito que eles NÃO
+     batem com roilabs.com.br — o site usa #ff5a1f + Archivo/Hanken Grotesk,
+     esta página usa #F5551E + Plus Jakarta Sans. Foi uma decisão pedida;
+     não "conserte" isso sem perguntar antes.
      ========================================================================== -->
 <style>
+/* Fontes do protótipo, self-hosted (subset latin) — a página não faz nenhuma
+   requisição externa. São variable fonts: um arquivo cobre todos os pesos. */
 @font-face{
-  font-family:"Archivo";
+  font-family:"Plus Jakarta Sans";
   font-style:normal;
-  font-weight:400 800;
+  font-weight:200 800;
   font-display:swap;
-  src:url(/assets/archivo-latin.woff2) format("woff2");
+  src:url(/assets/plus-jakarta-sans-latin.woff2) format("woff2");
 }
 @font-face{
-  font-family:"Hanken Grotesk";
+  font-family:"JetBrains Mono";
   font-style:normal;
-  font-weight:400 700;
+  font-weight:100 800;
   font-display:swap;
-  src:url(/assets/hanken-grotesk-latin.woff2) format("woff2");
-}
-@font-face{
-  font-family:"Space Mono";
-  font-style:normal;
-  font-weight:400;
-  font-display:swap;
-  src:url(/assets/space-mono-400-latin.woff2) format("woff2");
-}
-@font-face{
-  font-family:"Space Mono";
-  font-style:normal;
-  font-weight:700;
-  font-display:swap;
-  src:url(/assets/space-mono-700-latin.woff2) format("woff2");
+  src:url(/assets/jetbrains-mono-latin.woff2) format("woff2");
 }
 
 :root{
-  --ink:#14171d;
-  --ink-2:#1c2027;
-  --ink-3:#262b34;
-  --hivis:#ff5a1f;
-  --hivis-deep:#e8460f;
-  --hivis-soft:#ff8a5c;
-  --d-text:#f2f1ed;
-  --d-muted:#969ba6;
+  --breu:#101318;
+  --carvao:#1A1E25;
+  --laranja:#F5551E;
+  --laranja-claro:#FF8A4C;
+  --nevoa:#F1F3F7;
+  --nevoa-media:#B9C0CC;
+  --nevoa-fraca:#98A1AF;
+  --nevoa-apagada:#6F7788;
 
-  --font-display:"Archivo", system-ui, sans-serif;
-  --font-body:"Hanken Grotesk", system-ui, sans-serif;
-  --font-mono:"Space Mono", ui-monospace, monospace;
+  --font-body:"Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono:"JetBrains Mono", ui-monospace, monospace;
 }
 
 *,*::before,*::after{ box-sizing:border-box }
@@ -237,31 +200,33 @@
 html{
   -webkit-text-size-adjust:100%;
   overflow-x:clip;
-  background:#0d1014;
+  background:#0B0D11;
 }
 
 body{
   margin:0;
   min-height:100svh;
   background:
-    radial-gradient(78% 46% at 50% 14%, rgba(255,90,31,.20) 0%, rgba(255,90,31,0) 64%),
-    linear-gradient(176deg, var(--ink-2) 0%, var(--ink) 56%, #0d1014 100%);
+    radial-gradient(78% 46% at 50% 16%, rgba(245,85,30,.20) 0%, rgba(245,85,30,0) 64%),
+    linear-gradient(176deg, var(--carvao) 0%, var(--breu) 58%, #0B0D11 100%);
   background-attachment:fixed;
-  color:var(--d-text);
+  color:var(--nevoa);
   font-family:var(--font-body);
   font-size:1.0625rem;
-  line-height:1.62;
+  line-height:1.6;
   -webkit-font-smoothing:antialiased;
   text-rendering:optimizeLegibility;
   display:flex;
   justify-content:center;
-  padding:clamp(30px,7vh,64px) 20px calc(clamp(30px,7vh,64px) + 24px);
+  padding:clamp(30px,7vh,66px) 20px calc(clamp(30px,7vh,66px) + 30px);
   overflow-x:hidden;
 }
 
 /* --- ondas concêntricas: o mesmo motivo do logo ---------------------------
-   O container é fixo e cobre a tela inteira SÓ pra recortar os círculos nela.
-   Sem esse recorte o círculo maior vaza pra direita e alarga a página. */
+   O container é fixo e cobre a tela inteira SÓ pra recortar os círculos nele.
+   No protótipo esse container tem `width:0` — aí o círculo maior vaza pra
+   direita e alarga a página no celular. Aqui é `inset:0` + `overflow:hidden`,
+   que é o mesmo desenho sem o vazamento. */
 .ondas{
   position:fixed;
   inset:0;
@@ -277,9 +242,9 @@ body{
   aspect-ratio:1;
   translate:-50% -50%;
   border-radius:50%;
-  border:1px solid rgba(255,90,31,.28);
+  border:1px solid rgba(245,85,30,.30);
   scale:calc(.2 + var(--n) * .2);
-  opacity:calc(.6 - var(--n) * .12);
+  opacity:calc(.62 - var(--n) * .12);
 }
 @media (prefers-reduced-motion: no-preference){
   .ondas span{
@@ -288,7 +253,7 @@ body{
   }
   @keyframes pulsar{
     from{ scale:.16; opacity:0 }
-    12%{ opacity:.58 }
+    12%{ opacity:.6 }
     to{ scale:1.06; opacity:0 }
   }
 }
@@ -297,10 +262,10 @@ body{
 .coluna{
   position:relative;
   z-index:2;
-  width:min(420px,100%);
+  width:min(400px,100%);
   display:flex;
   flex-direction:column;
-  gap:clamp(26px,5vh,36px);
+  gap:clamp(26px,5vh,38px);
 }
 
 .topo{
@@ -312,44 +277,49 @@ body{
 }
 
 .marca{
+  position:relative;
   width:96px; height:96px;
-  border-radius:24px;
+  border-radius:27px;
   overflow:hidden;
-  background:var(--ink-3);
+  background:#20242C;
   box-shadow:
-    0 0 0 1px rgba(242,241,237,.10),
+    0 0 0 1px rgba(255,255,255,.08),
     0 18px 44px rgba(0,0,0,.55),
-    0 0 60px rgba(255,90,31,.18);
+    0 0 60px rgba(245,85,30,.18);
 }
 .marca img{ display:block; width:100%; height:100% }
 
 h1{
   margin:0;
-  font-family:var(--font-display);
-  font-size:clamp(1.85rem,7vw,2.35rem);
-  font-weight:800;
-  letter-spacing:-.03em;
-  line-height:1;
-  color:#fff;
+  font-size:clamp(1.6rem,6vw,2.05rem);
+  font-weight:700;
+  letter-spacing:-.028em;
+  line-height:1.12;
+  text-wrap:balance;
+  color:#FFFFFF;
 }
 
+/* Sem `max-width` em `ch`: a unidade `ch` ignora o letter-spacing, então um
+   limite em ch quebra a linha muito antes do que parece. Quem limita a largura
+   aqui é a própria coluna. */
 .assinatura{
   margin:0;
   font-family:var(--font-mono);
-  font-size:.7rem;
-  font-weight:700;
+  font-size:.688rem;
+  font-weight:400;
   text-transform:uppercase;
-  letter-spacing:.2em;
-  line-height:1.5;
-  color:var(--hivis);
+  letter-spacing:.17em;
+  line-height:1.6;
+  color:var(--nevoa-fraca);
 }
 
 .promessa{
-  margin:2px 0 0;
+  margin:-2px 0 0;
   max-width:28ch;
-  font-size:1.0625rem;
+  font-size:1rem;
+  font-weight:400;
   line-height:1.45;
-  color:var(--d-muted);
+  color:var(--nevoa-media);
   text-wrap:balance;
 }
 
@@ -357,7 +327,7 @@ h1{
 .pilha{
   display:flex;
   flex-direction:column;
-  gap:11px;
+  gap:12px;
 }
 
 .vidro{
@@ -365,24 +335,26 @@ h1{
   isolation:isolate;
   display:flex;
   align-items:center;
-  gap:14px;
-  min-height:64px;
-  padding:14px 20px;
-  border-radius:16px;
+  justify-content:center;
+  min-height:60px;
+  padding:17px 26px;
+  border-radius:999px;
+  text-align:center;
   text-decoration:none;
-  color:var(--d-text);
+  color:var(--nevoa);
   background:
-    linear-gradient(180deg, rgba(242,241,237,.13) 0%, rgba(242,241,237,.04) 46%, rgba(242,241,237,.07) 100%);
-  border:1px solid rgba(242,241,237,.14);
+    linear-gradient(180deg, rgba(255,255,255,.14) 0%, rgba(255,255,255,.045) 46%, rgba(255,255,255,.075) 100%);
+  border:1px solid rgba(255,255,255,.15);
   backdrop-filter:blur(15px) saturate(165%);
   -webkit-backdrop-filter:blur(15px) saturate(165%);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.24),
+    inset 0 1px 0 rgba(255,255,255,.30),
     inset 0 -1px 0 rgba(0,0,0,.22),
     0 12px 30px rgba(0,0,0,.42);
   transition:transform .26s cubic-bezier(.2,.8,.3,1),
              border-color .26s ease,
-             box-shadow .26s ease;
+             box-shadow .26s ease,
+             background-color .26s ease;
 }
 
 /* o reflexo que corre por cima do vidro */
@@ -399,84 +371,52 @@ h1{
   left:-40%; top:-120%;
   width:45%; height:340%;
   rotate:18deg;
-  background:linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.15) 50%, rgba(255,255,255,0) 100%);
+  background:linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.16) 50%, rgba(255,255,255,0) 100%);
   transition:translate .55s cubic-bezier(.3,.7,.3,1);
 }
 
-.texto{
-  flex:1;
-  display:flex;
-  flex-direction:column;
-  gap:1px;
-  min-width:0;
-}
-
 .rotulo{
-  font-family:var(--font-display);
-  font-size:1.02rem;
-  font-weight:700;
-  letter-spacing:-.018em;
+  font-size:1.005rem;
+  font-weight:600;
+  letter-spacing:-.012em;
   line-height:1.25;
-}
-
-.apoio{
-  font-family:var(--font-mono);
-  font-size:.645rem;
-  font-weight:400;
-  text-transform:uppercase;
-  letter-spacing:.09em;
-  line-height:1.5;
-  color:var(--d-muted);
-}
-
-.seta{
-  flex:none;
-  font-size:1.05rem;
-  line-height:1;
-  color:var(--d-muted);
-  transition:transform .26s cubic-bezier(.2,.8,.3,1), color .26s ease;
 }
 
 .vidro:hover,
 .vidro:focus-visible{
   transform:translateY(-2px);
-  border-color:rgba(255,90,31,.55);
+  border-color:rgba(245,85,30,.55);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.3),
+    inset 0 1px 0 rgba(255,255,255,.36),
     inset 0 -1px 0 rgba(0,0,0,.22),
     0 16px 38px rgba(0,0,0,.5),
-    0 0 26px rgba(255,90,31,.26);
+    0 0 26px rgba(245,85,30,.28);
 }
 .vidro:hover .brilho::before,
 .vidro:focus-visible .brilho::before{ translate:280% 0 }
-.vidro:hover .seta,
-.vidro:focus-visible .seta{ transform:translateX(3px); color:var(--hivis) }
 .vidro:active{ transform:translateY(0) scale(.988) }
 
 /* o botão principal — o único laranja da página */
 .vidro.destaque{
-  background:linear-gradient(180deg, var(--hivis) 0%, var(--hivis-deep) 100%);
-  border-color:rgba(255,160,120,.5);
-  color:#fff6f2;
+  background:
+    linear-gradient(180deg, rgba(245,85,30,.92) 0%, rgba(228,68,18,.86) 100%);
+  border-color:rgba(255,150,100,.55);
+  color:#FFF6F2;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.36),
+    inset 0 1px 0 rgba(255,255,255,.38),
     inset 0 -1px 0 rgba(0,0,0,.2),
     0 12px 30px rgba(0,0,0,.42),
-    0 0 30px rgba(255,90,31,.32);
+    0 0 30px rgba(245,85,30,.32);
 }
-.vidro.destaque .apoio{ color:rgba(255,246,242,.84) }
-.vidro.destaque .seta{ color:rgba(255,246,242,.85) }
 .vidro.destaque:hover,
 .vidro.destaque:focus-visible{
-  border-color:rgba(255,190,160,.75);
+  border-color:rgba(255,180,140,.75);
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,.45),
     inset 0 -1px 0 rgba(0,0,0,.2),
     0 16px 40px rgba(0,0,0,.5),
-    0 0 40px rgba(255,90,31,.5);
+    0 0 40px rgba(245,85,30,.5);
 }
-.vidro.destaque:hover .seta,
-.vidro.destaque:focus-visible .seta{ color:#fff }
 
 /* --- redes ---------------------------------------------------------------- */
 .sociais{
@@ -489,13 +429,13 @@ h1{
   place-items:center;
   width:44px; height:44px;
   border-radius:50%;
-  color:var(--d-muted);
+  color:var(--nevoa-fraca);
   transition:color .2s ease, background-color .2s ease, transform .2s ease;
 }
 .sociais a:hover,
 .sociais a:focus-visible{
-  color:var(--hivis-soft);
-  background:rgba(242,241,237,.07);
+  color:var(--laranja-claro);
+  background:rgba(255,255,255,.07);
   transform:translateY(-2px);
 }
 .sociais svg{
@@ -511,21 +451,21 @@ h1{
 /* --- rodapé --------------------------------------------------------------- */
 .rodape{
   text-align:center;
-  color:var(--d-muted);
+  color:var(--nevoa-fraca);
 }
 .rodape p{ margin:0; font-size:.83rem; line-height:1.6; text-wrap:balance }
 .rodape__meta{
-  margin-top:5px !important;
+  margin-top:6px !important;
   font-family:var(--font-mono);
   font-size:.66rem;
   letter-spacing:.11em;
   text-transform:uppercase;
-  color:#6f7480;
+  color:var(--nevoa-apagada);
 }
 
 /* --- foco visível --------------------------------------------------------- */
 a:focus-visible{
-  outline:2px solid var(--hivis);
+  outline:2px solid var(--laranja-claro);
   outline-offset:4px;
 }
 
@@ -536,14 +476,14 @@ a:focus-visible{
   }
   .topo{ animation-delay:.05s }
   .vidro:nth-child(1){ animation-delay:.16s }
-  .vidro:nth-child(2){ animation-delay:.21s }
-  .vidro:nth-child(3){ animation-delay:.26s }
-  .vidro:nth-child(4){ animation-delay:.31s }
-  .vidro:nth-child(5){ animation-delay:.36s }
-  .vidro:nth-child(6){ animation-delay:.41s }
-  .vidro:nth-child(7){ animation-delay:.46s }
-  .sociais{ animation-delay:.52s }
-  .rodape{ animation-delay:.58s }
+  .vidro:nth-child(2){ animation-delay:.22s }
+  .vidro:nth-child(3){ animation-delay:.28s }
+  .vidro:nth-child(4){ animation-delay:.34s }
+  .vidro:nth-child(5){ animation-delay:.40s }
+  .vidro:nth-child(6){ animation-delay:.46s }
+  .vidro:nth-child(7){ animation-delay:.52s }
+  .sociais{ animation-delay:.58s }
+  .rodape{ animation-delay:.64s }
   @keyframes sobe{
     from{ opacity:0; transform:translateY(15px) }
     to{ opacity:1; transform:translateY(0) }
