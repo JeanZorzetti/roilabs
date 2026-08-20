@@ -2,7 +2,7 @@
 
 > **Abrindo isto numa aba nova?** Leia o "Estado atual" e o "Se você é a próxima
 > sessão" no fim. O resto é referência.
-> Última atualização: **20/08/2026**, commit `361ad4c`.
+> Última atualização: **20/08/2026**, commit `098d7e4`.
 
 ## Estado atual — 20/08/2026
 
@@ -18,12 +18,21 @@ O que a página mostra hoje:
 - 7 botões em pílula, só o do WhatsApp em laranja
 - Instagram, LinkedIn, e-mail + rodapé
 
+A prévia que aparece ao compartilhar (`assets/og-image.jpg`) repete esses três
+primeiros itens no mesmo visual da página — desde `098d7e4` elas batem.
+
 ## O que é
 Página de links única (tipo Linktree), estática, para colar na bio do Instagram
 e do LinkedIn. Um `index.html` + a pasta `assets/`. **Não tem build.**
 
 Editar = abrir o `index.html` e trocar o texto entre os comentários `TROCAR`.
-Tudo que é editável está antes do comentário "DAQUI PRA BAIXO É O VISUAL".
+Tudo que é editável está antes do comentário "DAQUI PRA BAIXO É O VISUAL" —
+**menos** os 4 campos de texto do `<head>` (`title`, `description`, `og:title`,
+`og:description`), que também estão marcados com `TROCAR` lá em cima.
+
+O `og-image.src.html` é uma peça à parte: é a **fonte da imagem de prévia**
+(`assets/og-image.jpg`), não é linkado de lugar nenhum e não faz parte da
+página. Ver "Trocar o texto da página" abaixo.
 
 ## Como está feito
 - Visual **copiado do protótipo** em `Desktop/Pasta das empresa/linkbio`:
@@ -46,8 +55,47 @@ Tudo que é editável está antes do comentário "DAQUI PRA BAIXO É O VISUAL".
 - SEO/social: canonical, OG completo com `og-image.jpg`, JSON-LD `ProfilePage`
   apontando pro `@id` da Organization do site principal (`#org`), favicon,
   apple-touch-icon.
+- O `assets/roilabs-icon.png` é **192px em paleta de 256 cores (26 KB)**, feito a
+  partir do PNG de 256px/93 KB que está em `site/public/`. É o mesmo desenho: a
+  paleta só descarta cores do antialiasing. Se precisar refazer, o caminho foi
+  redimensionar com `System.Drawing` e reencodar com median cut (o `/site` ainda
+  usa o de 93 KB — isso aqui não mexeu nele).
 - A11y: `focus-visible` laranja, `aria-label` em todos os ícones,
   `prefers-reduced-motion` respeitado nas ondas e na entrada.
+
+## Trocar o texto da página (e a prévia junto)
+
+O mesmo texto vive em **três lugares**. Trocar só um deixa a página dizendo uma
+coisa e a prévia do WhatsApp dizendo outra — foi exatamente o que aconteceu
+entre `d91c4eb` e agora. A ordem:
+
+1. **`index.html`, no corpo:** `<h1>`, `.assinatura`, `.promessa`.
+2. **`index.html`, no `<head>`:** `title`, `description`, `og:title`,
+   `og:description` (bloco marcado com `TROCAR` logo no começo do arquivo).
+3. **`og-image.src.html`:** os mesmos `<h1>`, `.assinatura` e `.promessa`,
+   e regere o JPG:
+
+```powershell
+# 1. servidor estático na pasta (os caminhos são absolutos, file:// não serve:
+#    as fontes .woff2 não carregam e o JPG sai com fonte de sistema)
+npx serve . -l 8099
+
+# 2. screenshot em 1200x630
+& "C:\Program Files\Google\Chrome\Application\chrome.exe" --headless=new `
+  --disable-gpu --no-sandbox --hide-scrollbars --user-data-dir="$env:TEMP\chrome-og" `
+  --force-device-scale-factor=1 --window-size=1200,630 `
+  --screenshot="og.png" --virtual-time-budget=5000 `
+  "http://localhost:8099/og-image.src.html"
+
+# 3. PNG -> JPG qualidade 84 (System.Drawing; não precisa instalar nada)
+```
+
+⚠️ **Sem `--user-data-dir` o `--screenshot` do Chrome falha calado nesta
+máquina** — sai com sucesso e não escreve arquivo nenhum. Perdi um ciclo nisso.
+
+Qualidade 84 dá ~52 KB sem banding visível no gradiente escuro; 78 economiza
+6 KB e começa a sujar o degradê atrás do logo. O `og:image` só é baixado por
+crawler, não pesa no carregamento da página — não vale apertar mais.
 
 ## Deploy — Vercel
 
@@ -115,6 +163,10 @@ estático qualquer na pasta (`npx serve .`).
   os 2 `.woff2`) existem e carregam. JSON-LD parseia. Nenhum `href="#"`.
 - Em produção: `<h1>` e subtítulo corretos, cache dos assets e fallback de URL
   conferidos com `curl`.
+- **Rodada de 20/08/2026** (`098d7e4`), nas mesmas 4 larguras: nenhuma resposta
+  `>= 400`, as duas fontes com `status: loaded`, o ícone novo entregue em
+  192×192, os 7 botões todos com 60px de altura e `scrollWidth == innerWidth`
+  nos quatro. `description` com 139 caracteres (cabe no snippet da busca).
 
 ## Histórico dos commits
 
@@ -125,22 +177,20 @@ estático qualquer na pasta (`npx serve .`).
 | `c6cbe95` | `vercel.json` + handoff do deploy no Vercel |
 | `d91c4eb` | título vira "ECOSSISTEMA ROILABS", subtítulo vira "Centralize suas vendas agora" |
 | `361ad4c` | "ROILABS" volta a ser "ROI Labs" (com `&nbsp;`) |
+| `098d7e4` | og-image regerada no visual atual (+ `og-image.src.html`), metas do `<head>` alinhadas ao `<h1>`, ícone 93 KB → 26 KB |
 
 ## Pendências / gotchas
-- ⚠️ **O `og-image.jpg` ainda é o da v1** (cinza + laranja do site, e com o
-  título antigo). Não está errado, mas quem abre o link compartilhado no
-  WhatsApp vê uma prévia com uma cara e a página com outra. **É a pendência
-  mais visível hoje.**
 - ⚠️ **O domínio.** O pedido original veio como `links.roylabs.com.br` (com
   **y**), mas o repo, o site, os e-mails e o schema todos usam `roilabs` (com
   **i**) — e é o `roilabs` que está no ar e funcionando. Se `roylabs.com.br`
   algum dia virar domínio de verdade, trocar em 4 lugares no `index.html`:
   `canonical`, `og:url`, `og:image` e `url` do JSON-LD.
-- O `<title>` da aba, o `og:title` e a `description` ainda dizem "ROI Labs —
-  todos os links" / "Growth Partner...". Não acompanharam a troca do `<h1>`
-  porque ninguém pediu. Decidir se devem acompanhar.
-- `assets/roilabs-icon.png` tem 93 KB pra exibir em 96px. Um resize pra 192px
-  derruba isso pra ~10 KB.
+- ⚠️ **O WhatsApp e o LinkedIn guardam a prévia antiga em cache.** A og-image
+  nova já está no ar, mas quem já compartilhou o link antes de 20/08/2026 pode
+  continuar vendo a imagem da v1 por dias. Pra forçar: rodar a URL no
+  [Post Inspector do LinkedIn](https://www.linkedin.com/post-inspector/) e no
+  [Sharing Debugger do Facebook](https://developers.facebook.com/tools/debug/)
+  (o WhatsApp usa o cache do Facebook). **Ninguém fez isso ainda.**
 - O rótulo do botão é uma linha só e centralizado: passando de ~28 caracteres
   ele quebra em duas linhas no celular e aquele botão fica mais alto que os
   vizinhos. Não quebra o layout, só desalinha a pilha.
@@ -160,6 +210,10 @@ estático qualquer na pasta (`npx serve .`).
    (`--remote-debugging-port`), medir `document.scrollWidth == innerWidth` em
    320/360/390/1366 e tirar screenshot. Depois do push, confirmar em produção
    com `curl https://links.roilabs.com.br/`.
+   ⚠️ Pro screenshot, use **`Page.captureScreenshot` via CDP**, não a flag
+   `--screenshot` com `--window-size`: a flag captura numa largura e faz o
+   layout em outra, e a imagem sai com a coluna cortada na direita mesmo com a
+   página inteira certa. Já me fez achar que tinha quebrado o layout.
 4. **Não conserte o descasamento de cor/fonte com o `roilabs.com.br`.**
    É intencional (ver "Decisões"). Pergunte antes.
 
