@@ -19,6 +19,8 @@ O que a página mostra hoje:
   `.convite` — mais altos de propósito, com uma frase de 2 linhas + a marca
   embaixo na letra do subtítulo: **ROI LABS** (site) e **SIRIUS CRM**
   (siriuscrm.com.br).
+- Selo "Em breve · dd/mm" em 3 botões: Sirius CRM (01/09), operação no ar
+  (05/09) e simulador (20/09). Os links continuam clicáveis.
 - Instagram, LinkedIn, e-mail + rodapé
 
 A prévia que aparece ao compartilhar (`assets/og-image.jpg`) repete esses três
@@ -200,6 +202,9 @@ estático qualquer na pasta (`npx serve .`).
 - O rótulo do botão é uma linha só e centralizado: passando de ~28 caracteres
   ele quebra em duas linhas no celular e aquele botão fica mais alto que os
   vizinhos. Não quebra o layout, só desalinha a pilha.
+- ⚠️ **Os selos "Em breve" têm data pra sair.** 01/09, 05/09 e 20/09 (2026).
+  Passada a data, apagar a linha `<span class="breve">...</span>` do botão —
+  o resto do layout se ajusta sozinho. Ninguém fez isso ainda.
 - As fontes em `assets/` são subset **latin** — cobre português inteiro, mas
   não cobre cirílico/grego. Não é um problema hoje.
 

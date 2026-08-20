@@ -109,22 +109,31 @@
       </span>
     </a>
 
+    <!-- TROCAR: as datas do "Em breve" ficam no .breve de cada botão.
+         Quando o link entrar no ar, apague só a linha <span class="breve">. -->
     <a class="vidro convite" href="https://siriuscrm.com.br/?utm_source=linkinbio&amp;utm_medium=bio&amp;utm_campaign=links" target="_blank" rel="noopener">
       <span class="brilho" aria-hidden="true"></span>
       <span class="rotulo">
         Descubra quais clientes estão prontos para comprar hoje
         <span class="rotulo-marca">Sirius CRM</span>
+        <span class="breve">Em breve · 01/09</span>
       </span>
     </a>
 
     <a class="vidro" href="https://goiania.roilabs.com.br/?utm_source=linkinbio&amp;utm_medium=bio&amp;utm_campaign=links" target="_blank" rel="noopener">
       <span class="brilho" aria-hidden="true"></span>
-      <span class="rotulo">Ver a operação no ar</span>
+      <span class="rotulo">
+        Ver a operação no ar
+        <span class="breve">Em breve · 05/09</span>
+      </span>
     </a>
 
     <a class="vidro" href="https://roilabs.com.br/simulador/?utm_source=linkinbio&amp;utm_medium=bio&amp;utm_campaign=links">
       <span class="brilho" aria-hidden="true"></span>
-      <span class="rotulo">Simulador de receita</span>
+      <span class="rotulo">
+        Simulador de receita
+        <span class="breve">Em breve · 20/09</span>
+      </span>
     </a>
 
     <!-- TROCAR: o número do WhatsApp está dentro do próprio link (5562993265713) -->
@@ -416,6 +425,28 @@ h1{
   line-height:1.6;
   color:var(--nevoa-fraca);
 }
+
+/* selo "Em breve · dd/mm" — é um aviso, não um destaque: fica em cinza, não em
+   laranja, porque o único laranja da página é o botão do WhatsApp.
+   Some sozinho do layout quando o <span class="breve"> é apagado. */
+.breve{
+  display:block;
+  width:fit-content;
+  margin:8px auto 0;
+  padding:3px 10px 4px;
+  border-radius:999px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.13);
+  font-family:var(--font-mono);
+  font-size:.625rem;
+  font-weight:400;
+  text-transform:uppercase;
+  letter-spacing:.13em;
+  line-height:1.5;
+  white-space:nowrap;
+  color:var(--nevoa-fraca);
+}
+.rotulo-marca + .breve{ margin-top:7px }
 
 .vidro:hover,
 .vidro:focus-visible{
