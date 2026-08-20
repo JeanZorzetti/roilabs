@@ -12,8 +12,8 @@ nenhum pra publicar: `git push` já republica.
 
 O que a página mostra hoje:
 
-- Título: **ECOSSISTEMA ROI Labs**
-- Subtítulo (mono, caixa alta): **CENTRALIZE SUAS VENDAS AGORA**
+- Título: **ROI Labs**
+- Subtítulo (mono, caixa alta): **PARCEIRO DE CRESCIMENTO**
 - Promessa: "Construímos sua venda online. / Você paga quando vende."
 - 7 botões em pílula, só o do WhatsApp em laranja
 - Instagram, LinkedIn, e-mail + rodapé
@@ -140,8 +140,8 @@ estático qualquer na pasta (`npx serve .`).
   `width:0` e, por ser `position:fixed`, o `overflow-x:hidden` do body não
   segura: o círculo maior vaza pra direita e alarga a página no celular. Aqui é
   `inset:0` + `overflow:hidden`. **Não "simplifique" isso de volta.**
-- **`&nbsp;` entre "ROI" e "Labs" no `<h1>`.** Segura o nome junto: em tela
-  estreita a quebra cai depois de "ECOSSISTEMA", nunca no meio do nome.
+- **`&nbsp;` entre "ROI" e "Labs" no `<h1>`.** Segura o nome junto: o nome
+  nunca quebra no meio.
 - **Sem build.** É uma página só; um pipeline Node pra isso era peso morto.
   (O `linkbio` tem um `build.js` só porque embute fonte e logo em base64 no
   HTML; aqui os arquivos ficam soltos em `assets/`, então não precisa.)
@@ -156,8 +156,7 @@ estático qualquer na pasta (`npx serve .`).
 ## Verificado (Chrome headless via CDP)
 - **320px, 360px, 390px e 1366px**: `document.scrollWidth == innerWidth` nos
   quatro, zero scroll horizontal.
-- O título cabe em uma linha de 360px pra cima; em 320px quebra em
-  "ECOSSISTEMA" / "ROI Labs", sem estourar.
+- O título ("ROI Labs") cabe em uma linha em qualquer largura.
 - Os 7 botões ficam com a mesma altura (o rótulo é uma linha só).
 - Zero 404: os 4 caminhos locais (`/favicon.png`, `/assets/roilabs-icon.png` e
   os 2 `.woff2`) existem e carregam. JSON-LD parseia. Nenhum `href="#"`.
@@ -178,6 +177,7 @@ estático qualquer na pasta (`npx serve .`).
 | `d91c4eb` | título vira "ECOSSISTEMA ROILABS", subtítulo vira "Centralize suas vendas agora" |
 | `361ad4c` | "ROILABS" volta a ser "ROI Labs" (com `&nbsp;`) |
 | `098d7e4` | og-image regerada no visual atual (+ `og-image.src.html`), metas do `<head>` alinhadas ao `<h1>`, ícone 93 KB → 26 KB |
+| `758e750` | handoff atualizado + como regerar a og-image |
 
 ## Pendências / gotchas
 - ⚠️ **O domínio.** O pedido original veio como `links.roylabs.com.br` (com
