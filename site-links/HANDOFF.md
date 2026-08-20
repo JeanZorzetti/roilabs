@@ -15,7 +15,9 @@ O que a página mostra hoje:
 - Título: **ROI Labs**
 - Subtítulo (mono, caixa alta): **PARCEIRO DE CRESCIMENTO**
 - Promessa: "Construímos sua venda online. / Você paga quando vende."
-- 7 botões em pílula, só o do WhatsApp em laranja
+- 7 botões em pílula, só o do WhatsApp em laranja. O primeiro (`.convite`)
+  é mais alto de propósito: "Conheça seu novo parceiro de crescimento e
+  tecnologia." + **ROI LABS** embaixo, na mesma letra do subtítulo.
 - Instagram, LinkedIn, e-mail + rodapé
 
 A prévia que aparece ao compartilhar (`assets/og-image.jpg`) repete esses três
@@ -157,7 +159,8 @@ estático qualquer na pasta (`npx serve .`).
 - **320px, 360px, 390px e 1366px**: `document.scrollWidth == innerWidth` nos
   quatro, zero scroll horizontal.
 - O título ("ROI Labs") cabe em uma linha em qualquer largura.
-- Os 7 botões ficam com a mesma altura (o rótulo é uma linha só).
+- Os 6 últimos botões ficam com a mesma altura (o rótulo é uma linha só); o
+  primeiro é o `.convite`, mais alto — cabe em 2 linhas até em 320px.
 - Zero 404: os 4 caminhos locais (`/favicon.png`, `/assets/roilabs-icon.png` e
   os 2 `.woff2`) existem e carregam. JSON-LD parseia. Nenhum `href="#"`.
 - Em produção: `<h1>` e subtítulo corretos, cache dos assets e fallback de URL

@@ -94,14 +94,19 @@
 
   <!-- TROCAR: os botões. Em cada um: o href e o texto do .rotulo.
 
-       O rótulo é uma linha só, centralizada. Passando de ~28 caracteres ele
-       quebra em duas linhas no celular e o botão fica mais alto que os
-       vizinhos — não quebra nada, só desalinha a pilha. -->
+       Do segundo botão pra baixo o rótulo é uma linha só, centralizada.
+       Passando de ~28 caracteres ele quebra em duas linhas no celular e o
+       botão fica mais alto que os vizinhos — não quebra nada, só desalinha
+       a pilha. O primeiro (.convite) é a exceção: ele foi feito pra ter a
+       frase em várias linhas + a marca embaixo. -->
   <nav class="pilha" aria-label="Links da ROI Labs">
 
-    <a class="vidro" href="https://roilabs.com.br/?utm_source=linkinbio&amp;utm_medium=bio&amp;utm_campaign=links">
+    <a class="vidro convite" href="https://roilabs.com.br/?utm_source=linkinbio&amp;utm_medium=bio&amp;utm_campaign=links">
       <span class="brilho" aria-hidden="true"></span>
-      <span class="rotulo">Site da ROI Labs</span>
+      <span class="rotulo">
+        Conheça seu novo parceiro de crescimento e tecnologia.
+        <span class="rotulo-marca">ROI Labs</span>
+      </span>
     </a>
 
     <a class="vidro" href="https://roilabs.com.br/modelo/?utm_source=linkinbio&amp;utm_medium=bio&amp;utm_campaign=links">
@@ -386,6 +391,27 @@ h1{
   font-weight:600;
   letter-spacing:-.012em;
   line-height:1.25;
+}
+
+/* o primeiro botão é um convite, não um rótulo: a frase quebra em 2-3 linhas e
+   a marca vem embaixo, na mesma letra do subtítulo do topo (.assinatura).
+   Por isso ele é mais alto que os outros seis — é de propósito. */
+.convite{ padding:19px 24px }
+.convite .rotulo{
+  display:block;
+  max-width:26ch;
+  text-wrap:balance;
+}
+.rotulo-marca{
+  display:block;
+  margin-top:8px;
+  font-family:var(--font-mono);
+  font-size:.688rem;
+  font-weight:400;
+  text-transform:uppercase;
+  letter-spacing:.17em;
+  line-height:1.6;
+  color:var(--nevoa-fraca);
 }
 
 .vidro:hover,
