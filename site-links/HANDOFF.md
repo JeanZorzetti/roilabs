@@ -2,7 +2,7 @@
 
 > **Abrindo isto numa aba nova?** Leia o "Estado atual" e o "Se você é a próxima
 > sessão" no fim. O resto é referência.
-> Última atualização: **21/08/2026**, commit `(este)`.
+> Última atualização: **21/08/2026**, commit `42c4c95`.
 
 ## Estado atual — 21/08/2026
 
@@ -234,7 +234,7 @@ estático qualquer na pasta (`npx serve .`).
 | `963233d` | 2º botão vira o convite do Sirius CRM (`/modelo/` sai da página) |
 | `75f4a00` | selo "Em breve · dd/mm" em 3 botões |
 | `41f86ac` | o selo fica verde e pisca (respiro, dentro do `prefers-reduced-motion`) |
-| `(este)` | 3º e 4º botões viram Orion ERP e Meridian (saem `goiania` e `/simulador/`); WhatsApp e "Candidatar" trocam de lugar |
+| `42c4c95` | 3º e 4º botões viram Orion ERP e Meridian (saem `goiania` e `/simulador/`); WhatsApp e "Candidatar" trocam de lugar |
 
 ## Pendências / gotchas
 - ⚠️ **O domínio.** O pedido original veio como `links.roylabs.com.br` (com
