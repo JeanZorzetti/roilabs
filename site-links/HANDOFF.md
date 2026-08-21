@@ -2,7 +2,8 @@
 
 > **Abrindo isto numa aba nova?** Leia o "Estado atual" e o "Se você é a próxima
 > sessão" no fim. O resto é referência.
-> Última atualização: **21/08/2026**, commit `42c4c95`.
+> Última atualização: **21/08/2026**, commit `ea444fc` + a troca das frases
+> dos botões 1, 2 e 3 (commit logo abaixo dele no `git log`).
 
 ## Estado atual — 21/08/2026
 
@@ -19,17 +20,21 @@ O que a página mostra hoje:
 
   | # | o que diz | marca | selo | vai pra |
   |---|---|---|---|---|
-  | 1 | Conheça seu novo parceiro de crescimento e tecnologia. | ROI LABS | — | `roilabs.com.br` |
-  | 2 | Descubra quais clientes estão prontos para comprar hoje | SIRIUS CRM | Em breve · 01/09 | `siriuscrm.com.br` |
-  | 3 | Conecte toda a sua operação em um único painel | ORION ERP | Em breve · 05/09 | `orion.roilabs.com.br` |
+  | 1 | Tenha um parceiro de crescimento. | ROI LABS | — | `roilabs.com.br` |
+  | 2 | Descubra como melhorar seu funil de vendas. | SIRIUS CRM | Em breve · 01/09 | `siriuscrm.com.br` |
+  | 3 | Melhore sua operação com ERP qualificado | ORION ERP | Em breve · 05/09 | `orion.roilabs.com.br` |
   | 4 | Diga adeus às planilhas. Automatize suas finanças. | MERIDIAN | Em breve · 20/09 | `meridian.roilabs.com.br` |
   | 5 | Candidatar minha empresa | — | — | `roilabs.com.br/#candidatar` |
   | 6 | **Falar no WhatsApp** (o único laranja) | — | — | `wa.me/5562993265713` |
   | 7 | Blog | — | — | `roilabs.com.br/blog/` |
 
-  Os 4 primeiros são `.convite`: mais altos de propósito, com a frase em 2 linhas
-  e a marca embaixo, na mesma letra do subtítulo do topo. Os selos "Em breve"
-  são chips **verdes piscando**; os links continuam clicáveis.
+  Os 4 primeiros são `.convite`: mais altos de propósito, com a frase em até 2
+  linhas e a marca embaixo, na mesma letra do subtítulo do topo. Os selos
+  "Em breve" são chips **verdes piscando**; os links continuam clicáveis.
+  ⚠️ Desde 21/08/2026 a frase do botão 1 cabe em **uma linha só**, então ele é
+  ~30px mais baixo que os outros 3 `.convite` (106px contra 137px em 320px de
+  largura). Não é bug: é a frase curta. Pra igualar, alongue a frase — não mexa
+  no CSS.
 - Instagram, LinkedIn, e-mail + rodapé
 
 A prévia que aparece ao compartilhar (`assets/og-image.jpg`) repete o logo, o
@@ -217,6 +222,12 @@ estático qualquer na pasta (`npx serve .`).
   (iframe — ver o gotcha do headless abaixo): as 4 frases dos `.convite` quebram
   em 2 linhas, nenhuma estoura a pílula, os selos verdes ficam legíveis nas duas
   pontas do piscar, e a og-image regerada bate com o `<h1>` novo.
+- **Rodada de 21/08/2026, 2ª sessão** (frases dos botões 1, 2 e 3 trocadas):
+  screenshot local em 520px + medição a 320px via iframe e `--dump-dom`.
+  A 320px: `scrollWidth == innerWidth == 320`, nenhum `.rotulo` estoura a
+  pílula, e as alturas ficaram 106 / 137 / 137 / 137 / 60 / 60 / 60 px — o
+  botão 1 é o mais baixo dos `.convite` porque a frase nova cabe em 1 linha.
+  Depois do push, os 7 rótulos foram relidos direto da produção.
 
 ## Histórico dos commits
 
@@ -235,6 +246,8 @@ estático qualquer na pasta (`npx serve .`).
 | `75f4a00` | selo "Em breve · dd/mm" em 3 botões |
 | `41f86ac` | o selo fica verde e pisca (respiro, dentro do `prefers-reduced-motion`) |
 | `42c4c95` | 3º e 4º botões viram Orion ERP e Meridian (saem `goiania` e `/simulador/`); WhatsApp e "Candidatar" trocam de lugar |
+| `ea444fc` | handoff carimba o hash do commit anterior |
+| _(este)_ | frases dos botões 1, 2 e 3 encurtadas (ROI Labs / Sirius / Orion); marcas, selos, links e ordem intocados |
 
 ## Pendências / gotchas
 - ⚠️ **O domínio.** O pedido original veio como `links.roylabs.com.br` (com
@@ -293,6 +306,20 @@ estático qualquer na pasta (`npx serve .`).
    Pra flagrar uma animação num frame específico, `--virtual-time-budget=N`
    congela o relógio em N ms — foi assim que os dois extremos do selo piscando
    foram conferidos (900ms = apagado, 1780ms = aceso).
+   ⚠️ **`--screenshot` falha calado quando sobrou processo `chrome.exe` da
+   rodada anterior** (descoberto em 21/08/2026, 2ª sessão). Sai com sucesso e
+   não escreve arquivo nenhum, ou escreve "Acesso negado" se o PNG de destino
+   ainda estiver travado. A cura: `Get-Process chrome | Stop-Process -Force`
+   antes de cada captura, e um nome de arquivo novo. Isso explica melhor o
+   comportamento que antes foi atribuído ao `--user-data-dir` — com o Chrome
+   limpo, funcionou com e sem o flag.
+   ⚠️ **`--dump-dom` não imprime nada quando o stdout é capturado direto pelo
+   PowerShell** (`$x = & chrome ...` volta vazio). Use
+   `Start-Process -RedirectStandardOutput arquivo.txt -Wait` e leia o arquivo.
+   Combinado com o iframe de 320px, dá pra **medir** o layout em vez de olhar
+   screenshot: um `<script>` na página de apoio lê o `contentDocument` do
+   iframe (mesma origem), escreve as medidas num `<pre>`, e o dump traz tudo.
+   Mais confiável que imagem pra "estourou a pílula?" e "tem scroll lateral?".
 4. **Não conserte o descasamento de cor/fonte com o `roilabs.com.br`.**
    É intencional (ver "Decisões"). Pergunte antes.
 
