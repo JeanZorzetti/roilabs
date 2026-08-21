@@ -2,8 +2,7 @@
 
 > **Abrindo isto numa aba nova?** Leia o "Estado atual" e o "Se você é a próxima
 > sessão" no fim. O resto é referência.
-> Última atualização: **21/08/2026**, commit `ea444fc` + a troca das frases
-> dos botões 1, 2 e 3 (commit logo abaixo dele no `git log`).
+> Última atualização: **21/08/2026**, commit `cd14c00`.
 
 ## Estado atual — 21/08/2026
 
@@ -247,7 +246,7 @@ estático qualquer na pasta (`npx serve .`).
 | `41f86ac` | o selo fica verde e pisca (respiro, dentro do `prefers-reduced-motion`) |
 | `42c4c95` | 3º e 4º botões viram Orion ERP e Meridian (saem `goiania` e `/simulador/`); WhatsApp e "Candidatar" trocam de lugar |
 | `ea444fc` | handoff carimba o hash do commit anterior |
-| _(este)_ | frases dos botões 1, 2 e 3 encurtadas (ROI Labs / Sirius / Orion); marcas, selos, links e ordem intocados |
+| `cd14c00` | frases dos botões 1, 2 e 3 encurtadas (ROI Labs / Sirius / Orion); marcas, selos, links e ordem intocados |
 
 ## Pendências / gotchas
 - ⚠️ **O domínio.** O pedido original veio como `links.roylabs.com.br` (com
@@ -313,6 +312,11 @@ estático qualquer na pasta (`npx serve .`).
    antes de cada captura, e um nome de arquivo novo. Isso explica melhor o
    comportamento que antes foi atribuído ao `--user-data-dir` — com o Chrome
    limpo, funcionou com e sem o flag.
+   ⚠️ Depois do push dessa mesma sessão o `--screenshot` passou a falhar
+   **sempre** ("Acesso negado" mesmo em pasta nova e vazia, com o Chrome
+   limpo) — cheira a antivírus/Controlled Folder Access, não a flag errada.
+   Se acontecer, não insista: leia o HTML da produção com `Invoke-WebRequest`
+   e confira os rótulos por regex. É a verificação que importa.
    ⚠️ **`--dump-dom` não imprime nada quando o stdout é capturado direto pelo
    PowerShell** (`$x = & chrome ...` volta vazio). Use
    `Start-Process -RedirectStandardOutput arquivo.txt -Wait` e leia o arquivo.
