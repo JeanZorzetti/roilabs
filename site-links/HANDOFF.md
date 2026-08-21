@@ -2,9 +2,9 @@
 
 > **Abrindo isto numa aba nova?** Leia o "Estado atual" e o "Se você é a próxima
 > sessão" no fim. O resto é referência.
-> Última atualização: **20/08/2026**, commit `098d7e4`.
+> Última atualização: **21/08/2026**, commit `(este)`.
 
-## Estado atual — 20/08/2026
+## Estado atual — 21/08/2026
 
 🟢 **NO AR** em https://links.roilabs.com.br/ — servido pelo **Vercel**,
 com deploy automático a cada push no `main`. Não precisa mexer em painel
@@ -15,16 +15,26 @@ O que a página mostra hoje:
 - Título: **ROI Labs**
 - Subtítulo (mono, caixa alta): **PARCEIRO DE CRESCIMENTO**
 - Promessa: "Construímos sua venda online. / Você paga quando vende."
-- 7 botões em pílula, só o do WhatsApp em laranja. Os dois primeiros são
-  `.convite` — mais altos de propósito, com uma frase de 2 linhas + a marca
-  embaixo na letra do subtítulo: **ROI LABS** (site) e **SIRIUS CRM**
-  (siriuscrm.com.br).
-- Selo "Em breve · dd/mm" **verde piscando** em 3 botões: Sirius CRM (01/09),
-  operação no ar (05/09) e simulador (20/09). Os links continuam clicáveis.
+- 7 botões em pílula, nesta ordem:
+
+  | # | o que diz | marca | selo | vai pra |
+  |---|---|---|---|---|
+  | 1 | Conheça seu novo parceiro de crescimento e tecnologia. | ROI LABS | — | `roilabs.com.br` |
+  | 2 | Descubra quais clientes estão prontos para comprar hoje | SIRIUS CRM | Em breve · 01/09 | `siriuscrm.com.br` |
+  | 3 | Conecte toda a sua operação em um único painel | ORION ERP | Em breve · 05/09 | `orion.roilabs.com.br` |
+  | 4 | Diga adeus às planilhas. Automatize suas finanças. | MERIDIAN | Em breve · 20/09 | `meridian.roilabs.com.br` |
+  | 5 | Candidatar minha empresa | — | — | `roilabs.com.br/#candidatar` |
+  | 6 | **Falar no WhatsApp** (o único laranja) | — | — | `wa.me/5562993265713` |
+  | 7 | Blog | — | — | `roilabs.com.br/blog/` |
+
+  Os 4 primeiros são `.convite`: mais altos de propósito, com a frase em 2 linhas
+  e a marca embaixo, na mesma letra do subtítulo do topo. Os selos "Em breve"
+  são chips **verdes piscando**; os links continuam clicáveis.
 - Instagram, LinkedIn, e-mail + rodapé
 
-A prévia que aparece ao compartilhar (`assets/og-image.jpg`) repete esses três
-primeiros itens no mesmo visual da página — desde `098d7e4` elas batem.
+A prévia que aparece ao compartilhar (`assets/og-image.jpg`) repete o logo, o
+título, o subtítulo e a promessa no mesmo visual da página — ela **não** mostra
+os botões, então mexer em botão não obriga a regerar o JPG.
 
 ## O que é
 Página de links única (tipo Linktree), estática, para colar na bio do Instagram
@@ -50,10 +60,12 @@ página. Ver "Trocar o texto da página" abaixo.
   nenhuma requisição externa. São variable fonts: um arquivo por família cobre
   todos os pesos (67 KB somados).
 - 7 botões, um só laranja (WhatsApp — a regra é: um destaque por página).
-  Links reais tirados do `/site`: home, `siriuscrm.com.br`,
-  `goiania.roilabs.com.br`, `/simulador/`, `wa.me/5562993265713`,
-  `/#candidatar`, `/blog/`. O `/modelo/` saiu quando o 2º botão virou o
-  convite do Sirius CRM (20/08/2026) — se quiser de volta, é um botão novo.
+  A lista completa está na tabela do "Estado atual". Em 21/08/2026 a pilha
+  deixou de ser "links do site" e virou **vitrine de produto**: 3 botões passaram
+  a vender Sirius CRM, Orion ERP e Meridian. Nessa troca saíram da página
+  `roilabs.com.br/modelo/`, `goiania.roilabs.com.br` (a operação no ar) e
+  `roilabs.com.br/simulador/`. Nenhum deles está linkado em outro lugar da
+  página — se algum fizer falta, é um botão novo, não um "voltar atrás".
 - Sociais: Instagram `roilabs.curadoria`, LinkedIn `roi-labs-curadoria`,
   e-mail `parceria@roilabs.com.br` (os mesmos do `sameAs` do Base.astro).
 - **UTM** `utm_source=linkinbio&utm_medium=bio&utm_campaign=links` nos links pro
@@ -100,6 +112,15 @@ npx serve . -l 8099
 ⚠️ **Sem `--user-data-dir` o `--screenshot` do Chrome falha calado nesta
 máquina** — sai com sucesso e não escreve arquivo nenhum. Perdi um ciclo nisso.
 
+Em 21/08/2026 a og-image foi regerada de novo (título "ROI Labs") por outro
+caminho, que também funciona e não depende de `System.Drawing`: servir a pasta
+com um `http.createServer` de 10 linhas em Node, tirar o PNG com `--screenshot`,
+e converter pra JPG numa página de apoio que desenha o PNG num `<canvas>` e
+imprime `canvas.toDataURL('image/jpeg', 0.84)` no DOM — dá pra ler esse dataURL
+com `--dump-dom` e gravar o base64 em arquivo pelo Node. Saiu com 39 KB.
+Nessa rodada o `--screenshot` funcionou **sem** `--user-data-dir`; se falhar
+calado de novo, o flag continua sendo a primeira coisa a tentar.
+
 Qualidade 84 dá ~52 KB sem banding visível no gradiente escuro; 78 economiza
 6 KB e começa a sujar o degradê atrás do logo. O `og:image` só é baixado por
 crawler, não pesa no carregamento da página — não vale apertar mais.
@@ -143,6 +164,24 @@ estático qualquer na pasta (`npx serve .`).
 - **Botão = pílula com uma linha só.** O protótipo não tem a linha de apoio nem
   a seta que a v1 tinha; elas saíram junto. Efeito colateral bom: sumiu o gotcha
   de altura desalinhada quando a linha de apoio quebrava em duas.
+- **`.convite` quebra essa regra de propósito (21/08/2026).** Pedido do Jean:
+  os botões de produto passaram a ter uma frase de venda + a marca embaixo, o
+  que os deixa mais altos que os simples. Não é desalinhamento acidental — é
+  hierarquia. Se um dia todos tiverem que voltar à mesma altura, o caminho é
+  encurtar as frases, não mexer no CSS.
+- **O selo "Em breve" é verde, não laranja.** A regra de um destaque laranja por
+  página continua valendo: o laranja é do WhatsApp. Verde também é o que a
+  pessoa já lê como "status", não como "clique aqui".
+- **O selo pisca em respiro, não em liga-desliga.** Opacidade indo a zero num
+  texto que a pessoa lê no celular é ilegível e cansa em dois ciclos. A animação
+  varia cor/fundo/borda/glow e o texto nunca some. Fica dentro do bloco
+  `prefers-reduced-motion: no-preference` — quem desliga animação vê o chip
+  verde parado, legível.
+- **Botão de produto aponta pro produto.** Quando o rótulo passou a vender
+  Sirius/Orion/Meridian, o `href` foi junto (`siriuscrm.com.br`,
+  `orion.roilabs.com.br`, `meridian.roilabs.com.br` — os 3 responderam 200 em
+  21/08/2026). Rótulo dizendo uma coisa e link levando pra outra é o tipo de
+  detalhe que queima confiança de quem veio do Instagram.
 - **O `.ondas` NÃO foi copiado igual ao protótipo.** Lá o container tem
   `width:0` e, por ser `position:fixed`, o `overflow-x:hidden` do body não
   segura: o círculo maior vaza pra direita e alarga a página no celular. Aqui é
@@ -164,8 +203,8 @@ estático qualquer na pasta (`npx serve .`).
 - **320px, 360px, 390px e 1366px**: `document.scrollWidth == innerWidth` nos
   quatro, zero scroll horizontal.
 - O título ("ROI Labs") cabe em uma linha em qualquer largura.
-- Os 5 botões simples ficam com a mesma altura (o rótulo é uma linha só); os
-  2 `.convite` são mais altos — cabem em 2 linhas até em 320px.
+- Os 3 botões simples ficam com a mesma altura (o rótulo é uma linha só); os
+  4 `.convite` são mais altos — as 4 frases cabem em 2 linhas até em 320px.
 - Zero 404: os 4 caminhos locais (`/favicon.png`, `/assets/roilabs-icon.png` e
   os 2 `.woff2`) existem e carregam. JSON-LD parseia. Nenhum `href="#"`.
 - Em produção: `<h1>` e subtítulo corretos, cache dos assets e fallback de URL
@@ -174,6 +213,10 @@ estático qualquer na pasta (`npx serve .`).
   `>= 400`, as duas fontes com `status: loaded`, o ícone novo entregue em
   192×192, os 7 botões todos com 60px de altura e `scrollWidth == innerWidth`
   nos quatro. `description` com 139 caracteres (cabe no snippet da busca).
+- **Rodada de 21/08/2026** (esta sessão), por screenshot em 500px e em 320px
+  (iframe — ver o gotcha do headless abaixo): as 4 frases dos `.convite` quebram
+  em 2 linhas, nenhuma estoura a pílula, os selos verdes ficam legíveis nas duas
+  pontas do piscar, e a og-image regerada bate com o `<h1>` novo.
 
 ## Histórico dos commits
 
@@ -186,6 +229,12 @@ estático qualquer na pasta (`npx serve .`).
 | `361ad4c` | "ROILABS" volta a ser "ROI Labs" (com `&nbsp;`) |
 | `098d7e4` | og-image regerada no visual atual (+ `og-image.src.html`), metas do `<head>` alinhadas ao `<h1>`, ícone 93 KB → 26 KB |
 | `758e750` | handoff atualizado + como regerar a og-image |
+| `64ffbda` | título vira "ROI Labs" (menor e mais pesado), subtítulo vira "Parceiro de crescimento"; metas e og-image regeradas |
+| `73e0ce4` | 1º botão vira `.convite`: frase de venda + "ROI LABS" embaixo |
+| `963233d` | 2º botão vira o convite do Sirius CRM (`/modelo/` sai da página) |
+| `75f4a00` | selo "Em breve · dd/mm" em 3 botões |
+| `41f86ac` | o selo fica verde e pisca (respiro, dentro do `prefers-reduced-motion`) |
+| `(este)` | 3º e 4º botões viram Orion ERP e Meridian (saem `goiania` e `/simulador/`); WhatsApp e "Candidatar" trocam de lugar |
 
 ## Pendências / gotchas
 - ⚠️ **O domínio.** O pedido original veio como `links.roylabs.com.br` (com
@@ -199,12 +248,23 @@ estático qualquer na pasta (`npx serve .`).
   [Post Inspector do LinkedIn](https://www.linkedin.com/post-inspector/) e no
   [Sharing Debugger do Facebook](https://developers.facebook.com/tools/debug/)
   (o WhatsApp usa o cache do Facebook). **Ninguém fez isso ainda.**
-- O rótulo do botão é uma linha só e centralizado: passando de ~28 caracteres
-  ele quebra em duas linhas no celular e aquele botão fica mais alto que os
-  vizinhos. Não quebra o layout, só desalinha a pilha.
+- Nos botões **simples** o rótulo é uma linha só e centralizado: passando de ~28
+  caracteres ele quebra em duas linhas no celular e aquele botão fica mais alto
+  que os vizinhos. Não quebra o layout, só desalinha a pilha. Se o texto for
+  mesmo de 2 linhas, use `.convite` — que é feito pra isso.
 - ⚠️ **Os selos "Em breve" têm data pra sair.** 01/09, 05/09 e 20/09 (2026).
   Passada a data, apagar a linha `<span class="breve">...</span>` do botão —
   o resto do layout se ajusta sozinho. Ninguém fez isso ainda.
+- ⚠️ **`orion.roilabs.com.br` está na lista de subdomínios a aposentar.**
+  `Docs/Obsidian/80-dev/roilabs-subdominios-aposentados.md` põe o `orion.` entre
+  os "10 mortos" que iriam redirecionar 301 pro apex. Em 21/08/2026 ele responde
+  200 e é pra onde o botão do Orion aponta — mas se aquela regra da Cloudflare
+  for aplicada, o botão passa a cair na home do `roilabs.com.br` **sem avisar**.
+  Antes de aplicar a regra, decida o destino do Orion e troque o `href` aqui.
+- O WhatsApp deixou de ser o 5º botão e virou o 6º (troca pedida em 21/08/2026,
+  ele e o "Candidatar minha empresa" trocaram de lugar). Os `animation-delay`
+  da entrada são por `nth-child`, então seguem a posição, não o botão — não
+  precisa mexer neles ao reordenar.
 - As fontes em `assets/` são subset **latin** — cobre português inteiro, mas
   não cobre cirílico/grego. Não é um problema hoje.
 
@@ -225,6 +285,14 @@ estático qualquer na pasta (`npx serve .`).
    `--screenshot` com `--window-size`: a flag captura numa largura e faz o
    layout em outra, e a imagem sai com a coluna cortada na direita mesmo com a
    página inteira certa. Já me fez achar que tinha quebrado o layout.
+   O motivo (descoberto em 21/08/2026): o headless tem **largura mínima de
+   janela ~500px**. Pedir `--window-size=320` renderiza a 500 e recorta pra 320
+   — a página parece deslocada e cortada, e não está. Sem CDP, o jeito barato de
+   ver 320px de verdade é uma página com `<iframe width="320">` apontando pro
+   servidor local, e tirar screenshot dela.
+   Pra flagrar uma animação num frame específico, `--virtual-time-budget=N`
+   congela o relógio em N ms — foi assim que os dois extremos do selo piscando
+   foram conferidos (900ms = apagado, 1780ms = aceso).
 4. **Não conserte o descasamento de cor/fonte com o `roilabs.com.br`.**
    É intencional (ver "Decisões"). Pergunte antes.
 
