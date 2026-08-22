@@ -2,7 +2,9 @@
 
 > **Abrindo isto numa aba nova?** Leia o "Estado atual" e o "Se você é a próxima
 > sessão" no fim. O resto é referência.
-> Última atualização: **21/08/2026**, commit `cd14c00`.
+> Última atualização: **22/08/2026**, commit `f8b3708`.
+> (O conteúdo da página não muda desde `cd14c00`, de 21/08 — o que veio
+> depois foi só handoff.)
 
 ## Estado atual — 21/08/2026
 
@@ -173,6 +175,14 @@ estático qualquer na pasta (`npx serve .`).
   que os deixa mais altos que os simples. Não é desalinhamento acidental — é
   hierarquia. Se um dia todos tiverem que voltar à mesma altura, o caminho é
   encurtar as frases, não mexer no CSS.
+- **As frases dos `.convite` encurtaram (21/08/2026, `cd14c00`).** Pedido do
+  Jean, botão a botão: "Tenha um parceiro de crescimento.", "Descubra como
+  melhorar seu funil de vendas." e "Melhore sua operação com ERP qualificado".
+  Saíram frases de 45–54 caracteres, entraram de 32–43. O botão 4 (Meridian)
+  não foi tocado. Efeito colateral aceito: a frase 1 passou a caber em 1 linha,
+  o que deixa aquele botão mais baixo que os outros 3 (ver "Estado atual").
+  Se um dia quiserem a pilha alinhada de novo, o caminho é **alongar a frase 1**
+  (ex.: "Tenha um parceiro de crescimento e tecnologia."), não mexer no CSS.
 - **O selo "Em breve" é verde, não laranja.** A regra de um destaque laranja por
   página continua valendo: o laranja é do WhatsApp. Verde também é o que a
   pessoa já lê como "status", não como "clique aqui".
@@ -247,6 +257,7 @@ estático qualquer na pasta (`npx serve .`).
 | `42c4c95` | 3º e 4º botões viram Orion ERP e Meridian (saem `goiania` e `/simulador/`); WhatsApp e "Candidatar" trocam de lugar |
 | `ea444fc` | handoff carimba o hash do commit anterior |
 | `cd14c00` | frases dos botões 1, 2 e 3 encurtadas (ROI Labs / Sirius / Orion); marcas, selos, links e ordem intocados |
+| `f8b3708` | handoff: carimba `cd14c00` + os gotchas do Chrome headless |
 
 ## Pendências / gotchas
 - ⚠️ **O domínio.** O pedido original veio como `links.roylabs.com.br` (com
@@ -264,6 +275,16 @@ estático qualquer na pasta (`npx serve .`).
   caracteres ele quebra em duas linhas no celular e aquele botão fica mais alto
   que os vizinhos. Não quebra o layout, só desalinha a pilha. Se o texto for
   mesmo de 2 linhas, use `.convite` — que é feito pra isso.
+- ⚠️ **O cache do navegador já fez parecer que um deploy não subiu.** Em
+  21/08/2026 o Jean mandou um print da página pedindo 3 mudanças que **já
+  estavam no ar** havia horas (`42c4c95`) — o print era a versão velha guardada
+  pelo navegador dele. Antes de "refazer" qualquer coisa a partir de um print,
+  leia o HTML da produção:
+  `(Invoke-WebRequest "https://links.roilabs.com.br/?cb=$(Get-Random)" -UseBasicParsing).Content`
+  — o `?cb=` fura o cache do Vercel e o `-Headers @{'Cache-Control'='no-cache'}`
+  ajuda. Pra pessoa ver o novo, `Ctrl+Shift+R` ou janela anônima. O `Age` da
+  resposta do Vercel pode passar de 1h e ainda assim trazer o conteúdo novo:
+  ele não é indicador de versão velha.
 - ⚠️ **Os selos "Em breve" têm data pra sair.** 01/09, 05/09 e 20/09 (2026).
   Passada a data, apagar a linha `<span class="breve">...</span>` do botão —
   o resto do layout se ajusta sozinho. Ninguém fez isso ainda.
