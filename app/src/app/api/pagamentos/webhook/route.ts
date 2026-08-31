@@ -242,6 +242,7 @@ export async function POST(req: NextRequest) {
       where: { id: pedido.id },
       data: { statusPagamento: 'reembolsado', statusFulfillment: 'reembolsado', mpPaymentId: paymentId },
     });
+    log.info({ pedidoId: pedido.id, paymentId, status: payment.status }, 'webhook: pedido reembolsado/chargeback');
   } else if (pedido.statusPagamento === 'pago') {
     // 014 (contracts/webhook-assinatura.md, "Caminho de RENOVAÇÃO"): notificação de um
     // ciclo seguinte de uma assinatura — aprovado ou não. Pedido sem Assinatura (notificação

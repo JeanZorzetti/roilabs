@@ -1,6 +1,7 @@
 import { isAuthed } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { linhasPorPedido, type ItemPagoInput } from '@/lib/financeiro';
+import { log } from '@/lib/log';
 
 const MES_RE = /^\d{4}-\d{2}$/;
 
@@ -85,6 +86,10 @@ export async function GET(req: Request): Promise<Response> {
   const periodo =
     de && ate ? `${de}_${ate}` : de ? `de-${de}` : ate ? `ate-${ate}` : 'todos';
   const filename = `roilabs-financeiro-${periodo}.csv`;
+
+  // Trilha de auditoria: exportação de dado financeiro bruto (GMV/líquido por pedido)
+  // saindo do sistema — quem gerou e qual período, não os valores em si (já vão no CSV).
+  log.info({ de, ate, linhas: linhas.length }, 'financeiro/csv: exportado');
 
   const BOM = '﻿';
   const header = 'data;pedido_id;gmv;modalidade;liquido\r\n';

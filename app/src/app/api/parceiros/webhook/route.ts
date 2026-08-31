@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { verifyWebhookToken, verificarPagamento } from '@/lib/asaas';
+import { log } from '@/lib/log';
 
 export const dynamic = 'force-dynamic';
 
@@ -12,6 +13,9 @@ const REEMBOLSO = new Set(['PAYMENT_REFUNDED']);
 // por asaasPaymentId; Asaas é a fonte da verdade do status (nunca confia só no corpo).
 export async function POST(req: NextRequest) {
   if (!verifyWebhookToken(req.headers.get('asaas-access-token'))) {
+    // Espelha pagamentos/webhook (MP): ou ASAAS_WEBHOOK_TOKEN derivou do painel — faturas
+    // param de conciliar em silêncio — ou é notificação forjada.
+    log.warn({}, 'parceiros/webhook: token inválido');
     return NextResponse.json({ error: 'invalid token' }, { status: 401 });
   }
 
@@ -39,6 +43,7 @@ export async function POST(req: NextRequest) {
         where: { id: fatura.id },
         data: { status: 'paga', asaasPaymentId: payment.id },
       });
+      log.info({ faturaId: fatura.id, parceiroId: fatura.parceiroId, paymentId: payment.id }, 'parceiros/webhook: fatura paga');
     }
   }
   // PAYMENT_REFUNDED: reconhecido para não ser tratado como confirmação; sem estado de
