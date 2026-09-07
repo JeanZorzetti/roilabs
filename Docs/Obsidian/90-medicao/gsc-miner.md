@@ -1,13 +1,13 @@
 ---
 tipo: medição
 status: vivo
-data: 2026-08-31
+data: 2026-09-07
 dono: automático (gsc-miner.mjs, cron semanal)
 ---
 
 # ⛏️ GSC miner — candidatas de expansão da malha
 
-> [!info] 2026-08-01 → 2026-08-29 (28 dias) · 45 pares query×page · propriedade sc-domain:goiania.roilabs.com.br
+> [!info] 2026-08-08 → 2026-09-05 (28 dias) · 54 pares query×page · propriedade sc-domain:goiania.roilabs.com.br
 > Fonte grátis que substitui a mineração DataForSEO. Critério de página nova continua o
 > editorial de sempre: intenção clara + produto real no catálogo (nada de página vazia).
 
@@ -15,7 +15,7 @@ dono: automático (gsc-miner.mjs, cron semanal)
 
 | Impressões | Cliques | CTR | Posição média | Cobertura dos pares |
 |-----------:|--------:|----:|--------------:|--------------------:|
-| 473 | 1 | 0.21% | 16.9 | 72 (15.2%) |
+| 547 | 1 | 0.18% | 17.3 | 81 (14.8%) |
 
 > A soma dos pares query×page é **piso**: a dimensão `query` anonimiza as raras. Só esta
 > linha diz quanta impressão o site teve de verdade.
@@ -24,10 +24,10 @@ dono: automático (gsc-miner.mjs, cron semanal)
 
 | Vertical | Impressões | Cliques | Páginas com impressão |
 |----------|-----------:|--------:|----------------------:|
-| guia/conteúdo | 247 | 0 | 11 |
-| porcelanato | 214 | 1 | 50 |
-| fitas | 8 | 0 | 3 |
-| home/outras | 8 | 0 | 1 |
+| guia/conteúdo | 281 | 0 | 11 |
+| porcelanato | 244 | 1 | 49 |
+| fitas | 19 | 0 | 3 |
+| home/outras | 7 | 0 | 1 |
 
 ## 1. Candidatas a página nova (query sem página dedicada, ≥ 20 impressões)
 
