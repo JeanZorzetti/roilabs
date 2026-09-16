@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { cancelarAssinatura, decidirCancelamento } from '@/lib/assinaturas';
+import { alertarCancelamento, cancelarAssinatura, decidirCancelamento } from '@/lib/assinaturas';
 import { isAuthed } from '@/lib/auth';
 import { log } from '@/lib/log';
 
@@ -40,6 +40,9 @@ export async function POST(req: NextRequest) {
     log.error({ err, assinaturaId: assinatura!.id }, 'assinaturas/cancelar: cancelPreapproval falhou');
     return NextResponse.json({ error: 'falha ao cancelar no gateway, tente novamente' }, { status: 502 });
   }
+
+  // Só o caminho do token avisa (roihub 027, FR-013): pelo `id`, quem cancelou foi a equipe.
+  if (!id) await alertarCancelamento(assinatura!, 'cliente');
 
   return NextResponse.json({ ok: true });
 }

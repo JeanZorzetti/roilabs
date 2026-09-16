@@ -111,6 +111,22 @@ export interface MpPayment {
 }
 
 /** Fetches a payment by id — the source of truth for status (never trust webhook body). */
+/**
+ * Notificação cujo efeito já está no pedido: o webhook a ignora. A devolução e a contestação
+ * chegam com o MESMO id do pagamento aprovado, então "mesmo id e fora de pendente" não basta —
+ * com essa trava, um pedido pago nunca virava reembolsado quando o dinheiro voltava pelo MP
+ * (achado da roihub 027).
+ */
+export function notificacaoJaAplicada(
+  pedido: { mpPaymentId: string | null; statusPagamento: string },
+  paymentId: string,
+  paymentStatus: string,
+): boolean {
+  if (pedido.mpPaymentId !== paymentId) return false;
+  if (paymentStatus === 'refunded' || paymentStatus === 'charged_back') return pedido.statusPagamento === 'reembolsado';
+  return pedido.statusPagamento !== 'pendente';
+}
+
 export async function getPayment(id: string): Promise<MpPayment> {
   const res = await fetch(`${API}/v1/payments/${id}`, { headers: authHeaders() });
   if (!res.ok) throw new Error(`MP getPayment failed: ${res.status} ${await res.text()}`);

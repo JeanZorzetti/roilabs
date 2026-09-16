@@ -2,6 +2,7 @@
 // e-mail nunca bloqueia nem quebra a rota que o dispara (lead/pedido é gravado antes).
 // Sem RESEND_API_KEY vira no-op — a infra é opcional até a chave existir na EasyPanel.
 import { log } from './log';
+import { alertaParaAviso, avisarRoihub, unescapeHtml } from './aviso-telegram';
 
 const KEY = process.env.RESEND_API_KEY;
 const FROM = process.env.EMAIL_FROM ?? 'ROI Labs <onboarding@resend.dev>';
@@ -29,13 +30,12 @@ export function sendEmail(to: string, subject: string, html: string): void {
 // O tópico É o segredo (nome longo/aleatório). Sem NTFY_TOPIC vira no-op, igual ao Resend.
 const NTFY_TOPIC = process.env.NTFY_TOPIC;
 
-const unescapeHtml = (s: string) =>
-  s.replace(/&(amp|lt|gt|quot|#39);/g, (m) => ({ '&amp;': '&', '&lt;': '<', '&gt;': '>', '&quot;': '"', '&#39;': "'" })[m]!);
-
 // Alerta interno de lead/pedido novo — em high-ticket local, velocidade de resposta é conversão.
-// Canais paralelos: e-mail (Resend) + push (ntfy) — cada um no-op sem a própria env var.
+// Canais paralelos: e-mail (Resend) + push (ntfy) + Telegram (pelo roihub, spec 027) — cada um
+// no-op sem a própria env var. O Telegram roda solto e nunca lança, como os outros dois.
 export function sendAlert(subject: string, html: string): void {
   if (ALERT_TO) sendEmail(ALERT_TO, subject, html);
+  void avisarRoihub(alertaParaAviso(subject, html));
   if (!NTFY_TOPIC) return;
   fetch('https://ntfy.sh', {
     method: 'POST',

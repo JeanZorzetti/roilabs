@@ -1,12 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { cancelarAssinatura, janelaEsgotada } from '@/lib/assinaturas';
+import { JANELA_DIAS, alertarCancelamento, cancelarAssinatura, janelaEsgotada } from '@/lib/assinaturas';
 import { log } from '@/lib/log';
 
 export const dynamic = 'force-dynamic';
-
-// FR-009: quantos dias de tentativas até cancelar automaticamente quem ficou inadimplente.
-const JANELA_DIAS = 7;
 
 // Sweep diário — a AUTORIDADE de quando uma assinatura vira 'cancelada' é este cron, nunca
 // o webhook (research.md D2). Mesmo padrão de auth de api/cron/digest.
@@ -19,7 +16,7 @@ export async function POST(req: NextRequest) {
 
   const candidatas = await prisma.assinatura.findMany({
     where: { estado: 'inadimplente', janelaFalhaDesde: { not: null } },
-    select: { id: true, itemPedidoId: true, mpPreapprovalId: true, janelaFalhaDesde: true },
+    select: { id: true, itemPedidoId: true, mpPreapprovalId: true, janelaFalhaDesde: true, slug: true, pedidoId: true },
   });
 
   const agora = new Date();
@@ -33,6 +30,7 @@ export async function POST(req: NextRequest) {
       // Se falhar, esta assinatura fica como está e o cron tenta de novo amanhã.
       await cancelarAssinatura(a);
       canceladas++;
+      await alertarCancelamento(a, 'sistema');
     } catch (err) {
       falhas.push(a.id);
       log.error({ err, assinaturaId: a.id }, 'cron/assinaturas: cancelPreapproval falhou, tenta de novo amanhã');

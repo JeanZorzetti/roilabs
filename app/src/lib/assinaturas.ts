@@ -3,6 +3,12 @@
 import crypto from 'crypto';
 import { prisma } from './prisma';
 import { cancelPreapproval } from './mercadopago';
+import { escapeHtml, sendAlert } from './email';
+import { log } from './log';
+
+// FR-009: quantos dias de tentativas até o cron cancelar quem ficou inadimplente. Mora aqui, e não
+// no cron, porque o alerta de renovação recusada do webhook anuncia a mesma data.
+export const JANELA_DIAS = 7;
 
 /** mensal soma 1 mês, anual soma 12, a partir de `de` (default agora). */
 export function dataProximoCiclo(recorrencia: string, de: Date = new Date()): Date {
@@ -90,4 +96,31 @@ export async function cancelarAssinatura(
       data: { assinaturaEstado: 'cancelada' },
     }),
   ]);
+}
+
+/**
+ * Alerta interno de assinatura cancelada pelo cliente (link do e-mail) ou pelo cron (roihub 027,
+ * FR-013). O cancelamento pela equipe no painel não chama isto: quem cancelou já sabe. Nunca lança —
+ * roda depois de o cancelamento já estar gravado.
+ */
+export async function alertarCancelamento(
+  assinatura: { id: string; slug: string; pedidoId: string },
+  quem: 'cliente' | 'sistema',
+): Promise<void> {
+  try {
+    const pedido = await prisma.pedido.findUnique({
+      where: { id: assinatura.pedidoId },
+      select: { nome: true, whatsapp: true },
+    });
+    if (!pedido) return;
+    sendAlert(
+      `⛔ Assinatura cancelada — ${pedido.nome}`,
+      `<p><strong>${escapeHtml(pedido.nome)}</strong> · ${escapeHtml(pedido.whatsapp)}</p>
+       <p>Assinatura ${escapeHtml(assinatura.slug)}</p>
+       <p>${quem === 'cliente' ? 'Cancelada pelo cliente.' : `Cancelada por falta de pagamento: ${JANELA_DIAS} dias sem cobrança aprovada.`}</p>
+       <p><a href="https://app.roilabs.com.br/admin/assinaturas">Abrir no admin</a></p>`,
+    );
+  } catch (err) {
+    log.error({ err, assinaturaId: assinatura.id }, 'assinaturas: alerta de cancelamento falhou');
+  }
 }

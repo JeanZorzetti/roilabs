@@ -1,14 +1,16 @@
 import crypto from 'crypto';
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { getPayment, verifyWebhookSignature } from '@/lib/mercadopago';
-import { dataProximoCiclo, novoCancelToken, decidirRenovacao } from '@/lib/assinaturas';
+import { getPayment, notificacaoJaAplicada, verifyWebhookSignature } from '@/lib/mercadopago';
+import { JANELA_DIAS, dataProximoCiclo, novoCancelToken, decidirRenovacao } from '@/lib/assinaturas';
 import { resolverParametros, resolverPiso, resolverModalidade, type CamadasConfig } from '@/lib/centros-custo';
 import { sendEmail, sendAlert, escapeHtml } from '@/lib/email';
 import { log } from '@/lib/log';
 import { getLoja } from '@/lib/lojas';
 
 export const dynamic = 'force-dynamic';
+
+const brl = (v: unknown) => Number(v).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
 // Mercado Pago payment webhook (server-to-server, no CORS). Idempotent by mpPaymentId (D4).
 export async function POST(req: NextRequest) {
@@ -55,8 +57,8 @@ export async function POST(req: NextRequest) {
 
   const paymentId = String(payment.id);
 
-  // Idempotent: this payment already recorded and not pending → no-op.
-  if (pedido.mpPaymentId === paymentId && pedido.statusPagamento !== 'pendente') {
+  // Idempotent: this payment's effect is already on the order → no-op.
+  if (notificacaoJaAplicada(pedido, paymentId, payment.status)) {
     return NextResponse.json({ ok: true });
   }
 
@@ -152,7 +154,6 @@ export async function POST(req: NextRequest) {
 
       // Pós-pagamento (fire-and-forget, nunca quebra o webhook): confirmação ao
       // cliente (recibo nosso, além do MP) + alerta interno de pedido novo.
-      const brl = (v: unknown) => Number(v).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
       // 013: `itens_pedido_fita` não existe mais — TODOS os itens vêm de `skuRows`. O que
       // decide a exibição passou a ser a `unidade` do item, não o vertical do pedido, e é
       // por isso que a lista deixou de ser duas somadas. O bug que a 011 remendava aqui
@@ -234,6 +235,7 @@ export async function POST(req: NextRequest) {
                 Clichê: ${clicheCobrado ? '<strong>COBRADO</strong> (arte nova).' : '<strong>ISENTO</strong> (cliente recorrente — reutilizar a arte já cadastrada).'}</p>`
              : ''
          }
+         ${cancelToken ? '<p>Assinatura: renova sozinha a cada ciclo.</p>' : ''}
          <p><a href="https://app.roilabs.com.br/admin/pedidos">Abrir no admin</a></p>`
       );
     }
@@ -243,6 +245,18 @@ export async function POST(req: NextRequest) {
       data: { statusPagamento: 'reembolsado', statusFulfillment: 'reembolsado', mpPaymentId: paymentId },
     });
     log.info({ pedidoId: pedido.id, paymentId, status: payment.status }, 'webhook: pedido reembolsado/chargeback');
+
+    // Só na primeira: a devolução de uma renovação (outro id) pode chegar com o pedido já
+    // reembolsado. As duas pedem ações diferentes, então o alerta diz qual foi (roihub 027).
+    if (pedido.statusPagamento !== 'reembolsado') {
+      const contestacao = payment.status === 'charged_back';
+      sendAlert(
+        `${contestacao ? '⚠️ Contestação no cartão' : '↩️ Pagamento devolvido'} — ${pedido.nome} · ${brl(pedido.total)}`,
+        `<p><strong>${escapeHtml(pedido.nome)}</strong> · ${escapeHtml(pedido.whatsapp)}</p>
+         <p>${contestacao ? 'O cliente contestou a compra com o banco. Responda a disputa no Mercado Pago.' : `Total devolvido: ${brl(pedido.total)}`}</p>
+         <p><a href="https://app.roilabs.com.br/admin/pedidos">Abrir no admin</a></p>`,
+      );
+    }
   } else if (pedido.statusPagamento === 'pago') {
     // 014 (contracts/webhook-assinatura.md, "Caminho de RENOVAÇÃO"): notificação de um
     // ciclo seguinte de uma assinatura — aprovado ou não. Pedido sem Assinatura (notificação
@@ -287,7 +301,21 @@ export async function POST(req: NextRequest) {
         log.warn({ assinaturaId: assinatura.id, paymentId, status: payment.status }, 'webhook: ciclo de renovação falhou');
 
         // FR-004: só avisa na 1ª falha da sequência (setarJanela) — falhas seguintes dentro
-        // da mesma janela já foram avisadas.
+        // da mesma janela já foram avisadas. O alerta interno não depende do e-mail do cliente.
+        if (decisao.setarJanela) {
+          const cancelaEm = new Date(Date.now() + JANELA_DIAS * 24 * 60 * 60 * 1000).toLocaleDateString('pt-BR', {
+            day: '2-digit',
+            month: '2-digit',
+            timeZone: 'America/Sao_Paulo',
+          });
+          sendAlert(
+            `⚠️ Renovação recusada — ${pedido.nome}`,
+            `<p><strong>${escapeHtml(pedido.nome)}</strong> · ${escapeHtml(pedido.whatsapp)}</p>
+             <p>Assinatura ${escapeHtml(assinatura.slug)} · ${brl(pedido.total)}</p>
+             <p>Cancela sozinha em ${cancelaEm} se nenhuma cobrança passar.</p>
+             <p><a href="https://app.roilabs.com.br/admin/assinaturas">Abrir no admin</a></p>`,
+          );
+        }
         if (decisao.setarJanela && pedido.email) {
           sendEmail(
             pedido.email,
