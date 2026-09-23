@@ -159,7 +159,7 @@ Eu escrevo as objeções como hipótese; os três sócios que prospectam corrige
 
 ### Medição da conversão
 
-- **Dois registros de clique:** `whatsapp_clique` e `formulario_enviado`, cada um com a página de origem.
+- **Dois registros de clique no GA4:** `whatsapp_clique` e `formulario_enviado`, cada um com a página de origem. Só contam visitantes que aceitaram cookies (seção 9).
 - **Contato qualificado:** os sócios marcam à mão, lendo a mensagem que já diz de onde a pessoa veio.
 - **Base de comparação:** o primeiro mês. Não há meta antes disso.
 
@@ -209,7 +209,7 @@ Eu escrevo as objeções como hipótese; os três sócios que prospectam corrige
 - **Só o envio do formulário roda no servidor** (adaptador da Vercel, rota sob demanda).
   - O contato vai por e-mail pelo Brevo para o endereço do insumo 8, com "responder para" apontando para o e-mail do lead.
   - Contra spam, um campo oculto que só robô preenche; captcha só entra se o spam aparecer.
-- **No navegador, JavaScript só para o menu** (botão com `aria-expanded`, fecha no Esc) **e para a medição de acessos.**
+- **No navegador, JavaScript só para o menu** (botão com `aria-expanded`, fecha no Esc), **para o aviso de cookies e para o GA4** (que só carrega depois do aceite).
 - **Produtos:** um só layout, com uma coleção de conteúdo de 4 arquivos. Cada arquivo guarda promessa, problema, passos, entregáveis, preço, objeções, mensagem do WhatsApp e prova. Mudar um preço é editar uma linha.
 - **Fontes:** no máximo 2 famílias, servidas pelo próprio site: woff2, `font-display: swap`, pré-carregamento só da fonte do topo.
 - **Imagens:** formato moderno e dimensões explícitas. A imagem do topo carrega com prioridade; as outras, só quando entram na tela.
@@ -244,9 +244,10 @@ Eu escrevo as objeções como hipótese; os três sócios que prospectam corrige
 
 ## 8. Publicação
 
-- **Vercel:** projeto novo `nimblabs-site`.
-  - Cada branch ganha um endereço de prévia, e é por ele que o Jean aprova.
-  - `main` publica em produção.
+- **Vercel:** projeto novo `nimblabs-site`, no time `jean-zorzettis-projects`, que está no **plano Hobby**.
+  - As regras da Vercel proíbem uso comercial no Hobby ("Hobby teams are restricted to non-commercial personal use only"). O Jean decidiu em 22/09 ficar no Hobby e aceitar o risco de a Vercel pausar o projeto.
+  - Até o lançamento, `main` publica só em `nimblabs-site.vercel.app`, que é onde o Jean aprova as telas. Esse endereço recebe `X-Robots-Tag: noindex`.
+  - Depois do lançamento, `main` passa a ser o site no ar, e as mudanças vão por branch com endereço de prévia.
   - O domínio só entra no lançamento.
 - **Situação conferida em 22/09:** `nimblabs.com` resolve para a Vercel (`216.198.79.65`) e mostra o site antigo. Já `https://www.nimblabs.com` dá erro de certificado.
 - **Lançamento (06/10):**
@@ -262,7 +263,11 @@ Eu escrevo as objeções como hipótese; os três sócios que prospectam corrige
 ## 9. Medição
 
 - **Search Console:** impressão, posição e página no Google.
-- **Vercel Web Analytics:** não usa cookie, então dispensa o aviso de consentimento, e mostra as visitas que chegam de `chatgpt.com` e `perplexity.ai`. Os dois registros de clique exigem o plano Pro da Vercel; sem o Pro, entra o GA4, com aviso de consentimento. O plano é conferido na primeira tarefa.
+- **GA4 com aviso de consentimento** (decidido em 22/09, porque no Hobby a Vercel não tem registro de clique):
+  - Nada do Google carrega antes de o visitante aceitar.
+  - "Aceitar" e "Recusar" têm o mesmo peso, e um link no rodapé reabre a escolha.
+  - O GA4 só roda no domínio `nimblabs.com`, nunca em prévia nem em localhost.
+  - Visitas vindas de `chatgpt.com` e `perplexity.ai` aparecem na origem do tráfego, só entre quem aceitou.
 - **Base de comparação das IAs:** na semana do lançamento, 5 perguntas que um cliente faria, feitas no ChatGPT, no Perplexity e no Gemini. Data e resposta ficam salvas em `Docs/Obsidian/90-medicao/`.
 
 ## 10. Quando uma página conta como pronta
@@ -298,10 +303,13 @@ Página sem os insumos dela não trava as outras: fica fora do menu e do sitemap
 | 3 | Preços: confirmar os de A, B e C; definir o do D e o mínimo do sob medida; o que faz o valor subir em A e C | bloco de preço de cada página |
 | 4 | D: o que o CRM faz e para que tamanho de agência | página D |
 | 5 | C: os 2 ou 3 pares de sistemas que serão aceitos | página C |
-| 6 | B: nome e registro do contador parceiro, e a revisão dele das afirmações fiscais | página B |
+| 6 | B: nome e registro do contador parceiro, a revisão dele das afirmações fiscais e 3 a 5 linhas reais para o exemplo de relatório | página B |
 | 7 | A: número de vagas de cliente piloto e desconto | página A |
 | 8 | E-mail que recebe os contatos do formulário | formulário |
 | 9 | LinkedIn da empresa e CNPJ, se houver | nada; sem eles, os campos ficam fora dos dados estruturados |
+| 10 | ID de medição do GA4 (`G-…`) de uma propriedade nova só para `nimblabs.com` | medição |
+| 11 | Políticas para as perguntas frequentes da home: de quem é o código, manutenção depois da entrega, atendimento remoto, forma de pagamento | perguntas frequentes da home |
+| 12 | Prazo de entrega de B e C (o do A é 90 dias, do documento) | passo "como funciona" de B e C |
 
 Não trava nada, mas melhora as páginas: as objeções que os três sócios ouvem na prospecção.
 
@@ -316,7 +324,8 @@ Não trava nada, mas melhora as páginas: as objeções que os três sócios ouv
 - **D sem definição:** a página D fica fora do lançamento.
 - **Aprovação atrasada:** o cronograma não tem folga.
 - **Ideia da marca reprovada nos testes:** o trabalho volta ao começo da `logo-design`, o que custa cerca de um dia.
-- **Plano da Vercel sem registro de cliques:** entra o GA4 com aviso de consentimento, o que pesa mais na página.
+- **Hobby com uso comercial (risco aceito em 22/09):** a Vercel pode pausar o projeto, e o site sai do ar até a situação ser resolvida. A saída é assinar o Pro na hora, sem mudar código.
+- **GA4 só conta quem aceita cookies:** os números de clique são uma amostra, não o total. O total de contatos continua sendo o que os sócios contam no WhatsApp e no e-mail.
 
 ## 15. Fora do escopo
 
