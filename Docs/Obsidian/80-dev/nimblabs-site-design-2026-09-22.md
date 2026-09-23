@@ -246,7 +246,7 @@ Eu escrevo as objeções como hipótese; os três sócios que prospectam corrige
 
 - **Vercel:** projeto novo `nimblabs-site`, no time `jean-zorzettis-projects`, que está no **plano Hobby**.
   - As regras da Vercel proíbem uso comercial no Hobby ("Hobby teams are restricted to non-commercial personal use only"). O Jean decidiu em 22/09 ficar no Hobby e aceitar o risco de a Vercel pausar o projeto.
-  - Até o lançamento, `main` publica só em `nimblabs-site.vercel.app`, que é onde o Jean aprova as telas. Esse endereço recebe `X-Robots-Tag: noindex`.
+  - Até o lançamento, `main` publica só em `nimblabs-site.vercel.app`, que é onde o Jean aprova as telas. Enquanto a variável `PUBLIC_AMBIENTE` não for `producao`, toda página leva `<meta name="robots" content="noindex">` e os rascunhos aparecem com selo. No lançamento, essa variável muda, e é a única troca.
   - Depois do lançamento, `main` passa a ser o site no ar, e as mudanças vão por branch com endereço de prévia.
   - O domínio só entra no lançamento.
 - **Situação conferida em 22/09:** `nimblabs.com` resolve para a Vercel (`216.198.79.65`) e mostra o site antigo. Já `https://www.nimblabs.com` dá erro de certificado.
