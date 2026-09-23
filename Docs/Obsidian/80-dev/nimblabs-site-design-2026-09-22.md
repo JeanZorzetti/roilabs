@@ -167,6 +167,8 @@ Eu escrevo as objeções como hipótese; os três sócios que prospectam corrige
 
 ### Marca (`logo-design`)
 
+> **Decisão de 23/09/2026:** o Jean reprovou a marca nova proposta e **manteve a marca atual**. O nome é Archivo 800 com o primeiro "b" aberto (nim·b = nimbus), e o ícone é esse "b" em âmbar `#E8A33D` sobre placa `#1C1F23`. No site, a marca é o nome sozinho. Os arquivos vieram do repositório antigo; a proposta descartada está em [[nimblabs-marca-2026-09-23]]. O texto abaixo fica como registro do que foi proposto.
+
 - **Formato:** o nome "nimblabs" desenhado como marca, em path e não digitado numa fonte do site, mais um símbolo para o ícone da aba e do celular. Com 8 letras, o nome é a parte principal; o símbolo só aparece onde o nome não cabe.
 - **Ideia a testar:** fábrica é a mesma peça repetida. As letras do nome são montadas com uma peça padrão, e uma delas usa uma peça diferente, a sob medida. O desenho conta o modelo de negócio: produto é repetição, sob medida é a exceção. A quantidade de produtos fica fora do desenho de propósito: com um quinto produto, a marca ficaria errada.
 - **Testes antes de mostrar:**

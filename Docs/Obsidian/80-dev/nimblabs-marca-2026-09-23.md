@@ -1,11 +1,13 @@
 ---
 tipo: decisão
-status: aguardando aprovação
+status: reprovada
 data: 2026-09-23
 dono: Jean (dev)
 ---
 
-# Marca nimblabs: proposta
+# Marca nimblabs: proposta (reprovada)
+
+> **23/09/2026: reprovada pelo Jean** ("marca reprovada, vamos manter a atual"). O site novo usa a marca atual (Archivo 800 com o "b" aberto), trazida do repositório antigo no commit `9fc38f9` de `nimblabs-site`. Esta nota fica como registro da proposta.
 
 Tarefa 2 do [[nimblabs-site-plano-2026-09-23]]. Passos da `logo-design`, com a ideia aprovada na especificação ([[nimblabs-site-design-2026-09-22]], seção 5): a fábrica é a mesma peça repetida, e uma peça é sob medida.
 
