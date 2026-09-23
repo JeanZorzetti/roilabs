@@ -34,3 +34,40 @@ O setor foi usado a pedido do Jean, só para mapear o lugar-comum e os mecanismo
 3. **Baralho** (catálogo) · pigmento · scroll · média. As fichas dos produtos se empilham no scroll, com preço e prazo na face.
 
 **Escolha do Jean em 23/09/2026: Placa.** Ela continua a marca, cujo ícone já é uma placa, e põe preço e prazo no centro do visual. As outras duas vão para o `.art/log.json` como recusadas.
+
+## Home construída (Tarefa 14, 23/09/2026, aguardando aprovação)
+
+- **Estrutura "espécime":** a placa-mestra, com a marca do fabricante (o "b") em relevo; as placas de produto, com grade de preço e prazo; a peça sob medida, com o canto cortado; as etapas numeradas; e o fecho.
+- **Uma ideia em todas as camadas, gravar:**
+  - entrada: um feixe de laser passa sobre a placa-mestra;
+  - rolagem: os valores de cada placa são gravados conforme ela entra na tela (CSS `view()`);
+  - cursor: uma luz de oficina segue o ponteiro sobre o metal;
+  - transição: o `view-transition-name` já está nas placas da home, e a outra ponta entra na Tarefa 15.
+- **Gates: 32 de 32 aplicáveis passam**, contando o G34 e o G35, que foram julgados olhando os prints.
+  - Reprovaram e foram corrigidos: G1 (tons neutros da placa passaram do matiz 255,6 para 245), G3 (título a 5,2 vezes o texto), G6 e G19 (brilho e sombra viraram tokens com temperatura), G18 (as sombras deixaram de ser preto puro), G7 (carimbo também no CSS da direção) e G26 (CLS 0,0098 → 0, com a Plex Mono pré-carregada).
+  - Não se aplicam: G31, porque não há canvas, e G32 e G33, porque esta é a primeira entrada do `.art/log.json` e não há com o que comparar.
+  - G10 passa por declaração: a transição está preparada nas placas da home, e a outra ponta entra na Tarefa 15.
+  - G35 passa. As referências do setor foram pedidas pelo Jean e serviram só para mapear o lugar-comum. O mecanismo emprestado veio da placa de motor, de fora da web, e o par Archivo + Plex Mono vem da marca e da placa.
+  - G34 passa, com ressalva. O topo tem cara de objeto: placa gravada, com a marca do fabricante em relevo. As placas de produto, vistas de longe, ficam mais perto de "três cards escuros", e o que as separa é a grade gravada e os rebites. E tudo escuro lê frio: o contraponto humano são as fotos dos sócios, quando chegarem.
+
+### Prints (23/09/2026, nimblabs.com no ar)
+
+![[nimblabs-direcao-visual/home-topo-1440.webp]]
+
+![[nimblabs-direcao-visual/home-produtos-1440.webp]]
+
+Celular (360 px) e a luz do cursor sobre uma placa:
+
+![[nimblabs-direcao-visual/home-topo-360.webp]] ![[nimblabs-direcao-visual/home-luz-do-cursor.webp]]
+
+## Custo
+
+```
+Faixa: marca
+JS adicionado: 1,1 kb gzip (menu, aviso de cookies, luz do cursor; tudo inline, zero script externo)
+LCP: 1,14 s (alvo 2,0 s), elemento = h1 · INP: sem medida de campo; TBT 0 ms · CLS: 0
+Medição: Lighthouse 12 local, celular, 4G e CPU 4× simulados, mediana de 3 (API do PageSpeed sem cota em 23/09)
+Fontes: Archivo variável (peso) 35 KB + IBM Plex Mono 500 15 KB, as duas pré-carregadas
+Fallback: sem JS, as placas continuam compostas e o menu mostra todos os links; com movimento reduzido, sem laser e sem luz no cursor, com os valores visíveis
+Fora do limiar bom de CWV? Não
+```
