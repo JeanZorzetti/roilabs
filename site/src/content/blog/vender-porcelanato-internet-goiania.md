@@ -42,7 +42,7 @@ A fórmula que gera essas páginas combina quatro variáveis: **produto × carac
 
 A demanda local é mensurável antes de qualquer investimento, e o primeiro nicho que a ROI Labs operou em Goiânia mostra a escala. A busca por "porcelanato" soma cerca de 1.900 pesquisas por mês só na cidade, ramificada em dezenas de variações por tamanho, acabamento e aplicação. O termo "porcelanato Goiânia" tem cerca de 140 buscas mensais com custo por clique alto no tráfego pago — sinal de intenção comercial forte.
 
-O mesmo mapeamento vale para qualquer nicho. O volume é medido no planejador de palavras-chave antes de abrir a operação; é o primeiro filtro de validação. Só se constrói a página onde há gente buscando — e a operação de porcelanato construída a partir desse mapa está [no ar e aberta para inspeção](/polo-goiania/).
+O mesmo mapeamento vale para qualquer nicho. O volume é medido no planejador de palavras-chave antes de abrir a operação; é o primeiro filtro de validação. Só se constrói a página onde há gente buscando — e a operação de porcelanato construída a partir desse mapa está [no ar e aberta para inspeção](https://goiania.roilabs.com.br/).
 
 ## Como capturar essa demanda sem bancar a tecnologia?
 

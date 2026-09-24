@@ -35,7 +35,7 @@ Depois do lançamento o CAPEX vira OPEX: mensalidades, mídia contínua, atualiz
 
 ## O que muda num polo pronto?
 
-No polo, a infraestrutura de captação já existe: templates de páginas de alta intenção, páginas de produto, [ferramentas como calculadora e comparador](/polo-goiania/), feed no Google Shopping e canal de pedido. A ROI Labs a construiu e opera no nicho de porcelanato em Goiânia, e a replica para o nicho de cada fornecedor que ocupa uma cadeira. O fornecedor entra com o que só ele tem — produto, estoque, preço competitivo e atendimento — e a ROI Labs entra com o resto.
+No polo, a infraestrutura de captação já existe: templates de páginas de alta intenção, páginas de produto, [ferramentas como calculadora e comparador](https://goiania.roilabs.com.br/), feed no Google Shopping e canal de pedido. A ROI Labs a construiu e opera no nicho de porcelanato em Goiânia, e a replica para o nicho de cada fornecedor que ocupa uma cadeira. O fornecedor entra com o que só ele tem — produto, estoque, preço competitivo e atendimento — e a ROI Labs entra com o resto.
 
 A contrapartida é o modelo de remuneração. Em vez de mensalidade de plataforma, uma anuidade simbólica da cadeira (R$ 2.640/ano) e um **success fee**: a mesma fórmula que a ROI Labs usa para faturar parceiros ativos, e que o [simulador](/simulador/) do site replica publicamente.
 

@@ -11,7 +11,6 @@ export const GET: APIRoute = async () => {
   const urls = [
     { loc: `${SITE}/` },
     { loc: `${SITE}/modelo/` },
-    { loc: `${SITE}/polo-goiania/` },
     { loc: `${SITE}/blog/` },
     { loc: `${SITE}/simulador/` },
     // /obrigado/ fica fora: é noindex (destino do form), rastreá-la é crawl desperdiçado.

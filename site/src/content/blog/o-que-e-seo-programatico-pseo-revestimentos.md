@@ -36,7 +36,7 @@ Cada célula desse cruzamento vira uma URL própria, com título, descrição e 
 
 O primeiro nicho que a ROI Labs operou em Goiânia foi o porcelanato, e ele mostra o método de ponta a ponta. O tipo de produto (porcelanato, porcelanato esmaltado) cruzou com característica (60x60, 80x80, acetinado, antiderrapante), ocasião (área externa, piscina, cozinha, fachada) e localização (Goiânia e bairros). A demanda de partida era medida: cerca de 1.900 buscas por mês pelo termo "porcelanato" só na cidade.
 
-O resultado está no ar e pode ser inspecionado: mais de 80 páginas de alta intenção, catálogo de 30 produtos, calculadora e comparador, todos descritos no [case do Polo Goiânia](/polo-goiania/). O mesmo template serve para outro catálogo — muda o banco de dados, não a máquina.
+O resultado está no ar e pode ser inspecionado: mais de 80 páginas de alta intenção, catálogo de 30 produtos, calculadora e comparador, todos [no ar para inspeção](https://goiania.roilabs.com.br/). O mesmo template serve para outro catálogo — muda o banco de dados, não a máquina.
 
 ## Qual a diferença entre pSEO e um blog comum?
 
