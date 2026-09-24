@@ -1,60 +1,60 @@
 ---
-title: "Exclusividade de cadeira: por que a ROI Labs trabalha com só uma loja por nicho em Goiânia"
-description: A ROI Labs opera com uma única cadeira por nicho, por polo — em Goiânia, uma só loja de revestimentos. É um modelo de escassez programada, inspirado no BNI, que protege o fornecedor da concorrência direta e concentra todo o esforço de aquisição em um parceiro por vez. Veja como funciona, o que é o SLA de estoque e o que acontece com os concorrentes.
+title: "Exclusividade de cadeira: por que a ROI Labs trabalha com um só fornecedor por nicho"
+description: A ROI Labs opera com uma única cadeira por nicho, por polo — um só fornecedor de cada setor em Goiânia. É um modelo de escassez programada, inspirado no BNI, que protege o fornecedor da concorrência direta e concentra todo o esforço de aquisição em um parceiro por vez. Veja como funciona, o que é o SLA de estoque e o que acontece com os concorrentes.
 eyebrow: Modelo · Exclusividade
 pubDate: 2026-07-01
 updatedDate: 2026-09-24
 author: Equipe ROI Labs
 faq:
   - q: 'O que é a exclusividade de cadeira da ROI Labs?'
-    a: 'É a regra de que a ROI Labs trabalha com apenas um fornecedor por nicho, por polo (cidade). Em Goiânia, existe uma única cadeira de revestimentos/porcelanato. Enquanto a loja ocupa essa cadeira e cumpre o SLA de estoque e despacho, nenhum concorrente do mesmo nicho entra no mesmo polo pela ROI Labs. É um modelo de escassez programada, inspirado no BNI, que dá exclusividade competitiva a quem senta primeiro.'
+    a: 'É a regra de que a ROI Labs trabalha com apenas um fornecedor por nicho, por polo (cidade). Em Goiânia, cada setor tem uma única cadeira. Enquanto o fornecedor ocupa a cadeira e cumpre o SLA de estoque e despacho, nenhum concorrente do mesmo nicho entra no mesmo polo pela ROI Labs. É um modelo de escassez programada, inspirado no BNI, que dá exclusividade competitiva a quem senta primeiro.'
   - q: 'Por que a exclusividade protege o fornecedor?'
-    a: 'Porque todo o tráfego de alta intenção que a ROI Labs constrói para aquele nicho na cidade converge para uma única loja. O concorrente direto não pode sentar na mesma cadeira, então não disputa as mesmas buscas dentro do canal da ROI Labs. Em vez de dividir a demanda orgânica local com rivais, o fornecedor a concentra — a escassez trabalha a favor de quem está dentro.'
+    a: 'Porque todo o tráfego de alta intenção que a ROI Labs constrói para aquele nicho na cidade converge para um único fornecedor. O concorrente direto não pode sentar na mesma cadeira, então não disputa as mesmas buscas dentro do canal da ROI Labs. Em vez de dividir a demanda orgânica local com rivais, o fornecedor a concentra.'
   - q: 'O que é o SLA de estoque e despacho?'
-    a: 'É o acordo de nível de serviço que a loja precisa cumprir para manter a cadeira: ter o produto em estoque e conseguir despachar dentro do prazo combinado. Como o grosso da remuneração da ROI Labs só existe quando a venda acontece, ela precisa que o cliente qualificado encontre produto disponível e atendimento rápido. Se a loja não sustenta estoque e despacho, o lead qualificado se perde e o modelo pago-pelo-sucesso não se sustenta para nenhuma das partes.'
+    a: 'É o acordo de nível de serviço que o fornecedor cumpre para manter a cadeira: ter o produto disponível e conseguir entregar dentro do prazo combinado. Como o grosso da remuneração da ROI Labs só existe quando a venda acontece, ela precisa que o cliente qualificado encontre produto e atendimento rápido. Sem estoque e despacho, o lead se perde e o modelo não se sustenta para nenhuma das partes.'
   - q: 'O que acontece com os concorrentes do mesmo nicho?'
     a: 'Eles não podem ocupar a mesma cadeira naquele polo enquanto ela estiver preenchida. Ficam de fora do canal de aquisição da ROI Labs para aquele nicho em Goiânia — não disputam as buscas de alta intenção que a ROI Labs captura para o parceiro que já está dentro. A cadeira só reabre se o fornecedor atual deixar de cumprir o SLA ou sair do modelo.'
+  - q: 'Como sei se a cadeira do meu nicho está livre?'
+    a: 'O mapa de cadeiras na página inicial da ROI Labs mostra os nichos já ocupados. Nicho que não está no mapa tem cadeira livre: a candidatura é aberta, e a cadeira só abre de fato depois que a demanda de busca e a brecha na concorrência daquele nicho são medidas.'
   - q: 'A exclusividade tem custo extra para o fornecedor?'
-    a: 'Não há custo extra além da anuidade da cadeira, de R$ 2.640/ano (R$ 220/mês), que é justamente o que reserva o nicho no polo. A ROI Labs banca a tecnologia e o tráfego, e o grosso da remuneração é uma fração variável atrelada à venda. A exclusividade não é um upgrade pago à parte; é a estrutura padrão do modelo, que alinha o interesse das duas partes.'
+    a: 'Não há custo extra além da anuidade da cadeira, de R$ 2.640/ano (R$ 220/mês), que é justamente o que reserva o nicho no polo. A ROI Labs banca a tecnologia e o tráfego, e o grosso da remuneração é uma fração variável atrelada à venda. A exclusividade não é um upgrade pago à parte; é a estrutura padrão do modelo.'
 ---
 
-A ROI Labs trabalha com uma única loja por nicho, por polo — em Goiânia, uma só cadeira de revestimentos — porque é assim que a exclusividade protege o fornecedor e concentra todo o esforço de aquisição em um parceiro por vez. É um modelo de escassez programada, inspirado no BNI: quem senta na cadeira primeiro fica imune à concorrência direta dentro do canal da ROI Labs, desde que cumpra o SLA de estoque e despacho.
+A ROI Labs trabalha com um único fornecedor por nicho, por polo — em Goiânia, uma cadeira para cada setor — porque é assim que a exclusividade protege o fornecedor e concentra todo o esforço de aquisição em um parceiro por vez. É um modelo de escassez programada, inspirado no BNI: quem senta na cadeira primeiro fica protegido da concorrência direta dentro do canal da ROI Labs, desde que cumpra o SLA de estoque e despacho.
 
 ## O que é a exclusividade de cadeira?
 
-Exclusividade de cadeira é a regra de que a ROI Labs mantém apenas um fornecedor por nicho em cada polo (cidade). Em Goiânia, o nicho de revestimentos/porcelanato tem uma única cadeira, ocupada por uma só loja. Enquanto essa loja está dentro e cumpre o combinado, a ROI Labs não abre uma segunda cadeira do mesmo nicho no mesmo polo — nem para o concorrente mais próximo.
+Exclusividade de cadeira é a regra de que a ROI Labs mantém apenas um fornecedor por nicho em cada polo (cidade). Enquanto o fornecedor de um nicho está dentro e cumpre o combinado, a ROI Labs não abre uma segunda cadeira do mesmo nicho no mesmo polo — nem para o concorrente mais próximo. As cadeiras ocupadas aparecem no [mapa de cadeiras](/#cadeiras) da página inicial.
 
-A inspiração é o modelo do BNI, o grupo de networking onde cada profissão tem um único representante por núcleo. A lógica é a mesma: a escassez é o valor. Uma cadeira que qualquer um pode ocupar não vale nada; uma cadeira que só um ocupa, e que bloqueia os rivais, vale a posição inteira do nicho na cidade.
+A inspiração é o modelo do BNI, o grupo de networking onde cada profissão tem um único representante por núcleo. A lógica é a mesma: a escassez é o valor. Uma cadeira que qualquer um pode ocupar não vale nada; uma cadeira que só um ocupa, e que deixa os rivais de fora, vale a posição inteira do nicho na cidade.
 
 ## Por que a escassez de vagas protege o fornecedor?
 
-A escassez protege o fornecedor porque faz todo o tráfego de alta intenção daquele nicho convergir para uma única loja, em vez de ser dividido entre concorrentes. A ROI Labs constrói a malha de páginas que captura as buscas de compra de revestimento em Goiânia — como as cerca de 1.900 buscas mensais por porcelanato — e esse fluxo aponta para um só parceiro.
+A escassez protege o fornecedor porque faz todo o tráfego de alta intenção daquele nicho convergir para um único parceiro, em vez de ser dividido entre concorrentes. A ROI Labs constrói a malha de páginas que captura as buscas de compra do nicho na cidade — na operação de porcelanato, por exemplo, uma demanda de cerca de 1.900 buscas mensais só pelo termo principal — e esse fluxo aponta para um só fornecedor.
 
 O efeito é um fosso competitivo. O concorrente direto não pode entrar no mesmo canal para disputar as mesmas buscas; ele fica de fora do ativo orgânico que a ROI Labs opera. Enquanto o fornecedor de dentro colhe o tráfego composto ao longo dos meses, quem ficou de fora não tem como replicar a posição pelo mesmo caminho.
 
 ## O que é o SLA de estoque e despacho?
 
-O SLA de estoque e despacho é o compromisso que a loja assume para manter a cadeira: ter o produto disponível e conseguir despachar dentro do prazo acordado. Como o grosso da remuneração da ROI Labs vem da venda concretizada, ela depende de que o cliente qualificado, ao chegar, encontre produto em estoque e atendimento ágil. Sem isso, o lead se perde e ninguém fatura.
+O SLA de estoque e despacho é o compromisso que o fornecedor assume para manter a cadeira: ter o produto disponível e conseguir entregar dentro do prazo acordado. Como o grosso da remuneração da ROI Labs vem da venda concretizada, ela depende de que o cliente qualificado, ao chegar, encontre produto e atendimento ágil. Sem isso, o lead se perde e ninguém fatura.
 
-Esse SLA é o outro lado da exclusividade. A cadeira dá ao fornecedor a proteção contra a concorrência; em troca, ele garante que a demanda entregue não bata em prateleira vazia ou em despacho lento. É um contrato de mão dupla: a ROI Labs entrega o cliente pronto para comprar, e a loja entrega a capacidade de atendê-lo.
+O SLA é o outro lado da exclusividade. A cadeira dá ao fornecedor a proteção contra a concorrência; em troca, o fornecedor garante que a demanda entregue não bata em prateleira vazia ou em entrega lenta. É um contrato de mão dupla: a ROI Labs entrega o cliente pronto para comprar, e o fornecedor entrega a capacidade de atendê-lo.
 
 ## O que acontece com os concorrentes do mesmo nicho?
 
 Os concorrentes do mesmo nicho ficam de fora do canal de aquisição da ROI Labs para aquele polo enquanto a cadeira estiver ocupada. Eles não disputam as buscas de alta intenção que a ROI Labs captura, não acessam a malha de páginas e não têm um lugar equivalente na estrutura. A cadeira só reabre se o fornecedor atual deixar de cumprir o SLA ou sair do modelo.
 
-O quadro abaixo resume quem ganha o quê nesse arranjo:
-
 | Papel | Dentro da cadeira | Fora da cadeira |
 | :-- | :-- | :-- |
 | Concorrência direta | Bloqueada no canal da ROI Labs | Sem acesso ao tráfego do nicho |
-| Tráfego de alta intenção | Todo convergido para uma loja | Precisa ser construído do zero |
+| Tráfego de alta intenção | Todo convergido para um fornecedor | Precisa ser construído do zero |
 | Custo fixo | Anuidade simbólica de R$ 2.640/ano | — |
-| Contrapartida | Cumprir SLA de estoque/despacho | — |
+| Contrapartida | Cumprir SLA de estoque e despacho | — |
 
 ## A cadeira exclusiva custa mais para o fornecedor?
 
-Não: além da anuidade simbólica da cadeira, de R$ 2.640/ano, a exclusividade não tem custo extra. A ROI Labs banca a tecnologia e o tráfego com capital próprio e o grosso da remuneração é uma fração variável atrelada à venda — se não vendeu, não há success fee. A cadeira exclusiva não é um plano premium; é a estrutura padrão que alinha o interesse das duas partes.
+Não: além da anuidade simbólica da cadeira, de R$ 2.640/ano, a exclusividade não tem custo extra. A ROI Labs banca a tecnologia e o tráfego com capital próprio, e o grosso da remuneração é uma fração variável atrelada à venda — se não vendeu, não há success fee. A cadeira exclusiva não é um plano premium; é a estrutura padrão que alinha o interesse das duas partes.
 
-Esse alinhamento é o que torna a exclusividade sustentável: a ROI Labs concentra todo o esforço em um parceiro porque só cresce se esse parceiro crescer. Para entender como esse modelo se compara a contratar agência ou montar e-commerce, veja [Growth Partner, agência ou e-commerce: o que traz venda de revestimentos](/blog/growth-partner-vs-agencia-revestimentos/). E para ver como o tráfego de alta intenção é construído na prática, leia [o que é SEO programático (pSEO) e como ele vende revestimento](/blog/o-que-e-seo-programatico-pseo-revestimentos/).
+O alinhamento é o que torna a exclusividade sustentável: a ROI Labs concentra o esforço em um parceiro por nicho porque só cresce se esse parceiro crescer. Para entender como esse modelo se compara a contratar agência ou montar e-commerce, veja [Growth Partner, agência ou e-commerce: o que traz venda para o fornecedor regional](/blog/growth-partner-vs-agencia-revestimentos/). E para ver como o tráfego de alta intenção é construído, leia [o que é SEO programático (pSEO)](/blog/o-que-e-seo-programatico-pseo-revestimentos/).
 
-A candidatura está aberta para o seu nicho. Veja [o que uma cadeira recebe na prática — o case vivo do Polo Goiânia](/polo-goiania/), entenda [como o modelo funciona da candidatura ao contrato](/modelo/), rode o [simulador de receita](/simulador/) com o seu ticket e volume para ver quanto sobra depois do success fee — e, se a conta fechar, [candidate sua empresa à cadeira](/#candidatar).
+A candidatura está aberta para o seu nicho. Veja [o que uma cadeira recebe na prática — o case vivo do Polo Goiânia](/polo-goiania/), entenda [como o modelo funciona da candidatura ao contrato](/modelo/), rode o [simulador de receita](/simulador/) com o seu ticket e volume — e, se a conta fechar, [candidate sua empresa à cadeira](/#candidatar).
