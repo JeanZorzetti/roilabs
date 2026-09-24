@@ -1,6 +1,6 @@
 ---
 title: Google Shopping para fornecedor regional — o que o Google exige de verdade
-description: Colocar produtos no Google Shopping (listagens gratuitas) exige conta no Merchant Center, domínio verificado, feed de produtos, imagem própria, política de devolução e paridade de preço entre feed e página. Este é o passo a passo real de quem montou um feed de 30 produtos para o Merchant Center, com as reprovações mais comuns e como evitá-las.
+description: Colocar produtos no Google Shopping (listagens gratuitas) exige conta no Merchant Center, domínio verificado, feed de produtos, imagem própria, política de devolução e paridade de preço entre feed e página. Este é o passo a passo que a ROI Labs segue ao montar o feed de um catálogo para o Merchant Center, com as reprovações mais comuns e como evitá-las.
 eyebrow: Google Shopping · Fornecedores
 pubDate: 2026-07-06
 updatedDate: 2026-09-24
@@ -20,7 +20,7 @@ faq:
     a: 'A primeira revisão após o processamento do feed leva de algumas horas a cerca de 3 dias úteis. O acompanhamento é feito em Produtos → Diagnóstico no Merchant Center, que mostra itens aprovados, reprovados e pendentes, com o motivo de cada reprovação.'
 ---
 
-Para colocar um fornecedor regional no Google Shopping não basta ter site: o Google exige conta no Merchant Center, domínio verificado e reivindicado, um feed de produtos estruturado, imagem hospedada no próprio domínio, política de devolução publicada e — o ponto que mais reprova item — paridade exata entre o preço do feed e o preço da página. Nas **listagens gratuitas**, tudo isso custa trabalho técnico, não mídia. Este artigo é o passo a passo real que seguimos ao montar o feed de 30 produtos da operação de porcelanato que a ROI Labs opera em Goiânia.
+Para colocar um fornecedor regional no Google Shopping não basta ter site: o Google exige conta no Merchant Center, domínio verificado e reivindicado, um feed de produtos estruturado, imagem hospedada no próprio domínio, política de devolução publicada e — o ponto que mais reprova item — paridade exata entre o preço do feed e o preço da página. Nas **listagens gratuitas**, tudo isso custa trabalho técnico, não mídia. Este artigo é o passo a passo que seguimos ao montar o feed de um catálogo.
 
 ## O que é o Google Shopping gratuito (free listings)?
 
@@ -39,7 +39,7 @@ O Google exige quatro blocos, nesta ordem:
 
 ## Como funciona o feed de produtos na prática?
 
-O feed é um RSS 2.0 no vocabulário do Google (`xmlns:g`), com um `<item>` por produto e campos como `g:title`, `g:price`, `g:image_link`, `g:availability` e `g:condition`. Na operação de porcelanato, o feed é **gerado no build do site** a partir do mesmo arquivo de dados que alimenta as páginas de produto — 30 itens hoje, e produto novo no catálogo entra no feed no deploy seguinte, sem passo manual.
+O feed é um RSS 2.0 no vocabulário do Google (`xmlns:g`), com um `<item>` por produto e campos como `g:title`, `g:price`, `g:image_link`, `g:availability` e `g:condition`. No método da ROI Labs, o feed é **gerado no build do site** a partir do mesmo arquivo de dados que alimenta as páginas de produto — produto novo no catálogo entra no feed no deploy seguinte, sem passo manual.
 
 Duas decisões técnicas evitam a maior parte das reprovações:
 
@@ -64,4 +64,4 @@ Após o primeiro processamento, o acompanhamento vive em **Produtos → Diagnós
 
 Vale, com uma ressalva honesta: o Shopping gratuito é uma **vitrine adicional**, não uma estratégia completa. Ele funciona melhor quando já existe uma base — páginas de produto reais, com preço, foto própria e informação técnica — porque é para essas páginas que o clique vai. Montar o feed sem ter páginas que convertem é inverter a ordem.
 
-Essa foi a sequência na [operação de porcelanato em Goiânia](https://goiania.roilabs.com.br/): primeiro a malha de páginas de alta intenção, depois o feed por cima do mesmo catálogo. Para o fornecedor que ocupa uma cadeira, todo esse trabalho técnico — feed, validação, Merchant Center — está incluído no [modelo Growth Partner](/modelo/), pela anuidade simbólica da cadeira (R$ 2.640/ano) e uma fração do que vendeu; a conta pode ser dimensionada no [simulador](/simulador/). Se preferir entender o custo de fazer tudo por conta própria, a comparação está em [e-commerce próprio vs entrar num polo pronto](/blog/ecommerce-proprio-vs-polo-pronto/).
+A sequência certa é essa: primeiro a malha de páginas de alta intenção, depois o feed por cima do mesmo catálogo. Para o fornecedor que ocupa uma cadeira, todo esse trabalho técnico — feed, validação, Merchant Center — está incluído no [modelo Growth Partner](/modelo/), pela anuidade simbólica da cadeira (R$ 2.640/ano) e uma fração do que vendeu; a conta pode ser dimensionada no [simulador](/simulador/). Se preferir entender o custo de fazer tudo por conta própria, a comparação está em [e-commerce próprio vs entrar num polo pronto](/blog/ecommerce-proprio-vs-polo-pronto/).

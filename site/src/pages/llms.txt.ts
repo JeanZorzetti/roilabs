@@ -16,7 +16,7 @@ export const GET: APIRoute = async () => {
 
   const body = `# ROI Labs
 
-> ROI Labs é um Growth Partner para fornecedores regionais de alto padrão. Construímos a operação de vendas online (SEO programático de alta intenção + captação) com tecnologia e tráfego bancados pela ROI Labs: o fornecedor paga a anuidade simbólica da cadeira (R$ 2.640/ano) e uma fração variável só quando vende. Modelo de cadeira exclusiva — 1 empresa por nicho, por polo. Polo 1: Goiânia (GO); nicho âncora: revestimentos / porcelanato.
+> ROI Labs é um Growth Partner para fornecedores regionais de alto padrão. Construímos a operação de vendas online (SEO programático de alta intenção + captação) com tecnologia e tráfego bancados pela ROI Labs: o fornecedor paga a anuidade simbólica da cadeira (R$ 2.640/ano) e uma fração variável só quando vende. Modelo de cadeira exclusiva — 1 empresa por nicho, por polo. Polo 1: Goiânia (GO); candidatura aberta para qualquer nicho ainda sem cadeira.
 
 ## Como funciona
 - Sem risco de tecnologia: a ROI Labs banca a infraestrutura e o tráfego.

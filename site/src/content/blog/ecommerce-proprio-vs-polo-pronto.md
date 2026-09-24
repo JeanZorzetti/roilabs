@@ -9,7 +9,7 @@ faq:
   - q: 'Quanto custa montar um e-commerce próprio?'
     a: 'Depende da ambição, mas a estrutura de custo é sempre a mesma: plataforma (mensalidade ou desenvolvimento), produção de fotos e cadastro do catálogo, integrações de frete e pagamento, e — o item mais subestimado — tráfego. Sem investir em mídia ou SEO por meses, o site pronto não recebe visita. O CAPEX vem todo antes da primeira venda.'
   - q: 'O que é um polo pronto?'
-    a: 'É uma operação de venda online com a infraestrutura já construída: templates de páginas de alta intenção, páginas de produto, ferramentas como calculadora e comparador, feed no Google Shopping e canal de pedido por WhatsApp. A ROI Labs opera a primeira em Goiânia, no nicho de porcelanato, e replica a mesma máquina para o nicho de cada fornecedor que ocupa uma cadeira.'
+    a: 'É uma operação de venda online com a infraestrutura já construída: templates de páginas de alta intenção, páginas de produto, ferramentas como calculadora e comparador, feed no Google Shopping e canal de pedido por WhatsApp. A ROI Labs replica a mesma máquina para o nicho de cada fornecedor que ocupa uma cadeira.'
   - q: 'Como funciona a cobrança no polo?'
     a: 'São duas partes. A anuidade da cadeira, de R$ 2.640/ano (R$ 220/mês), e o success fee: a base é a soma dos pedidos elegíveis do mês, e a fatura é essa base vezes o percentual negociado em contrato. Vendeu R$ 20.000 num mês com fee de 10%, o success fee é R$ 2.000. Não vendeu nada, o success fee é zero — fica só a anuidade.'
   - q: 'Qual o percentual do success fee?'
@@ -35,7 +35,7 @@ Depois do lançamento o CAPEX vira OPEX: mensalidades, mídia contínua, atualiz
 
 ## O que muda num polo pronto?
 
-No polo, a infraestrutura de captação já existe: templates de páginas de alta intenção, páginas de produto, [ferramentas como calculadora e comparador](https://goiania.roilabs.com.br/), feed no Google Shopping e canal de pedido. A ROI Labs a construiu e opera no nicho de porcelanato em Goiânia, e a replica para o nicho de cada fornecedor que ocupa uma cadeira. O fornecedor entra com o que só ele tem — produto, estoque, preço competitivo e atendimento — e a ROI Labs entra com o resto.
+No polo, a infraestrutura de captação já existe: templates de páginas de alta intenção, páginas de produto, ferramentas como calculadora e comparador, feed no Google Shopping e canal de pedido. A ROI Labs replica essa infraestrutura para o nicho de cada fornecedor que ocupa uma cadeira. O fornecedor entra com o que só ele tem — produto, estoque, preço competitivo e atendimento — e a ROI Labs entra com o resto.
 
 A contrapartida é o modelo de remuneração. Em vez de mensalidade de plataforma, uma anuidade simbólica da cadeira (R$ 2.640/ano) e um **success fee**: a mesma fórmula que a ROI Labs usa para faturar parceiros ativos, e que o [simulador](/simulador/) do site replica publicamente.
 

@@ -22,7 +22,7 @@ Aparecer no Google em Goiânia custa de duas formas: pagando por clique no tráf
 
 ## Quanto custa aparecer no Google em Goiânia?
 
-O custo de aparecer no Google depende do canal: no tráfego pago você paga por clique de forma recorrente; no orgânico, paga pela produção das páginas e recebe o tráfego sem cobrança por clique. No Google Ads, termos comerciais com o nome da cidade costumam ter custo por clique alto — na operação de porcelanato, "porcelanato Goiânia" é um exemplo medido de CPC elevado — e cada visita é cobrada, compre ela ou não.
+O custo de aparecer no Google depende do canal: no tráfego pago você paga por clique de forma recorrente; no orgânico, paga pela produção das páginas e recebe o tráfego sem cobrança por clique. No Google Ads, termos comerciais com o nome da cidade costumam ter custo por clique alto — "porcelanato Goiânia" é um exemplo medido de CPC elevado — e cada visita é cobrada, compre ela ou não.
 
 No orgânico, o investimento está em construir a malha de páginas que responde às buscas dos clientes. Depois de indexadas, as páginas trazem visitantes sem cobrança por clique. O custo migra de "aluguel mensal de tráfego" para "construção de um ativo que se paga ao longo do tempo".
 
@@ -30,7 +30,7 @@ No orgânico, o investimento está em construir a malha de páginas que responde
 
 Para um fornecedor regional, o tráfego orgânico tende a valer mais no médio prazo porque cada página ranqueada é um ativo que continua trabalhando, enquanto o tráfego pago é um custo que evapora ao ser interrompido. Produto de ticket alto e decisão longa gera várias pesquisas antes da compra — pagar por clique em todas as etapas dessa jornada corrói a margem.
 
-A busca local concentra demanda real e mensurável. No primeiro nicho que a ROI Labs operou em Goiânia, a pesquisa por "porcelanato" soma cerca de 1.900 buscas mensais só na cidade, ramificada em dezenas de variações por tipo e aplicação. Capturar essa malha de buscas de forma orgânica é construir um canal que continua entregando clientes mês após mês, sem renovar verba — e a mesma medição vale para qualquer nicho antes de a cadeira abrir.
+A busca local concentra demanda real e mensurável. Em Goiânia, só a pesquisa por "porcelanato" soma cerca de 1.900 buscas mensais só na cidade, ramificada em dezenas de variações por tipo e aplicação. Capturar essa malha de buscas de forma orgânica é construir um canal que continua entregando clientes mês após mês, sem renovar verba — e a mesma medição vale para qualquer nicho antes de a cadeira abrir.
 
 ## Quanto tempo o SEO leva para trazer venda?
 

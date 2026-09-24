@@ -68,4 +68,4 @@ Os valores de agência são ilustrativos, não uma pesquisa de preço: troque-os
 
 A escolha depende do apetite a risco: se você tem produto e logística fortes, mas presença online fraca, o Growth Partner é o caminho de menor risco porque alinha custo ao resultado. Agência faz sentido quando há caixa para sustentar mídia paga e desejo de controle total da operação. E-commerce próprio só se justifica quando vender online é o núcleo do negócio, não um canal complementar — a conta completa está em [e-commerce próprio vs entrar num polo pronto](/blog/ecommerce-proprio-vs-polo-pronto/).
 
-Para ver a máquina funcionando antes de decidir, a [operação de porcelanato em Goiânia](https://goiania.roilabs.com.br/) está no ar. E se a cadeira do seu nicho estiver livre, [candidate sua empresa](/#candidatar).
+Se a cadeira do seu nicho estiver livre, [candidate sua empresa](/#candidatar).

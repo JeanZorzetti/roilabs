@@ -30,7 +30,7 @@ A inspiração é o modelo do BNI, o grupo de networking onde cada profissão te
 
 ## Por que a escassez de vagas protege o fornecedor?
 
-A escassez protege o fornecedor porque faz todo o tráfego de alta intenção daquele nicho convergir para um único parceiro, em vez de ser dividido entre concorrentes. A ROI Labs constrói a malha de páginas que captura as buscas de compra do nicho na cidade — na operação de porcelanato, por exemplo, uma demanda de cerca de 1.900 buscas mensais só pelo termo principal — e esse fluxo aponta para um só fornecedor.
+A escassez protege o fornecedor porque faz todo o tráfego de alta intenção daquele nicho convergir para um único parceiro, em vez de ser dividido entre concorrentes. A ROI Labs constrói a malha de páginas que captura as buscas de compra do nicho na cidade — no porcelanato em Goiânia, por exemplo, são cerca de 1.900 buscas mensais só pelo termo principal — e esse fluxo aponta para um só fornecedor.
 
 O efeito é um fosso competitivo. O concorrente direto não pode entrar no mesmo canal para disputar as mesmas buscas; ele fica de fora do ativo orgânico que a ROI Labs opera. Enquanto o fornecedor de dentro colhe o tráfego composto ao longo dos meses, quem ficou de fora não tem como replicar a posição pelo mesmo caminho.
 
@@ -57,4 +57,4 @@ Não: além da anuidade simbólica da cadeira, de R$ 2.640/ano, a exclusividade 
 
 O alinhamento é o que torna a exclusividade sustentável: a ROI Labs concentra o esforço em um parceiro por nicho porque só cresce se esse parceiro crescer. Para entender como esse modelo se compara a contratar agência ou montar e-commerce, veja [Growth Partner, agência ou e-commerce: o que traz venda para o fornecedor regional](/blog/growth-partner-vs-agencia-revestimentos/). E para ver como o tráfego de alta intenção é construído, leia [o que é SEO programático (pSEO)](/blog/o-que-e-seo-programatico-pseo-revestimentos/).
 
-A candidatura está aberta para o seu nicho. Veja [a operação de porcelanato no ar](https://goiania.roilabs.com.br/), entenda [como o modelo funciona da candidatura ao contrato](/modelo/), rode o [simulador de receita](/simulador/) com o seu ticket e volume — e, se a conta fechar, [candidate sua empresa à cadeira](/#candidatar).
+A candidatura está aberta para o seu nicho. Entenda [como o modelo funciona da candidatura ao contrato](/modelo/), rode o [simulador de receita](/simulador/) com o seu ticket e volume — e, se a conta fechar, [candidate sua empresa à cadeira](/#candidatar).

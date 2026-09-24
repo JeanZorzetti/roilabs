@@ -1,6 +1,6 @@
 ---
 title: "O que é SEO programático (pSEO) e como ele vende para o fornecedor regional"
-description: SEO programático (pSEO) gera de forma automatizada centenas de páginas de cauda longa cruzando produto, característica, ocasião e localização — cada combinação com busca real vira uma página que responde à pesquisa exata do comprador. Veja como o método transforma o catálogo de um fornecedor regional em captação, com o caso do porcelanato em Goiânia.
+description: SEO programático (pSEO) gera de forma automatizada centenas de páginas de cauda longa cruzando produto, característica, ocasião e localização — cada combinação com busca real vira uma página que responde à pesquisa exata do comprador. Veja como o método transforma o catálogo de um fornecedor regional em captação, com um exemplo medido do porcelanato em Goiânia.
 eyebrow: Método · Busca local
 pubDate: 2026-07-01
 updatedDate: 2026-09-24
@@ -11,7 +11,7 @@ faq:
   - q: 'Qual a diferença entre pSEO e escrever artigos de blog?'
     a: 'O blog cobre temas informacionais um a um, com esforço manual por peça. O pSEO cobre a malha inteira de buscas de compra do catálogo de uma vez, com páginas geradas por template. O blog atrai quem pesquisa; o pSEO captura quem já quer comprar e digita a busca específica. Os dois se complementam: o blog constrói autoridade, o pSEO converte a cauda longa.'
   - q: 'Quantas páginas o pSEO gera para um fornecedor regional?'
-    a: 'Depende do catálogo e da demanda medida, mas costuma ir de dezenas a centenas. Cada tipo de produto multiplica por atributo, aplicação e bairro. No caso do porcelanato em Goiânia, a busca pelo termo soma cerca de 1.900 pesquisas mensais na cidade, ramificada em dezenas de variações — e a operação no ar passa de 80 páginas.'
+    a: 'Depende do catálogo e da demanda medida, mas costuma ir de dezenas a centenas. Cada tipo de produto multiplica por atributo, aplicação e bairro. No caso do porcelanato em Goiânia, a busca pelo termo soma cerca de 1.900 pesquisas mensais na cidade, ramificada em dezenas de variações, cada uma candidata a página própria.'
   - q: 'Páginas geradas por template não são consideradas spam pelo Google?'
     a: 'Não, desde que cada página responda a uma busca real com conteúdo útil e distinto. O Google penaliza páginas vazias ou duplicadas geradas em massa sem valor. O pSEO bem feito só publica combinações com demanda medida, cada uma com dados próprios de produto, aplicação e contexto local — é escala com substância, não texto repetido.'
   - q: 'Quanto tempo o pSEO leva para trazer venda?'
@@ -32,11 +32,11 @@ O pSEO gera páginas cruzando quatro variáveis e publicando toda combinação c
 
 Cada célula desse cruzamento vira uma URL própria, com título, descrição e conteúdo que respondem exatamente àquela busca e levam ao WhatsApp ou à loja. O comprador que digita a busca específica encontra a página específica — e chega já qualificado, no momento da decisão. É a mecânica descrita em [como vender pela internet em Goiânia sem montar um e-commerce](/blog/vender-porcelanato-internet-goiania/), aplicada em escala.
 
-## Como ficou na prática: o caso do porcelanato
+## Como fica na prática: um exemplo com porcelanato
 
-O primeiro nicho que a ROI Labs operou em Goiânia foi o porcelanato, e ele mostra o método de ponta a ponta. O tipo de produto (porcelanato, porcelanato esmaltado) cruzou com característica (60x60, 80x80, acetinado, antiderrapante), ocasião (área externa, piscina, cozinha, fachada) e localização (Goiânia e bairros). A demanda de partida era medida: cerca de 1.900 buscas por mês pelo termo "porcelanato" só na cidade.
+Um catálogo de porcelanato em Goiânia mostra o método de ponta a ponta. O tipo de produto (porcelanato, porcelanato esmaltado) cruza com característica (60x60, 80x80, acetinado, antiderrapante), ocasião (área externa, piscina, cozinha, fachada) e localização (Goiânia e bairros). A demanda de partida é medida: cerca de 1.900 buscas por mês pelo termo "porcelanato" só na cidade.
 
-O resultado está no ar e pode ser inspecionado: mais de 80 páginas de alta intenção, catálogo de 30 produtos, calculadora e comparador, todos [no ar para inspeção](https://goiania.roilabs.com.br/). O mesmo template serve para outro catálogo — muda o banco de dados, não a máquina.
+Cada combinação com volume vira uma página, e ferramentas como calculadora de quantidade e comparador de produtos completam a jornada de compra. O mesmo template serve para outro catálogo — muda o banco de dados, não a máquina.
 
 ## Qual a diferença entre pSEO e um blog comum?
 

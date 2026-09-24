@@ -60,7 +60,7 @@ O problema do canal próprio nunca foi o mérito — é o custo de construir a c
 
 ## Qual é a terceira via entre marketplace e loja própria?
 
-O polo da ROI Labs inverte as duas trocas ruins do marketplace: **a captação é construída pela ROI Labs** (malha de páginas de alta intenção, páginas de produto, ferramentas como calculadora e comparador, feed no Google Shopping) e **o cliente continua sendo seu** — o pedido cai no seu WhatsApp ou balcão, com o seu atendimento. A máquina já roda no ar na [operação de porcelanato em Goiânia](https://goiania.roilabs.com.br/). A remuneração é a anuidade simbólica da cadeira (R$ 2.640/ano) e um success fee sobre o que vendeu: sem CAPEX, e sem success fee em mês sem venda. Rode a sua conta no [simulador](/simulador/).
+O polo da ROI Labs inverte as duas trocas ruins do marketplace: **a captação é construída pela ROI Labs** (malha de páginas de alta intenção, páginas de produto, ferramentas como calculadora e comparador, feed no Google Shopping) e **o cliente continua sendo seu** — o pedido cai no seu WhatsApp ou balcão, com o seu atendimento. A remuneração é a anuidade simbólica da cadeira (R$ 2.640/ano) e um success fee sobre o que vendeu: sem CAPEX, e sem success fee em mês sem venda. Rode a sua conta no [simulador](/simulador/).
 
 O modelo inteiro — exclusividade de cadeira por nicho, o que a ROI Labs assume e o que fica com o fornecedor — está na página do [modelo Growth Partner](/modelo/). Se a conta fechou, o passo seguinte é [candidatar sua empresa à cadeira do seu nicho](/#candidatar).
 

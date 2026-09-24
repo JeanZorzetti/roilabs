@@ -1,6 +1,6 @@
 ---
 title: Como vender pela internet em Goiânia sem montar um e-commerce
-description: Um fornecedor regional em Goiânia pode vender pela internet sem e-commerce — capturando a busca local de alta intenção do seu nicho com páginas que respondem à pesquisa exata do comprador e o levam ao seu WhatsApp ou balcão. Veja como funciona, com o caso real do porcelanato (1.900 buscas por mês).
+description: Um fornecedor regional em Goiânia pode vender pela internet sem e-commerce — capturando a busca local de alta intenção do seu nicho com páginas que respondem à pesquisa exata do comprador e o levam ao seu WhatsApp ou balcão. Veja como funciona, com um exemplo medido (1.900 buscas por mês por porcelanato).
 eyebrow: Vender online · Fornecedores
 pubDate: 2026-06-29
 updatedDate: 2026-09-24
@@ -38,11 +38,11 @@ Busca de alta intenção é a pesquisa feita por alguém perto da decisão de co
 
 A fórmula que gera essas páginas combina quatro variáveis: **produto × característica × ocasião × localização**. Serve para qualquer catálogo: tipo de produto, atributo técnico (material, tamanho, acabamento), aplicação ou uso, e bairro ou cidade. Cada combinação com volume de busca real vira uma página dedicada. O método completo está em [o que é SEO programático (pSEO)](/blog/o-que-e-seo-programatico-pseo-revestimentos/).
 
-## Quanta demanda existe? O caso do porcelanato em Goiânia
+## Quanta demanda existe? Um exemplo medido em Goiânia
 
-A demanda local é mensurável antes de qualquer investimento, e o primeiro nicho que a ROI Labs operou em Goiânia mostra a escala. A busca por "porcelanato" soma cerca de 1.900 pesquisas por mês só na cidade, ramificada em dezenas de variações por tamanho, acabamento e aplicação. O termo "porcelanato Goiânia" tem cerca de 140 buscas mensais com custo por clique alto no tráfego pago — sinal de intenção comercial forte.
+A demanda local é mensurável antes de qualquer investimento, e o porcelanato mostra a escala. A busca por "porcelanato" soma cerca de 1.900 pesquisas por mês só na cidade, ramificada em dezenas de variações por tamanho, acabamento e aplicação. O termo "porcelanato Goiânia" tem cerca de 140 buscas mensais com custo por clique alto no tráfego pago — sinal de intenção comercial forte.
 
-O mesmo mapeamento vale para qualquer nicho. O volume é medido no planejador de palavras-chave antes de abrir a operação; é o primeiro filtro de validação. Só se constrói a página onde há gente buscando — e a operação de porcelanato construída a partir desse mapa está [no ar e aberta para inspeção](https://goiania.roilabs.com.br/).
+O mesmo mapeamento vale para qualquer nicho. O volume é medido no planejador de palavras-chave antes de abrir a operação; é o primeiro filtro de validação. Só se constrói a página onde há gente buscando.
 
 ## Como capturar essa demanda sem bancar a tecnologia?
 
