@@ -12,7 +12,7 @@ const apply = 'mailto:parceria@roilabs.com.br?subject=Candidatura%20%C3%A0%20cad
 // Canal direto B2B (Gate 3): fornecedor high-ticket quer conversa, não formulário.
 const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
 const whatsHref = `https://wa.me/${whatsapp}?text=${encodeURIComponent(
-  'Quero saber mais sobre a cadeira de revestimentos em Goiânia'
+  'Quero saber se a cadeira do meu nicho está livre'
 )}`;
 
 // Candidaturas vão para o app admin (app.roilabs.com.br), que grava no DB.
@@ -31,7 +31,7 @@ const CANDIDATURAS_ENDPOINT = 'https://app.roilabs.com.br/api/candidaturas';
 // `open` — nunca só `open`. Cadeira ocupada NÃO é oferecida.
 const seats: { niche: string; status: string; open: boolean; estado: string; href?: string }[] = [
   { niche: 'Fitas adesivas', status: 'Ocupada · Tapepro', open: false, estado: 'ocupada-vendavel', href: 'https://tapepro.roilabs.com.br/' },
-  { niche: 'Ortodontia / Alinhadores', status: 'Ocupada · Use Aligner', open: false, estado: 'ocupada-vendavel', href: 'https://atma.roilabs.com.br/' },
+  { niche: 'Ortodontia / Alinhadores', status: 'Ocupada · Use Aligner', open: false, estado: 'ocupada-vendavel', href: 'https://usealigner.com/' },
 ];
 const ocupada = (s: { estado: string }) => s.estado.startsWith('ocupada');
 const aceitaCandidatura = (s: { estado: string; open: boolean }) => s.estado === 'vaga' && s.open;
@@ -92,10 +92,10 @@ const jsonLdNodes = [
           </div>
         </div>
 
-        <aside class="chair" aria-label="Status da cadeira de Goiânia">
+        <aside class="chair" aria-label="A próxima cadeira em Goiânia">
           <div class="chair__top">
             <span class="chair__label">Cadeira</span>
-            <span class="chair__num">Nº 01</span>
+            <span class="chair__num">A próxima</span>
           </div>
           <div class="chair__row">
             <span class="chair__k">Polo</span>
@@ -103,7 +103,7 @@ const jsonLdNodes = [
           </div>
           <div class="chair__row">
             <span class="chair__k">Nicho</span>
-            <span class="chair__v">Revestimentos&nbsp;/&nbsp;Porcelanato</span>
+            <span class="chair__v">O seu</span>
           </div>
           <div class="chair__row">
             <span class="chair__k">Status</span>
@@ -224,7 +224,7 @@ const jsonLdNodes = [
           ))}
         </ul>
         <p class="map__caption">
-          // polo 01 de N · cadeira escura = ocupada · novos nichos abrem após a primeira cadeira faturar
+          // polo 01 de N · cadeira escura = ocupada · nicho fora do mapa = cadeira livre
         </p>
       </div>
     </section>
@@ -293,8 +293,9 @@ const jsonLdNodes = [
           <span class="eyebrow">Leitura de mercado · Goiânia</span>
           <h2 id="mercado-title">A demanda já existe. Falta quem a capture.</h2>
           <p class="section__lead">
-            Não é aposta. O volume de busca local foi medido antes de abrir a
-            cadeira — e a concorrência orgânica é fraca.
+            Não é aposta. No polo 1, a busca por porcelanato foi medida antes de
+            construir a operação — e a concorrência orgânica era fraca. É o mesmo
+            teste que o seu nicho passa antes de a cadeira abrir.
           </p>
         </div>
 
@@ -342,30 +343,30 @@ const jsonLdNodes = [
       <div class="wrap">
         <div class="section__head">
           <span class="eyebrow">A cadeira é sua se…</span>
-          <h2 id="icp-title">Dois gates já bateram. Falta o terceiro: você.</h2>
+          <h2 id="icp-title">Três gates. Dois medimos nós. O terceiro é você.</h2>
           <p class="section__lead">
-            Não abrimos uma cadeira no escuro. A de revestimentos de Goiânia só
-            existe porque passou na validação — e a última peça que falta é o
-            fornecedor certo.
+            Não abrimos uma cadeira no escuro. Antes de o seu nicho ganhar
+            cadeira, medimos a demanda e a brecha na busca — foi assim com o
+            porcelanato em Goiânia. A peça que falta é o fornecedor certo.
           </p>
         </div>
 
         <div class="gate-list" role="list" aria-label="Os três gates da cadeira">
-          <div class="gate gate--done" role="listitem">
-            <span class="gate__check" aria-hidden="true">✓</span>
+          <div class="gate gate--open" role="listitem">
+            <span class="gate__check" aria-hidden="true"></span>
             <div class="gate__body">
               <div class="gate__name">Gate 01 — Demanda comprovada</div>
-              <div class="gate__desc">1.900 buscas/mês por "porcelanato" só em Goiânia.</div>
+              <div class="gate__desc">Volume de busca local do seu nicho, medido. No polo 1: 1.900 buscas/mês por "porcelanato" só em Goiânia.</div>
             </div>
-            <span class="gate__state">Validado</span>
+            <span class="gate__state">Nós medimos</span>
           </div>
-          <div class="gate gate--done" role="listitem">
-            <span class="gate__check" aria-hidden="true">✓</span>
+          <div class="gate gate--open" role="listitem">
+            <span class="gate__check" aria-hidden="true"></span>
             <div class="gate__body">
               <div class="gate__name">Gate 02 — Brecha na busca</div>
               <div class="gate__desc">SERP local fraca: só marketplace genérico ranqueia. Espaço pra dominar.</div>
             </div>
-            <span class="gate__state">Validado</span>
+            <span class="gate__state">Nós medimos</span>
           </div>
           <div class="gate gate--open" role="listitem">
             <span class="gate__check" aria-hidden="true"></span>
@@ -373,14 +374,14 @@ const jsonLdNodes = [
               <div class="gate__name">Gate 03 — Fornecedor A-Player</div>
               <div class="gate__desc">O produto e a logística que a demanda exige. Esse é você.</div>
             </div>
-            <span class="gate__state">Aberto</span>
+            <span class="gate__state">Você</span>
           </div>
         </div>
 
         <div class="fit">
           <div class="fit__col fit__col--yes">
             <div class="fit__title">É pra você se</div>
-            <p class="fit__item"><span class="fit__mark" aria-hidden="true">✓</span> Tem catálogo próprio e amplo de revestimentos / porcelanato.</p>
+            <p class="fit__item"><span class="fit__mark" aria-hidden="true">✓</span> Tem catálogo próprio e amplo no seu nicho.</p>
             <p class="fit__item"><span class="fit__mark" aria-hidden="true">✓</span> Aguenta estoque e despacho rápido — pronta-entrega de verdade.</p>
             <p class="fit__item"><span class="fit__mark" aria-hidden="true">✓</span> Produto forte, presença online fraca, e quer escalar.</p>
             <p class="fit__item"><span class="fit__mark" aria-hidden="true">✓</span> Topa exclusividade de cadeira atrelada a SLA.</p>
@@ -469,9 +470,9 @@ const jsonLdNodes = [
       <div class="wrap close__inner">
         <div>
           <span class="eyebrow close__eyebrow">Candidate-se</span>
-          <h2 id="close-title">A cadeira de revestimentos de Goiânia está em curadoria.</h2>
+          <h2 id="close-title">A próxima cadeira pode ser a do seu nicho.</h2>
           <p class="close__copy">
-            Uma empresa vai sentar nela e dominar a busca local de porcelanato.
+            Uma empresa por nicho senta nela e domina a busca local do setor.
             Anuidade simbólica, sem risco de tecnologia. Candidate-se antes do seu
             concorrente.
           </p>
@@ -515,12 +516,9 @@ const jsonLdNodes = [
               </div>
             </div>
 
-            <div class="field">
-              <label for="f-cat">Categoria / nicho</label>
-              <select id="f-cat" name="categoria">
-                <option>Revestimentos / Porcelanato</option>
-                <option>Outro</option>
-              </select>
+            <div class="field field--req">
+              <label for="f-cat">Seu nicho</label>
+              <input id="f-cat" name="categoria" type="text" required maxlength="120" placeholder="ex.: móveis planejados" />
             </div>
 
             <div class="field">

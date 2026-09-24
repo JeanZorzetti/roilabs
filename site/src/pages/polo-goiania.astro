@@ -62,9 +62,9 @@ const jsonLdNodes = [
     '@type': 'WebPage',
     '@id': 'https://roilabs.com.br/polo-goiania/#webpage',
     url: 'https://roilabs.com.br/polo-goiania/',
-    // ⚠️ 07/08: "cadeira ocupada" saiu de toda esta página. No banco a cadeira de porcelanato
-    // é `estado: vaga, open: true` — é a ÚNICA em curadoria aberta, e o mapa da home diz isso.
-    // As duas páginas são públicas: enquanto esta afirmava "ocupada", elas se contradiziam.
+    // ⚠️ 24/09: a cadeira de porcelanato saiu do mapa (decisão do Jean). A operação segue no
+    // ar como CASE — nenhuma frase desta página pode dizer que ela está em curadoria, senão a
+    // home (que não a lista mais) e esta página voltam a se contradizer, como em 07/08.
     name: 'Polo Goiânia — porcelanato: o que a cadeira recebe',
     isPartOf: { '@id': 'https://roilabs.com.br/#website' },
     about: { '@id': 'https://roilabs.com.br/#service' },
@@ -98,8 +98,7 @@ const jsonLdNodes = [
           <h1 id="polo-title">Polo Goiânia — porcelanato: o que a cadeira recebe.</h1>
           <p class="section__lead">
             A operação de porcelanato de Goiânia já está no ar em
-            <a href={POLO + '/'} target="_blank" rel="noopener" style="color:inherit">goiania.roilabs.com.br</a>
-            — e a cadeira dela segue em <strong>curadoria aberta</strong>.
+            <a href={POLO + '/'} target="_blank" rel="noopener" style="color:inherit">goiania.roilabs.com.br</a>.
             Esta página lista <strong>o que existe de verdade no build de jul/2026</strong>
             — páginas, catálogo, ferramentas — sem métrica inventada de venda ou
             tráfego. É a infraestrutura que a ROI Labs banca e que o próximo
@@ -160,9 +159,8 @@ const jsonLdNodes = [
           <span class="eyebrow">A próxima cadeira</span>
           <h2 id="proximo-title">Isso, no seu nicho: R$ 2.640/ano + success fee.</h2>
           <p class="section__lead">
-            A máquina de porcelanato já está construída e no ar — e a cadeira dela
-            é a única de Goiânia em curadoria aberta hoje.
-            Entenda <a href="/modelo/" style="color:inherit">o modelo em profundidade</a>
+            A máquina de porcelanato já está construída e no ar. A próxima é a do
+            seu nicho. Entenda <a href="/modelo/" style="color:inherit">o modelo em profundidade</a>
             ou faça a conta com os seus números.
           </p>
         </div>

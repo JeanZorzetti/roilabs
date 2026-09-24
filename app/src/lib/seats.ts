@@ -58,7 +58,7 @@ export const PROJETOS_CADEIRA = [
   // `vertice` — e classificá-la como parceiro externo a colocava na régua do success fee,
   // fazendo a ROI Labs cobrar fee de si mesma e INFLAR a receita da carteira (FR-010).
   // Vale a regra fail-closed do bloco acima: na dúvida, `true`.
-  { slug: 'atma', niche: 'Ortodontia / Alinhadores', status: 'Ocupada · Use Aligner', estado: 'ocupada-vendavel', gateway: 'mercadopago', daCasa: true, exibirDaCasa: false, siteUrl: 'https://atma.roilabs.com.br/', repoUrl: 'https://github.com/JeanZorzetti/Atma' },
+  { slug: 'atma', niche: 'Ortodontia / Alinhadores', status: 'Ocupada · Use Aligner', estado: 'ocupada-vendavel', gateway: 'mercadopago', daCasa: true, exibirDaCasa: false, siteUrl: 'https://usealigner.com/', repoUrl: 'https://github.com/JeanZorzetti/Atma' },
   // ⚠️ `niche` aqui é RÓTULO DE EXIBIÇÃO, não chave (o seed casa por `siteUrl`). Cada um
   // saiu do que o próprio site diz de si, lido no ar em 07/08 — 5 dos 8 descreviam produto
   // que não existe mais (o `polarisia` não tinha uma palavra sobre imóvel na página inteira).
