@@ -1,8 +1,9 @@
 ---
 title: 'E-commerce próprio vs entrar num polo pronto: a conta real'
-description: Montar um e-commerce próprio de material de construção envolve CAPEX de plataforma, fotos, integrações e tráfego antes da primeira venda. Entrar num polo pronto inverte a conta — custo fixo zero e um success fee sobre o que vendeu. Este artigo abre as duas contas, com a fórmula exata do success fee.
+description: Montar um e-commerce próprio de material de construção envolve CAPEX de plataforma, fotos, integrações e tráfego antes da primeira venda. Entrar num polo pronto inverte a conta — anuidade simbólica de R$ 2.640/ano e um success fee sobre o que vendeu. Este artigo abre as duas contas, com a fórmula exata do success fee.
 eyebrow: Modelo de negócio · Fornecedores
 pubDate: 2026-07-06
+updatedDate: 2026-09-24
 author: Equipe ROI Labs
 faq:
   - q: 'Quanto custa montar um e-commerce próprio de material de construção?'
@@ -10,16 +11,16 @@ faq:
   - q: 'O que é um polo pronto?'
     a: 'É uma operação de venda online já construída para um nicho — no caso da ROI Labs, o polo de revestimentos de Goiânia: malha de páginas de alta intenção no Google, catálogo com páginas de produto, calculadora, comparador, feed no Google Shopping e canal de pedido por WhatsApp. O fornecedor entra com produto e atendimento; a captação já existe.'
   - q: 'Como funciona o success fee do polo?'
-    a: 'A fórmula é uma multiplicação simples: a base é a soma dos pedidos elegíveis do mês, e a fatura é essa base vezes o percentual negociado em contrato. Vendeu R$ 20.000 num mês com fee de 10%, a fatura é R$ 2.000 e ficam R$ 18.000 com você. Não vendeu nada, a fatura é zero — não existe mensalidade.'
+    a: 'A fórmula é uma multiplicação simples: a base é a soma dos pedidos elegíveis do mês, e a fatura é essa base vezes o percentual negociado em contrato. Vendeu R$ 20.000 num mês com fee de 10%, a fatura é R$ 2.000 e ficam R$ 18.000 com você. Não vendeu nada, o success fee é zero — fica só a anuidade da cadeira, de R$ 2.640/ano (R$ 220/mês).'
   - q: 'Qual o percentual do success fee?'
     a: 'É definido em contrato, conforme nicho, estoque e SLA de despacho. O simulador público da ROI Labs permite testar qualquer percentual sobre o seu ticket médio e volume de pedidos antes de qualquer conversa comercial.'
   - q: 'Se eu já tenho um e-commerce, o polo ainda faz sentido?'
     a: 'Pode fazer, porque os dois não competem: o polo captura a busca local de alta intenção e entrega o pedido ao seu atendimento, enquanto o e-commerce atende quem já conhece sua marca. O ponto de atenção é operacional — preço e estoque precisam estar coerentes entre os canais.'
   - q: 'Qual o risco de cada caminho?'
-    a: 'No e-commerce próprio, o risco é financeiro e antecipado: você paga tudo antes de saber se vende. No polo, o risco financeiro é da operação do polo (que só fatura se você vender) e o seu risco é de dependência do canal — mitigado pelo fato de o cliente fechar no SEU WhatsApp ou balcão, ou seja, o relacionamento fica com você.'
+    a: 'No e-commerce próprio, o risco é financeiro e antecipado: você paga tudo antes de saber se vende. No polo, o risco financeiro fica quase todo com a operação do polo (o success fee só existe se você vender; o seu custo fixo é a anuidade simbólica de R$ 2.640/ano) e o seu risco é de dependência do canal — mitigado pelo fato de o cliente fechar no SEU WhatsApp ou balcão, ou seja, o relacionamento fica com você.'
 ---
 
-A diferença entre montar um e-commerce próprio e entrar num polo pronto não é de grau, é de estrutura de risco: no e-commerce próprio, todo o custo (plataforma, catálogo, integrações, tráfego) vem **antes** da primeira venda; no polo pronto, o custo fixo é zero e a operação é remunerada por um **success fee** — uma fração da venda, cobrada só quando ela acontece. A fórmula é pública e simples: `fatura = vendas do mês × percentual negociado`. Este artigo abre as duas contas.
+A diferença entre montar um e-commerce próprio e entrar num polo pronto não é de grau, é de estrutura de risco: no e-commerce próprio, todo o custo (plataforma, catálogo, integrações, tráfego) vem **antes** da primeira venda; no polo pronto, o custo fixo se resume a uma anuidade simbólica da cadeira (R$ 2.640/ano) e a operação é remunerada por um **success fee** — uma fração da venda, cobrada só quando ela acontece. A fórmula é pública e simples: `fatura = vendas do mês × percentual negociado`. Este artigo abre as duas contas.
 
 ## O que entra no CAPEX de um e-commerce próprio?
 
@@ -36,23 +37,24 @@ E depois do lançamento o CAPEX vira OPEX: mensalidades, mídia contínua, atual
 
 No polo, a infraestrutura de captação já existe e é compartilhada: malha de páginas de alta intenção no Google, páginas de produto, [calculadora e comparador](/polo-goiania/), feed no Google Shopping, canal de pedido. O fornecedor entra com o que só ele tem — produto, estoque, preço competitivo e atendimento — e a operação do polo entra com todo o resto.
 
-A contrapartida é o modelo de remuneração. Em vez de mensalidade, um **success fee**: a mesma fórmula que usamos para faturar parceiros ativos, e que o [simulador](/simulador/) do site replica publicamente.
+A contrapartida é o modelo de remuneração. Em vez de mensalidade de plataforma, uma anuidade simbólica da cadeira (R$ 2.640/ano) e um **success fee**: a mesma fórmula que usamos para faturar parceiros ativos, e que o [simulador](/simulador/) do site replica publicamente.
 
 ## A conta, lado a lado
 
-A fórmula do success fee tem duas linhas:
+A conta tem três linhas:
 
 - **receita do mês** = ticket médio × pedidos
-- **fatura do polo** = receita × percentual negociado (o que fica com você é o resto)
+- **success fee** = receita × percentual negociado
+- **anuidade da cadeira** = R$ 2.640/ano, ou R$ 220/mês (o que fica com você é o resto)
 
-Um exemplo hipotético para dar escala — ticket de R$ 450, 40 pedidos/mês, fee de 10%: receita de R$ 18.000, fatura de R$ 1.800, **R$ 16.200 ficam com o fornecedor**. Zero pedidos no mês = fatura zero. Você pode rodar a sua própria conta, com qualquer percentual, no [simulador](/simulador/).
+Um exemplo hipotético para dar escala — ticket de R$ 450, 40 pedidos/mês, fee de 10%: receita de R$ 18.000, success fee de R$ 1.800 e R$ 220 de anuidade mensalizada: **R$ 15.980 ficam com o fornecedor**. Zero pedidos no mês = success fee zero; fica só a anuidade. Você pode rodar a sua própria conta, com qualquer percentual, no [simulador](/simulador/).
 
 | | E-commerce próprio | Polo pronto (success fee) |
 | :-- | :-- | :-- |
-| Custo antes da 1ª venda | Plataforma + catálogo + integrações + tráfego | Zero |
-| Custo mensal fixo | Mensalidades + mídia + operação | Zero |
+| Custo antes da 1ª venda | Plataforma + catálogo + integrações + tráfego | Nenhum CAPEX; só a anuidade da cadeira |
+| Custo mensal fixo | Mensalidades + mídia + operação | R$ 220 (anuidade de R$ 2.640 ÷ 12) |
 | Custo variável | Taxas de pagamento/frete | % sobre a venda (definido em contrato) |
-| Quem carrega o risco de não vender | Você | A operação do polo |
+| Quem carrega o risco de não vender | Você | A operação do polo (o seu teto é a anuidade) |
 | Tempo até a primeira visita qualificada | Meses (SEO) ou pago (mídia) | A malha já ranqueia; entrada é imediata |
 | De quem é o cliente | Seu | Seu — o pedido fecha no seu WhatsApp/balcão |
 

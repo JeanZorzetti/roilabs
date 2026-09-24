@@ -3,6 +3,7 @@ title: Como vender porcelanato pela internet em Goiânia
 description: Uma loja de revestimentos em Goiânia pode vender pela internet sem montar um e-commerce — capturando a busca local de alta intenção por porcelanato, que soma cerca de 1.900 pesquisas por mês. Veja como funciona e por que a presença física forte não basta.
 eyebrow: Vender online · Revestimentos
 pubDate: 2026-06-29
+updatedDate: 2026-09-24
 author: Equipe ROI Labs
 faq:
   - q: 'Preciso de um e-commerce para vender porcelanato pela internet?'
@@ -14,7 +15,7 @@ faq:
   - q: 'Minha loja já tem site institucional. Preciso trocar?'
     a: 'Não precisa trocar nada. A camada de captação de alta intenção é construída por cima do que você já tem: dezenas a centenas de páginas de cauda longa que o site institucional não cobre. O site institucional fala da empresa; as páginas de alta intenção respondem à busca específica de quem já quer comprar.'
   - q: 'Quanto custa para o fornecedor?'
-    a: 'No modelo Growth Partner da ROI Labs, o custo fixo é zero. A ROI Labs banca a tecnologia e o tráfego, e é remunerada por uma fração variável atrelada à venda. Se não vendeu, não cobramos — o lucro da ROI Labs é uma parte do seu.'
+    a: 'No modelo Growth Partner da ROI Labs, o custo fixo é a anuidade simbólica da cadeira: R$ 2.640/ano (R$ 220/mês). A ROI Labs banca a tecnologia e o tráfego, e é remunerada por uma fração variável atrelada à venda. Se não vendeu, não há success fee — o grosso do lucro da ROI Labs é uma parte do seu.'
 ---
 
 Uma loja de revestimentos em Goiânia consegue vender pela internet sem montar um e-commerce: o caminho é capturar a busca local de alta intenção por porcelanato — cerca de 1.900 pesquisas por mês — com páginas que respondem exatamente ao que o comprador procura e o levam direto ao seu contato. A venda continua fechando no balcão ou no WhatsApp; a internet só entrega o cliente certo, no momento da decisão.
@@ -43,16 +44,16 @@ A busca por porcelanato em Goiânia é grande e concentrada: o termo principal s
 
 Esse mapeamento não é palpite. O volume é medido no planejador de palavras-chave antes de abrir qualquer operação — é o primeiro filtro de validação. Só se constrói a página onde há gente buscando.
 
-## Como capturar essa demanda sem custo fixo?
+## Como capturar essa demanda sem bancar a tecnologia?
 
 A captura acontece publicando, de forma programática, todas as páginas de combinação com volume de busca maior que zero e medindo quantas o Google indexa. Em vez de mirar um punhado de palavras-chave "alvo", o método gera a malha inteira de páginas de cauda longa do catálogo e deixa o volume de indexação crescer ao longo de meses.
 
-Esse trabalho — tecnologia, estrutura e tráfego — é o que a ROI Labs assume no modelo Growth Partner, sem cobrar custo fixo do fornecedor. A comparação entre os caminhos de venda online deixa a diferença clara:
+Esse trabalho — tecnologia, estrutura e tráfego — é o que a ROI Labs assume no modelo Growth Partner; o fornecedor paga só a anuidade simbólica da cadeira e uma fração da venda. A comparação entre os caminhos de venda online deixa a diferença clara:
 
 | Caminho | Custo inicial | Adequação a revestimento | Quem traz o cliente |
 | :-- | :-- | :-- | :-- |
 | E-commerce próprio | Alto (plataforma, fotos, operação) | Baixa (frete volumoso, lote, ver peça) | Você, depois de muito investimento |
 | Marketplace nacional | Médio (comissão por venda) | Média (concorre por preço, sem marca local) | A plataforma, levando o cliente embora |
-| Páginas de alta intenção (pSEO) | Zero no modelo Growth Partner | Alta (cliente local pronto para comprar) | Busca orgânica → seu WhatsApp/loja |
+| Páginas de alta intenção (pSEO) | Anuidade de R$ 2.640/ano no modelo Growth Partner | Alta (cliente local pronto para comprar) | Busca orgânica → seu WhatsApp/loja |
 
 Para entender por que esse modelo difere de contratar uma agência de marketing, veja [Growth Partner, agência ou e-commerce: o que realmente traz venda de revestimentos](/blog/growth-partner-vs-agencia-revestimentos). E para dimensionar o investimento, veja [quanto custa colocar uma loja de materiais de construção no Google em Goiânia](/blog/quanto-custa-loja-materiais-construcao-google-goiania).

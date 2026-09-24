@@ -3,6 +3,7 @@ title: Google Shopping para loja de material de construção — o que o Google 
 description: Colocar produtos de uma loja de material de construção no Google Shopping (listagens gratuitas) exige um feed de produtos, domínio verificado, imagem própria, política de devolução e paridade de preço entre feed e página. Este é o passo a passo real de quem montou um feed de 30 porcelanatos para o Merchant Center.
 eyebrow: Google Shopping · Material de construção
 pubDate: 2026-07-06
+updatedDate: 2026-09-24
 author: Equipe ROI Labs
 faq:
   - q: 'Preciso pagar para aparecer no Google Shopping?'
@@ -63,4 +64,4 @@ Após o primeiro processamento, o acompanhamento vive em **Produtos → Diagnós
 
 Vale, com uma ressalva honesta: o Shopping gratuito é uma **vitrine adicional**, não uma estratégia completa. Ele funciona melhor quando já existe uma base — páginas de produto reais, com preço, foto própria e informação técnica — porque é para essas páginas que o clique vai. Montar o feed sem ter páginas que convertem é inverter a ordem.
 
-É exatamente essa a sequência do modelo que operamos no [polo de revestimentos de Goiânia](/polo-goiania/): primeiro a malha de páginas de alta intenção, depois o feed por cima do mesmo catálogo. Para o lojista parceiro, todo esse trabalho técnico — feed, validação, Merchant Center — está incluído no [modelo Growth Partner](/modelo/), sem custo fixo: a remuneração é uma fração do que vendeu, e você pode dimensionar a conta no [simulador](/simulador/). Se preferir entender o custo de fazer tudo por conta própria, a comparação está em [e-commerce próprio vs entrar num polo pronto](/blog/ecommerce-proprio-vs-polo-pronto/).
+É exatamente essa a sequência do modelo que operamos no [polo de revestimentos de Goiânia](/polo-goiania/): primeiro a malha de páginas de alta intenção, depois o feed por cima do mesmo catálogo. Para o lojista parceiro, todo esse trabalho técnico — feed, validação, Merchant Center — está incluído no [modelo Growth Partner](/modelo/), pela anuidade simbólica da cadeira (R$ 2.640/ano) e uma fração do que vendeu, e você pode dimensionar a conta no [simulador](/simulador/). Se preferir entender o custo de fazer tudo por conta própria, a comparação está em [e-commerce próprio vs entrar num polo pronto](/blog/ecommerce-proprio-vs-polo-pronto/).

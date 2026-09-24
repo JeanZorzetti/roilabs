@@ -3,6 +3,7 @@ title: 'Mercado Livre, Shopee ou canal próprio: onde vender porcelanato sem per
 description: Marketplace é excelente para produto leve, de alto giro e margem folgada — o oposto de revestimento. Comissão de dois dígitos, frete subsidiado em caixa de 25 kg, quebra e devolução por conta do vendedor, e disputa por preço lado a lado com o concorrente. Este artigo abre a conta dos três canais (marketplace, loja própria e polo por success fee) e mostra o que cada um resolve de verdade.
 eyebrow: Comparativo · Canais de venda
 pubDate: 2026-07-12
+updatedDate: 2026-09-24
 author: Equipe ROI Labs
 faq:
   - q: 'Vale a pena vender porcelanato no Mercado Livre ou na Shopee?'
@@ -16,7 +17,7 @@ faq:
   - q: 'Qual a diferença entre vender no marketplace e vender pelo canal próprio?'
     a: 'No marketplace, o cliente é do canal: você aluga a audiência, disputa preço lado a lado com o concorrente e paga comissão sobre cada venda, para sempre. No canal próprio, o cliente é seu, a margem é cheia e o atendimento é consultivo (cálculo de m², rejunte, ambientação) — mas a captação passa a ser um problema seu, e é aí que a maioria das lojas trava.'
   - q: 'Como o polo de revestimentos se encaixa nessa comparação?'
-    a: 'O polo é a terceira via: a captação de busca local já está construída (malha de páginas de alta intenção, catálogo, calculadora, comparador, Google Shopping) e o pedido fecha no seu WhatsApp ou balcão — o cliente é seu. A remuneração é um success fee sobre o que vendeu, sem mensalidade: não vendeu, fatura zero. É o oposto do marketplace, onde a comissão vem junto com a perda do relacionamento.'
+    a: 'O polo é a terceira via: a captação de busca local já está construída (malha de páginas de alta intenção, catálogo, calculadora, comparador, Google Shopping) e o pedido fecha no seu WhatsApp ou balcão — o cliente é seu. A remuneração é a anuidade simbólica da cadeira (R$ 2.640/ano) e um success fee sobre o que vendeu: não vendeu, não há success fee. É o oposto do marketplace, onde a comissão vem junto com a perda do relacionamento.'
   - q: 'Posso usar marketplace e canal próprio ao mesmo tempo?'
     a: 'Pode, e é a configuração mais saudável: marketplace para o item leve e de giro, canal próprio (ou polo) para o carro-chefe de margem, que é onde a venda consultiva local ganha. A única disciplina obrigatória é a coerência de preço e estoque entre os canais.'
   - q: 'Como eu faço a conta para o meu caso?'
@@ -50,7 +51,7 @@ O problema do canal próprio nunca foi o mérito — é o custo de construir a c
 
 | | Marketplace | Loja própria | Polo (success fee) |
 | :-- | :-- | :-- | :-- |
-| Custo antes da 1ª venda | Zero (só cadastro) | Plataforma + catálogo + integrações + tráfego | Zero |
+| Custo antes da 1ª venda | Zero (só cadastro) | Plataforma + catálogo + integrações + tráfego | Só a anuidade da cadeira (R$ 2.640/ano) |
 | Custo por venda | Comissão (10–20%) + frete + quebra | Taxas de pagamento/frete | % sobre a venda (em contrato) |
 | De quem é o cliente | Do canal | Seu | Seu — fecha no seu WhatsApp/balcão |
 | Adequação ao produto pesado | Ruim (frete e quebra) | Boa (frete local/retirada) | Boa (frete local/retirada) |
@@ -59,7 +60,7 @@ O problema do canal próprio nunca foi o mérito — é o custo de construir a c
 
 ## A terceira via
 
-O polo de revestimentos inverte as duas trocas ruins do marketplace: **a captação já está construída** (malha de páginas de alta intenção, páginas de produto, [calculadora e comparador](/polo-goiania/), feed no Google Shopping) e **o cliente continua sendo seu** — o pedido cai no seu WhatsApp ou balcão, com o seu atendimento. A remuneração é um success fee sobre o que vendeu: sem mensalidade, sem CAPEX, e fatura zero em mês sem venda. Rode a sua conta, com o seu ticket e o seu volume, no [simulador](/simulador/).
+O polo de revestimentos inverte as duas trocas ruins do marketplace: **a captação já está construída** (malha de páginas de alta intenção, páginas de produto, [calculadora e comparador](/polo-goiania/), feed no Google Shopping) e **o cliente continua sendo seu** — o pedido cai no seu WhatsApp ou balcão, com o seu atendimento. A remuneração é a anuidade simbólica da cadeira (R$ 2.640/ano) e um success fee sobre o que vendeu: sem CAPEX, e sem success fee em mês sem venda. Rode a sua conta, com o seu ticket e o seu volume, no [simulador](/simulador/).
 
 O modelo inteiro — exclusividade de cadeira por nicho, o que a ROI Labs assume e o que fica com o fornecedor — está na página do [modelo Growth Partner](/modelo/). Se a conta fechou, o passo seguinte é [candidatar sua empresa à cadeira do seu nicho](/#candidatar).
 

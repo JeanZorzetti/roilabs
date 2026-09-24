@@ -3,6 +3,7 @@ title: "Como aparecer no ChatGPT e Perplexity para vender revestimento em Goiân
 description: Visitantes que chegam por citações de IA convertem de 4,4 a 23 vezes mais que o orgânico tradicional, porque chegam pré-qualificados pela resposta. Ser citado por ChatGPT, Perplexity e Google AI Overviews exige uma estrutura própria — BLUF, FAQ, dados numéricos, @graph e llms.txt. Veja como preparar a página da sua loja para esse canal.
 eyebrow: GEO/AEO · Citação de IA
 pubDate: 2026-07-01
+updatedDate: 2026-09-24
 author: Equipe ROI Labs
 faq:
   - q: 'Por que aparecer no ChatGPT e Perplexity vale a pena para uma loja de revestimentos?'
@@ -53,4 +54,4 @@ A diferença é o alvo: o SEO tradicional quer ranquear na lista de links; o GEO
 
 Não é preciso escolher: a mesma página bem estruturada serve aos dois canais. Um título que responde a uma busca real de revestimento ranqueia no Google e, com abertura BLUF, bloco de FAQ e dados numéricos, também vira fonte citável para ChatGPT e Perplexity. O esforço de produção é único; o retorno é duplo — busca tradicional e citação de IA saindo da mesma página.
 
-É exatamente esse o padrão aplicado nos artigos deste blog e nas páginas que a ROI Labs constrói para as lojas parceiras. Para ver como a malha de páginas de alta intenção é gerada em escala, leia [o que é SEO programático (pSEO) e como ele vende revestimento](/blog/o-que-e-seo-programatico-pseo-revestimentos). E para entender por que esse canal de conversão altíssima reforça o modelo sem custo fixo, veja [quanto custa colocar uma loja de materiais de construção no Google em Goiânia](/blog/quanto-custa-loja-materiais-construcao-google-goiania).
+É exatamente esse o padrão aplicado nos artigos deste blog e nas páginas que a ROI Labs constrói para as lojas parceiras. Para ver como a malha de páginas de alta intenção é gerada em escala, leia [o que é SEO programático (pSEO) e como ele vende revestimento](/blog/o-que-e-seo-programatico-pseo-revestimentos). E para entender por que esse canal de conversão altíssima reforça o modelo de custo fixo simbólico, veja [quanto custa colocar uma loja de materiais de construção no Google em Goiânia](/blog/quanto-custa-loja-materiais-construcao-google-goiania).

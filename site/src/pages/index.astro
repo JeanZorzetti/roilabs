@@ -49,16 +49,24 @@ const jsonLdNodes = [
   {
     '@type': 'Service',
     '@id': 'https://roilabs.com.br/#service',
-    name: 'Growth Partner — operação de vendas online pago pelo sucesso',
+    name: 'Growth Partner — operação de vendas online com success fee',
     serviceType: 'Operação de vendas online (SEO programático de alta intenção)',
     description:
-      'A ROI Labs constrói e opera a venda online de um fornecedor regional por nicho: páginas de alta intenção validadas por volume real de busca, sem mensalidade e sem custo fixo. Remuneração 100% variável, paga somente quando a venda acontece. Exclusividade de cadeira: uma empresa por nicho, por polo.',
+      'A ROI Labs constrói e opera a venda online de um fornecedor regional por nicho: páginas de alta intenção validadas por volume real de busca, com tecnologia e tráfego bancados pela ROI Labs. O fornecedor paga a anuidade simbólica da cadeira (R$ 2.640/ano) e um success fee sobre a venda concretizada. Exclusividade de cadeira: uma empresa por nicho, por polo.',
     provider: { '@id': 'https://roilabs.com.br/#org' },
     areaServed: { '@type': 'City', name: 'Goiânia' },
     offers: {
       '@type': 'Offer',
       description:
-        'Sem mensalidade: fração variável sobre a venda concretizada, com SLA de estoque e despacho.',
+        'Anuidade da cadeira de R$ 2.640/ano (R$ 220/mês) mais fração variável sobre a venda concretizada, com SLA de estoque e despacho.',
+      price: '2640.00',
+      priceCurrency: 'BRL',
+      priceSpecification: {
+        '@type': 'UnitPriceSpecification',
+        price: '2640.00',
+        priceCurrency: 'BRL',
+        referenceQuantity: { '@type': 'QuantitativeValue', value: 1, unitCode: 'ANN' },
+      },
     },
   },
 ];
@@ -75,12 +83,12 @@ const jsonLdNodes = [
           <span class="eyebrow hero__eyebrow">Growth Partner · Polo Goiânia</span>
           <h1 id="hero-title">
             Construímos sua venda&nbsp;online.<br />
-            Você paga <span class="accent">quando vende.</span>
+            Nosso lucro vem <span class="accent">da sua venda.</span>
           </h1>
           <p class="hero__sub">
-            A ROI Labs banca a tecnologia e o tráfego. Você entra com o produto.
-            A conta só chega depois da venda — porque o nosso lucro é uma fração
-            do seu.
+            A ROI Labs banca a tecnologia e o tráfego. Você entra com o produto
+            e uma anuidade simbólica pela cadeira. O resto só é cobrado depois da
+            venda, porque o nosso lucro é uma fração do seu.
           </p>
           <div class="hero__actions">
             <a class="btn btn--primary" href="#candidatar">Aplicar para a cadeira</a>
@@ -109,8 +117,8 @@ const jsonLdNodes = [
             </span>
           </div>
           <div class="chair__row">
-            <span class="chair__k">Custo fixo</span>
-            <span class="chair__v">R$ 0</span>
+            <span class="chair__k">Anuidade</span>
+            <span class="chair__v">R$ 2.640/ano</span>
           </div>
           <div class="chair__row">
             <span class="chair__k">Exclusividade</span>
@@ -131,7 +139,8 @@ const jsonLdNodes = [
           A ROI Labs é uma fábrica de infraestrutura de vendas. Construímos o
           ecossistema — site, SEO de alta intenção, captação — que coloca
           fornecedores regionais de alto padrão na frente de quem já está pronto
-          pra comprar. Sem fee mensal, sem projeto fechado, sem risco pra você.
+          pra comprar. Sem fee de agência, sem projeto fechado: uma anuidade
+          simbólica pela cadeira e o resto atrelado à venda.
         </p>
       </div>
     </section>
@@ -172,10 +181,10 @@ const jsonLdNodes = [
             <h3>Só ganhamos se você ganha</h3>
             <p>
               Quando as vendas chegam, dividimos. Nossa parte é variável e
-              atrelada a SLA de estoque e despacho. Sua cadeira é exclusiva por
-              um ano, renovável por entrega.
+              atrelada a SLA de estoque e despacho. A anuidade de R$ 2.640
+              garante a cadeira exclusiva por um ano, renovável por entrega.
             </p>
-            <span class="step__tag">100% variável</span>
+            <span class="step__tag">Anuidade + success fee</span>
           </article>
         </div>
       </div>
@@ -408,9 +417,10 @@ const jsonLdNodes = [
           <details class="faq__item">
             <summary>Quanto a ROI Labs fica?</summary>
             <p class="faq__a">
-              Uma fração variável do que você vende, definida em contrato. Sem
-              mensalidade, sem setup, sem piso. Se não vendeu, não cobramos — o
-              nosso lucro é uma parte do seu.
+              Duas partes. A anuidade da cadeira: R$ 2.640 por ano (R$ 220/mês),
+              que reserva o nicho só pra você no polo. E uma fração variável do
+              que você vende, definida em contrato. Sem setup, sem piso de venda,
+              sem verba de mídia: o grosso do nosso lucro é uma parte do seu.
             </p>
           </details>
           <details class="faq__item">
@@ -441,9 +451,10 @@ const jsonLdNodes = [
           <details class="faq__item">
             <summary>E se não der resultado?</summary>
             <p class="faq__a">
-              O risco de tecnologia e tráfego é todo nosso. Você não desembolsa
-              nada pra começar e não paga nada se não vender. O alinhamento é
-              total: só crescemos juntos.
+              O risco de tecnologia e tráfego é todo nosso. O seu custo máximo é
+              conhecido desde o primeiro dia: a anuidade de R$ 2.640. A parte
+              variável só existe se você vender. O alinhamento é total: só
+              crescemos juntos.
             </p>
           </details>
           <details class="faq__item">
@@ -466,7 +477,7 @@ const jsonLdNodes = [
           <h2 id="close-title">A cadeira de revestimentos de Goiânia está em curadoria.</h2>
           <p class="close__copy">
             Uma empresa vai sentar nela e dominar a busca local de porcelanato.
-            Sem custo fixo, sem risco de tecnologia. Candidate-se antes do seu
+            Anuidade simbólica, sem risco de tecnologia. Candidate-se antes do seu
             concorrente.
           </p>
           <p class="close__whats">
@@ -528,7 +539,7 @@ const jsonLdNodes = [
             </div>
 
             <button class="btn btn--primary form__submit" type="submit">Enviar candidatura</button>
-            <p class="form__note">Sem custo, sem compromisso. Leva 1 minuto.</p>
+            <p class="form__note">Candidatar-se não custa nada nem compromete. Leva 1 minuto.</p>
           </form>
         </div>
       </div>

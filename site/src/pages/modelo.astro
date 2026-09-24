@@ -8,17 +8,22 @@ const whatsHref = `https://wa.me/${whatsapp}?text=${encodeURIComponent(
   'Quero entender o modelo Growth Partner da ROI Labs'
 )}`;
 
-// Exemplo numérico = mesma fórmula do /simulador (fee = ticket × pedidos × pct).
+// Exemplo numérico = mesma fórmula do /simulador (fee = ticket × pedidos × pct, + anuidade/12).
+const ANUIDADE = 2640;
 const exemplo = { ticket: 450, pedidos: 40, pct: 0.1 };
 const receita = exemplo.ticket * exemplo.pedidos; // 18.000
-const fee = receita * exemplo.pct; // 1.800
-const liquido = receita - fee; // 16.200
+const custo = receita * exemplo.pct + ANUIDADE / 12; // 1.800 + 220
+const liquido = receita - custo; // 15.980
 const brl = (n: number) => 'R$ ' + n.toLocaleString('pt-BR');
 
 const faq = [
   {
+    q: 'Quanto custa ocupar uma cadeira?',
+    a: 'A anuidade é de R$ 2.640 por ano (R$ 220/mês) e reserva o nicho só para você no polo enquanto o contrato vigorar. É simbólica de propósito: a tecnologia e o tráfego continuam bancados pela ROI Labs, e o grosso da remuneração segue sendo o success fee sobre a venda concretizada.',
+  },
+  {
     q: 'Como o percentual do success fee é definido?',
-    a: 'Em contrato, caso a caso, conforme nicho, margem do produto e SLA de estoque e despacho que você consegue sustentar. É uma fração da venda concretizada — sem mensalidade, sem setup, sem piso mínimo. Se não vendeu, a fatura é zero.',
+    a: 'Em contrato, caso a caso, conforme nicho, margem do produto e SLA de estoque e despacho que você consegue sustentar. É uma fração da venda concretizada, somada à anuidade da cadeira — sem setup, sem piso mínimo de venda. Se não vendeu, o success fee é zero.',
   },
   {
     q: 'Quem é dono do site e das páginas que a ROI Labs constrói?',
@@ -30,7 +35,7 @@ const faq = [
   },
   {
     q: 'Como funciona o pedido e o repasse do dinheiro?',
-    a: 'O cliente compra na operação do polo e você fatura a venda: o dinheiro da venda é seu. A ROI Labs fatura do parceiro apenas o success fee sobre os pedidos concretizados do período, com relatório detalhado pedido a pedido.',
+    a: 'O cliente compra na operação do polo e você fatura a venda: o dinheiro da venda é seu. A ROI Labs fatura do parceiro o success fee sobre os pedidos concretizados do período, com relatório detalhado pedido a pedido, além da anuidade da cadeira.',
   },
   {
     q: 'O que a exclusividade exige de mim na prática?',
@@ -38,7 +43,7 @@ const faq = [
   },
   {
     q: 'E se a ROI Labs não entregar resultado?',
-    a: 'Você não paga nada — a remuneração é 100% variável — e pode sair na renovação. O contrato de cadeira é anual, renovável por desempenho dos dois lados: nós entregamos demanda, você entrega estoque e despacho.',
+    a: 'O seu custo máximo é a anuidade de R$ 2.640 — o success fee só existe se houver venda — e você pode sair na renovação. O contrato de cadeira é anual, renovável por desempenho dos dois lados: nós entregamos demanda, você entrega estoque e despacho.',
   },
   {
     q: 'Quanto tempo leva da candidatura ao contrato?',
@@ -49,7 +54,7 @@ const faq = [
 const howtoSteps = [
   {
     name: 'Candidatura',
-    text: 'Preencha o formulário na home (leva 1 minuto) ou chame no WhatsApp. Sem custo e sem compromisso — é só o ponto de partida da curadoria.',
+    text: 'Preencha o formulário na home (leva 1 minuto) ou chame no WhatsApp. A candidatura não tem custo nem compromisso — é só o ponto de partida da curadoria.',
   },
   {
     name: 'Triagem e conversa de curadoria',
@@ -61,15 +66,15 @@ const howtoSteps = [
   },
   {
     name: 'Proposta: percentual e termos',
-    text: 'Definimos juntos o percentual do success fee e o SLA de estoque e despacho. Tudo em números claros — a mesma fórmula do simulador público: fee = receita × percentual.',
+    text: 'Definimos juntos o percentual do success fee e o SLA de estoque e despacho. A anuidade da cadeira é fixa: R$ 2.640/ano. Tudo em números claros — a mesma fórmula do simulador público: fee = receita × percentual.',
   },
   {
     name: 'Contrato e onboarding do catálogo',
-    text: 'Assinatura do contrato anual de exclusividade e integração do catálogo à operação do polo: produtos, preços, fotos, prazos de entrega.',
+    text: 'Assinatura do contrato anual de exclusividade (anuidade de R$ 2.640) e integração do catálogo à operação do polo: produtos, preços, fotos, prazos de entrega.',
   },
   {
     name: 'Go-live e travessia',
-    text: 'A operação entra no ar e o SEO começa a maturar — de 3 a 6 meses até o volume orgânico estabilizar. Você acompanha cada fase com transparência total, pagando apenas sobre o que vender.',
+    text: 'A operação entra no ar e o SEO começa a maturar — de 3 a 6 meses até o volume orgânico estabilizar. Você acompanha cada fase com transparência total, e o success fee incide só sobre o que vender.',
   },
 ];
 
@@ -82,12 +87,12 @@ const jsonLdNodes = [
     isPartOf: { '@id': 'https://roilabs.com.br/#website' },
     about: { '@id': 'https://roilabs.com.br/#service' },
     inLanguage: 'pt-BR',
-    dateModified: '2026-07-06',
+    dateModified: '2026-09-24',
   },
   {
     '@type': 'Service',
     '@id': 'https://roilabs.com.br/#service',
-    name: 'Growth Partner — operação de vendas online pago pelo sucesso',
+    name: 'Growth Partner — operação de vendas online com success fee',
     serviceType: 'Operação de vendas online (SEO programático de alta intenção)',
     provider: { '@id': 'https://roilabs.com.br/#org' },
     areaServed: { '@type': 'City', name: 'Goiânia' },
@@ -117,7 +122,7 @@ const jsonLdNodes = [
 
 <Base
   title="O modelo Growth Partner — como funciona a cadeira | ROI Labs"
-  description="Gates de validação, success fee 100% variável, exclusividade de cadeira e o passo a passo da candidatura ao contrato. O modelo ROI Labs explicado com números."
+  description="Gates de validação, anuidade de R$ 2.640/ano + success fee, exclusividade de cadeira e o passo a passo da candidatura ao contrato. O modelo ROI Labs com números."
   jsonLdNodes={jsonLdNodes}
 >
   <Header />
@@ -132,11 +137,12 @@ const jsonLdNodes = [
           <p class="section__lead">
             O modelo em uma frase: a ROI Labs constrói e opera a venda online de
             <strong>um único fornecedor por nicho, por polo</strong> — bancando
-            tecnologia e tráfego — e é remunerada por uma
-            <strong>fração variável da venda concretizada</strong>. Sem
-            mensalidade, sem setup, sem piso. Esta página detalha cada peça:
-            os gates, a conta do success fee, a exclusividade e o caminho da
-            candidatura ao contrato.
+            tecnologia e tráfego — e é remunerada pela
+            <strong>anuidade simbólica da cadeira (R$ 2.640/ano)</strong> mais
+            uma <strong>fração variável da venda concretizada</strong>. Sem
+            setup, sem piso, sem verba de mídia. Esta página detalha cada peça:
+            os gates, a conta, a exclusividade e o caminho da candidatura ao
+            contrato.
           </p>
         </div>
       </div>
@@ -196,10 +202,11 @@ const jsonLdNodes = [
       <div class="wrap">
         <div class="section__head">
           <span class="eyebrow">Peça 2 · a conta</span>
-          <h2 id="fee-title">Success fee: a fórmula é pública.</h2>
+          <h2 id="fee-title">Anuidade + success fee: a conta é pública.</h2>
           <p class="section__lead">
-            Não há tabela escondida. O fee é uma fração percentual da receita
-            que a operação gerou para você no mês:
+            Não há tabela escondida. São duas partes: a anuidade da cadeira,
+            <strong>R$ 2.640/ano (R$ 220/mês)</strong>, e o success fee, uma
+            fração percentual da receita que a operação gerou para você no mês:
             <strong>fee = ticket médio × pedidos × percentual</strong>. O
             percentual é definido em contrato, conforme nicho, margem e SLA.
           </p>
@@ -208,7 +215,7 @@ const jsonLdNodes = [
         <div class="readout" role="group" aria-label="Exemplo de cálculo do success fee">
           <div class="readout__bar">
             <span class="readout__dotrow" aria-hidden="true"><span></span><span></span><span></span></span>
-            exemplo — ticket {brl(exemplo.ticket)} × {exemplo.pedidos} pedidos × {exemplo.pct * 100}%
+            exemplo — ticket {brl(exemplo.ticket)} × {exemplo.pedidos} pedidos × {exemplo.pct * 100}% + anuidade
           </div>
           <div class="readout__body">
             <div class="metric">
@@ -216,8 +223,8 @@ const jsonLdNodes = [
               <div class="metric__key">receita projetada (ticket × pedidos)</div>
             </div>
             <div class="metric">
-              <div class="metric__val">{brl(fee)}<span class="unit">/mês</span></div>
-              <div class="metric__key">success fee da ROI Labs</div>
+              <div class="metric__val">{brl(custo)}<span class="unit">/mês</span></div>
+              <div class="metric__key">success fee + anuidade (R$ 220/mês)</div>
             </div>
             <div class="metric">
               <div class="metric__val">{brl(liquido)}<span class="unit">/mês</span></div>
@@ -226,8 +233,8 @@ const jsonLdNodes = [
           </div>
         </div>
         <p class="prova__foot">
-          Vendeu zero? Fatura zero. O alinhamento é estrutural: o nosso lucro é
-          uma parte do seu. Faça a conta com os seus números no
+          Vendeu zero? O success fee é zero; fica só a anuidade de R$ 220/mês.
+          O alinhamento é estrutural: o grosso do nosso lucro é uma parte do seu. Faça a conta com os seus números no
           <a href="/simulador/" style="color:inherit">simulador de receita →</a>
         </p>
       </div>
@@ -259,7 +266,7 @@ const jsonLdNodes = [
             <p class="fit__item"><span class="fit__mark" aria-hidden="true">✓</span> Catálogo próprio e amplo, com preço e foto atualizados.</p>
             <p class="fit__item"><span class="fit__mark" aria-hidden="true">✓</span> Estoque consistente dos produtos anunciados (SLA).</p>
             <p class="fit__item"><span class="fit__mark" aria-hidden="true">✓</span> Despacho no prazo — pronta-entrega de verdade.</p>
-            <p class="fit__item"><span class="fit__mark" aria-hidden="true">✓</span> O success fee sobre o que vendeu. Só isso.</p>
+            <p class="fit__item"><span class="fit__mark" aria-hidden="true">✓</span> A anuidade da cadeira e o success fee sobre o que vendeu.</p>
           </div>
         </div>
       </div>
@@ -311,7 +318,7 @@ const jsonLdNodes = [
 
         <p class="prova__foot" style="margin-top: 2rem;">
           Quer ver o modelo aplicado? Leia
-          <a href="/blog/growth-partner-vs-agencia-revestimentos/" style="color:inherit">a conta real: pago pelo sucesso vs agência</a>
+          <a href="/blog/growth-partner-vs-agencia-revestimentos/" style="color:inherit">a conta real: Growth Partner vs agência</a>
           e
           <a href="/blog/exclusividade-de-cadeira-uma-loja-por-nicho-goiania/" style="color:inherit">por que só existe uma cadeira por nicho</a>.
         </p>
