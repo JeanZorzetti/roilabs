@@ -39,13 +39,6 @@ export const carteira: {
     "siteUrl": "https://siriuscrm.com.br/"
   },
   {
-    "niche": "Ferramentas de dev",
-    "estado": "ocupada-vendavel",
-    "rotulo": "parceiro",
-    "nome": "Context Keeper",
-    "siteUrl": "https://context.nimblabs.com/"
-  },
-  {
     "niche": "ERP / Gestão empresarial",
     "estado": "ocupada-vendavel",
     "rotulo": "casa",
@@ -58,12 +51,5 @@ export const carteira: {
     "rotulo": "casa",
     "nome": "Meridian",
     "siteUrl": "https://meridian.roilabs.com.br/"
-  },
-  {
-    "niche": "Orçamento de obra",
-    "estado": "em-preparacao",
-    "rotulo": "parceiro",
-    "nome": "OrçaObra",
-    "siteUrl": "https://orcaobra.roilabs.com.br/"
   }
 ];

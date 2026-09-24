@@ -57,8 +57,13 @@ assert.deepEqual(reposDuplicados([c('a', 'https://github.com/x/repo'), c('b', 'h
     'duas cadeiras no mesmo repo INFLAM a carteira (card ≠ repositório)',
   );
   // O bloco acima passaria com a lista inteira nula. Este garante que ele tem o que comparar.
+  // ⚠️ 24/09: era `>= 9`, o tamanho da lista escrito à mão — quebrou quando 2 cadeiras saíram.
+  // A invariante real é "nenhuma sem repo, e existe pelo menos um par".
   const comRepo = PROJETOS_CADEIRA.filter((p) => p.repoUrl).length;
-  assert.ok(comRepo >= 9, `só ${comRepo} cadeira(s) com repoUrl — o dedupe volta a ser vácuo`);
+  assert.ok(
+    comRepo >= 2 && comRepo === PROJETOS_CADEIRA.length,
+    `${comRepo} de ${PROJETOS_CADEIRA.length} cadeira(s) com repoUrl — o dedupe volta a ser vácuo`,
+  );
 }
 
 console.log('cadeira-repo-unico.test.mjs: all assertions passed');

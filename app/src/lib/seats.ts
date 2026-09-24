@@ -7,18 +7,17 @@
 // `Materiais de construção`, `Esquadrias / Vidraçaria`, `Iluminação / Elétrica`,
 // `Marcenaria sob medida` e `Pisos / Deck externo`. Nenhum tinha parceiro, produto ou
 // candidatura. Restam 3 cadeiras de nicho, das quais só `Revestimentos / Porcelanato` está
-// em curadoria aberta. 🚨 O SEED NÃO DELETA: tirar daqui não tira do banco, e a home lê o
-// banco ao vivo — a remoção no banco foi por script (ver handoff-limpeza-construcao.md).
+// em curadoria aberta.
+//
+// ⚠️ 24/09/2026 (Jean): saíram do mapa `Revestimentos / Porcelanato`, `Moda social masculina`
+// (Maná), `Ferramentas de dev` (Context Keeper) e `Orçamento de obra` (OrçaObra). Nenhuma tinha
+// parceiro nem produto; as linhas foram deletadas do banco por script, como em 07/08.
+// 🚨 O SEED NÃO DELETA: tirar daqui não tira do banco, e a home lê o banco ao vivo — a
+// remoção no banco foi por script (ver handoff-limpeza-construcao.md).
 //
 // `estado` é o campo que MÁQUINA lê (vaga | em-preparacao | ocupada-sem-produto |
 // ocupada-vendavel). `status` continua sendo texto de exibição e nenhuma decisão o lê.
 export const DEFAULT_SEATS = [
-  // CORRIGIDA (Jean, 08/08): DA CASA. O porcelanato é vendido pelo carrinho da própria ROI
-  // Labs (`modoCobranca: 'roilabs'` em site-goiania/src/data/lojas.ts) — não há parceiro, e
-  // receita própria nunca entra na régua do success fee. `estado: 'vaga'` não contradiz:
-  // a cadeira segue em curadoria aberta, e vira `daCasa: false` no dia que um parceiro a
-  // ocupar, exatamente como a `Fitas adesivas` fez com a Tapepro.
-  { niche: 'Revestimentos / Porcelanato', status: 'Curadoria aberta', open: true, estado: 'vaga', daCasa: true, exibirDaCasa: false },
   // Primeira cadeira ocupada: Tapepro (fitas adesivas personalizadas, B2B). open:false = fora
   // de curadoria (já preenchida). O link/estado visual "ocupada" vive no site (presentational).
   // daCasa:false — Tapepro é parceiro externo (spec 011), e a venda dela GERA success fee.
@@ -27,14 +26,7 @@ export const DEFAULT_SEATS = [
   // foi corrigido abaixo. O comentário anterior afirmava duas coisas falsas: "parceiro
   // externo" (o site é subdomínio `atma.roilabs.com.br` e o repo é da própria ROI Labs) e
   // "gateway já ligado" (`CredencialGateway` tem ZERO linhas em produção, conferido 08/08).
-  { niche: 'Ortodontia / Alinhadores', status: 'Ocupada · Atma Aligner', open: false, estado: 'ocupada-vendavel', daCasa: true, exibirDaCasa: false },
-  // 015 (Jean, 18/08): Maná Moda Social entra em `ordem: 3` — a faixa 3..7 ficou VAGA depois
-  // da remoção dos 5 nichos de construção em 07/08 (comentário acima), então a Maná cai
-  // sozinha no lugar certo sem reordenar nada. `daCasa: false`: é parceiro externo e a venda
-  // gera success fee (`lojas.ts`: `pagoA: 'Maná Moda'`, `split.comissaoPct: 0.1`), mesma
-  // leitura da Tapepro. `estado: 'em-preparacao'` até o checkout fechar (015 fase B) —
-  // vira `ocupada-vendavel` só nesse dia, nunca antes.
-  { niche: 'Moda social masculina', status: 'Em preparação · Maná Moda', open: false, estado: 'em-preparacao', daCasa: false, exibirDaCasa: false, siteUrl: 'https://mana.roilabs.com.br/' },
+  { niche: 'Ortodontia / Alinhadores', status: 'Ocupada · Use Aligner', open: false, estado: 'ocupada-vendavel', daCasa: true, exibirDaCasa: false },
 ] as const;
 
 /**
@@ -66,7 +58,7 @@ export const PROJETOS_CADEIRA = [
   // `vertice` — e classificá-la como parceiro externo a colocava na régua do success fee,
   // fazendo a ROI Labs cobrar fee de si mesma e INFLAR a receita da carteira (FR-010).
   // Vale a regra fail-closed do bloco acima: na dúvida, `true`.
-  { slug: 'atma', niche: 'Ortodontia / Alinhadores', status: 'Ocupada · Atma Aligner', estado: 'ocupada-vendavel', gateway: 'mercadopago', daCasa: true, exibirDaCasa: false, siteUrl: 'https://atma.roilabs.com.br/', repoUrl: 'https://github.com/JeanZorzetti/Atma' },
+  { slug: 'atma', niche: 'Ortodontia / Alinhadores', status: 'Ocupada · Use Aligner', estado: 'ocupada-vendavel', gateway: 'mercadopago', daCasa: true, exibirDaCasa: false, siteUrl: 'https://atma.roilabs.com.br/', repoUrl: 'https://github.com/JeanZorzetti/Atma' },
   // ⚠️ `niche` aqui é RÓTULO DE EXIBIÇÃO, não chave (o seed casa por `siteUrl`). Cada um
   // saiu do que o próprio site diz de si, lido no ar em 07/08 — 5 dos 8 descreviam produto
   // que não existe mais (o `polarisia` não tinha uma palavra sobre imóvel na página inteira).
@@ -86,7 +78,6 @@ export const PROJETOS_CADEIRA = [
   // Solar era 1 de 5 segmentos que o próprio site lista (corretores, solar, agências,
   // consultores, representantes) — o rótulo antigo estreitava a cadeira a um quinto dela.
   { slug: 'sirius', niche: 'CRM de vendas', status: 'Ocupada · Sirius CRM', estado: 'ocupada-vendavel', gateway: 'stripe', daCasa: true, exibirDaCasa: true, siteUrl: 'https://siriuscrm.com.br/', repoUrl: 'https://github.com/JeanZorzetti/sirius' },
-  { slug: 'context', niche: 'Ferramentas de dev', status: 'Ocupada · Context Keeper', estado: 'ocupada-vendavel', gateway: 'stripe', daCasa: true, exibirDaCasa: false, siteUrl: 'https://context.nimblabs.com/', repoUrl: 'https://github.com/JeanZorzetti/context-keeper' },
   // ⚠️ mesma nota do `polarisia`: banco tem "Ocupada · Orion", corrigir no /admin.
   { slug: 'orion', niche: 'ERP / Gestão empresarial', status: 'Ocupada · Orion ERP', estado: 'ocupada-vendavel', gateway: 'stripe', daCasa: true, exibirDaCasa: true, siteUrl: 'https://orion.roilabs.com.br/', repoUrl: 'https://github.com/JeanZorzetti/orion-nova-ui' },
   // ── Fora da fase 1, mas nomeadas pela spec ─────────────────────────────────
@@ -97,12 +88,6 @@ export const PROJETOS_CADEIRA = [
   // de front-end para a vaga da FitNext — polimento visual, não o setor. Não houve pivô;
   // o rótulo nasceu de ler o apelido do projeto como se fosse o nicho dele.
   { slug: 'meridian', niche: 'Finanças pessoais', status: 'Em preparação · Meridian', estado: 'em-preparacao', gateway: null, daCasa: true, exibirDaCasa: true, siteUrl: 'https://meridian.roilabs.com.br/', repoUrl: 'https://github.com/JeanZorzetti/meridian' },
-  // orcaobra: saiu da fase 1 por bloqueio de PRODUTO, não de fiação ("acho ele um produto
-  // ruim do jeito que está"). Ligar checkout aqui venderia algo que não deveria estar à venda.
-  // ⚠️ O repo NÃO se chama `orcaobra`: é `reforma-maestro`. Derivar repoUrl do slug erraria aqui.
-  // T052 CORRIGIDA (Jean, 07/08, fim do dia): `orcaobra` é DA CASA — mesma correção do
-  // `vertice`. O bloqueio dele segue sendo de PRODUTO (`em-preparacao`), não de curadoria.
-  { slug: 'orcaobra', niche: 'Orçamento de obra', status: 'Em preparação · OrçaObra', estado: 'em-preparacao', gateway: null, daCasa: true, exibirDaCasa: false, siteUrl: 'https://orcaobra.roilabs.com.br/', repoUrl: 'https://github.com/JeanZorzetti/reforma-maestro' },
 ] as const;
 
 /**
