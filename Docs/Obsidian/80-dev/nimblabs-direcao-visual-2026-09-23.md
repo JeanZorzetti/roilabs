@@ -35,7 +35,7 @@ O setor foi usado a pedido do Jean, só para mapear o lugar-comum e os mecanismo
 
 **Escolha do Jean em 23/09/2026: Placa.** Ela continua a marca, cujo ícone já é uma placa, e põe preço e prazo no centro do visual. As outras duas vão para o `.art/log.json` como recusadas.
 
-## Home construída (Tarefa 14, 23/09/2026, aguardando aprovação)
+## Home construída (Tarefa 14, aprovada pelo Jean em 24/09/2026)
 
 - **Estrutura "espécime":** a placa-mestra, com a marca do fabricante (o "b") em relevo; as placas de produto, com grade de preço e prazo; a peça sob medida, com o canto cortado; as etapas numeradas; e o fecho.
 - **Uma ideia em todas as camadas, gravar:**
@@ -71,3 +71,30 @@ Fontes: Archivo variável (peso) 35 KB + IBM Plex Mono 500 15 KB, as duas pré-c
 Fallback: sem JS, as placas continuam compostas e o menu mostra todos os links; com movimento reduzido, sem laser e sem luz no cursor, com os valores visíveis
 Fora do limiar bom de CWV? Não
 ```
+
+## Visual em todas as páginas (Tarefa 15, 24/09/2026, aguardando aprovação)
+
+- **Tokens:** saíram do escopo da home e valem no site inteiro.
+- **Placa no topo de cada página:** produto, sob medida, contato, privacidade e 404 abrem cada um na sua placa, com rótulo gravado.
+  - A placa do produto repete a grade do card da home (entrada, mensal e prazo). Ao clicar no card, ele vira essa placa na página seguinte, em 360 ms.
+  - Com movimento reduzido, a página troca sem animação.
+  - A placa do sob medida tem o canto cortado, como na home.
+- **Formulário de contato:** os campos são rasgos na placa. O erro fica no campo e num resumo com links que levam ao campo, e o vermelho tem contraste de 5,5 a 7,8:1.
+- **Tabela do exemplo de relatório (produto B):** no celular, rola de lado com a coluna do item fixa. Foi conferida com dado de teste, porque o exemplo real ainda depende do contador parceiro.
+- **Aviso de cookies:**
+  - pelo teclado, é alcançado logo depois do "Pular para o conteúdo";
+  - no celular, fica fora da primeira tela e aparece na primeira rolagem;
+  - com foco ou com movimento reduzido, aparece na hora.
+- **Imagem de compartilhamento:** agora é o "b" âmbar sobre a placa, com o nome embaixo. O símbolo ocupa 31% da altura e sobrevive ao recorte quadrado.
+- **Medido no ar (nimblabs.com, 360, 768 e 1440 px):**
+  - CLS 0 em todas as páginas. Uma única leitura de 0,0079 na home, na primeira carga logo após o deploy, não se repetiu em 5 medições.
+  - 5 requisições por página e nenhum serviço de terceiros.
+  - Um h1 por página, nenhum link ou botão sem nome e títulos em ordem.
+  - Console limpo; a única linha é o próprio 404 da página de erro.
+  - Alvos de toque de pelo menos 44 px.
+
+![[nimblabs-direcao-visual/produto-1440.webp]]
+
+![[nimblabs-direcao-visual/contato-768.webp]] ![[nimblabs-direcao-visual/produto-360.webp]]
+
+![[nimblabs-direcao-visual/og.webp]]
