@@ -7,7 +7,7 @@ import Footer from '../components/Footer.astro';
 // manual foi o que deixou o conserto da API invisível aqui.
 import { carteira } from '../data/carteira';
 
-const apply = 'mailto:parceria@roilabs.com.br?subject=Candidatura%20%C3%A0%20cadeira%20%E2%80%94%20Goi%C3%A2nia';
+const apply = 'mailto:parceria@roilabs.com.br?subject=Candidatura%20%C3%A0%20cadeira';
 
 // Canal direto B2B (Gate 3): fornecedor high-ticket quer conversa, não formulário.
 const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
@@ -47,9 +47,9 @@ const jsonLdNodes = [
     name: 'Growth Partner — operação de vendas online com success fee',
     serviceType: 'Operação de vendas online (SEO programático de alta intenção)',
     description:
-      'A ROI Labs constrói e opera a venda online de um fornecedor regional por nicho: páginas de alta intenção validadas por volume real de busca, com tecnologia e tráfego bancados pela ROI Labs. O fornecedor paga a anuidade simbólica da cadeira (R$ 2.640/ano) e um success fee sobre a venda concretizada. Exclusividade de cadeira: uma empresa por nicho, por polo.',
+      'A ROI Labs constrói e opera a venda online de um fornecedor regional por nicho: páginas de alta intenção validadas por volume real de busca, com tecnologia e tráfego bancados pela ROI Labs. O fornecedor paga a anuidade simbólica da cadeira (R$ 2.640/ano) e um success fee sobre a venda concretizada. Exclusividade de cadeira: uma empresa por nicho no Brasil.',
     provider: { '@id': 'https://roilabs.com.br/#org' },
-    areaServed: { '@type': 'City', name: 'Goiânia' },
+    areaServed: { '@type': 'Country', name: 'Brasil' },
     offers: {
       '@type': 'Offer',
       description:
@@ -92,14 +92,14 @@ const jsonLdNodes = [
           </div>
         </div>
 
-        <aside class="chair" aria-label="A próxima cadeira em Goiânia">
+        <aside class="chair" aria-label="A próxima cadeira">
           <div class="chair__top">
             <span class="chair__label">Cadeira</span>
             <span class="chair__num">A próxima</span>
           </div>
           <div class="chair__row">
-            <span class="chair__k">Polo</span>
-            <span class="chair__v">Goiânia</span>
+            <span class="chair__k">Alcance</span>
+            <span class="chair__v">Brasil inteiro</span>
           </div>
           <div class="chair__row">
             <span class="chair__k">Nicho</span>
@@ -117,7 +117,7 @@ const jsonLdNodes = [
           </div>
           <div class="chair__row">
             <span class="chair__k">Exclusividade</span>
-            <span class="chair__v">1 por nicho / polo</span>
+            <span class="chair__v">1 por nicho no Brasil</span>
           </div>
         </aside>
       </div>
@@ -165,7 +165,7 @@ const jsonLdNodes = [
             <h3>Máquina de tráfego orgânico</h3>
             <p>
               Montamos centenas de páginas de alta intenção — uma para cada
-              combinação de produto, característica e bairro com busca real.
+              combinação de produto, característica e cidade com busca real.
               Custo de tecnologia e tráfego é nosso.
             </p>
             <span class="step__tag">Custo da ROI Labs</span>
@@ -192,10 +192,9 @@ const jsonLdNodes = [
           <span class="eyebrow">Escassez programada</span>
           <h2 id="cadeiras-title">Mapa de cadeiras</h2>
           <p class="section__lead">
-            Uma cadeira por nicho, por polo, renovável por desempenho. Quando uma
-            fecha, ela sai do mapa — e o seu concorrente não senta nela. O mapa traz
-            o polo de Goiânia e, junto, as cadeiras que a ROI Labs já opera fora dele:
-            cada uma é um produto no ar, não um case.
+            Uma cadeira por nicho no Brasil inteiro, renovável por desempenho.
+            Quando uma fecha, ela sai do mapa — e o seu concorrente não senta nela.
+            Cada cadeira do mapa é um produto no ar, não um case.
           </p>
         </div>
 
@@ -224,7 +223,7 @@ const jsonLdNodes = [
           ))}
         </ul>
         <p class="map__caption">
-          // polo 01 de N · cadeira escura = ocupada · nicho fora do mapa = cadeira livre
+          // cadeira escura = ocupada · nicho fora do mapa = cadeira livre
         </p>
       </div>
     </section>
@@ -232,7 +231,7 @@ const jsonLdNodes = [
     <script is:inline>
       // Mapa de cadeiras AO VIVO: busca o DB no navegador e sobrescreve o skeleton estático.
       // ponytail: casa por ÍNDICE — a API ordena por `ordem`, e o skeleton renderiza na mesma
-      // ordem (os nichos de Goiânia primeiro, depois as cadeiras de projeto geradas de
+      // ordem (os nichos primeiro, depois as cadeiras de projeto geradas de
       // seats.ts). O VALOR de `ordem` não é lido aqui; só a sequência importa.
       // Falhou o fetch? mantém o skeleton (degrada limpo) — que agora é o grid inteiro, e não
       // mais meia seção em branco.
@@ -407,7 +406,7 @@ const jsonLdNodes = [
             <summary>Quanto a ROI Labs fica?</summary>
             <p class="faq__a">
               Duas partes. A anuidade da cadeira: R$ 2.640 por ano (R$ 220/mês),
-              que reserva o nicho só pra você no polo. E uma fração variável do
+              que reserva o nicho só pra você no Brasil. E uma fração variável do
               que você vende, definida em contrato. Sem setup, sem piso de venda,
               sem verba de mídia: o grosso do nosso lucro é uma parte do seu.
             </p>
@@ -423,7 +422,7 @@ const jsonLdNodes = [
           <details class="faq__item">
             <summary>A exclusividade me prende em quê?</summary>
             <p class="faq__a">
-              Você fica como o único fornecedor do seu nicho no polo por um ano,
+              Você fica como o único fornecedor do seu nicho no Brasil por um ano,
               renovável. Em troca, mantém o SLA de estoque e despacho. Não
               cumprimos a nossa parte? Você sai — a cadeira é sua enquanto a
               gente entrega resultado.
@@ -465,7 +464,7 @@ const jsonLdNodes = [
           <span class="eyebrow close__eyebrow">Candidate-se</span>
           <h2 id="close-title">A próxima cadeira pode ser a do seu nicho.</h2>
           <p class="close__copy">
-            Uma empresa por nicho senta nela e domina a busca local do setor.
+            Uma empresa por nicho senta nela e domina a busca do setor no Brasil.
             Anuidade simbólica, sem risco de tecnologia. Candidate-se antes do seu
             concorrente.
           </p>
@@ -501,11 +500,11 @@ const jsonLdNodes = [
             <div class="form__row">
               <div class="field field--req">
                 <label for="f-whats">WhatsApp</label>
-                <input id="f-whats" name="whatsapp" type="tel" required placeholder="(62) 9____-____" autocomplete="tel" />
+                <input id="f-whats" name="whatsapp" type="tel" required placeholder="(DDD) 9____-____" autocomplete="tel" />
               </div>
               <div class="field">
                 <label for="f-cidade">Cidade</label>
-                <input id="f-cidade" name="cidade" type="text" value="Goiânia" autocomplete="address-level2" />
+                <input id="f-cidade" name="cidade" type="text" placeholder="ex.: Goiânia" autocomplete="address-level2" />
               </div>
             </div>
 

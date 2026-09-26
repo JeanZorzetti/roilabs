@@ -19,7 +19,7 @@ const brl = (n: number) => 'R$ ' + n.toLocaleString('pt-BR');
 const faq = [
   {
     q: 'Quanto custa ocupar uma cadeira?',
-    a: 'A anuidade é de R$ 2.640 por ano (R$ 220/mês) e reserva o nicho só para você no polo enquanto o contrato vigorar. É simbólica de propósito: a tecnologia e o tráfego continuam bancados pela ROI Labs, e o grosso da remuneração segue sendo o success fee sobre a venda concretizada.',
+    a: 'A anuidade é de R$ 2.640 por ano (R$ 220/mês) e reserva o nicho só para você no Brasil enquanto o contrato vigorar. É simbólica de propósito: a tecnologia e o tráfego continuam bancados pela ROI Labs, e o grosso da remuneração segue sendo o success fee sobre a venda concretizada.',
   },
   {
     q: 'Como o percentual do success fee é definido?',
@@ -27,7 +27,7 @@ const faq = [
   },
   {
     q: 'Quem é dono do site e das páginas que a ROI Labs constrói?',
-    a: 'A infraestrutura (domínio do polo, páginas, calculadoras, feed de produtos) é da ROI Labs — é o nosso investimento e o nosso risco. O seu catálogo, sua marca e seus clientes são seus. Se a parceria termina, você sai sem dívida e sem amarra técnica no seu próprio site.',
+    a: 'A infraestrutura (domínio da loja, páginas, calculadoras, feed de produtos) é da ROI Labs — é o nosso investimento e o nosso risco. O seu catálogo, sua marca e seus clientes são seus. Se a parceria termina, você sai sem dívida e sem amarra técnica no seu próprio site.',
   },
   {
     q: 'Preciso abandonar meu site ou meus canais atuais?',
@@ -35,11 +35,11 @@ const faq = [
   },
   {
     q: 'Como funciona o pedido e o repasse do dinheiro?',
-    a: 'O cliente compra na operação do polo e você fatura a venda: o dinheiro da venda é seu. A ROI Labs fatura do parceiro o success fee sobre os pedidos concretizados do período, com relatório detalhado pedido a pedido, além da anuidade da cadeira.',
+    a: 'O cliente compra na loja da operação e você fatura a venda: o dinheiro da venda é seu. A ROI Labs fatura do parceiro o success fee sobre os pedidos concretizados do período, com relatório detalhado pedido a pedido, além da anuidade da cadeira.',
   },
   {
     q: 'O que a exclusividade exige de mim na prática?',
-    a: 'Manter o SLA acordado: estoque consistente dos produtos anunciados e despacho no prazo. É o que protege a reputação da operação — e a sua cadeira. Em troca, nenhum concorrente do seu nicho entra no polo enquanto o contrato vigorar.',
+    a: 'Manter o SLA acordado: estoque consistente dos produtos anunciados e despacho no prazo. É o que protege a reputação da operação — e a sua cadeira. Em troca, nenhum concorrente do seu nicho entra na ROI Labs, em nenhum lugar do Brasil, enquanto o contrato vigorar.',
   },
   {
     q: 'E se a ROI Labs não entregar resultado?',
@@ -70,7 +70,7 @@ const howtoSteps = [
   },
   {
     name: 'Contrato e onboarding do catálogo',
-    text: 'Assinatura do contrato anual de exclusividade (anuidade de R$ 2.640) e integração do catálogo à operação do polo: produtos, preços, fotos, prazos de entrega.',
+    text: 'Assinatura do contrato anual de exclusividade (anuidade de R$ 2.640) e integração do catálogo à loja da operação: produtos, preços, fotos, prazos de entrega.',
   },
   {
     name: 'Go-live e travessia',
@@ -87,7 +87,7 @@ const jsonLdNodes = [
     isPartOf: { '@id': 'https://roilabs.com.br/#website' },
     about: { '@id': 'https://roilabs.com.br/#service' },
     inLanguage: 'pt-BR',
-    dateModified: '2026-09-24',
+    dateModified: '2026-09-26',
   },
   {
     '@type': 'Service',
@@ -95,7 +95,7 @@ const jsonLdNodes = [
     name: 'Growth Partner — operação de vendas online com success fee',
     serviceType: 'Operação de vendas online (SEO programático de alta intenção)',
     provider: { '@id': 'https://roilabs.com.br/#org' },
-    areaServed: { '@type': 'City', name: 'Goiânia' },
+    areaServed: { '@type': 'Country', name: 'Brasil' },
   },
   {
     '@type': 'FAQPage',
@@ -136,7 +136,7 @@ const jsonLdNodes = [
           <h1 id="modelo-title">Growth Partner: sócio de performance, não agência.</h1>
           <p class="section__lead">
             O modelo em uma frase: a ROI Labs constrói e opera a venda online de
-            <strong>um único fornecedor por nicho, por polo</strong> — bancando
+            <strong>um único fornecedor por nicho no Brasil</strong> — bancando
             tecnologia e tráfego — e é remunerada pela
             <strong>anuidade simbólica da cadeira (R$ 2.640/ano)</strong> mais
             uma <strong>fração variável da venda concretizada</strong>. Sem
@@ -166,9 +166,10 @@ const jsonLdNodes = [
             <span class="step__num">Gate 01</span>
             <h3>Demanda comprovada</h3>
             <p>
-              Volume real de busca local, medido no Keyword Planner antes de
-              qualquer investimento. Em Goiânia: 1.900 buscas/mês por
-              "porcelanato" só na cidade. Sem volume medido, não há cadeira.
+              Busca real pelo nicho, medida no Keyword Planner antes de
+              qualquer investimento. Exemplo: anunciantes pagam até R$&nbsp;32,95
+              por clique em "fitas adesivas personalizadas" (Brasil, ago/2026).
+              Sem demanda medida, não há cadeira.
             </p>
             <span class="step__tag">Dados, não intuição</span>
           </article>
@@ -176,8 +177,8 @@ const jsonLdNodes = [
             <span class="step__num">Gate 02</span>
             <h3>Brecha na busca</h3>
             <p>
-              A SERP local precisa estar fraca: se só marketplace genérico
-              ranqueia, há espaço para uma operação local dominar. Concorrência
+              A primeira página do Google precisa estar fraca: se só marketplace
+              genérico ranqueia, há espaço para uma operação especializada dominar. Concorrência
               orgânica forte demais? A conta não fecha e o nicho fica em estudo.
             </p>
             <span class="step__tag">Espaço para dominar</span>
@@ -256,7 +257,7 @@ const jsonLdNodes = [
         <div class="fit">
           <div class="fit__col fit__col--yes">
             <div class="fit__title">O que a ROI Labs banca</div>
-            <p class="fit__item"><span class="fit__mark" aria-hidden="true">✓</span> Tecnologia inteira: site do polo, catálogo, calculadoras, comparador, feed.</p>
+            <p class="fit__item"><span class="fit__mark" aria-hidden="true">✓</span> Tecnologia inteira: loja online, catálogo, calculadoras, comparador, feed.</p>
             <p class="fit__item"><span class="fit__mark" aria-hidden="true">✓</span> Tráfego orgânico: centenas de páginas de alta intenção, sem mídia paga.</p>
             <p class="fit__item"><span class="fit__mark" aria-hidden="true">✓</span> Captação e qualificação do lead até o pedido.</p>
             <p class="fit__item"><span class="fit__mark" aria-hidden="true">✓</span> Transparência: relatório pedido a pedido na fatura do fee.</p>

@@ -16,19 +16,19 @@ export const GET: APIRoute = async () => {
 
   const body = `# ROI Labs
 
-> ROI Labs é um Growth Partner para fornecedores regionais de alto padrão. Construímos a operação de vendas online (SEO programático de alta intenção + captação) com tecnologia e tráfego bancados pela ROI Labs: o fornecedor paga a anuidade simbólica da cadeira (R$ 2.640/ano) e uma fração variável só quando vende. Modelo de cadeira exclusiva — 1 empresa por nicho, por polo. Polo 1: Goiânia (GO); candidatura aberta para qualquer nicho ainda sem cadeira.
+> ROI Labs é um Growth Partner para fornecedores regionais de alto padrão. Construímos a operação de vendas online (SEO programático de alta intenção + captação) com tecnologia e tráfego bancados pela ROI Labs: o fornecedor paga a anuidade simbólica da cadeira (R$ 2.640/ano) e uma fração variável só quando vende. Modelo de cadeira exclusiva — 1 empresa por nicho no Brasil inteiro; candidatura aberta para qualquer nicho ainda sem cadeira.
 
 ## Como funciona
 - Sem risco de tecnologia: a ROI Labs banca a infraestrutura e o tráfego.
 - Remuneração: anuidade da cadeira de R$ 2.640/ano (R$ 220/mês) + success fee sobre a venda concretizada.
-- Exclusividade: uma cadeira por nicho, por polo, renovável por desempenho (SLA de estoque e despacho).
+- Exclusividade: uma cadeira por nicho no Brasil, renovável por desempenho (SLA de estoque e despacho).
 - Canal primário: páginas de alta intenção (produto × característica × ocasião × intenção local), validadas por volume real de busca, não mídia paga.
 
 ## Páginas principais
-- [Home e candidatura](${SITE}/): o modelo, o mapa de cadeiras de Goiânia e o formulário de candidatura do fornecedor.
+- [Home e candidatura](${SITE}/): o modelo, o mapa de cadeiras e o formulário de candidatura do fornecedor.
 - [O modelo Growth Partner](${SITE}/modelo/): os três gates de validação, a fórmula pública do success fee, a exclusividade de cadeira e as 6 etapas da candidatura ao contrato.
 - [Simulador de receita](${SITE}/simulador/): fornecedor candidato simula ticket médio × pedidos/mês e vê a receita projetada e o líquido após o success fee e a anuidade da cadeira.
-- [Blog](${SITE}/blog/): como fornecedores regionais em Goiânia vendem pela internet sem montar e-commerce nem comprar mídia.
+- [Blog](${SITE}/blog/): como fornecedores vendem pela internet sem montar e-commerce nem comprar mídia.
 - [Feed RSS do blog](${SITE}/rss.xml)
 
 ## Artigos
@@ -36,7 +36,7 @@ ${artigos}
 
 ## Contato
 - E-mail: parceria@roilabs.com.br
-- Local: Goiânia, GO, Brasil
+- Sede: Goiânia, GO · Atendimento: Brasil inteiro
 `;
 
   return new Response(body, {

@@ -31,7 +31,7 @@ export const GET: APIRoute = async () => {
     <title>ROI Labs — Blog</title>
     <link>${SITE}/blog/</link>
     <atom:link href="${SITE}/rss.xml" rel="self" type="application/rss+xml" />
-    <description>Como fornecedores de revestimentos e materiais de construção vendem pela internet — Growth Partner, pSEO, AEO e o polo de Goiânia.</description>
+    <description>Como fornecedores de revestimentos e materiais de construção vendem pela internet — Growth Partner, pSEO, AEO e a cadeira exclusiva por nicho.</description>
     <language>pt-BR</language>
     <lastBuildDate>${(posts[0]?.data.pubDate ?? new Date()).toUTCString()}</lastBuildDate>
 ${items}
