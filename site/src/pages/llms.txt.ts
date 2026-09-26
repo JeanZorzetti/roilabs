@@ -35,7 +35,7 @@ export const GET: APIRoute = async () => {
 ${artigos}
 
 ## Contato
-- E-mail: parceria@roilabs.com.br
+- E-mail: roilabs.ia@gmail.com
 - Sede: Goiânia, GO · Atendimento: Brasil inteiro
 `;
 
