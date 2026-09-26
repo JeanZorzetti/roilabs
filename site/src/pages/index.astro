@@ -341,30 +341,33 @@ const jsonLdNodes = [
         </div>
 
         <div class="gate-list" role="list" aria-label="Os três gates da cadeira">
-          <div class="gate gate--open" role="listitem">
-            <span class="gate__check" aria-hidden="true"></span>
-            <div class="gate__body">
-              <div class="gate__name">Gate 01 — Demanda comprovada</div>
-              <div class="gate__desc">Volume de busca local do seu nicho, medido. Exemplo: 1.900 buscas/mês por "porcelanato" só em Goiânia.</div>
-            </div>
+          <label class="gate gate--open" role="listitem">
+            <input class="gate__input" type="checkbox" />
+            <span class="gate__check" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M6 10L8.5 12.5L14 7" /></svg></span>
+            <span class="gate__body">
+              <span class="gate__name">Gate 01 — Demanda comprovada</span>
+              <span class="gate__desc">Volume de busca local do seu nicho, medido. Exemplo: 1.900 buscas/mês por "porcelanato" só em Goiânia.</span>
+            </span>
             <span class="gate__state">Nós medimos</span>
-          </div>
-          <div class="gate gate--open" role="listitem">
-            <span class="gate__check" aria-hidden="true"></span>
-            <div class="gate__body">
-              <div class="gate__name">Gate 02 — Brecha na busca</div>
-              <div class="gate__desc">SERP local fraca: só marketplace genérico ranqueia. Espaço pra dominar.</div>
-            </div>
+          </label>
+          <label class="gate gate--open" role="listitem">
+            <input class="gate__input" type="checkbox" />
+            <span class="gate__check" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M6 10L8.5 12.5L14 7" /></svg></span>
+            <span class="gate__body">
+              <span class="gate__name">Gate 02 — Brecha na busca</span>
+              <span class="gate__desc">SERP local fraca: só marketplace genérico ranqueia. Espaço pra dominar.</span>
+            </span>
             <span class="gate__state">Nós medimos</span>
-          </div>
-          <div class="gate gate--open" role="listitem">
-            <span class="gate__check" aria-hidden="true"></span>
-            <div class="gate__body">
-              <div class="gate__name">Gate 03 — Fornecedor A-Player</div>
-              <div class="gate__desc">O produto e a logística que a demanda exige. Esse é você.</div>
-            </div>
+          </label>
+          <label class="gate gate--open" role="listitem">
+            <input class="gate__input" type="checkbox" />
+            <span class="gate__check" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M6 10L8.5 12.5L14 7" /></svg></span>
+            <span class="gate__body">
+              <span class="gate__name">Gate 03 — Fornecedor A-Player</span>
+              <span class="gate__desc">O produto e a logística que a demanda exige. Esse é você.</span>
+            </span>
             <span class="gate__state">Você</span>
-          </div>
+          </label>
         </div>
 
         <div class="fit">

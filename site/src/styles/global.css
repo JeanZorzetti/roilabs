@@ -795,6 +795,7 @@ a {
 }
 
 .gate__name {
+  display: block;
   font-family: var(--font-display);
   font-weight: 700;
   font-size: 1.08rem;
@@ -802,6 +803,7 @@ a {
 }
 
 .gate__desc {
+  display: block;
   font-size: 0.88rem;
   color: var(--l-muted);
   margin-top: 0.15rem;
@@ -822,6 +824,73 @@ a {
 
 .gate--open .gate__state {
   color: var(--l-muted);
+}
+
+/* Gate como checkbox clicável (inspirado no Checkbox do 21st.dev, sem React):
+   o <input> real fica escondido e o estado vem de :has(:checked). */
+label.gate {
+  cursor: pointer;
+  transition: background-color 200ms ease;
+}
+
+label.gate:hover {
+  background: color-mix(in srgb, var(--hivis) 5%, transparent);
+}
+
+.gate__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.gate__check {
+  transition: background-color 200ms ease, border-color 200ms ease;
+}
+
+.gate__check svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: #1a0c05;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 12;
+  stroke-dashoffset: 12;
+  transition: stroke-dashoffset 280ms ease 60ms;
+}
+
+label.gate:hover .gate__check {
+  border-color: var(--hivis);
+}
+
+.gate__input:focus-visible + .gate__check {
+  outline: 2px solid var(--hivis);
+  outline-offset: 3px;
+}
+
+.gate:has(.gate__input:checked) .gate__check {
+  background: var(--hivis);
+  border: 1.5px solid var(--hivis);
+}
+
+.gate:has(.gate__input:checked) .gate__check svg {
+  stroke-dashoffset: 0;
+}
+
+.gate:has(.gate__input:checked) .gate__state {
+  color: var(--hivis-deep);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  label.gate,
+  .gate__check,
+  .gate__check svg {
+    transition: none;
+  }
 }
 
 .fit {
