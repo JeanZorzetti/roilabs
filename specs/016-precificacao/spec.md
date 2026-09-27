@@ -4,7 +4,7 @@
 
 **Created**: 2026-09-27
 
-**Status**: Implementado no branch (não publicado — ver handoff.md)
+**Status**: Publicado em `main` (27/09/2026) — ver handoff.md
 
 **Input**: User description: "implemente como nova feature 'precificação' do painel adm app.roilabs" — a partir da pesquisa de mercado de 27/09/2026 que propôs percentuais de comissão por nicho/segmento para quem vai ocupar as cadeiras.
 

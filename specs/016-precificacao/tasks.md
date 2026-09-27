@@ -23,5 +23,5 @@
 
 - [x] T010 `npm run build` limpo (TypeScript incluso) e `npm test` com saída 0.
 - [x] T011 Navegador local (Playwright): 1440px e 390px, exemplos do relatório conferidos na tela, console sem erro, sem rolagem lateral.
-- [ ] T012 Publicar (merge em `main` + push) — **aguarda decisão** sobre o repositório ser público (handoff.md).
+- [x] T012 Publicar (merge em `main` + push) — autorizado pela Maria em 27/09, ciente do repo público (handoff.md §0).
 - [ ] T013 Prova em produção: `/admin/precificacao` responde (redireciona para `/login` sem sessão) e abre logado com a lista real de parceiros.

@@ -1,19 +1,17 @@
 # Handoff — 016 Precificação
 
-**Última atualização: 27/09/2026.** Feature pronta e verificada **localmente**, commitada no branch
-`016-precificacao`. **Não publicada** (nem push do branch, nem merge em `main`).
+**Última atualização: 27/09/2026.** Feature publicada: merge em `main` e push em 27/09, com
+autorização da Maria ("de tudo que já fez faça commit push") depois do aviso abaixo.
 
-## 0. Por que não foi publicada
+## 0. A tabela é pública
 
 O repositório `JeanZorzetti/roilabs` é **público** (GitHub API: `visibility=public`, conferido em
-27/09). Publicar esta feature põe no GitHub, legível por qualquer um — inclusive fornecedores e o
-parceiro atual de fitas —, a tabela interna de preços: as faixas, a recompra de 8% sugerida para
-o B2B (o contrato atual é 15/10), o "limite para negociar" e as justificativas. Isso é decisão de
-negócio, não técnica. Caminhos:
-
-1. **Publicar assim mesmo** (a home já diz "a conta é pública"): `git checkout main && git merge 016-precificacao && git push`. Push em `main` = deploy.
-2. **Tornar o repo privado antes** (Settings → General → Danger Zone no GitHub). ⚠️ Conferir antes se a EasyPanel puxa o repo com token; se puxa pela URL pública, o deploy quebra até configurar credencial.
-3. **Publicar sem as partes sensíveis**: tirar do `NICHOS` a linha B2B e a regra "Limite para negociar" da página.
+27/09). Com o push, a tabela interna de preços ficou legível por qualquer um — inclusive
+fornecedores e o parceiro atual de fitas: as faixas, a recompra de 8% sugerida para o B2B (o
+contrato atual é 15/10), o "limite para negociar" e as justificativas. A Maria foi avisada antes e
+autorizou. Se isso mudar: tornar o repo privado (Settings → General → Danger Zone) — ⚠️ conferir
+antes se a EasyPanel puxa o repo com token; se puxa pela URL pública, o deploy quebra até
+configurar credencial. Tornar privado não apaga o que já foi lido ou copiado.
 
 ## Feito
 
@@ -36,8 +34,8 @@ negócio, não técnica. Caminhos:
 
 ## Próximos passos
 
-- Decidir a publicação (seção 0). Depois do deploy: abrir `/admin/precificacao` logado e conferir a
-  lista real de parceiros e a linha sugerida de cada um.
+- Abrir `/admin/precificacao` logado em produção e conferir a lista real de parceiros e a linha
+  sugerida de cada um (sem banco local, isso não foi visto).
 - Se o Jean aprovar a tabela: botão "preencher pela tabela" no cadastro do parceiro (toca o caminho
   de dinheiro da 010 — só pré-preenche, a validação `parseTaxa` continua igual).
 - Subir a confiança dos números: CPC por nicho no Keyword Planner, margem real de cada fornecedor,

@@ -23,7 +23,7 @@ Uma página nova no admin (`/admin/precificacao`) que mostra a tabela de success
 | Princípio | Como a feature cumpre |
 |---|---|
 | I. Env primeiro | Não mexe em env nem conexão. |
-| II. Verificação real | Build + testes + navegador local com Playwright (1440px e 390px, console limpo). **Falta** a prova em produção: só depois do push, e o push depende da decisão sobre o repo público (handoff.md). |
+| II. Verificação real | Build + testes + navegador local com Playwright (1440px e 390px, console limpo). A prova em produção vem depois do push (tasks T013). |
 | III. Simplicidade | Tabela em código, não em model Prisma (muda raramente; teto e caminho de upgrade no topo de `precificacao.ts`). Sem dependência. |
 | IV. Qualidade de página | Faixas coloridas, calculadora com decomposição da conta, tabelas que viram cartões no celular, estados de erro e de "não fecha". |
 | V. Spec-driven | spec/plan/tasks/handoff nesta pasta. |
