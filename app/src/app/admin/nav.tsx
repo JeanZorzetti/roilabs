@@ -11,6 +11,7 @@ const LINKS: [string, string][] = [
   ['/admin/pedidos', 'Pedidos'],
   ['/admin/assinaturas', 'Assinaturas'],
   ['/admin/parceiros', 'Parceiros'],
+  ['/admin/precificacao', 'Precificação'],
   ['/admin/centros-de-custo', 'Centros de custo'],
   ['/admin/cupons', 'Cupons'],
   ['/admin/financeiro', 'Financeiro'],

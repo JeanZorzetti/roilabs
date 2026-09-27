@@ -86,10 +86,13 @@ a { color: inherit; }
   padding: 0.75rem clamp(1rem, 4vw, 2rem);
   border-bottom: 1px solid rgba(242,241,237,0.1);
 }
-.topbar__brand { display: flex; align-items: center; gap: 0.6rem; font-family: var(--font-display), sans-serif; font-weight: 800; }
-.topbar__nav { display: flex; gap: 0.25rem; margin-left: 0.5rem; }
+.topbar__brand { display: flex; align-items: center; gap: 0.6rem; font-family: var(--font-display), sans-serif; font-weight: 800; white-space: nowrap; flex-shrink: 0; }
+/* 12 links: quando não cabem numa linha, o menu quebra em 2 linhas inteiras — nunca o rótulo
+   ("Leads / Goiânia") nem um link escondido na borda. No celular vira trilho rolável (abaixo). */
+.topbar__nav { display: flex; flex-wrap: wrap; gap: 0.15rem; margin-left: 0.5rem; min-width: 0; }
 .topbar__nav a {
-  text-decoration: none; padding: 0.4rem 0.8rem; border-radius: 7px; font-weight: 700; font-size: 14px; color: var(--d-muted);
+  text-decoration: none; padding: 0.4rem 0.65rem; border-radius: 7px; font-weight: 700; font-size: 14px; color: var(--d-muted);
+  white-space: nowrap;
 }
 .topbar__nav a:hover { color: var(--d-text); background: rgba(242,241,237,0.06); }
 .topbar__nav a.active { color: var(--d-text); background: rgba(255,90,31,0.16); }
@@ -293,12 +296,153 @@ a { color: inherit; }
   .fin-table tbody tr:hover { background: transparent; }
 }
 
+/* ── Precificação (016) ────────────────────────────────────────────────── */
+/* cor por faixa; todas passam AA (>=4.5:1) como texto sobre branco E sobre --porcelain-2 */
+:root {
+  --pr-premium: #9a3412;
+  --pr-padrao: #854d0e;
+  --pr-intermediaria: #166534;
+  --pr-margem-fina: #1d4ed8;
+  --pr-especial: #5b606a;
+}
+.pr-cor--premium { --pr-cor: var(--pr-premium); }
+.pr-cor--padrao { --pr-cor: var(--pr-padrao); }
+.pr-cor--intermediaria { --pr-cor: var(--pr-intermediaria); }
+.pr-cor--margem-fina { --pr-cor: var(--pr-margem-fina); }
+.pr-cor--especial { --pr-cor: var(--pr-especial); }
+
+.pr-tag {
+  display: inline-block; margin-bottom: 0.5rem; padding: 0.2rem 0.6rem; border-radius: 20px;
+  font-family: var(--font-mono), monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em;
+  background: rgba(255,90,31,0.12); color: var(--hivis-deep);
+}
+.page__head p a { color: var(--hivis-deep); font-weight: 700; }
+
+.pr-faixas { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 0.75rem; margin-bottom: 1.5rem; }
+.pr-faixa {
+  background: #fff; border: 1px solid var(--l-line); border-top: 4px solid var(--pr-cor);
+  border-radius: 12px; padding: 0.9rem 1rem; display: flex; flex-direction: column; gap: 0.2rem;
+}
+.pr-faixa__nome { font-family: var(--font-mono), monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--pr-cor); font-weight: 700; }
+.pr-faixa__taxa { font-family: var(--font-mono), monospace; font-size: 1.35rem; font-weight: 700; line-height: 1.25; }
+.pr-faixa__taxa span { display: block; white-space: nowrap; }
+.pr-faixa__criterio { font-size: 13px; color: var(--l-muted); }
+.pr-faixa__qtd { font-size: 12px; color: var(--l-muted); margin-top: auto; padding-top: 0.35rem; }
+
+.pr-calc { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr); gap: 1rem; align-items: start; }
+.pr-panel { background: #fff; border: 1px solid var(--l-line); border-radius: 12px; padding: 1.1rem 1.25rem; }
+.pr-panel h2 { font-size: 1.1rem; }
+.pr-panel__lead { color: var(--l-muted); font-size: 13.5px; margin: 0.25rem 0 1rem; }
+.pr-form { display: flex; flex-wrap: wrap; gap: 0.85rem; align-items: flex-end; }
+.pr-field { display: flex; flex-direction: column; gap: 0.3rem; font-size: 12px; font-weight: 700; color: var(--l-muted); }
+.pr-field input, .pr-field select {
+  font: inherit; font-size: 14px; font-weight: 600; color: var(--l-text);
+  padding: 0.5rem 0.6rem; border-radius: 8px; border: 1px solid var(--l-line); background: #fff; min-height: 40px;
+}
+.pr-field input { font-family: var(--font-mono), monospace; }
+.pr-field input:focus, .pr-field select:focus { border-color: var(--hivis); }
+.pr-field input[aria-invalid="true"] { border-color: var(--red); }
+.pr-field--grow { flex: 1 1 260px; }
+.pr-field--grow select { width: 100%; }
+.pr-field--num input { width: 150px; }
+.pr-check { display: flex; align-items: center; gap: 0.5rem; font-size: 13px; font-weight: 700; min-height: 40px; cursor: pointer; }
+.pr-check input { width: 18px; height: 18px; accent-color: var(--hivis); }
+.pr-hint { font-size: 12.5px; color: var(--l-muted); margin: 0.6rem 0 0; }
+
+.pr-results { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem; margin-top: 0.9rem; }
+.pr-result { background: var(--porcelain); border: 1px solid var(--l-line); border-radius: 10px; padding: 0.9rem 1rem; }
+.pr-result__label { font-family: var(--font-mono), monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--l-muted); font-weight: 700; }
+.pr-result__valor { font-family: var(--font-mono), monospace; font-size: 1.7rem; font-weight: 700; margin-top: 0.15rem; }
+.pr-result__pct { font-size: 13px; color: var(--l-muted); }
+.pr-result ul { margin: 0.6rem 0 0; padding-left: 1.05rem; font-size: 13px; color: var(--l-muted); display: grid; gap: 0.2rem; }
+
+.pr-encaixe { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem; margin: 0.9rem 0; }
+.pr-encaixe > div { background: var(--porcelain); border: 1px solid var(--l-line); border-radius: 10px; padding: 0.75rem 0.9rem; }
+.pr-encaixe dt { font-size: 12px; color: var(--l-muted); font-weight: 700; }
+.pr-encaixe dd { margin: 0.15rem 0 0; font-family: var(--font-mono), monospace; font-size: 1.3rem; font-weight: 700; }
+.pr-sugestao { border: 1px solid var(--l-line); border-left: 4px solid var(--pr-cor); border-radius: 10px; padding: 0.85rem 1rem; }
+.pr-sugestao__faixa { font-family: var(--font-display), sans-serif; font-weight: 800; font-size: 1.15rem; color: var(--pr-cor); }
+.pr-sugestao__taxa { font-family: var(--font-mono), monospace; font-size: 1.25rem; font-weight: 700; }
+.pr-sugestao__taxa span { font-family: var(--font-body), sans-serif; font-size: 12px; font-weight: 700; color: var(--l-muted); }
+.pr-alerta { color: #9a3412; font-weight: 700; font-size: 13.5px; margin: 0.9rem 0 0; }
+
+.pr-section { margin-top: 2.5rem; }
+.pr-section h2 { font-size: 1.25rem; }
+.pr-section > p { color: var(--l-muted); margin: 0.3rem 0 1rem; max-width: 85ch; }
+
+.pr-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 13.5px; background: #fff; border: 1px solid var(--l-line); border-radius: 12px; overflow: hidden; }
+.pr-table thead th {
+  font-family: var(--font-mono), monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em;
+  color: var(--l-muted); font-weight: 700; padding: 0.65rem 0.75rem; border-bottom: 2px solid var(--l-line); text-align: left; white-space: nowrap;
+}
+.pr-table tbody td { padding: 0.65rem 0.75rem; border-bottom: 1px solid var(--l-line); vertical-align: top; }
+.pr-table tbody tr:last-child td { border-bottom: 0; }
+.pr-table a { color: inherit; }
+.pr-table__nicho { font-weight: 700; min-width: 190px; }
+.pr-table__taxa { font-family: var(--font-mono), monospace; font-weight: 700; font-size: 15px; white-space: nowrap; }
+.pr-table__texto { font-weight: 700; min-width: 150px; }
+.pr-table__regra { min-width: 220px; }
+.pr-table__porque { color: var(--l-muted); min-width: 280px; }
+.pr-group th {
+  text-align: left; padding: 0.55rem 0.75rem; font-size: 13px; font-weight: 800; color: var(--pr-cor);
+  background: var(--porcelain-2); border-left: 4px solid var(--pr-cor); border-bottom: 1px solid var(--l-line);
+}
+.pr-group th span { color: var(--l-muted); font-weight: 600; }
+.pr-destaque td { background: rgba(255,90,31,0.08); font-weight: 700; }
+
+.pr-conf { display: inline-block; font-size: 11px; font-weight: 800; padding: 0.15rem 0.55rem; border-radius: 20px; white-space: nowrap; }
+.pr-conf--alta, .pr-conf--media-alta { color: #166534; background: #dcfce7; }
+.pr-conf--media { color: #854d0e; background: #fef3c7; }
+.pr-conf--media-baixa { color: #9a3412; background: #ffedd5; }
+.pr-conf--baixa { color: #b91c1c; background: #fee2e2; }
+
+.pr-status { font-weight: 700; font-size: 13px; }
+.pr-status--igual { color: var(--green-strong); }
+.pr-status--acima { color: #9a3412; }
+.pr-status--abaixo { color: var(--blue); }
+.pr-status--neutro { color: var(--l-muted); }
+
+.pr-regras { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 0.75rem; }
+.pr-regra { background: #fff; border: 1px solid var(--l-line); border-radius: 10px; padding: 0.9rem 1rem; }
+.pr-regra h3 { font-size: 0.95rem; margin-bottom: 0.3rem; }
+.pr-regra p { margin: 0; font-size: 13.5px; color: var(--l-muted); }
+.pr-regra--contrato { margin-top: 0.75rem; border-left: 4px solid var(--ink); }
+.pr-regra--contrato ul { margin: 0; padding-left: 1.1rem; font-size: 13.5px; color: var(--l-muted); display: grid; gap: 0.25rem; }
+
+.pr-notas { margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--l-line); font-size: 13px; color: var(--l-muted); }
+.pr-notas ul { margin: 0.4rem 0 0; padding-left: 1.1rem; display: grid; gap: 0.25rem; }
+
+@media (max-width: 1000px) {
+  .pr-calc { grid-template-columns: 1fr; }
+}
+/* celular: tabela vira pilha de cartões — rolar de lado escondia a coluna "Recompra" */
+@media (max-width: 760px) {
+  .pr-faixas { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pr-faixa__taxa { font-size: 1.1rem; }
+  .pr-table--cards thead { display: none; }
+  .pr-table--cards tbody, .pr-table--cards tr, .pr-table--cards td, .pr-table--cards th { display: block; }
+  .pr-table--cards tbody tr { padding: 0.75rem 0.9rem; border-bottom: 1px solid var(--l-line); }
+  .pr-table--cards tr.pr-group { padding: 0; border-bottom: 0; }
+  .pr-table--cards tbody td { border: 0; padding: 0.12rem 0; min-width: 0; }
+  .pr-table--cards td[data-label]::before {
+    content: attr(data-label) " · "; font-family: var(--font-body), sans-serif; font-size: 12px; font-weight: 700; color: var(--l-muted);
+  }
+  .pr-table--cards .pr-table__nicho { font-size: 15px; margin-bottom: 0.2rem; }
+  .pr-table--cards .pr-table__taxa { display: inline-block; margin-right: 1.1rem; }
+  .pr-table--cards .pr-conf { margin-top: 0.35rem; }
+}
+@media (max-width: 560px) {
+  .pr-results, .pr-encaixe { grid-template-columns: 1fr; }
+  .pr-field--num { flex: 1 1 140px; }
+  .pr-field--num input { width: 100%; }
+}
+
 /* ── Mobile — admin operado de campo (celular) ─────────────────────────── */
 @media (max-width: 760px) {
   .topbar { flex-wrap: wrap; gap: 0.5rem 1rem; }
   /* nav vira trilho horizontal rolável em linha própria */
   .topbar__nav {
-    order: 9; width: 100%; margin-left: 0;
+    order: 9; width: 100%; margin-left: 0; flex-wrap: nowrap;
     overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;
   }
   .topbar__nav::-webkit-scrollbar { display: none; }
