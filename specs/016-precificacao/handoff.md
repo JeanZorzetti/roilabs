@@ -30,7 +30,9 @@ configurar credencial. Tornar privado não apaga o que já foi lido ou copiado.
   mostra o aviso, calculadora confere com o relatório (moda R$ 200 → R$ 30/R$ 20; móveis R$ 4.000 →
   R$ 380; eletrônicos R$ 30 com distribuidor → piso R$ 5; margem 20% → "não fecha"). Console sem
   erro. 390px sem rolagem lateral; tabelas viram cartões.
-- **Não verificado**: a seção "Taxas em vigor" com dados reais (sem banco local) e produção.
+- **Produção (27/09, 01:22)**: `/admin/precificacao` sem sessão → `307 /login` (era 404) e o CSS
+  publicado tem `.pr-faixa` e o menu com `flex-wrap`. **Não verificado**: a página logada e a seção
+  "Taxas em vigor" com dados reais (sem senha do admin nem banco nesta máquina).
 
 ## Próximos passos
 
@@ -43,6 +45,10 @@ configurar credencial. Tornar privado não apaga o que já foi lido ou copiado.
 
 ## Gotchas
 
+- **O push nem sempre dispara o deploy da EasyPanel.** O push de `26cf740`/`d024499` deixou o app
+  no build antigo por 20 min (rota 404, CSS sem `.pr-*`). Um commit vazio (`006eb92`) resolveu em
+  1,4 min — mesmo sintoma e mesma cura do `d747465` (26/09). Depois de push, conferir a produção,
+  não assumir.
 - `next start` avisa que não combina com `output: 'standalone'`, mas serve para conferir tela local.
 - `npm install` no `/app` gera `package-lock.json`; o repo não versiona lockfile — não commitar.
 - A tabela está em código de propósito (Constituição III). Editar pelo admin = model Prisma + form,

@@ -24,4 +24,4 @@
 - [x] T010 `npm run build` limpo (TypeScript incluso) e `npm test` com saída 0.
 - [x] T011 Navegador local (Playwright): 1440px e 390px, exemplos do relatório conferidos na tela, console sem erro, sem rolagem lateral.
 - [x] T012 Publicar (merge em `main` + push) — autorizado pela Maria em 27/09, ciente do repo público (handoff.md §0).
-- [ ] T013 Prova em produção: `/admin/precificacao` responde (redireciona para `/login` sem sessão) e abre logado com a lista real de parceiros.
+- [ ] T013 Prova em produção: `/admin/precificacao` responde (redireciona para `/login` sem sessão) e abre logado com a lista real de parceiros. **Metade feita (27/09)**: sem sessão → `307 /login` (antes 404) e o CSS no ar tem `.pr-faixa`. Falta abrir logado (sem senha do admin nesta máquina).
