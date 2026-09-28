@@ -1,0 +1,768 @@
+/* art-direction · brasil-inteiro · eixos: campo/autônomo/escura · orçamento: 30kb · 2026-09-28 */
+/* A home na direção Brasil Inteiro. Tudo aqui mora dentro de [data-art="brasil-inteiro"]:
+   as outras páginas continuam no global.css até a home ser aprovada no ar. */
+
+/* reservas com a largura da fonte da direção, medida no navegador: a troca pela fonte real não reflui o texto (CLS) */
+@font-face {
+  font-family: 'Gloock Reserva';
+  src: local('Georgia');
+  size-adjust: 102.6%;
+  ascent-override: 95.5%;
+  descent-override: 22.4%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'Figtree Reserva';
+  font-weight: 100 449;
+  src: local('Arial'), local('Helvetica'), local('Roboto');
+  size-adjust: 98.9%;
+  ascent-override: 96%;
+  descent-override: 25.3%;
+  line-gap-override: 0%;
+}
+
+/* Figtree 500 ≈ Arial 400 × 1,008; o negrito do Arial é mais largo que o Figtree 600 (× 0,951) */
+@font-face {
+  font-family: 'Figtree Reserva';
+  font-weight: 450 549;
+  src: local('Arial'), local('Helvetica'), local('Roboto');
+  size-adjust: 100.8%;
+  ascent-override: 94.2%;
+  descent-override: 24.8%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'Figtree Reserva';
+  font-weight: 550 900;
+  src: local('Arial Bold'), local('Arial-BoldMT'), local('Helvetica Bold'), local('Roboto Bold');
+  size-adjust: 95.1%;
+  ascent-override: 101%;
+  descent-override: 26.6%;
+  line-gap-override: 0%;
+}
+
+/* ---------- 1. o global.css relido com os tokens da direção ---------- */
+[data-art='brasil-inteiro'] {
+  --ink: var(--bi-noite);
+  --ink-2: var(--bi-noite-2);
+  --ink-3: var(--bi-noite-3);
+  --porcelain: var(--bi-creme);
+  --porcelain-2: var(--bi-creme-2);
+  --concrete: var(--bi-tinta-2);
+  --hivis: var(--bi-laranja);
+  --hivis-deep: var(--bi-laranja-texto);
+  --d-text: var(--bi-texto);
+  --d-muted: var(--bi-texto-2);
+  --d-line: var(--bi-fio);
+  --d-line-strong: var(--bi-fio-forte);
+  --l-text: var(--bi-tinta);
+  --l-muted: var(--bi-tinta-2);
+  --l-line: var(--bi-fio-c);
+  --l-line-strong: var(--bi-fio-c-forte);
+  --font-display: var(--bi-corpo);
+  --font-body: var(--bi-corpo);
+  --font-mono: var(--bi-corpo);
+
+  background: var(--bi-noite);
+  color: var(--bi-texto);
+  font-family: var(--bi-corpo);
+}
+
+body:has([data-art='brasil-inteiro']) {
+  background: var(--bi-noite, inherit);
+}
+
+/* a gramática antiga (mono, caixa alta, espaçamento largo) sai daqui: a voz agora é serifa + grotesca */
+[data-art='brasil-inteiro'] :is(
+    .eyebrow, .nav__link, .nav__toggle, .nav__panel a, .btn, .step__num, .step__tag, .map__subtitle,
+    .seat__status, .map__caption, .readout__bar, .metric__key, .prova__foot, .site-footer__meta,
+    .site-footer__nav a, .gate__state, .fit__title, .close__fine, .field label, .form__note
+  ) {
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+[data-art='brasil-inteiro'] :is(h1, h2, .manifesto__big, .metric__val, .prova__title) {
+  font-family: var(--bi-display);
+  font-weight: 400;
+  font-synthesis: none;
+  letter-spacing: -0.01em;
+}
+
+[data-art='brasil-inteiro'] h3 {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+[data-art='brasil-inteiro'] .section h2 {
+  font-size: clamp(2rem, 3.9vw, 3.2rem);
+  line-height: 1.06;
+  text-wrap: balance;
+}
+
+[data-art='brasil-inteiro'] .section--light :focus-visible {
+  outline-color: var(--bi-laranja-texto);
+}
+
+[data-art='brasil-inteiro'] .eyebrow {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+/* banda clara: creme com a trama de pontos — o mesmo ponto do mapa, em outra escala */
+[data-art='brasil-inteiro'] .section--light {
+  background:
+    radial-gradient(circle at 1px 1px, var(--bi-trama) 1px, transparent 1.6px) 0 0 / 22px 22px,
+    var(--bi-creme);
+}
+
+/* ---------- 2. cabeçalho e botões ---------- */
+[data-art='brasil-inteiro'] .nav__link {
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+[data-art='brasil-inteiro'] .nav__panel {
+  box-shadow: 0 20px 40px -20px var(--bi-sombra);
+}
+
+[data-art='brasil-inteiro'] :is(.nav__toggle, .nav__panel a) {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+[data-art='brasil-inteiro'] .btn {
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: var(--bi-raio);
+  transition:
+    background-color var(--bi-dur-rapida) var(--bi-ease-saida),
+    border-color var(--bi-dur-rapida) var(--bi-ease-saida);
+}
+
+[data-art='brasil-inteiro'] .btn--sm {
+  font-size: 0.92rem;
+}
+
+[data-art='brasil-inteiro'] .btn--primary {
+  color: var(--bi-sobre-laranja);
+  box-shadow: 0 12px 26px -16px var(--bi-sombra-laranja);
+}
+
+[data-art='brasil-inteiro'] .btn--primary:hover {
+  background: var(--bi-laranja-2);
+  transform: none;
+}
+
+/* WhatsApp: contorno com o ponto verde da marca dele, sem disputar com o laranja */
+[data-art='brasil-inteiro'] .btn--whats {
+  background: transparent;
+  color: var(--bi-texto);
+  border: 1.5px solid var(--bi-fio-forte);
+}
+
+[data-art='brasil-inteiro'] .btn--whats::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--bi-whats);
+}
+
+[data-art='brasil-inteiro'] .btn--whats:hover {
+  background: transparent;
+  border-color: var(--bi-texto);
+  transform: none;
+}
+
+/* ---------- 3. o palco: mapa vivo + texto + vitrine ---------- */
+[data-art='brasil-inteiro'] .bi-palco {
+  --bi-mapa-h: clamp(420px, 66svh, 640px);
+  --bi-palco-topo: clamp(2rem, 5vh, 3.5rem);
+  position: relative;
+  overflow: clip;
+  padding-top: var(--bi-palco-topo);
+  border-bottom: 1px solid var(--bi-fio);
+}
+
+/* escurece o lado do texto quando o mapa chega perto dele (telas médias) */
+[data-art='brasil-inteiro'] .bi-palco::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    var(--bi-noite) 0%,
+    color-mix(in oklch, var(--bi-noite) 82%, transparent) 36%,
+    transparent 56%
+  );
+}
+
+[data-art='brasil-inteiro'] .bi-mapa {
+  position: absolute;
+  z-index: 0;
+  top: 0.75rem;
+  right: clamp(1rem, 2vw, 2rem);
+  height: var(--bi-mapa-h);
+  aspect-ratio: 1100 / 1074;
+}
+
+[data-art='brasil-inteiro'] .bi-mapa__poster,
+[data-art='brasil-inteiro'] .bi-mapa__vivo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+[data-art='brasil-inteiro'] .bi-mapa__vivo {
+  opacity: 0;
+  transition: opacity var(--bi-dur-cena) var(--bi-ease-saida);
+}
+
+[data-art='brasil-inteiro'] .bi-mapa[data-estado='vivo'] .bi-mapa__vivo {
+  opacity: 1;
+}
+
+[data-art='brasil-inteiro'] .bi-mapa[data-estado='vivo'] .bi-mapa__poster {
+  opacity: 0;
+  transition: opacity var(--bi-dur-cena) var(--bi-ease-saida) 200ms;
+}
+
+/* a cidade de onde a luz sai: coordenada de Goiânia na mesma projeção do canvas */
+[data-art='brasil-inteiro'] .bi-mapa__origem {
+  position: absolute;
+  left: 58.5%;
+  top: 55.55%;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  translate: -6px -50%;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--bi-texto);
+  white-space: nowrap;
+  text-shadow: 0 0 6px var(--bi-noite), 0 0 14px var(--bi-noite);
+  pointer-events: none;
+}
+
+[data-art='brasil-inteiro'] .bi-mapa__origem i {
+  flex: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--bi-laranja);
+  animation: bi-farol var(--bi-pulso) var(--bi-ease-saida) infinite;
+}
+
+@keyframes bi-farol {
+  from {
+    box-shadow: 0 0 0 0 color-mix(in oklch, var(--bi-laranja) 70%, transparent);
+  }
+  to {
+    box-shadow: 0 0 0 16px transparent;
+  }
+}
+
+/* legenda no canto sudeste da caixa (oceano, sem cidade); no celular vai para o sudoeste */
+[data-art='brasil-inteiro'] .bi-mapa__legenda {
+  position: absolute;
+  right: 0;
+  bottom: 2%;
+  max-width: 30%;
+  text-align: right;
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: var(--bi-texto-2);
+}
+
+[data-art='brasil-inteiro'] .bi-mapa__legenda b {
+  display: block;
+  margin-bottom: 0.3rem;
+  font-family: var(--bi-display);
+  font-weight: 400;
+  font-size: 1.6rem;
+  line-height: 1.1;
+  color: var(--bi-texto);
+}
+
+[data-art='brasil-inteiro'] .bi-palco__texto {
+  position: relative;
+  z-index: 1;
+  min-height: calc(var(--bi-mapa-h) + 0.75rem - var(--bi-palco-topo));
+  pointer-events: none; /* a caixa cobre o mapa na largura toda; só o conteúdo dela recebe o ponteiro */
+}
+
+[data-art='brasil-inteiro'] .bi-palco__texto > * {
+  width: fit-content;
+  pointer-events: auto;
+}
+
+[data-art='brasil-inteiro'] .bi-olho {
+  display: block;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--bi-laranja);
+}
+
+[data-art='brasil-inteiro'] .bi-palco h1 {
+  margin-top: 1rem;
+  max-width: 8.2em;
+  font-size: clamp(2.75rem, 5.95vw, 5.35rem);
+  line-height: 1.02;
+  text-wrap: balance;
+}
+
+[data-art='brasil-inteiro'] .bi-palco h1 em {
+  font-style: normal;
+  color: var(--bi-laranja);
+}
+
+[data-art='brasil-inteiro'] .bi-sub {
+  margin-top: 1.4rem;
+  max-width: 35rem; /* rem, não ch: ch muda com a fonte e o parágrafo refluía na troca */
+  font-size: 1.0625rem;
+  color: var(--bi-texto-2);
+}
+
+[data-art='brasil-inteiro'] .bi-acoes {
+  margin-top: 1.9rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+[data-art='brasil-inteiro'] .bi-mais {
+  padding: 0.85rem 0.4rem;
+  font-weight: 500;
+  color: var(--bi-texto-2);
+  text-underline-offset: 4px;
+}
+
+[data-art='brasil-inteiro'] .bi-mais:hover {
+  color: var(--bi-texto);
+}
+
+[data-art='brasil-inteiro'] .bi-ficha {
+  font-size: 0.92rem;
+  color: var(--bi-texto-2);
+}
+
+[data-art='brasil-inteiro'] .bi-ficha b {
+  font-weight: 600;
+  color: var(--bi-texto);
+}
+
+[data-art='brasil-inteiro'] .bi-ficha span {
+  white-space: nowrap;
+}
+
+[data-art='brasil-inteiro'] .bi-ficha span::before {
+  content: '';
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 0.4rem;
+  border-radius: 50%;
+  background: var(--bi-laranja);
+  vertical-align: 0.1em;
+}
+
+/* a vitrine: as cadeiras que já estão no ar, de ponta a ponta */
+[data-art='brasil-inteiro'] .bi-vitrine {
+  --bi-margem: max(clamp(1.25rem, 5vw, 4rem), calc((100% - 1180px) / 2 + clamp(1.25rem, 5vw, 4rem)));
+  position: relative;
+  z-index: 1;
+  margin-top: clamp(1rem, 3vh, 2rem);
+  padding-bottom: clamp(2.5rem, 6vh, 4rem);
+}
+
+[data-art='brasil-inteiro'] .bi-vitrine__rot {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.4rem 2rem;
+  margin-bottom: 0.6rem;
+  font-size: 0.95rem;
+  color: var(--bi-texto-2);
+}
+
+[data-art='brasil-inteiro'] .bi-vitrine__rot b {
+  font-weight: 600;
+  color: var(--bi-texto);
+}
+
+[data-art='brasil-inteiro'] .bi-vitrine__janela {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--bi-margem);
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+
+[data-art='brasil-inteiro'] .bi-vitrine__janela::-webkit-scrollbar {
+  display: none;
+}
+
+[data-art='brasil-inteiro'] .bi-vitrine__trilho {
+  display: flex;
+  gap: clamp(0.9rem, 1.6vw, 1.4rem);
+  width: max-content;
+  margin: 0;
+  padding: 0.6rem var(--bi-margem) 1.6rem;
+  list-style: none;
+}
+
+[data-art='brasil-inteiro'] .bi-vitrine__item {
+  width: clamp(17.5rem, 29vw, 27rem);
+  scroll-snap-align: start;
+  animation: bi-chegar var(--bi-dur-cena) var(--bi-ease-cena) backwards;
+  animation-delay: calc(var(--i, 0) * 70ms + 250ms);
+}
+
+@keyframes bi-chegar {
+  from {
+    opacity: 0;
+    translate: 3rem 0;
+  }
+}
+
+[data-art='brasil-inteiro'] .bi-vitrine__item a {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  border-radius: 6px;
+}
+
+[data-art='brasil-inteiro'] .bi-vitrine__item img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  object-position: top;
+  border-radius: 6px;
+  outline: 1px solid var(--bi-fio);
+  box-shadow: 0 28px 50px -24px var(--bi-sombra);
+  transition:
+    box-shadow var(--bi-dur-rapida) var(--bi-ease-saida),
+    outline-color var(--bi-dur-rapida) var(--bi-ease-saida);
+}
+
+[data-art='brasil-inteiro'] .bi-vitrine__leg {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 0.8rem;
+  font-size: 0.92rem;
+}
+
+[data-art='brasil-inteiro'] .bi-vitrine__leg > span:first-child {
+  color: var(--bi-texto-2);
+}
+
+/* "No ar" e "Abrir site" dividem a mesma célula; o ponteiro troca um pelo outro */
+[data-art='brasil-inteiro'] .bi-vitrine__estado {
+  display: grid;
+  flex: none;
+  font-weight: 600;
+  color: var(--bi-laranja);
+  text-align: right;
+}
+
+[data-art='brasil-inteiro'] .bi-vitrine__estado > * {
+  grid-area: 1 / 1;
+  transition: opacity var(--bi-dur-rapida) var(--bi-ease-saida);
+}
+
+[data-art='brasil-inteiro'] .bi-vitrine__estado > span:first-child::before {
+  content: '';
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 0.4rem;
+  border-radius: 50%;
+  background: currentColor;
+  vertical-align: 0.1em;
+}
+
+[data-art='brasil-inteiro'] .bi-vitrine__abrir {
+  opacity: 0;
+  color: var(--bi-texto);
+}
+
+@media (hover: hover) {
+  [data-art='brasil-inteiro'] .bi-vitrine__item a:hover img {
+    outline-color: var(--bi-laranja);
+    box-shadow: 0 28px 50px -24px var(--bi-sombra), 0 0 32px -6px var(--bi-sombra-laranja);
+  }
+}
+
+[data-art='brasil-inteiro'] .bi-vitrine__item a:is(:hover, :focus-visible) .bi-vitrine__abrir {
+  opacity: 1;
+}
+
+[data-art='brasil-inteiro'] .bi-vitrine__item a:is(:hover, :focus-visible) .bi-vitrine__estado > span:first-child {
+  opacity: 0;
+}
+
+/* desktop com movimento: a faixa anda para o lado conforme a página desce (vitrine.ts) */
+[data-art='brasil-inteiro'] .bi-vitrine[data-movel] .bi-vitrine__janela {
+  overflow: visible;
+  scroll-snap-type: none;
+}
+
+[data-art='brasil-inteiro'] .bi-vitrine[data-movel] .bi-vitrine__trilho {
+  translate: min(0px, calc(var(--bi-trilho, 0) * (100vw - 100%))) 0;
+}
+
+@media (max-width: 899px) {
+  [data-art='brasil-inteiro'] .bi-palco {
+    padding-top: 0;
+  }
+
+  [data-art='brasil-inteiro'] .bi-palco::after {
+    display: none;
+  }
+
+  [data-art='brasil-inteiro'] .bi-mapa {
+    position: relative;
+    top: auto;
+    right: auto;
+    width: min(100% - 2rem, 30rem);
+    height: auto;
+    margin: 0.75rem auto 0;
+  }
+
+  [data-art='brasil-inteiro'] .bi-mapa__origem {
+    gap: 0.45rem;
+    font-size: 0.75rem;
+    translate: -5px -50%;
+  }
+
+  [data-art='brasil-inteiro'] .bi-mapa__origem i {
+    width: 10px;
+    height: 10px;
+  }
+
+  [data-art='brasil-inteiro'] .bi-mapa__legenda {
+    right: auto;
+    left: 0;
+    max-width: 36%;
+    font-size: 0.72rem;
+    text-align: left;
+  }
+
+  [data-art='brasil-inteiro'] .bi-mapa__legenda b {
+    font-size: 1.15rem;
+  }
+
+  [data-art='brasil-inteiro'] .bi-mapa__legenda span {
+    display: none;
+  }
+
+  [data-art='brasil-inteiro'] .bi-palco__texto {
+    min-height: 0;
+    padding-top: 1.25rem;
+  }
+
+  [data-art='brasil-inteiro'] .bi-sub {
+    font-size: 1.05rem;
+  }
+
+  [data-art='brasil-inteiro'] .bi-vitrine__item {
+    width: 17.5rem;
+  }
+}
+
+/* ---------- 4. as seções de baixo, na mesma pele ---------- */
+[data-art='brasil-inteiro'] .manifesto__big {
+  font-size: clamp(2rem, 4vw, 3.3rem);
+  line-height: 1.08;
+}
+
+[data-art='brasil-inteiro'] .manifesto__big em {
+  color: var(--bi-laranja);
+}
+
+[data-art='brasil-inteiro'] .steps {
+  border-radius: var(--bi-raio-painel);
+  box-shadow: 0 30px 60px -40px var(--bi-sombra-c);
+}
+
+[data-art='brasil-inteiro'] .step {
+  background: var(--bi-creme-2);
+}
+
+[data-art='brasil-inteiro'] .step__num {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+[data-art='brasil-inteiro'] .step__tag {
+  font-size: 0.82rem;
+  font-weight: 500;
+}
+
+[data-art='brasil-inteiro'] .map__subtitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--bi-tinta);
+}
+
+[data-art='brasil-inteiro'] .seat {
+  background: var(--bi-creme-2);
+  border-radius: var(--bi-raio-painel);
+}
+
+[data-art='brasil-inteiro'] .seat--open {
+  background: color-mix(in oklch, var(--bi-laranja) 8%, var(--bi-creme-2));
+  box-shadow: 0 14px 30px -18px var(--bi-sombra-laranja);
+}
+
+[data-art='brasil-inteiro'] .seat--taken {
+  color: var(--bi-texto);
+  border-color: var(--bi-noite);
+  background: var(--bi-noite);
+  box-shadow: 0 18px 36px -24px var(--bi-sombra);
+}
+
+[data-art='brasil-inteiro'] .seat--taken .seat__status {
+  color: var(--bi-laranja);
+}
+
+[data-art='brasil-inteiro'] .seat__status {
+  font-size: 0.85rem;
+}
+
+[data-art='brasil-inteiro'] .map__caption {
+  font-size: 0.95rem;
+}
+
+[data-art='brasil-inteiro'] .readout {
+  border-radius: var(--bi-raio-painel);
+  background: var(--bi-noite-2);
+  box-shadow: 0 40px 80px -48px var(--bi-sombra);
+}
+
+[data-art='brasil-inteiro'] .readout__bar {
+  font-size: 0.88rem;
+}
+
+[data-art='brasil-inteiro'] .readout__dotrow {
+  display: none;
+}
+
+[data-art='brasil-inteiro'] .metric__val {
+  font-size: clamp(2.2rem, 4.2vw, 3.1rem);
+}
+
+[data-art='brasil-inteiro'] .metric__val .unit {
+  font-family: var(--bi-corpo);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+[data-art='brasil-inteiro'] .metric__key {
+  font-size: 0.92rem;
+}
+
+[data-art='brasil-inteiro'] .prova__title {
+  font-size: clamp(1.7rem, 3vw, 2.3rem);
+}
+
+[data-art='brasil-inteiro'] .prova__foot {
+  font-size: 0.85rem;
+}
+
+[data-art='brasil-inteiro'] .gate-list {
+  background: var(--bi-creme-2);
+  border-radius: var(--bi-raio-painel);
+  box-shadow: 0 30px 60px -44px var(--bi-sombra-c);
+}
+
+[data-art='brasil-inteiro'] .gate--done .gate__check {
+  color: var(--bi-sobre-laranja);
+}
+
+[data-art='brasil-inteiro'] .gate__check svg {
+  stroke: var(--bi-sobre-laranja);
+}
+
+[data-art='brasil-inteiro'] .gate__state {
+  font-size: 0.82rem;
+}
+
+[data-art='brasil-inteiro'] .fit__col {
+  background: var(--bi-creme-2);
+  border-radius: var(--bi-raio-painel);
+}
+
+[data-art='brasil-inteiro'] .fit__col--yes {
+  background: color-mix(in oklch, var(--bi-laranja) 7%, var(--bi-creme-2));
+}
+
+[data-art='brasil-inteiro'] .fit__title {
+  font-size: 1rem;
+}
+
+[data-art='brasil-inteiro'] .faq__item summary {
+  font-weight: 600;
+}
+
+[data-art='brasil-inteiro'] .faq__item summary::after {
+  font-weight: 400;
+}
+
+[data-art='brasil-inteiro'] .form-card {
+  border-radius: var(--bi-raio-painel);
+  background: var(--bi-noite-2);
+  box-shadow: 0 40px 80px -44px var(--bi-sombra);
+}
+
+[data-art='brasil-inteiro'] .field label {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+[data-art='brasil-inteiro'] .field :is(input, textarea) {
+  border-radius: var(--bi-raio);
+}
+
+[data-art='brasil-inteiro'] .field :is(input, textarea)::placeholder {
+  color: var(--bi-texto-2);
+  opacity: 0.7;
+}
+
+[data-art='brasil-inteiro'] :is(.close__fine, .form__note) {
+  font-size: 0.85rem;
+}
+
+[data-art='brasil-inteiro'] :is(.site-footer__meta, .site-footer__nav a) {
+  font-size: 0.9rem;
+}
+
+/* ---------- 5. parado: o mapa fica aceso e nada se mexe ---------- */
+@media (prefers-reduced-motion: reduce) {
+  [data-art='brasil-inteiro'] .bi-mapa__vivo {
+    display: none;
+  }
+
+  [data-art='brasil-inteiro'] .bi-mapa__poster {
+    opacity: 1;
+  }
+
+  [data-art='brasil-inteiro'] :is(.bi-mapa__origem i, .bi-vitrine__item) {
+    animation: none;
+  }
+
+  [data-art='brasil-inteiro'] :is(.bi-vitrine__item a, .bi-vitrine__item img, .btn) {
+    transition: none;
+  }
+}

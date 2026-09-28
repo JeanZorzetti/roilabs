@@ -8,6 +8,8 @@ interface Props {
   ogImage?: string;
   jsonLdNodes?: Record<string, unknown>[];
   noindex?: boolean;
+  /** false = não carrega Archivo/Hanken/Space Mono (a página traz as fontes dela pelo slot "head"). */
+  fontesPadrao?: boolean;
 }
 
 const {
@@ -17,6 +19,7 @@ const {
   ogImage = '/og-image.jpg',
   jsonLdNodes = [],
   noindex = false,
+  fontesPadrao = true,
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site);
@@ -89,10 +92,15 @@ const gaId = import.meta.env.PUBLIC_GA_ID ?? 'G-7JD9J2QEDJ';
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=Hanken+Grotesk:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap"
-    />
+    {fontesPadrao && (
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=Hanken+Grotesk:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap"
+      />
+    )}
+
+    <!-- página que precisa de fonte ou preload próprio (a home da direção Brasil Inteiro) injeta aqui -->
+    <slot name="head" />
 
     <script type="application/ld+json" set:html={JSON.stringify(graph)} />
 

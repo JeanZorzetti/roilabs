@@ -1,0 +1,58 @@
+/* art-direction · brasil-inteiro · eixos: campo/autônomo/escura · orçamento: 30kb · 2026-09-28 */
+/* Tokens da direção Brasil Inteiro. Escopo: só onde houver [data-art="brasil-inteiro"] (hoje, só a home).
+   Promover para o global só depois da home aprovada no ar. */
+
+[data-art='brasil-inteiro'] {
+  /* banda escura: azul-noite com temperatura, nunca preto puro */
+  --bi-noite: oklch(0.17 0.02 240);
+  --bi-noite-2: oklch(0.21 0.022 240);
+  --bi-noite-3: oklch(0.26 0.024 240);
+  --bi-texto: oklch(0.95 0.014 85);
+  --bi-texto-2: oklch(0.8 0.02 230);
+  --bi-fio: oklch(0.95 0.014 85 / 0.12);
+  --bi-fio-forte: oklch(0.95 0.014 85 / 0.26);
+
+  /* banda clara: creme com a trama de pontos do mapa */
+  --bi-creme: oklch(0.95 0.014 85);
+  --bi-creme-2: oklch(0.975 0.008 85);
+  --bi-tinta: oklch(0.21 0.02 240);
+  --bi-tinta-2: oklch(0.43 0.02 240);
+  --bi-fio-c: oklch(0.21 0.02 240 / 0.14);
+  --bi-fio-c-forte: oklch(0.21 0.02 240 / 0.28);
+  --bi-trama: oklch(0.21 0.02 240 / 0.07);
+
+  /* acento: o laranja da marca (chevron do logo); o "acento do acento" é a frente da onda */
+  --bi-laranja: oklch(0.71 0.19 45);
+  --bi-laranja-2: oklch(0.65 0.19 42);
+  --bi-laranja-texto: oklch(0.52 0.17 40);
+  --bi-sobre-laranja: oklch(0.17 0.02 240);
+  --bi-frente: oklch(0.8 0.16 55);
+  --bi-whats: oklch(0.74 0.17 150);
+
+  /* os pontos do mapa */
+  --bi-ponto: oklch(0.52 0.03 240 / 0.55);
+  --bi-ponto-aceso: oklch(0.9 0.05 75 / 0.85);
+  --bi-ponto-ponteiro: var(--bi-frente); /* o cursor leva a mesma luz da onda */
+
+  /* sombra: difusa e com cor do fundo, nunca preta */
+  --bi-sombra: oklch(0.08 0.04 245 / 0.7);
+  --bi-sombra-c: oklch(0.35 0.06 240 / 0.22);
+  --bi-sombra-laranja: oklch(0.55 0.17 40 / 0.45);
+
+  /* tipografia: serifa de alto contraste para a voz, grotesca neutra para o resto */
+  --bi-display: 'Gloock', 'Gloock Reserva', Georgia, serif;
+  --bi-corpo: 'Figtree', 'Figtree Reserva', system-ui, sans-serif;
+
+  /* movimento */
+  --bi-dur-rapida: 160ms;
+  --bi-dur-base: 240ms;
+  --bi-dur-cena: 600ms;
+  --bi-onda: 5.5s;
+  --bi-pulso: 2.8s;
+  --bi-ease-saida: cubic-bezier(0, 0, 0.2, 1);
+  --bi-ease-cena: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* medidas */
+  --bi-raio: 4px;
+  --bi-raio-painel: 14px;
+}

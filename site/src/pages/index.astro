@@ -6,6 +6,10 @@ import Footer from '../components/Footer.astro';
 // app/src/lib/seats.ts (`cd app && npm run gen:carteira`), nunca escrito à mão: espelho
 // manual foi o que deixou o conserto da API invisível aqui.
 import { carteira } from '../data/carteira';
+// Direção de arte Brasil Inteiro (28/09/2026): tokens e estilos só desta página, dentro de
+// [data-art="brasil-inteiro"]. As outras páginas seguem no global.css até a home ser aprovada.
+import '../styles/brasil-inteiro/tokens.css';
+import '../styles/brasil-inteiro/home.css';
 
 const apply = 'mailto:roilabs.ia@gmail.com?subject=Candidatura%20%C3%A0%20cadeira';
 
@@ -39,6 +43,23 @@ const aceitaCandidatura = (s: { estado: string; open: boolean }) => s.estado ===
 // propósito: o inline não compartilha escopo com o frontmatter, e são 2 linhas.
 const ESTADO: Record<string, string> = { 'ocupada-vendavel': 'No ar', 'em-preparacao': 'Em preparação' };
 
+// Vitrine do hero: as cadeiras ocupadas que têm foto da página no ar em
+// public/art/brasil-inteiro/vitrine/ (tiradas à mão em 28/09/2026: 1440×900, topo da página, WebP 880×550).
+// Nome, nicho e link saem dos mesmos dados do mapa de cadeiras; cadeira nova só aparece aqui com foto.
+// O Orion fica fora: a página dele rola sozinha ao carregar e a foto sai no meio.
+const FOTO: Record<string, string> = {
+  Tapepro: 'tapepro',
+  'Use Aligner': 'usealigner',
+  'Polaris IA': 'polaris',
+  'Estetia CRM': 'estetia',
+  'Vértice': 'vertice',
+  'Sirius CRM': 'sirius',
+};
+const vitrine = [
+  ...seats.filter(ocupada).map((s) => ({ nome: s.status.split('·').pop()!.trim(), nicho: s.niche, href: s.href ?? '#cadeiras' })),
+  ...carteira.filter(ocupada).map((c) => ({ nome: c.nome, nicho: c.niche, href: c.siteUrl })),
+].flatMap((v) => (FOTO[v.nome] ? [{ ...v, foto: FOTO[v.nome] }] : []));
+
 // Nó próprio da home no @graph: o serviço Growth Partner (Base entrega Organization + WebSite).
 const jsonLdNodes = [
   {
@@ -67,61 +88,93 @@ const jsonLdNodes = [
 ];
 ---
 
-<Base jsonLdNodes={jsonLdNodes}>
+<Base jsonLdNodes={jsonLdNodes} fontesPadrao={false}>
+  <Fragment slot="head">
+    <!-- As fontes não travam a primeira pintura: as reservas de mesma largura (home.css) seguram o texto até elas chegarem. -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Gloock&display=swap" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Gloock&display=swap" /></noscript>
+    <link rel="preload" as="image" href="/art/brasil-inteiro/mapa-apagado.webp" type="image/webp" media="(prefers-reduced-motion: no-preference)" />
+  </Fragment>
+
+  <div class="bi" data-art="brasil-inteiro">
   <Header />
 
   <main>
-    <!-- HERO -->
-    <section class="hero" aria-labelledby="hero-title">
-      <div class="wrap hero__inner">
-        <div>
-          <span class="eyebrow hero__eyebrow">Growth Partner · Tecnologia e tráfego por nossa conta</span>
-          <h1 id="hero-title">
-            Construímos sua venda&nbsp;online.<br />
-            Nosso lucro vem <span class="accent">da sua venda.</span>
-          </h1>
-          <p class="hero__sub">
-            A ROI Labs banca a tecnologia e o tráfego. Você entra com o produto
-            e uma anuidade simbólica pela cadeira. O resto só é cobrado depois da
-            venda, porque o nosso lucro é uma fração do seu.
-          </p>
-          <div class="hero__actions">
-            <a class="btn btn--primary" href="#candidatar">Aplicar para a cadeira</a>
-            <a class="btn btn--whats" href={whatsHref} target="_blank" rel="noopener">Chamar no WhatsApp</a>
-            <a class="hero__more" href="#mecanica">Ver como funciona ↓</a>
-          </div>
-        </div>
+    <!-- HERO · palco: o Brasil desenhado pelos 5.571 municípios; a luz sai de uma cidade e acende o país.
+         O pôster (imagem estática) pinta primeiro e é o LCP; o canvas assume depois (scripts/brasil-inteiro/palco.ts).
+         Com "reduzir movimento", o pôster aceso fica e o canvas nem carrega. -->
+    <section class="bi-palco" aria-labelledby="hero-title">
+      <div class="bi-mapa" data-estado="parado">
+        <picture>
+          <source media="(prefers-reduced-motion: reduce)" srcset="/art/brasil-inteiro/mapa-aceso.webp" type="image/webp" />
+          <img class="bi-mapa__poster" src="/art/brasil-inteiro/mapa-apagado.webp" alt="" width="1100" height="1074" fetchpriority="high" decoding="async" />
+        </picture>
+        <canvas class="bi-mapa__vivo" aria-hidden="true"></canvas>
+        <span class="bi-mapa__origem" aria-hidden="true"><i></i>Sua cidade (ex.: Goiânia)</span>
+        <p class="bi-mapa__legenda"><b>5.571 municípios</b> Cada ponto é uma cidade do IBGE.<span> A cadeira do seu nicho vale para todas.</span></p>
+      </div>
 
-        <aside class="chair" aria-label="A próxima cadeira">
-          <div class="chair__top">
-            <span class="chair__label">Cadeira</span>
-            <span class="chair__num">A próxima</span>
-          </div>
-          <div class="chair__row">
-            <span class="chair__k">Alcance</span>
-            <span class="chair__v">Brasil inteiro</span>
-          </div>
-          <div class="chair__row">
-            <span class="chair__k">Nicho</span>
-            <span class="chair__v">O seu</span>
-          </div>
-          <div class="chair__row">
-            <span class="chair__k">Status</span>
-            <span class="chair__v chair__v--hi">
-              <span class="status-dot" aria-hidden="true"></span>Curadoria aberta
-            </span>
-          </div>
-          <div class="chair__row">
-            <span class="chair__k">Anuidade</span>
-            <span class="chair__v">R$ 2.640/ano</span>
-          </div>
-          <div class="chair__row">
-            <span class="chair__k">Exclusividade</span>
-            <span class="chair__v">1 por nicho no Brasil</span>
-          </div>
-        </aside>
+      <div class="wrap bi-palco__texto">
+        <span class="bi-olho">Growth Partner · Tecnologia e tráfego por nossa conta</span>
+        <h1 id="hero-title">Construímos sua venda&nbsp;online. Nosso lucro vem <em>da sua venda.</em></h1>
+        <p class="bi-sub">
+          A ROI Labs banca a tecnologia e o tráfego. Você entra com o produto
+          e uma anuidade simbólica pela cadeira. O resto só é cobrado depois da
+          venda, porque o nosso lucro é uma fração do seu.
+        </p>
+        <div class="bi-acoes">
+          <a class="btn btn--primary" href="#candidatar">Aplicar para a cadeira</a>
+          <a class="btn btn--whats" href={whatsHref} target="_blank" rel="noopener">Chamar no WhatsApp</a>
+          <a class="bi-mais" href="#mecanica">Ver como funciona ↓</a>
+        </div>
+      </div>
+
+      <!-- Vitrine: as cadeiras que já estão no ar. No desktop anda para o lado com a rolagem
+           (scripts/brasil-inteiro/vitrine.ts); no celular se arrasta com o dedo. -->
+      <div class="bi-vitrine">
+        <div class="wrap bi-vitrine__rot">
+          <p><b>No ar agora.</b> Cada cadeira ocupada é uma operação de verdade, construída com a ROI Labs.</p>
+          <p class="bi-ficha"><b>R$ 2.640/ano</b> de anuidade · <b>1 cadeira por nicho</b> no Brasil · <span>curadoria aberta</span></p>
+        </div>
+        <div class="bi-vitrine__janela">
+          <ul class="bi-vitrine__trilho" role="list">
+            {vitrine.map((v, i) => (
+              <li class="bi-vitrine__item" style={`--i: ${i}`}>
+                <a href={v.href} target="_blank" rel="noopener">
+                  <img
+                    src={`/art/brasil-inteiro/vitrine/${v.foto}.webp`}
+                    alt={`Página inicial do site ${v.nome}`}
+                    width="880"
+                    height="550"
+                    loading={i < 3 ? 'eager' : 'lazy'}
+                    decoding="async"
+                  />
+                  <span class="bi-vitrine__leg">
+                    <span>{v.nicho} · {v.nome}</span>
+                    <span class="bi-vitrine__estado"><span>No ar</span><span class="bi-vitrine__abrir">Abrir site ↗</span></span>
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </section>
+
+    <script>
+      import { iniciarVitrine } from '../scripts/brasil-inteiro/vitrine';
+
+      const vitrine = document.querySelector<HTMLElement>('.bi-vitrine');
+      if (vitrine) iniciarVitrine(vitrine);
+
+      // O mapa vivo (e os 22kb de coordenadas) só carrega depois que a página pintou.
+      const caixa = document.querySelector<HTMLElement>('.bi-mapa');
+      if (caixa && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const ligar = () => import('../scripts/brasil-inteiro/palco').then((m) => m.iniciar(caixa));
+        if ('requestIdleCallback' in window) requestIdleCallback(ligar, { timeout: 1500 });
+        else addEventListener('load', ligar, { once: true });
+      }
+    </script>
 
     <!-- MANIFESTO -->
     <section class="section section--dark manifesto" aria-labelledby="manifesto-title">
@@ -315,7 +368,7 @@ const jsonLdNodes = [
         <div class="readout" role="group" aria-label="Indicadores de demanda no Brasil">
           <div class="readout__bar">
             <span class="readout__dotrow" aria-hidden="true"><span></span><span></span><span></span></span>
-            keyword_planner — brasil — ago/2026
+            Google Keyword Planner · Brasil · ago/2026
           </div>
           <div class="readout__body">
             <div class="metric">
@@ -343,7 +396,7 @@ const jsonLdNodes = [
         <div class="readout" role="group" aria-label="Resultado orgânico da Use Aligner em 12 meses">
           <div class="readout__bar">
             <span class="readout__dotrow" aria-hidden="true"><span></span><span></span><span></span></span>
-            search_console — usealigner.com — 12 meses
+            Google Search Console · usealigner.com · 12 meses
           </div>
           <div class="readout__body">
             <div class="metric">
@@ -389,6 +442,10 @@ const jsonLdNodes = [
               flow.plugins = [continuous];
               flow.spinTiming = ritmo;
               flow.transformTiming = ritmo;
+              // Reserva a largura do valor final: sem isso a palavra ao lado ("vezes") anda
+              // enquanto o número cresce de 0 até ele, e isso conta como deslocamento de layout.
+              flow.style.display = 'inline-block';
+              flow.style.minWidth = `${el.getBoundingClientRect().width}px`;
               el.before(flow);
               el.classList.add('metric__num--sr');
               flow.update(0);
@@ -625,4 +682,5 @@ const jsonLdNodes = [
   </main>
 
   <Footer />
+  </div>
 </Base>
