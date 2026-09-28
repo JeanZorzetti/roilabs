@@ -1,21 +1,31 @@
 import { Pool } from "pg";
 
 /**
- * Pool único para o Postgres da Vértice (banco `verticemkt`), usado pelas telas
- * da Vértice em /admin. Não é o banco da ROI Labs (`DATABASE_URL`, do Prisma):
- * é o mesmo banco que o site verticemarketing.roilabs.com.br lê para abrir os
- * links públicos de proposta, contrato e termo de entrega.
+ * Pool único para as telas que vieram da Vértice em /admin (clientes,
+ * onboarding, propostas, contratos, entregas). Mora no banco da ROI Labs
+ * (`roilabs_db`, o mesmo `DATABASE_URL` do Prisma), no schema `vertice`.
+ * `VERTICE_DATABASE_URL` só existe para apontar para outro banco.
  *
  * O `globalThis` evita que o hot reload do `next dev` abra um pool novo a cada
  * recompilação e estoure o limite de conexões do servidor.
  */
 const globalForPool = globalThis as unknown as { verticePool?: Pool };
 
+/**
+ * Schema Postgres das tabelas. Fora do `public` de propósito: o `roilabs_db`
+ * recebe `prisma db push` manual, e o push apaga do `public` toda tabela que
+ * não está no schema.prisma. O `public` no search_path mantém funcionando um
+ * banco sem o schema `vertice` (o `verticemkt` antigo, tabelas no `public`).
+ * Quem cria o schema é `scripts/migrate-vertice.ts` — o `ensureSchema` abaixo
+ * não cria, senão num banco antigo ele abriria tabelas vazias por cima das reais.
+ */
+export const PG_SCHEMA = "vertice";
+
 function connectionString(): string {
-  const url = process.env.VERTICE_DATABASE_URL;
+  const url = process.env.VERTICE_DATABASE_URL || process.env.DATABASE_URL;
   if (!url) {
     throw new Error(
-      "VERTICE_DATABASE_URL não configurada. As telas da Vértice precisam dela para ler e gravar clientes, propostas e entregas."
+      "DATABASE_URL não configurada. As telas de clientes, propostas, contratos e entregas precisam dela para ler e gravar."
     );
   }
   return url;
@@ -25,6 +35,7 @@ export function pool(): Pool {
   if (!globalForPool.verticePool) {
     globalForPool.verticePool = new Pool({
       connectionString: connectionString(),
+      options: `-c search_path=${PG_SCHEMA},public`,
       max: 4,
       idleTimeoutMillis: 10_000,
       connectionTimeoutMillis: 8_000,
@@ -38,7 +49,7 @@ export function pool(): Pool {
 // segunda pessoa escrevendo schema, migrar para drizzle-kit ou node-pg-migrate.
 let schemaReady: Promise<void> | null = null;
 
-const SCHEMA = `
+export const SCHEMA = `
 create table if not exists clients (
   id          serial primary key,
   name        text not null,

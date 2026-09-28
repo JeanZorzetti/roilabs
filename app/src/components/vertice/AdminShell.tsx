@@ -40,11 +40,13 @@ export function DbErrorState({ message }: { message: string }) {
         <span aria-hidden="true">⚠</span> Não conseguimos falar com o banco
       </h2>
       <p className="mt-2 max-w-2xl text-sm text-red-900/90">
-        Clientes, onboarding, propostas, contratos e entregas ficam no Postgres da Vértice (banco{" "}
-        <code className="rounded bg-white px-1 py-0.5 font-mono text-xs">verticemkt</code>). Confira a variável{" "}
-        <code className="rounded bg-white px-1 py-0.5 font-mono text-xs">VERTICE_DATABASE_URL</code> na EasyPanel e
-        recarregue a página. O catálogo de entregáveis e a tabela de preços continuam funcionando — eles não
-        dependem do banco.
+        Clientes, onboarding, propostas, contratos e entregas ficam no banco da ROI Labs (schema{" "}
+        <code className="rounded bg-white px-1 py-0.5 font-mono text-xs">vertice</code>). Se a mensagem abaixo
+        falar de tabela que não existe, rode{" "}
+        <code className="rounded bg-white px-1 py-0.5 font-mono text-xs">scripts/migrate-vertice.ts</code>; se
+        falar de conexão, confira a{" "}
+        <code className="rounded bg-white px-1 py-0.5 font-mono text-xs">DATABASE_URL</code> na EasyPanel. O
+        catálogo de entregáveis e a tabela de preços continuam funcionando — eles não dependem do banco.
       </p>
       <p className="mt-3 font-mono text-xs text-red-900/70">{message}</p>
     </div>
