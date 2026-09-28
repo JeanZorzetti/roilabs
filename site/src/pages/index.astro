@@ -376,6 +376,10 @@ const jsonLdNodes = [
           const calmo = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
           if (box && nums.length && !calmo && 'IntersectionObserver' in window) {
+            // Lento de propósito: o número grande precisa de tempo para pesar. Curva
+            // ease-out suave (não expo), senão quase todo o giro acontece no começo e
+            // parece rápido de novo. Mais de ~3s cansa, já que repete a cada passada.
+            const ritmo = { duration: 2800, easing: 'cubic-bezier(0.33, 1, 0.68, 1)' };
             const flows = nums.map((el) => {
               const casas = Number(el.dataset.decimals ?? 0);
               const flow = document.createElement('number-flow');
@@ -383,7 +387,8 @@ const jsonLdNodes = [
               flow.locales = 'pt-BR';
               flow.format = { minimumFractionDigits: casas, maximumFractionDigits: casas };
               flow.plugins = [continuous];
-              flow.spinTiming = { duration: 1600, easing: 'cubic-bezier(0.16, 1, 0.3, 1)' };
+              flow.spinTiming = ritmo;
+              flow.transformTiming = ritmo;
               el.before(flow);
               el.classList.add('metric__num--sr');
               flow.update(0);
@@ -397,7 +402,7 @@ const jsonLdNodes = [
             new IntersectionObserver(([e]) => {
               if (!rolou && e.intersectionRatio >= 0.5) {
                 rolou = true;
-                timers = flows.map(({ flow, alvo }, i) => window.setTimeout(() => flow.update(alvo), i * 180));
+                timers = flows.map(({ flow, alvo }, i) => window.setTimeout(() => flow.update(alvo), i * 250));
               } else if (rolou && !e.isIntersecting) {
                 rolou = false;
                 timers.forEach(clearTimeout);
