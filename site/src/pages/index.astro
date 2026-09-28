@@ -42,10 +42,19 @@ const FOTO: Record<string, string> = {
   'Vértice': 'vertice',
   'Sirius CRM': 'sirius',
 };
+// Ordem da vitrine escolhida pela dona (28/09/2026): estas primeiro, nesta ordem; o resto vem
+// depois na ordem dos dados. Cadeira que não está aqui não some, só vai para o fim.
+const ORDEM_VITRINE = ['Sirius CRM', 'Use Aligner', 'Tapepro'];
+const posicao = (nome: string) => {
+  const i = ORDEM_VITRINE.indexOf(nome);
+  return i < 0 ? ORDEM_VITRINE.length : i;
+};
 const vitrine = [
   ...seats.filter(ocupada).map((s) => ({ nome: s.status.split('·').pop()!.trim(), nicho: s.niche, href: s.href ?? '#cadeiras' })),
   ...carteira.filter(ocupada).map((c) => ({ nome: c.nome, nicho: c.niche, href: c.siteUrl })),
-].flatMap((v) => (FOTO[v.nome] ? [{ ...v, foto: FOTO[v.nome] }] : []));
+]
+  .flatMap((v) => (FOTO[v.nome] ? [{ ...v, foto: FOTO[v.nome] }] : []))
+  .sort((a, b) => posicao(a.nome) - posicao(b.nome)); // sort estável: o resto mantém a ordem
 
 // Nó próprio da home no @graph: o serviço Growth Partner (Base entrega Organization + WebSite).
 const jsonLdNodes = [
