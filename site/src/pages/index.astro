@@ -11,32 +11,19 @@ import { carteira } from '../data/carteira';
 import '../styles/brasil-inteiro/tokens.css';
 import '../styles/brasil-inteiro/home.css';
 
-const apply = 'mailto:roilabs.ia@gmail.com?subject=Candidatura%20%C3%A0%20cadeira';
+// Cadeiras de fornecedor e contatos moram em src/data/ porque o rodapé usa os mesmos dados.
+import { fornecedores as seats } from '../data/fornecedores';
+import { EMAIL, whatsLink } from '../data/contato';
 
-// Canal direto B2B (Gate 3): fornecedor high-ticket quer conversa, não formulário.
-const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
-const whatsHref = `https://wa.me/${whatsapp}?text=${encodeURIComponent(
-  'Quero saber se a cadeira do meu nicho está livre'
-)}`;
+const apply = `mailto:${EMAIL}?subject=Candidatura%20%C3%A0%20cadeira`;
+const whatsHref = whatsLink();
 
 // Candidaturas vão para o app admin (app.roilabs.com.br), que grava no DB.
 // POST urlencoded simples (sem preflight CORS); a API redireciona pro `redirect`.
 const CANDIDATURAS_ENDPOINT = 'https://app.roilabs.com.br/api/candidaturas';
 
-// Mapa de cadeiras — skeleton ESTÁTICO (SEO + no-JS). A verdade vem do DB AO VIVO:
-// o <script is:inline> no fim desta section busca /api/cadeiras no NAVEGADOR e atualiza
-// status/aberta a cada carregamento. Build-time fetch foi removido de propósito: o Docker
-// cacheia o layer do `npm run build`, então redeploy sem commit novo servia dist velho e
-// não refletia o admin. Runtime fetch é imune a esse cache e reflete a edição na hora.
-// href é presentational (link pra venture); só o estático o usa.
-// 012 (T054/FR-019): este array ESPELHA DEFAULT_SEATS de app/src/lib/seats.ts — mesma ordem,
-// mesmo `estado`. Divergir aqui faz o visitante sem JS ver uma carteira que não existe.
-// 012 (T055/FR-020): quem decide se a cadeira aceita candidatura é `estado === 'vaga'` E
-// `open` — nunca só `open`. Cadeira ocupada NÃO é oferecida.
-const seats: { niche: string; status: string; open: boolean; estado: string; href?: string }[] = [
-  { niche: 'Fitas adesivas', status: 'Ocupada · Tapepro', open: false, estado: 'ocupada-vendavel', href: 'https://tapepro.roilabs.com.br/' },
-  { niche: 'Ortodontia / Alinhadores', status: 'Ocupada · Use Aligner', open: false, estado: 'ocupada-vendavel', href: 'https://usealigner.com/' },
-];
+// Mapa de cadeiras: o skeleton estático sai de src/data/fornecedores.ts (espelho de DEFAULT_SEATS,
+// ver o comentário lá); a verdade ao vivo vem de /api/cadeiras no navegador.
 const ocupada = (s: { estado: string }) => s.estado.startsWith('ocupada');
 const aceitaCandidatura = (s: { estado: string; open: boolean }) => s.estado === 'vaga' && s.open;
 // Texto de estado das cadeiras de projeto. Duplicado no <script is:inline> abaixo de

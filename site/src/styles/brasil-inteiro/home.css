@@ -77,8 +77,8 @@ body:has([data-art='brasil-inteiro']) {
 /* a gramática antiga (mono, caixa alta, espaçamento largo) sai daqui: a voz agora é serifa + grotesca */
 [data-art='brasil-inteiro'] :is(
     .eyebrow, .nav__link, .nav__toggle, .nav__panel a, .btn, .step__num, .step__tag, .map__subtitle,
-    .seat__status, .map__caption, .readout__bar, .metric__key, .prova__foot, .site-footer__meta,
-    .site-footer__nav a, .gate__state, .fit__title, .close__fine, .field label, .form__note
+    .seat__status, .map__caption, .readout__bar, .metric__key, .prova__foot, .site-footer__titulo,
+    .gate__state, .fit__title, .close__fine, .field label, .form__note
   ) {
   text-transform: none;
   letter-spacing: 0;
@@ -844,8 +844,19 @@ body:has([data-art='brasil-inteiro']) {
   font-size: 0.85rem;
 }
 
-[data-art='brasil-inteiro'] :is(.site-footer__meta, .site-footer__nav a) {
-  font-size: 0.9rem;
+/* rodapé: a frase de fechamento na voz da direção; títulos das colunas em laranja, sem caixa alta */
+[data-art='brasil-inteiro'] .site-footer__frase {
+  font-family: var(--bi-display);
+  font-weight: 400;
+  font-synthesis: none;
+  font-size: clamp(2rem, 4.2vw, 3.4rem);
+  letter-spacing: -0.01em;
+}
+
+[data-art='brasil-inteiro'] .site-footer__titulo {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--bi-laranja);
 }
 
 /* ---------- 5. parado: o mapa fica aceso e nada se mexe ---------- */

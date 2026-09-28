@@ -896,57 +896,113 @@ a.seat__niche::after {
 }
 
 /* ---------- footer ---------- */
+/* frase de fechamento + CTA · marca e o que a ROI Labs é · cadeiras no ar · o modelo · contato · base */
 .site-footer {
   border-top: 1px solid var(--d-line);
-  padding-block: clamp(2.5rem, 5vw, 3.5rem);
+  padding-block: clamp(3rem, 6vw, 4.5rem) 1.75rem;
 }
 
-.site-footer__inner {
+.site-footer__chamada {
   display: flex;
   flex-wrap: wrap;
-  gap: 1.5rem 2.5rem;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
+  gap: 1.5rem 3rem;
+  padding-bottom: clamp(2rem, 4vw, 3rem);
+  border-bottom: 1px solid var(--d-line);
 }
 
-.site-footer__tag {
+.site-footer__frase {
+  max-width: 17ch;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.9rem, 4vw, 3.1rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.site-footer__frase em {
+  font-style: normal;
+  color: var(--hivis);
+}
+
+.site-footer__grade {
+  display: grid;
+  gap: 2rem 2.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+  padding-block: clamp(2rem, 4vw, 3rem);
+}
+
+/* a coluna de contato mede o próprio conteúdo: o número do WhatsApp nunca quebra no meio */
+@media (min-width: 1000px) {
+  .site-footer__grade {
+    grid-template-columns: 1.4fr 1.2fr 1fr max-content;
+  }
+}
+
+.site-footer__logo {
+  display: block;
+  width: auto;
+  height: 30px;
+}
+
+.site-footer__marca p {
+  margin-top: 1.1rem;
+  max-width: 36ch;
+  font-size: 0.95rem;
   color: var(--d-muted);
-  max-width: 34ch;
-  font-size: 0.92rem;
 }
 
-.site-footer__meta {
+.site-footer__titulo {
+  margin-bottom: 0.8rem;
   font-family: var(--font-mono);
   font-size: 0.74rem;
-  letter-spacing: 0.08em;
+  font-weight: 700;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--d-muted);
 }
 
-.site-footer__meta a {
-  color: inherit;
+.site-footer__col ul {
+  display: grid;
+  gap: 0.1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.site-footer__col li a {
   display: inline-block;
-  padding-block: 0.8rem;
-}
-
-.site-footer__nav {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0 1.4rem;
-}
-
-.site-footer__nav a {
-  font-family: var(--font-mono);
-  font-size: 0.74rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--d-muted);
-  padding-block: 0.8rem;
+  white-space: nowrap;
+  padding-block: 0.3rem;
+  font-size: 0.95rem;
+  color: var(--d-text);
+  text-decoration: none;
   text-underline-offset: 4px;
 }
 
-.site-footer__nav a:hover {
-  color: var(--d-text);
+.site-footer__col li a:hover {
+  color: var(--hivis);
+  text-decoration: underline;
+}
+
+.site-footer__nicho {
+  display: block;
+  margin: -0.2rem 0 0.35rem;
+  font-size: 0.8rem;
+  color: var(--d-muted);
+}
+
+.site-footer__base {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.4rem 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--d-line);
+  font-size: 0.85rem;
+  color: var(--d-muted);
 }
 
 /* ---------- ICP: os 3 gates + fit ---------- */
