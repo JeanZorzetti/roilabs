@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { FAIXAS, NICHOS, type Faixa } from "@/lib/precificacao";
 import {
@@ -12,6 +13,7 @@ import {
   limiteDificuldade,
   limparTermos,
   projetar,
+  urlSimulador,
   validarTermos,
   type Cenario,
   type TermoConsultado,
@@ -366,6 +368,24 @@ export function Projecao() {
                     })}
                   </div>
                 </fieldset>
+
+                {/* Ativo também no zero real: "o orgânico não traz venda no ano 1" é uma resposta. */}
+                <div className="space-y-1">
+                  <Link
+                    href={urlSimulador(nicho.id, r.mediaAno1, cenario)}
+                    className={`flex min-h-11 w-full items-center justify-center rounded-md bg-navy px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-navy-dark ${FOCO}`}
+                  >
+                    Usar no simulador
+                    <span className="sr-only">
+                      : {formatarVendas(r.mediaAno1)} {unidadeDe(funil.unidade, r.mediaAno1)} por mês, cenário{" "}
+                      {ROTULO_CENARIO[cenario].toLowerCase()}
+                    </span>
+                  </Link>
+                  <p className="text-xs text-muted-foreground">
+                    Abre Preços com este nicho e {formatarVendas(r.mediaAno1)} {unidadeDe(funil.unidade, r.mediaAno1)}{" "}
+                    por mês. Nada é salvo.
+                  </p>
+                </div>
 
                 <Avisos
                   total={r.demanda.total}

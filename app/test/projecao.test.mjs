@@ -12,6 +12,8 @@ import {
   arredondarVendas,
   formatarVendas,
   erroDataForSEO,
+  urlSimulador,
+  lerPonteSimulador,
 } from '../src/lib/projecao.ts';
 
 const perto = (a, b, msg) => assert.ok(Math.abs(a - b) < 1e-9, `${msg ?? ''} esperado ${b}, veio ${a}`);
@@ -159,6 +161,32 @@ const termo = (t, volume, dificuldade, mensal = volume == null ? null : serie(vo
   assert.deepEqual(erroDataForSEO(40210), { erro: 'saldo', http: 402 });
   for (const c of [50000, 50401, 40202, 12345]) assert.deepEqual(erroDataForSEO(c), { erro: 'fonte', http: 502 }, String(c));
   console.log('ok erros da fonte');
+}
+
+// ── ponte para o simulador (research D13): leva o número que a tela mostra ─────────────
+{
+  assert.equal(urlSimulador('moda', 1.644, 'conservador'), '/admin/precos?nicho=moda&ritmo=1.6&cenario=conservador#simulador');
+  assert.equal(urlSimulador('moda', 18.4, 'base'), '/admin/precos?nicho=moda&ritmo=18&cenario=base#simulador');
+  // o simulador lê de volta o mesmo número que a Projeção escreveu
+  for (const media of [0, 0.02, 0.14385, 1.644, 9.96, 18.4, 1234.5]) {
+    const params = Object.fromEntries(new URLSearchParams(urlSimulador('clinicas', media, 'otimista').split('?')[1].split('#')[0]));
+    assert.equal(lerPonteSimulador(params).ritmo, arredondarVendas(media), `média ${media}`);
+  }
+  assert.deepEqual(lerPonteSimulador({ nicho: 'moda', ritmo: '18', cenario: 'base' }), { nichoId: 'moda', ritmo: 18, cenario: 'base' });
+  const ruins = [
+    { nicho: 'moda', ritmo: 'abc', cenario: 'base' },
+    { nicho: 'moda', ritmo: '-1', cenario: 'base' },
+    { nicho: 'moda', ritmo: '100001', cenario: 'base' },
+    { nicho: 'moda', ritmo: '', cenario: 'base' },
+    { nicho: 'xpto', ritmo: '18', cenario: 'base' },
+    { nicho: 'moda', ritmo: '18', cenario: 'xpto' },
+    { nicho: 'moda', ritmo: '18' },
+    { nicho: ['moda', 'pet'], ritmo: '18', cenario: 'base' },
+    { nicho: 'moda', ritmo: ['18'], cenario: 'base' },
+    {},
+  ];
+  for (const p of ruins) assert.equal(lerPonteSimulador(p), null, JSON.stringify(p));
+  console.log('ok ponte do simulador');
 }
 
 process.stdout.write('projecao: ok\n');

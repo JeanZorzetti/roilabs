@@ -412,6 +412,32 @@ export function formatarVendas(n: number): string {
   return VENDAS.format(r);
 }
 
+// ── Ponte para o simulador (research D13) ──────────────────────────────────────────────
+
+/** Leva o número que a tela mostra ao lado do botão, não a média crua. */
+export function urlSimulador(nichoId: string, ritmo: number, cenario: Cenario): string {
+  const q = new URLSearchParams({ nicho: nichoId, ritmo: String(arredondarVendas(ritmo)), cenario });
+  return `/admin/precos?${q}#simulador`;
+}
+
+export interface PonteSimulador {
+  nichoId: string;
+  ritmo: number;
+  cenario: Cenario;
+}
+
+/** Qualquer parâmetro inválido anula os três: o simulador abre como sempre abriu (FR-011). */
+export function lerPonteSimulador(params: Record<string, string | string[] | undefined>): PonteSimulador | null {
+  const { nicho, ritmo, cenario } = params;
+  if (typeof nicho !== 'string' || typeof ritmo !== 'string' || typeof cenario !== 'string') return null;
+  if (!NICHOS.some((n) => n.id === nicho)) return null;
+  if (!(CENARIOS as readonly string[]).includes(cenario)) return null;
+  if (!/^\d+(\.\d+)?$/.test(ritmo)) return null;
+  const valor = Number(ritmo);
+  if (!Number.isFinite(valor) || valor > 100_000) return null;
+  return { nichoId: nicho, ritmo: valor, cenario: cenario as Cenario };
+}
+
 // ── Erros da DataForSEO (contracts/api.md) ─────────────────────────────────────────────
 
 export type ErroFonte = 'chave' | 'saldo' | 'fonte';

@@ -1,7 +1,9 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { FAIXAS, NICHOS, lerNumeroBR, type Faixa, type NichoPreco } from "@/lib/precificacao";
+import { ROTULO_CENARIO, type PonteSimulador } from "@/lib/projecao";
 import {
   ANUIDADE,
   CONSULTA_MAX,
@@ -73,15 +75,19 @@ const ler = (s: string) => {
   return Number.isNaN(v) ? 0 : v;
 };
 
-export function SimuladorCadeira() {
-  const [nichoId, setNichoId] = useState("moda");
-  const [pedidos, setPedidos] = useState("30");
+export function SimuladorCadeira({ inicial }: { inicial?: PonteSimulador | null }) {
+  // Vindo da Projeção (spec 017), o ritmo entra no campo do modelo do nicho. Sem `inicial`, tudo
+  // começa exatamente como antes.
+  const modeloInicial = inicial ? NICHOS.find((n) => n.id === inicial.nichoId)?.modelo : undefined;
+  const ritmoInicial = inicial ? inicial.ritmo.toLocaleString("pt-BR", { maximumFractionDigits: 1 }) : "";
+  const [nichoId, setNichoId] = useState(inicial?.nichoId ?? "moda");
+  const [pedidos, setPedidos] = useState(modeloInicial === "percentual" ? ritmoInicial : "30");
   const [ticket, setTicket] = useState("200");
   const [recompra, setRecompra] = useState("20");
   const [distribuidor, setDistribuidor] = useState(false);
-  const [assinaturas, setAssinaturas] = useState("3");
+  const [assinaturas, setAssinaturas] = useState(modeloInicial === "mensalidade" ? ritmoInicial : "3");
   const [mensalidade, setMensalidade] = useState("300");
-  const [consultas, setConsultas] = useState("10");
+  const [consultas, setConsultas] = useState(modeloInicial === "consulta" ? ritmoInicial : "10");
   const [valorConsulta, setValorConsulta] = useState("200");
   const [copiado, setCopiado] = useState(false);
 
@@ -150,10 +156,20 @@ export function SimuladorCadeira() {
 
         <fieldset className="min-w-0 rounded-xl border border-border bg-white p-4 shadow-soft">
           <legend className="px-1 text-sm font-bold text-navy">Ritmo esperado de venda</legend>
-          <p className="mt-1 text-xs text-muted-foreground">
-            Pergunte ao parceiro, ou use um número conservador. O orgânico leva de 3 a 6 meses para
-            estabilizar: o ano 1 real tende a ficar abaixo desta conta.
-          </p>
+          {inicial && nichoId === inicial.nichoId ? (
+            <p className="mt-1 text-xs text-navy">
+              <strong className="font-semibold">Veio da Projeção:</strong> média do ano 1 no cenário{" "}
+              {ROTULO_CENARIO[inicial.cenario].toLowerCase()}, já com a rampa de maturação do orgânico.{" "}
+              <Link href="/admin/projecao" className="font-semibold underline underline-offset-2">
+                Voltar à Projeção
+              </Link>
+            </p>
+          ) : (
+            <p className="mt-1 text-xs text-muted-foreground">
+              Pergunte ao parceiro, ou use um número conservador. O orgânico leva de 3 a 6 meses para
+              estabilizar: o ano 1 real tende a ficar abaixo desta conta.
+            </p>
+          )}
 
           {nicho.modelo === "percentual" ? (
             <>

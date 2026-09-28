@@ -13,6 +13,7 @@ import {
   REGRAS_DOMINIO,
   brl,
 } from "@/lib/precos-cadeira";
+import { lerPonteSimulador } from "@/lib/projecao";
 import { SimuladorCadeira } from "./simulador";
 
 export const metadata: Metadata = {
@@ -32,7 +33,13 @@ function taxasDaFaixa(nichos: NichoPreco[], tipo: "aquisicao" | "recorrencia"): 
   return valores.length ? valores.join(" ou ") : "—";
 }
 
-export default function PrecosPage() {
+export default async function PrecosPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  // Ponte da Projeção (017): ?nicho=&ritmo=&cenario=. Inválido = simulador como sempre (FR-011).
+  const inicial = lerPonteSimulador(await searchParams);
   return (
     <AdminShell
       title="Preços da ROI Labs"
@@ -58,7 +65,7 @@ export default function PrecosPage() {
           </Link>
           , com piso de {brl(PISO_POR_PEDIDO)} por pedido e taxa reduzida em pedido grande.
         </p>
-        <SimuladorCadeira />
+        <SimuladorCadeira inicial={inicial} />
       </section>
 
       <section aria-labelledby="tabela" className="mb-14">
