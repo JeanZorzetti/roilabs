@@ -2,6 +2,8 @@
 // Footer compartilhado (home, blog, /modelo, /simulador, 404). Diz o que a ROI Labs é hoje e
 // lista as cadeiras no ar com os MESMOS dados do mapa de cadeiras da home: cadeira nova entra
 // aqui sozinha quando entra em src/data/fornecedores.ts ou na carteira gerada do app.
+// As cadeiras ficam numa faixa baixa, só com os nomes, nas mesmas duas divisões do mapa
+// (clientes / ROI Labs); o nicho vai no title do link, para a lista não crescer com a carteira.
 // Estilo em global.css (.site-footer*); a home reveste com os tokens da direção Brasil Inteiro.
 import { carteira } from '../data/carteira';
 import { fornecedores } from '../data/fornecedores';
@@ -10,11 +12,15 @@ import { EMAIL, INSTAGRAM, LINKEDIN, whatsLegivel, whatsLink } from '../data/con
 const noAr = [
   ...fornecedores
     .filter((s) => s.estado.startsWith('ocupada'))
-    .map((s) => ({ nome: s.status.split('·').pop()!.trim(), nicho: s.niche, href: s.href })),
+    .map((s) => ({ nome: s.status.split('·').pop()!.trim(), nicho: s.niche, href: s.href, grupo: 'cliente' })),
   ...carteira
     .filter((c) => c.estado === 'ocupada-vendavel')
-    .map((c) => ({ nome: c.nome, nicho: c.niche, href: c.siteUrl })),
+    .map((c) => ({ nome: c.nome, nicho: c.niche, href: c.siteUrl, grupo: c.grupo })),
 ];
+const grupos = [
+  { rotulo: 'De clientes', itens: noAr.filter((c) => c.grupo === 'cliente') },
+  { rotulo: 'Da ROI Labs', itens: noAr.filter((c) => c.grupo === 'roilabs') },
+].filter((g) => g.itens.length > 0);
 const ano = new Date().getFullYear();
 ---
 <footer class="site-footer">
@@ -33,18 +39,6 @@ const ano = new Date().getFullYear();
           lucro é uma fração da sua venda.
         </p>
       </div>
-
-      <nav class="site-footer__col" aria-label="Cadeiras no ar">
-        <p class="site-footer__titulo">Cadeiras no ar</p>
-        <ul role="list">
-          {noAr.map((c) => (
-            <li>
-              <a href={c.href} target="_blank" rel="noopener">{c.nome} ↗</a>
-              <span class="site-footer__nicho">{c.nicho}</span>
-            </li>
-          ))}
-        </ul>
-      </nav>
 
       <nav class="site-footer__col" aria-label="O modelo">
         <p class="site-footer__titulo">O modelo</p>
@@ -67,6 +61,24 @@ const ano = new Date().getFullYear();
         </ul>
       </div>
     </div>
+
+    <nav class="site-footer__cadeiras" aria-label="Cadeiras no ar">
+      <p class="site-footer__titulo">Cadeiras no ar</p>
+      {grupos.map((g) => (
+        <div class="site-footer__grupo">
+          <p class="site-footer__rotulo">{g.rotulo}</p>
+          <ul role="list">
+            {g.itens.map((c) => (
+              <li>
+                <a href={c.href} target="_blank" rel="noopener" title={c.nicho}>
+                  {c.nome} <span aria-hidden="true">↗</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </nav>
 
     <div class="site-footer__base">
       <p>© {ano} ROI Labs · Goiânia, GO · atendimento no Brasil inteiro</p>
