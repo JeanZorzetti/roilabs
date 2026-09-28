@@ -18,7 +18,7 @@
 // banco. A verdade ao vivo continua vindo de /api/cadeiras no navegador.
 import { writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { DEFAULT_SEATS, PROJETOS_CADEIRA } from '../src/lib/seats';
+import { DEFAULT_SEATS, PROJETOS_CADEIRA, grupoDaCadeira } from '../src/lib/seats';
 import { nomeExibido, rotuloPublico } from '../src/lib/carteira/produto';
 
 // A MESMA regra do seed: projeto cujo `niche` já é cadeira de nicho (a `atma`) não vira card
@@ -35,6 +35,8 @@ const carteira = PROJETOS_CADEIRA.filter((p) => !nichos.has(p.niche)).map((p) =>
   // JÁ resolvido porque `site/` não consegue importar de `app/` (o Docker copia só site/).
   nome: nomeExibido(p.status),
   siteUrl: p.siteUrl,
+  // Em qual das duas divisões do mapa a home desenha a cadeira: da ROI Labs ou de cliente (28/09/2026).
+  grupo: grupoDaCadeira(p),
   // ⚠️ `ordem` NÃO é emitida (07/08): ninguém no `site` a lia, e ela era um valor derivado de
   // `DEFAULT_SEATS.length` que passou a divergir do banco assim que o mapa de nichos encolheu
   // (skeleton diria 3..10, banco serve 8..15). O que alinha card com linha é a POSIÇÃO no
@@ -56,6 +58,7 @@ export const carteira: {
   rotulo: 'casa' | 'parceiro';
   nome: string;
   siteUrl: string;
+  grupo: 'roilabs' | 'cliente';
 }[] = ${JSON.stringify(carteira, null, 2)};
 `,
   'utf8'

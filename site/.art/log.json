@@ -1,0 +1,21 @@
+[
+  {
+    "data": "2026-09-28",
+    "alvo": "home / (roilabs.com.br)",
+    "direcao": "custom:derivada-brasil-inteiro",
+    "eixos": { "materia": "campo", "motor": "autônomo", "banda": "escura" },
+    "estrutura": "palco",
+    "origem": "derivada dos 5.571 municípios do IBGE + vitrine com as páginas reais das cadeiras ocupadas (pedido do dono)",
+    "orcamento": { "faixa": "captação", "js_kb": 27.2, "lcp_alvo": 2.0, "lcp_medido": 1.72, "lcp_medido_celular": 1.7, "cls": 0.0001 },
+    "deps": [],
+    "escopo": "tokens e estilos só em [data-art='brasil-inteiro'] (home); /modelo, /simulador e blog seguem no global.css",
+    "camadas": "entrada: onda de luz a partir da cidade · autônomo: pulso no mapa · ponteiro: o cursor acende as cidades e os cartões · scroll: nenhuma (a dona pediu a vitrine manual, com setas, em 28/09) · transição: nenhuma (página única; fica para a propagação)",
+    "recusadas": [
+      "custom:derivada-planta (pigmento/ponteiro/clara)",
+      "custom:derivada-contagem (geometria/scroll/escura)",
+      "custom:derivada-placa (pigmento/estado/média)",
+      "custom:vitrine (imagem/scroll/escura) — virou a faixa de baixo do palco",
+      "custom:seu-nicho (geometria/estado/média)"
+    ]
+  }
+]

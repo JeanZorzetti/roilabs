@@ -56,10 +56,13 @@ assert.equal(receitaDaCarteira([v({ daCasa: true, motivoDescarte: 'payer-teste' 
   assert.equal(calcularFaturaMensal([negocio({ faturavel: false })]).base, 0, 'a BASE também não pode somar');
 }
 
-// ── FR-010a no SEED: a lista de exceções é DADO, e são exatamente três ──────
+// ── FR-010a no SEED: a lista de exceções é DADO ─────────────────────────────
+// Eram três (sirius, meridian, orion, decisão do Jean). `verticemarketing` entrou em
+// 28/09/2026 por decisão da Maria ("já são nossa empresa"). Mudar esta lista é decisão de
+// negócio, não ajuste de teste.
 {
   const exibidas = PROJETOS_CADEIRA.filter((p) => p.exibirDaCasa).map((p) => p.slug).sort();
-  assert.deepEqual(exibidas, ['meridian', 'orion', 'sirius']);
+  assert.deepEqual(exibidas, ['meridian', 'orion', 'sirius', 'verticemarketing']);
   // ⚠️ Toda cadeira exibida como da casa TEM de ser da casa no dado. O contrário é livre
   // (da casa exibida como parceiro é a decisão do Jean) — mas exibir como da casa uma que
   // não é seria prova social invertida.

@@ -1,19 +1,76 @@
 ---
-// Footer compartilhado (home + blog).
+// Footer compartilhado (home, blog, /modelo, /simulador, 404). Diz o que a ROI Labs é hoje e
+// lista as cadeiras no ar com os MESMOS dados do mapa de cadeiras da home: cadeira nova entra
+// aqui sozinha quando entra em src/data/fornecedores.ts ou na carteira gerada do app.
+// Estilo em global.css (.site-footer*); a home reveste com os tokens da direção Brasil Inteiro.
+import { carteira } from '../data/carteira';
+import { fornecedores } from '../data/fornecedores';
+import { EMAIL, INSTAGRAM, LINKEDIN, whatsLegivel, whatsLink } from '../data/contato';
+
+const noAr = [
+  ...fornecedores
+    .filter((s) => s.estado.startsWith('ocupada'))
+    .map((s) => ({ nome: s.status.split('·').pop()!.trim(), nicho: s.niche, href: s.href })),
+  ...carteira
+    .filter((c) => c.estado === 'ocupada-vendavel')
+    .map((c) => ({ nome: c.nome, nicho: c.niche, href: c.siteUrl })),
+];
+const ano = new Date().getFullYear();
 ---
 <footer class="site-footer">
-  <div class="wrap site-footer__inner">
-    <p class="site-footer__tag">
-      ROI Labs — Growth Partner para fornecedores regionais de alto padrão.
-    </p>
-    <p class="site-footer__meta">
-      Goiânia · BR &nbsp;·&nbsp;
-      <a href="mailto:roilabs.ia@gmail.com">roilabs.ia@gmail.com</a>
-    </p>
-    <nav class="site-footer__nav" aria-label="Rodapé">
-      <a href="/modelo/">Como funciona o modelo</a>
-      <a href="/simulador/">Simulador</a>
-      <a href="/blog/">Blog</a>
-    </nav>
+  <div class="wrap">
+    <div class="site-footer__chamada">
+      <p class="site-footer__frase">Uma empresa por nicho, vendendo para <em>o Brasil inteiro.</em></p>
+      <a class="btn btn--primary" href="/#candidatar">Aplicar para a cadeira</a>
+    </div>
+
+    <div class="site-footer__grade">
+      <div class="site-footer__marca">
+        <img class="site-footer__logo" src="/roilabs-logo.png" alt="ROI Labs" width="253" height="48" loading="lazy" decoding="async" />
+        <p>
+          Growth Partner de vendas online. Construímos e operamos a captação de uma
+          empresa por nicho: a tecnologia e o tráfego são por nossa conta, e o nosso
+          lucro é uma fração da sua venda.
+        </p>
+      </div>
+
+      <nav class="site-footer__col" aria-label="Cadeiras no ar">
+        <p class="site-footer__titulo">Cadeiras no ar</p>
+        <ul role="list">
+          {noAr.map((c) => (
+            <li>
+              <a href={c.href} target="_blank" rel="noopener">{c.nome} ↗</a>
+              <span class="site-footer__nicho">{c.nicho}</span>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      <nav class="site-footer__col" aria-label="O modelo">
+        <p class="site-footer__titulo">O modelo</p>
+        <ul role="list">
+          <li><a href="/modelo/">Como funciona o modelo</a></li>
+          <li><a href="/#cadeiras">Mapa de cadeiras</a></li>
+          <li><a href="/simulador/">Simulador de receita</a></li>
+          <li><a href="/blog/">Blog</a></li>
+          <li><a href="/#candidatar">Candidatar-se</a></li>
+        </ul>
+      </nav>
+
+      <div class="site-footer__col">
+        <p class="site-footer__titulo">Fale com a gente</p>
+        <ul role="list">
+          <li><a href={whatsLink()} target="_blank" rel="noopener">WhatsApp {whatsLegivel()}</a></li>
+          <li><a href={`mailto:${EMAIL}`}>{EMAIL}</a></li>
+          <li><a href={INSTAGRAM} target="_blank" rel="noopener">Instagram ↗</a></li>
+          <li><a href={LINKEDIN} target="_blank" rel="noopener">LinkedIn ↗</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="site-footer__base">
+      <p>© {ano} ROI Labs · Goiânia, GO · atendimento no Brasil inteiro</p>
+      <p>Tecnologia e tráfego por nossa conta. Nosso lucro vem da sua venda.</p>
+    </div>
   </div>
 </footer>

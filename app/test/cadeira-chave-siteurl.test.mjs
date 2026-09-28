@@ -9,7 +9,7 @@
 // A #2 não é erro: é o estado honesto de um projeto sem site apurado. O teste a torna
 // VISÍVEL, listando quem ainda depende do fallback, em vez de deixar a regressão silenciosa.
 import assert from 'node:assert/strict';
-import { DEFAULT_SEATS, PROJETOS_CADEIRA } from '../src/lib/seats.ts';
+import { DEFAULT_SEATS, PROJETOS_CADEIRA, grupoDaCadeira } from '../src/lib/seats.ts';
 import { carteira } from '../../site/src/data/carteira.ts';
 import { nomeExibido, rotuloPublico } from '../src/lib/carteira/produto.ts';
 
@@ -31,6 +31,7 @@ const esperado = PROJETOS_CADEIRA.filter((p) => !nichos.has(p.niche)).map((p) =>
   rotulo: rotuloPublico(p),
   nome: nomeExibido(p.status),
   siteUrl: p.siteUrl,
+  grupo: grupoDaCadeira(p),
 }));
 assert.deepEqual(carteira, esperado, 'site/src/data/carteira.ts desatualizado — rode `npm run gen:carteira`');
 

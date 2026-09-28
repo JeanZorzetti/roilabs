@@ -64,7 +64,10 @@ async function main() {
 
   let criadas = 0;
   for (const p of PROJETOS_CADEIRA) {
-    const { slug: _slug, gateway: _gateway, ...dados } = p;
+    // `grupo` também é metadado do seed (qual divisão do mapa da home), não coluna: sem tirá-lo
+    // daqui, o `create` abaixo recebe um campo que o schema não conhece e o seed quebra.
+    const { slug: _slug, gateway: _gateway, ...resto } = p;
+    const { grupo: _grupo, ...dados } = { grupo: undefined, ...resto };
     // 🚨 O `dados.siteUrl &&` NÃO é defensivo à toa: `siteUrl` é anulável de propósito
     // ("nulo é não sei", ver seats.ts), e `findFirst({ siteUrl: null })` casaria com a
     // PRIMEIRA cadeira de nicho sem site — sobrescrevendo uma linha aleatória do mapa de
