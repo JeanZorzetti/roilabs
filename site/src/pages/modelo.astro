@@ -54,9 +54,12 @@ const faq = [
 const howtoSteps = [
   {
     name: 'Candidatura',
-    text: 'Preencha o formulário na home (leva 1 minuto) ou chame no WhatsApp. A candidatura não tem custo nem compromisso — é só o ponto de partida da curadoria.',
-    // Trecho do texto que vira link na página (o JSON-LD usa o texto puro).
-    link: { text: 'formulário na home', href: '/#candidatar' },
+    text: 'Você tem dois caminhos, os dois gratuitos e sem compromisso: preencha o formulário no fim da página inicial — pede só seu nome, a empresa, o WhatsApp e o seu nicho, e leva 1 minuto — ou chame a gente direto no WhatsApp. É o ponto de partida da curadoria.',
+    // Botões que aparecem só na página (o JSON-LD usa o texto puro).
+    acoes: [
+      { label: 'Preencher o formulário', href: '/#candidatar', classe: 'btn--primary' },
+      { label: 'Chamar no WhatsApp', href: whatsHref, classe: 'btn--whats', externo: true },
+    ],
   },
   {
     name: 'Triagem e conversa de curadoria',
@@ -289,15 +292,20 @@ const jsonLdNodes = [
               <span class="howto__num">{String(i + 1).padStart(2, '0')}</span>
               <div>
                 <h3 class="howto__name">{s.name}</h3>
-                <p class="howto__text">
-                  {s.link ? (
-                    <>
-                      {s.text.split(s.link.text)[0]}
-                      <a href={s.link.href} style="color:inherit">{s.link.text}</a>
-                      {s.text.split(s.link.text)[1]}
-                    </>
-                  ) : s.text}
-                </p>
+                <p class="howto__text">{s.text}</p>
+                {s.acoes && (
+                  <div class="howto__acoes">
+                    {s.acoes.map((a) => (
+                      <a
+                        class={`btn btn--sm ${a.classe}`}
+                        href={a.href}
+                        {...(a.externo ? { target: '_blank', rel: 'noopener' } : {})}
+                      >
+                        {a.label}
+                      </a>
+                    ))}
+                  </div>
+                )}
               </div>
             </li>
           ))}
@@ -372,5 +380,11 @@ const jsonLdNodes = [
     font-size: 0.95rem;
     opacity: 0.85;
     line-height: 1.6;
+  }
+  .howto__acoes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1rem;
   }
 </style>
