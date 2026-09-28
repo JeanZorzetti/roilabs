@@ -9,7 +9,7 @@ import { Pool } from "pg";
  * O `globalThis` evita que o hot reload do `next dev` abra um pool novo a cada
  * recompilação e estoure o limite de conexões do servidor.
  */
-const globalForPool = globalThis as unknown as { verticePool?: Pool };
+const globalForPool = globalThis as unknown as { verticePool?: Promise<Pool> };
 
 /**
  * Schema Postgres das tabelas. Fora do `public` de propósito: o `roilabs_db`
@@ -21,37 +21,57 @@ const globalForPool = globalThis as unknown as { verticePool?: Pool };
  */
 export const PG_SCHEMA = "vertice";
 
-export function connectionString(): string {
+function connectionString(): string {
   const url = process.env.VERTICE_DATABASE_URL || process.env.DATABASE_URL;
   if (!url) {
     throw new Error(
       "DATABASE_URL não configurada. As telas de clientes, propostas, contratos e entregas precisam dela para ler e gravar."
     );
   }
-  // A DATABASE_URL é escrita para o Prisma, que lê `sslmode=prefer` como "tenta TLS e,
-  // se o servidor recusar, conecta sem". O `pg` lê `prefer` como TLS obrigatório e não
-  // tem volta — contra o roilabs_db, que não tem TLS, dá "The server does not support
-  // SSL connections". Sem volta possível, `prefer`/`allow` viram "sem TLS" aqui;
-  // `require` e `verify-*` continuam exigindo.
-  const parsed = new URL(url);
-  const mode = parsed.searchParams.get("sslmode");
-  if (mode === "prefer" || mode === "allow") {
-    parsed.searchParams.delete("sslmode");
-    return parsed.toString();
-  }
   return url;
 }
 
-export function pool(): Pool {
-  if (!globalForPool.verticePool) {
-    globalForPool.verticePool = new Pool({
-      connectionString: connectionString(),
-      options: `-c search_path=${PG_SCHEMA},public`,
-      max: 4,
-      idleTimeoutMillis: 10_000,
-      connectionTimeoutMillis: 8_000,
-    });
+/** O erro do `pg` quando o servidor responde "não" ao pedido de TLS. */
+const SERVER_WITHOUT_TLS = "The server does not support SSL connections";
+
+/**
+ * Abre o pool lendo a URL como o Prisma lê, porque a DATABASE_URL é escrita para ele:
+ * `sslmode=require` exige TLS, `sslmode=disable` desliga, e todo o resto — `prefer`,
+ * `ssl=true`, `verify-full`, sem sslmode com `PGSSLMODE` no ambiente — é "tenta TLS;
+ * se o servidor recusar, conecta sem". O `pg` não tem essa volta: lê quase tudo isso
+ * como TLS obrigatório e desiste. O roilabs_db não tem TLS, então em produção é a
+ * volta que conecta. A regra não depende do formato da URL de produção: se o Prisma
+ * conecta com ela, este pool conecta também.
+ */
+export async function openPool(url: string): Promise<Pool> {
+  const config = {
+    options: `-c search_path=${PG_SCHEMA},public`,
+    max: 4,
+    idleTimeoutMillis: 10_000,
+    connectionTimeoutMillis: 8_000,
+  };
+  const asWritten = new Pool({ ...config, connectionString: url });
+  try {
+    (await asWritten.connect()).release();
+    return asWritten;
+  } catch (error) {
+    await asWritten.end();
+    const plain = new URL(url);
+    const refusedTls = error instanceof Error && error.message === SERVER_WITHOUT_TLS;
+    if (!refusedTls || plain.searchParams.get("sslmode") === "require") throw error;
+    plain.searchParams.delete("sslmode");
+    plain.searchParams.delete("ssl");
+    // `ssl: false` explícito: sem ele o pg ainda leria a PGSSLMODE do ambiente.
+    return new Pool({ ...config, connectionString: plain.toString(), ssl: false });
   }
+}
+
+export function pool(): Promise<Pool> {
+  globalForPool.verticePool ??= openPool(connectionString()).catch((error) => {
+    // Sem isso, uma falha de rede na primeira conexão ficaria guardada até o próximo deploy.
+    globalForPool.verticePool = undefined;
+    throw error;
+  });
   return globalForPool.verticePool;
 }
 
@@ -160,7 +180,7 @@ create unique index if not exists media_plans_slug_key on media_plans (slug);
 export function ensureSchema(): Promise<void> {
   if (!schemaReady) {
     schemaReady = pool()
-      .query(SCHEMA)
+      .then((db) => db.query(SCHEMA))
       .then(() => undefined)
       .catch((error) => {
         // Sem isso, uma falha de rede no primeiro acesso "cacheia" o erro para
@@ -177,6 +197,6 @@ export async function query<T extends Record<string, unknown>>(
   params: unknown[] = []
 ): Promise<T[]> {
   await ensureSchema();
-  const result = await pool().query(text, params);
+  const result = await (await pool()).query(text, params);
   return result.rows as T[];
 }
