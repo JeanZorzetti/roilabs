@@ -9,7 +9,7 @@
 // A #2 não é erro: é o estado honesto de um projeto sem site apurado. O teste a torna
 // VISÍVEL, listando quem ainda depende do fallback, em vez de deixar a regressão silenciosa.
 import assert from 'node:assert/strict';
-import { DEFAULT_SEATS, PROJETOS_CADEIRA, tipoDaCadeira } from '../src/lib/seats.ts';
+import { DEFAULT_SEATS, PROJETOS_CADEIRA, grupoDaCadeira } from '../src/lib/seats.ts';
 import { carteira } from '../../site/src/data/carteira.ts';
 import { nomeExibido, rotuloPublico } from '../src/lib/carteira/produto.ts';
 
@@ -31,7 +31,7 @@ const esperado = PROJETOS_CADEIRA.filter((p) => !nichos.has(p.niche)).map((p) =>
   rotulo: rotuloPublico(p),
   nome: nomeExibido(p.status),
   siteUrl: p.siteUrl,
-  tipo: tipoDaCadeira(p),
+  grupo: grupoDaCadeira(p),
 }));
 assert.deepEqual(carteira, esperado, 'site/src/data/carteira.ts desatualizado — rode `npm run gen:carteira`');
 
@@ -49,18 +49,5 @@ assert.ok(
   carteira.every((c) => !('daCasa' in c) && (c.rotulo === 'casa' || c.rotulo === 'parceiro')),
   'daCasa vazou para o HTML público'
 );
-
-// 5 — a home desenha o bloco de software ANTES do de serviços, e o laço ao vivo casa card com
-// linha do banco por ÍNDICE. Uma cadeira de software anexada depois das de serviço trocaria os
-// dados de todos os cards do meio. Software novo entra antes das de serviço (e o banco precisa
-// ser reordenado à mão), ou vira serviço.
-{
-  const tipos = carteira.map((c) => c.tipo);
-  const i = tipos.indexOf('servico');
-  assert.ok(
-    i === -1 || tipos.slice(i).every((t) => t === 'servico'),
-    `cadeira de software depois das de serviço em PROJETOS_CADEIRA: ${tipos.join(', ')}`,
-  );
-}
 
 console.log(`ok — chave siteUrl: ${urls.length} únicas, 0 no fallback, skeleton com ${carteira.length} cadeiras`);

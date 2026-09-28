@@ -32,6 +32,35 @@ const aceitaCandidatura = (s: { estado: string; open: boolean }) => s.estado ===
 // propósito: o inline não compartilha escopo com o frontmatter, e são 2 linhas.
 const ESTADO: Record<string, string> = { 'ocupada-vendavel': 'No ar', 'em-preparacao': 'Em preparação' };
 
+// Mapa de cadeiras em DUAS divisões (Maria, 28/09/2026): as de clientes (empresas que contrataram
+// a ROI Labs: os fornecedores e as cadeiras de projeto com `grupo: 'cliente'`) e as da ROI Labs
+// (softwares e a agência). O card é o mesmo nas duas, com a legenda `estado · nome`.
+type CardCadeira = { niche: string; estado: string; open: boolean; nome: string; siteUrl: string; rotulo: string };
+const mapaClientes: CardCadeira[] = [
+  ...seats.map((s) => ({
+    niche: s.niche,
+    estado: s.estado,
+    open: s.open,
+    nome: s.status.split('·').pop()!.trim(),
+    siteUrl: s.href ?? '',
+    rotulo: 'parceiro',
+  })),
+  ...carteira.filter((c) => c.grupo === 'cliente').map((c) => ({ ...c, open: false })),
+];
+const mapaRoiLabs: CardCadeira[] = carteira.filter((c) => c.grupo === 'roilabs').map((c) => ({ ...c, open: false }));
+const divisoesDoMapa = [
+  {
+    titulo: 'Cadeiras de clientes',
+    lead: 'Empresas que contrataram a ROI Labs: construímos e operamos a venda online delas.',
+    cards: mapaClientes,
+  },
+  {
+    titulo: 'Cadeiras da ROI Labs',
+    lead: 'Softwares e serviços próprios, construídos e operados com o mesmo método de captação.',
+    cards: mapaRoiLabs,
+  },
+];
+
 // Vitrine do hero: as cadeiras ocupadas que têm foto da página no ar em
 // public/art/brasil-inteiro/vitrine/ (tiradas à mão em 28/09/2026: 1440×900, topo da página, WebP 880×550).
 // Nome, nicho e link saem dos mesmos dados do mapa de cadeiras; cadeira nova só aparece aqui com foto.
@@ -286,62 +315,34 @@ const jsonLdNodes = [
           </p>
         </div>
 
-        <!-- Dois blocos, uma sequência: o <script is:inline> abaixo casa por ÍNDICE em
-             `#cadeiras .map__grid .seat`, e querySelectorAll segue a ordem do documento —
-             nichos primeiro, cadeiras de projeto depois. Não inverta os blocos. -->
-        <h3 class="map__subtitle">Cadeiras de fornecedores</h3>
-        <ul class="map__grid" role="list">
-          {seats.map((s) => (
-            <li class={`seat ${aceitaCandidatura(s) ? 'seat--open' : ''} ${ocupada(s) ? 'seat--taken' : ''}`}>
-              {s.href ? (
-                <a class="seat__niche" href={s.href} target="_blank" rel="noopener">{s.niche} ↗</a>
-              ) : (
-                <span class="seat__niche">{s.niche}</span>
-              )}
-              <span class="seat__status">
-                <span class={`seat__ring`} aria-hidden="true"></span>
-                {s.status}
-              </span>
-            </li>
-          ))}
-        </ul>
-
-        <h3 class="map__subtitle">Cadeiras de software</h3>
-        <p class="map__sublead">
-          Produtos digitais que a ROI Labs constrói e opera com o mesmo método de captação,
-          próprios ou com parceiros.
-        </p>
-        <ul class="map__grid map__grid--software" role="list">
-          {carteira.filter((c) => c.tipo === 'software').map((c) => (
-            <li class={`seat ${ocupada(c) ? 'seat--taken' : ''}`} data-projeto>
-              <a class="seat__niche" href={c.siteUrl} target="_blank" rel="noopener">{c.niche} ↗</a>
-              <span class="seat__status">
-                <span class="seat__ring" aria-hidden="true"></span>
-                {' '}{ESTADO[c.estado] ?? c.estado}{c.nome ? ` · ${c.nome}` : ''}{c.rotulo === 'casa' ? ' · Da casa' : ''}
-              </span>
-            </li>
-          ))}
-        </ul>
-
-        <!-- 28/09/2026: cadeiras de SERVIÇO (agência, seguros, energia, viagens) num bloco próprio —
-             no de software a página diria que são produtos digitais. O laço ao vivo continua
-             certo porque as de serviço são as ÚLTIMAS de PROJETOS_CADEIRA (e do banco, por `ordem`):
-             a ordem do documento (fornecedores → software → serviços) é a ordem da API. -->
-        <h3 class="map__subtitle">Cadeiras de serviços</h3>
-        <p class="map__sublead">
-          Serviços captados com o mesmo método, da própria ROI Labs ou de parceiros.
-        </p>
-        <ul class="map__grid map__grid--software" role="list">
-          {carteira.filter((c) => c.tipo === 'servico').map((c) => (
-            <li class={`seat ${ocupada(c) ? 'seat--taken' : ''}`} data-projeto>
-              <a class="seat__niche" href={c.siteUrl} target="_blank" rel="noopener">{c.niche} ↗</a>
-              <span class="seat__status">
-                <span class="seat__ring" aria-hidden="true"></span>
-                {' '}{ESTADO[c.estado] ?? c.estado}{c.nome ? ` · ${c.nome}` : ''}{c.rotulo === 'casa' ? ' · Da casa' : ''}
-              </span>
-            </li>
-          ))}
-        </ul>
+        <!-- Duas divisões (28/09/2026): clientes e ROI Labs. O script ao vivo abaixo casa cada card
+             com a linha do banco por `data-site` (siteUrl) e, sem site no banco, por `data-nicho` —
+             NÃO por posição: a ordem das divisões não é a ordem (`ordem`) do banco. -->
+        {divisoesDoMapa.map((d) => (
+          <Fragment>
+            <h3 class="map__subtitle">{d.titulo}</h3>
+            <p class="map__sublead">{d.lead}</p>
+            <ul class="map__grid map__grid--software" role="list">
+              {d.cards.map((c) => (
+                <li
+                  class={`seat ${aceitaCandidatura(c) ? 'seat--open' : ''} ${ocupada(c) ? 'seat--taken' : ''}`}
+                  data-site={c.siteUrl}
+                  data-nicho={c.niche}
+                >
+                  {c.siteUrl ? (
+                    <a class="seat__niche" href={c.siteUrl} target="_blank" rel="noopener">{c.niche} ↗</a>
+                  ) : (
+                    <span class="seat__niche">{c.niche}</span>
+                  )}
+                  <span class="seat__status">
+                    <span class="seat__ring" aria-hidden="true"></span>
+                    {' '}{ESTADO[c.estado] ?? c.estado}{c.nome ? ` · ${c.nome}` : ''}{c.rotulo === 'casa' ? ' · Da casa' : ''}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </Fragment>
+        ))}
         <p class="map__caption">
           Seu nicho não está no mapa? Então a cadeira dele está livre.
           <a href="#candidatar">Candidate-se →</a>
@@ -351,21 +352,28 @@ const jsonLdNodes = [
 
     <script is:inline>
       // Mapa de cadeiras AO VIVO: busca o DB no navegador e sobrescreve o skeleton estático.
-      // ponytail: casa por ÍNDICE — a API ordena por `ordem`, e o skeleton renderiza na mesma
-      // ordem (os nichos primeiro, depois as cadeiras de projeto geradas de
-      // seats.ts). O VALOR de `ordem` não é lido aqui; só a sequência importa.
-      // Falhou o fetch? mantém o skeleton (degrada limpo) — que agora é o grid inteiro, e não
-      // mais meia seção em branco.
+      // Casa card com linha por `siteUrl` (data-site) e, para a linha sem site no banco (a de
+      // fitas adesivas, que nasceu no SEED de nicho), por `niche` (data-nicho). Até 28/09 casava
+      // por ÍNDICE; com as divisões clientes/ROI Labs a ordem do documento deixou de ser a do
+      // banco. Card sem par no banco (cadeira nova antes do seed, rótulo editado no /admin)
+      // mantém o texto do skeleton: degrada limpo em vez de receber o dado do vizinho.
+      // Falhou o fetch? mantém o skeleton inteiro.
       //
       // 012/T057b: o laço ATUALIZA, nunca cria <li>. Criar aqui duplicaria os cards que o
-      // skeleton já desenhou — foi o que a versão anterior fazia quando a carteira era uma
-      // seção separada e JS-only.
+      // skeleton já desenhou.
       var ESTADO = { 'ocupada-vendavel': 'No ar', 'em-preparacao': 'Em preparação' };
+      var chave = function (u) { return String(u || '').toLowerCase().replace(/\/+$/, ''); };
       fetch('https://app.roilabs.com.br/api/cadeiras')
         .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
-        .then((seats) => {
-          document.querySelectorAll('#cadeiras .map__grid .seat').forEach((li, i) => {
-            const s = seats[i];
+        .then((cadeiras) => {
+          var porSite = {};
+          var porNicho = {};
+          cadeiras.forEach((s) => {
+            if (s.siteUrl) porSite[chave(s.siteUrl)] = s;
+            if (s.niche) porNicho[s.niche] = s;
+          });
+          document.querySelectorAll('#cadeiras .map__grid .seat').forEach((li) => {
+            const s = porSite[chave(li.dataset.site)] || porNicho[li.dataset.nicho];
             if (!s) return;
             // 012 FR-020: cadeira OCUPADA não é oferecida para candidatura. `s.open` sozinho
             // não basta — a API resolve as duas condições em `aceitaCandidatura`.
@@ -378,28 +386,17 @@ const jsonLdNodes = [
             ring.className = 'seat__ring';
             ring.setAttribute('aria-hidden', 'true');
             st.appendChild(ring);
-            // Cadeira de PROJETO tem outra legenda: `estado · nome`, e o selo "Da casa" SÓ
-            // quando `rotulo === 'casa'` (decisão do Jean, 07/08 — opção C).
-            // ⚠️ Quem é cadeira de projeto vem do `data-projeto` que o skeleton marca — o
-            // Astro já sabe (são as do `carteira.map`). Comparar `s.ordem >= 8` era constante
-            // escrita à mão que quebrava sozinha ao mudar o tamanho do mapa de nichos.
-            // O nome sai do `status` do /admin ("Ocupada · Polaris IA"), o mesmo lugar de onde
-            // o skeleton o extrai em `nomeExibido`; mudar um sem o outro faz a legenda piscar.
-            // ⚠️ FR-010a: `rotulo`, NUNCA `daCasa`. Sem selo agora SIGNIFICA parceiro — é o
-            // preço da opção C, e é como os cards de nicho (Tapepro, Atma) já se apresentam.
+            // Legenda `estado · nome`, e o selo "Da casa" SÓ quando `rotulo === 'casa'`.
+            // O nome sai do `status` do /admin ("Ocupada · Polaris IA"), o mesmo lugar de onde o
+            // skeleton o extrai; mudar um sem o outro faz a legenda piscar.
+            // ⚠️ FR-010a: `rotulo`, NUNCA `daCasa`.
             const nome = String(s.status || '').split('·').pop().trim();
-            const texto =
-              li.dataset.projeto !== undefined
-                ? (ESTADO[s.estado] || s.estado) +
-                  (nome ? ' · ' + nome : '') +
-                  (s.rotulo === 'casa' ? ' · Da casa' : '')
-                : s.status;
+            const texto = (ESTADO[s.estado] || s.estado) + (nome ? ' · ' + nome : '') + (s.rotulo === 'casa' ? ' · Da casa' : '');
             st.appendChild(document.createTextNode(' ' + texto));
 
-            // O rótulo do nicho MUDA (5 dos 8 foram corrigidos em 07/08). O skeleton é gerado
-            // de seats.ts e o banco vem do mesmo seed, mas quem manda é o banco: sem isto, um
-            // rótulo editado no /admin ficaria invisível até o próximo deploy.
-            const alvo = li.querySelector('.seat__niche a') || li.querySelector('.seat__niche');
+            // O rótulo do nicho MUDA, e quem manda é o banco: sem isto, um rótulo editado no
+            // /admin ficaria invisível até o próximo deploy.
+            const alvo = li.querySelector('.seat__niche');
             if (alvo && s.niche) alvo.textContent = alvo.tagName === 'A' ? s.niche + ' ↗' : s.niche;
           });
         })

@@ -9,7 +9,7 @@ export const carteira: {
   rotulo: 'casa' | 'parceiro';
   nome: string;
   siteUrl: string;
-  tipo: 'software' | 'servico';
+  grupo: 'roilabs' | 'cliente';
 }[] = [
   {
     "niche": "Orquestração de agentes IA",
@@ -17,7 +17,7 @@ export const carteira: {
     "rotulo": "parceiro",
     "nome": "Polaris IA",
     "siteUrl": "https://polarisia.com.br/",
-    "tipo": "software"
+    "grupo": "roilabs"
   },
   {
     "niche": "CRM / Estética",
@@ -25,7 +25,7 @@ export const carteira: {
     "rotulo": "parceiro",
     "nome": "Estetia CRM",
     "siteUrl": "https://estetiacrm.com.br/",
-    "tipo": "software"
+    "grupo": "roilabs"
   },
   {
     "niche": "Onboarding de clientes",
@@ -33,7 +33,7 @@ export const carteira: {
     "rotulo": "parceiro",
     "nome": "Vértice",
     "siteUrl": "https://vertice.roilabs.com.br/",
-    "tipo": "software"
+    "grupo": "roilabs"
   },
   {
     "niche": "CRM de vendas",
@@ -41,7 +41,7 @@ export const carteira: {
     "rotulo": "casa",
     "nome": "Sirius CRM",
     "siteUrl": "https://siriuscrm.com.br/",
-    "tipo": "software"
+    "grupo": "roilabs"
   },
   {
     "niche": "ERP / Gestão empresarial",
@@ -49,7 +49,7 @@ export const carteira: {
     "rotulo": "casa",
     "nome": "Orion ERP",
     "siteUrl": "https://orion.roilabs.com.br/",
-    "tipo": "software"
+    "grupo": "roilabs"
   },
   {
     "niche": "Finanças pessoais",
@@ -57,7 +57,7 @@ export const carteira: {
     "rotulo": "casa",
     "nome": "Meridian",
     "siteUrl": "https://meridian.roilabs.com.br/",
-    "tipo": "software"
+    "grupo": "roilabs"
   },
   {
     "niche": "Agência de marketing digital",
@@ -65,7 +65,7 @@ export const carteira: {
     "rotulo": "casa",
     "nome": "Vértice Marketing",
     "siteUrl": "https://verticemarketing.roilabs.com.br/",
-    "tipo": "servico"
+    "grupo": "roilabs"
   },
   {
     "niche": "Seguros, crédito e veículos",
@@ -73,7 +73,7 @@ export const carteira: {
     "rotulo": "parceiro",
     "nome": "Autogestor",
     "siteUrl": "https://autogestor.roilabs.com.br/",
-    "tipo": "servico"
+    "grupo": "cliente"
   },
   {
     "niche": "Desconto na conta de luz",
@@ -81,7 +81,7 @@ export const carteira: {
     "rotulo": "parceiro",
     "nome": "Coopluz",
     "siteUrl": "https://coopluz.roilabs.com.br/",
-    "tipo": "servico"
+    "grupo": "cliente"
   },
   {
     "niche": "Passagens e pacotes de viagem",
@@ -89,6 +89,6 @@ export const carteira: {
     "rotulo": "parceiro",
     "nome": "Autogestor Viagens",
     "siteUrl": "https://viagens.roilabs.com.br/",
-    "tipo": "servico"
+    "grupo": "cliente"
   }
 ];
