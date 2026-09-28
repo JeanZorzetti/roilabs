@@ -189,11 +189,11 @@ body:has([data-art='brasil-inteiro']) {
   border-bottom: 1px solid var(--bi-fio);
 }
 
-/* duas colunas: o texto ocupa o que o título pede; o mapa, todo o resto, centrado na altura do texto */
+/* duas colunas: o texto ocupa o que o título pede; o mapa, todo o resto, ao lado do título */
 [data-art='brasil-inteiro'] .bi-palco__topo {
   display: grid;
-  grid-template-columns: fit-content(max(36rem, calc(var(--bi-h1) * 7.8))) minmax(0, 1fr);
-  align-items: center;
+  grid-template-columns: fit-content(max(30rem, calc(var(--bi-h1) * 7.8))) minmax(0, 1fr);
+  align-items: start;
   column-gap: clamp(1rem, 2vw, 2rem);
   padding-inline: var(--bi-margem) clamp(1rem, 2vw, 2rem);
 }
@@ -208,7 +208,8 @@ body:has([data-art='brasil-inteiro']) {
   grid-area: 1 / 2;
   justify-self: center;
   width: min(100%, calc(var(--bi-mapa-hmax) * 1.0242));
-  margin: 0;
+  /* o topo do mapa na linha do topo do título (rótulo de cima + margem do h1) */
+  margin: 2.6rem 0 0;
 }
 
 [data-art='brasil-inteiro'] .bi-mapa {
@@ -343,8 +344,8 @@ body:has([data-art='brasil-inteiro']) {
   color: var(--bi-texto);
 }
 
-/* abaixo de 1100px a coluna do mapa ficaria pequena demais: o mapa vai para cima do texto */
-@media (max-width: 1099px) {
+/* abaixo de 860px (celular, tablet em pé) a coluna do mapa ficaria pequena demais: o mapa vai para cima do texto */
+@media (max-width: 859px) {
   [data-art='brasil-inteiro'] .bi-palco {
     padding-top: 0;
   }
@@ -358,7 +359,7 @@ body:has([data-art='brasil-inteiro']) {
   [data-art='brasil-inteiro'] .bi-mapa-fig {
     grid-area: 1 / 1;
     width: min(100%, 30rem);
-    margin-top: 0.75rem;
+    margin: 0.75rem 0 0;
   }
 
   [data-art='brasil-inteiro'] .bi-palco__texto {
