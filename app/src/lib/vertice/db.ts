@@ -21,12 +21,23 @@ const globalForPool = globalThis as unknown as { verticePool?: Pool };
  */
 export const PG_SCHEMA = "vertice";
 
-function connectionString(): string {
+export function connectionString(): string {
   const url = process.env.VERTICE_DATABASE_URL || process.env.DATABASE_URL;
   if (!url) {
     throw new Error(
       "DATABASE_URL não configurada. As telas de clientes, propostas, contratos e entregas precisam dela para ler e gravar."
     );
+  }
+  // A DATABASE_URL é escrita para o Prisma, que lê `sslmode=prefer` como "tenta TLS e,
+  // se o servidor recusar, conecta sem". O `pg` lê `prefer` como TLS obrigatório e não
+  // tem volta — contra o roilabs_db, que não tem TLS, dá "The server does not support
+  // SSL connections". Sem volta possível, `prefer`/`allow` viram "sem TLS" aqui;
+  // `require` e `verify-*` continuam exigindo.
+  const parsed = new URL(url);
+  const mode = parsed.searchParams.get("sslmode");
+  if (mode === "prefer" || mode === "allow") {
+    parsed.searchParams.delete("sslmode");
+    return parsed.toString();
   }
   return url;
 }

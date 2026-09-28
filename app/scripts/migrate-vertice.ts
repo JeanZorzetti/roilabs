@@ -6,15 +6,12 @@
 // (lib/vertice/db.ts), então app e script nunca divergem. O que só o script faz é criar o
 // schema — ver o comentário de PG_SCHEMA sobre por que não é o `public`.
 import pg from "pg";
-import { PG_SCHEMA, SCHEMA } from "../src/lib/vertice/db";
+import { PG_SCHEMA, SCHEMA, connectionString } from "../src/lib/vertice/db";
 
-const url = process.env.VERTICE_DATABASE_URL || process.env.DATABASE_URL;
-if (!url) {
-  console.error("Defina DATABASE_URL (ou VERTICE_DATABASE_URL) antes de rodar.");
-  process.exit(1);
-}
-
-const client = new pg.Client({ connectionString: url, options: `-c search_path=${PG_SCHEMA},public` });
+const client = new pg.Client({
+  connectionString: connectionString(),
+  options: `-c search_path=${PG_SCHEMA},public`,
+});
 await client.connect();
 try {
   await client.query("begin");
