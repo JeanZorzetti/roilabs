@@ -1,0 +1,106 @@
+/* Estilo das telas da Vértice em /admin (Tailwind). Ver tailwind.config.ts. */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Cores da marca Vértice — as mesmas do site verticemarketing. */
+    --background: 0 0% 100%;
+    --foreground: 220 75% 20%;
+    --card: 0 0% 96%;
+    --card-foreground: 220 75% 20%;
+    --primary: 220 75% 33%;
+    --primary-foreground: 0 0% 100%;
+    --accent: 39 45% 50%;
+    --accent-foreground: 0 0% 100%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 220 20% 46%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 20% 88%;
+    --radius: 0.5rem;
+    --gold: 39 45% 50%;
+    --gold-light: 39 45% 60%;
+    /* 36%: gold-dark só aparece como texto, e a 14px bold precisa de 4.5:1. */
+    --gold-dark: 39 50% 36%;
+    --navy: 220 75% 33%;
+    --navy-light: 220 60% 45%;
+    --navy-dark: 220 80% 20%;
+    --shadow-soft: 0 4px 20px -4px hsl(220 75% 33% / 0.1);
+    --shadow-gold: 0 4px 20px -4px hsl(39 45% 50% / 0.3);
+    --shadow-elevated: 0 20px 40px -12px hsl(220 75% 33% / 0.15);
+  }
+
+  /* O preflight do Tailwind, preso em `.vtx`. `:where()` zera a especificidade
+     do seletor de elemento: fica (0,1,0), igual à de uma classe utilitária, que
+     vem depois no arquivo e por isso ganha. */
+  .vtx,
+  .vtx :where(*, ::before, ::after) {
+    border-width: 0;
+    border-style: solid;
+    border-color: hsl(var(--border));
+  }
+  .vtx {
+    color: hsl(var(--foreground));
+    font-family: var(--font-body), system-ui, sans-serif;
+    line-height: 1.5;
+  }
+  .vtx :where(h1, h2, h3, h4, h5, h6) {
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    letter-spacing: normal;
+    margin: 0;
+  }
+  .vtx :where(p, blockquote, dl, dd, figure, pre, hr, fieldset) {
+    margin: 0;
+  }
+  .vtx :where(ol, ul, menu) {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .vtx :where(a) {
+    color: inherit;
+    text-decoration: inherit;
+  }
+  .vtx :where(b, strong) {
+    font-weight: bolder;
+  }
+  .vtx :where(table) {
+    border-collapse: collapse;
+    text-indent: 0;
+    border-color: inherit;
+  }
+  .vtx :where(button, input, optgroup, select, textarea) {
+    font: inherit;
+    letter-spacing: inherit;
+    color: inherit;
+    margin: 0;
+    padding: 0;
+  }
+  .vtx :where(button, [type='button'], [type='reset'], [type='submit']) {
+    background-color: transparent;
+    background-image: none;
+    cursor: pointer;
+  }
+  .vtx :where(textarea) {
+    resize: vertical;
+  }
+  .vtx :where(input, textarea)::placeholder {
+    color: #9ca3af;
+    opacity: 1;
+  }
+  .vtx :where(img, svg, video, canvas) {
+    display: block;
+    vertical-align: middle;
+  }
+  .vtx :where(img, video) {
+    max-width: 100%;
+    height: auto;
+  }
+  .vtx :where(summary) {
+    display: list-item;
+  }
+}

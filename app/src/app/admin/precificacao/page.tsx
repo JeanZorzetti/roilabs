@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
 import { log } from '@/lib/log';
 import { FAIXAS, NICHOS, nichoSugerido, type Confianca, type Faixa, type NichoPreco } from '@/lib/precificacao';
@@ -98,7 +97,7 @@ export default async function PrecificacaoPage() {
         <p>
           Quanto cobrar de success fee em cada nicho, para montar a proposta de uma cadeira. É referência:{' '}
           <strong>não muda nenhuma cobrança</strong>. Quem fatura continua sendo a taxa gravada no cadastro de
-          cada <Link href="/admin/parceiros">parceiro</Link>.
+          cada parceiro.
         </p>
       </div>
 
@@ -190,7 +189,7 @@ export default async function PrecificacaoPage() {
                 const sit = comparar(p.aq, p.rec, sug);
                 return (
                   <tr key={p.id}>
-                    <td className="pr-table__nicho"><Link href={`/admin/parceiros/${p.id}`}>{p.nome}</Link></td>
+                    <td className="pr-table__nicho">{p.nome}</td>
                     <td data-label="Nicho no cadastro">{p.nicho}{p.daCasa && <span className="pr-hint"> · da casa, não gera fee</span>}</td>
                     <td data-label="Estágio">{p.estagio}</td>
                     <td data-label="Hoje" className="pr-table__taxa">{p.aq !== null && p.rec !== null ? `${pct(p.aq)} / ${pct(p.rec)}` : '—'}</td>
