@@ -78,7 +78,7 @@ body:has([data-art='brasil-inteiro']) {
 [data-art='brasil-inteiro'] :is(
     .eyebrow, .nav__link, .nav__toggle, .nav__panel a, .btn, .step__num, .step__tag, .map__subtitle,
     .seat__status, .map__caption, .readout__bar, .metric__key, .prova__foot, .site-footer__titulo,
-    .gate__state, .fit__title, .close__fine, .field label, .form__note
+    .close__fine, .field label, .form__note
   ) {
   text-transform: none;
   letter-spacing: 0;
@@ -781,37 +781,274 @@ body:has([data-art='brasil-inteiro']) {
   font-size: 0.85rem;
 }
 
-[data-art='brasil-inteiro'] .gate-list {
-  background: var(--bi-creme-2);
-  border-radius: var(--bi-raio-painel);
-  box-shadow: 0 30px 60px -44px var(--bi-sombra-c);
+/* gates: 01 e 02 medidos (estáticos, acesos) à esquerda; o 03 é o teste num cartão noite à direita */
+[data-art='brasil-inteiro'] .bi-gates__grade {
+  display: grid;
+  grid-template-columns: 5fr 6fr;
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
 }
 
-[data-art='brasil-inteiro'] .gate--done .gate__check {
+[data-art='brasil-inteiro'] .bi-gates .eyebrow {
+  display: block;
+  margin-bottom: 1rem;
+}
+
+[data-art='brasil-inteiro'] .bi-gates h2 em {
+  font-style: normal;
+  color: var(--bi-laranja-texto);
+}
+
+[data-art='brasil-inteiro'] .bi-medidos {
+  display: grid;
+  gap: 0.75rem;
+  margin: 2rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+[data-art='brasil-inteiro'] .bi-medido {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: 0.2rem 1rem;
+  align-items: center;
+  padding: 0.9rem 1rem;
+  border-radius: 12px;
+  background: var(--bi-creme-2);
+  box-shadow: inset 0 0 0 1px var(--bi-fio-c);
+}
+
+[data-art='brasil-inteiro'] .bi-medido__num {
+  grid-row: span 2;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  font-family: var(--bi-display);
+  font-size: 1.2rem;
+  background: var(--bi-laranja);
   color: var(--bi-sobre-laranja);
+  box-shadow: 0 10px 22px -12px var(--bi-sombra-laranja);
 }
 
-[data-art='brasil-inteiro'] .gate__check svg {
-  stroke: var(--bi-sobre-laranja);
+[data-art='brasil-inteiro'] .bi-medido b {
+  font-weight: 700;
 }
 
-[data-art='brasil-inteiro'] .gate__state {
+[data-art='brasil-inteiro'] .bi-medido b small {
+  margin-left: 0.4rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--bi-laranja-texto);
+}
+
+[data-art='brasil-inteiro'] .bi-medido > span:last-child {
+  font-size: 0.9rem;
+  color: var(--bi-tinta-2);
+}
+
+[data-art='brasil-inteiro'] .bi-simular {
+  display: inline-block;
+  margin-top: 1.6rem;
+  padding-block: 0.6rem;
+  font-weight: 600;
+  color: var(--bi-tinta);
+  text-underline-offset: 4px;
+}
+
+[data-art='brasil-inteiro'] .bi-simular:hover {
+  color: var(--bi-laranja-texto);
+}
+
+/* o cartão do teste: noite sobre o creme, com a trama de pontos do mapa bem apagada */
+[data-art='brasil-inteiro'] .bi-teste {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(1.6rem, 3.5vw, 2.4rem);
+  border-radius: 16px;
+  background:
+    radial-gradient(circle at 1px 1px, var(--bi-fio) 1px, transparent 1.6px) 0 0 / 18px 18px,
+    var(--bi-noite);
+  color: var(--bi-texto);
+  box-shadow: 0 40px 80px -40px var(--bi-sombra), 0 0 0 1px var(--bi-fio);
+}
+
+[data-art='brasil-inteiro'] .bi-teste__topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+[data-art='brasil-inteiro'] .bi-teste__rot {
+  font-weight: 700;
+  color: var(--bi-laranja);
+}
+
+[data-art='brasil-inteiro'] .bi-teste__passo {
+  font-size: 0.9rem;
+  color: var(--bi-texto-2);
+}
+
+/* as barras acendem uma a uma: a mesma luz do mapa */
+[data-art='brasil-inteiro'] .bi-teste__barras {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-top: 1rem;
+}
+
+[data-art='brasil-inteiro'] .bi-teste__barras i {
+  height: 4px;
+  border-radius: 4px;
+  background: var(--bi-fio-forte);
+  transition: background-color var(--bi-dur-base) var(--bi-ease-saida), box-shadow var(--bi-dur-base) var(--bi-ease-saida);
+}
+
+[data-art='brasil-inteiro'] .bi-teste__barras i.sim {
+  background: var(--bi-laranja);
+  box-shadow: 0 0 10px var(--bi-sombra-laranja);
+}
+
+[data-art='brasil-inteiro'] .bi-teste__barras i.nao {
+  background: var(--bi-texto-2);
+}
+
+[data-art='brasil-inteiro'] .bi-teste__pergunta,
+[data-art='brasil-inteiro'] .bi-teste__titulo {
+  margin-top: 1.8rem;
+  font-family: var(--bi-display);
+  font-weight: 400;
+  font-synthesis: none;
+  line-height: 1.12;
+  letter-spacing: -0.005em;
+  text-wrap: balance;
+  color: var(--bi-texto);
+}
+
+[data-art='brasil-inteiro'] .bi-teste__pergunta {
+  min-height: 3.5em;
+  font-size: clamp(1.7rem, 2.6vw, 2.2rem);
+}
+
+[data-art='brasil-inteiro'] .bi-teste__titulo {
+  font-size: clamp(1.6rem, 2.6vw, 2.3rem);
+}
+
+[data-art='brasil-inteiro'] .bi-teste__titulo:focus {
+  outline: none;
+}
+
+[data-art='brasil-inteiro'] .bi-teste__titulo em {
+  font-style: normal;
+  color: var(--bi-laranja);
+}
+
+[data-art='brasil-inteiro'] .bi-teste__texto {
+  margin-top: 0.8rem;
+  color: var(--bi-texto-2);
+}
+
+[data-art='brasil-inteiro'] .bi-teste__texto b {
+  font-weight: 600;
+  color: var(--bi-texto);
+}
+
+[data-art='brasil-inteiro'] .bi-teste__lista {
+  display: grid;
+  gap: 0.5rem;
+  margin: 1.1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+[data-art='brasil-inteiro'] .bi-teste__lista li {
+  display: flex;
+  gap: 0.7rem;
+}
+
+[data-art='brasil-inteiro'] .bi-teste__lista li::before {
+  content: '✓';
+  flex: none;
+  font-weight: 700;
+  color: var(--bi-laranja);
+}
+
+[data-art='brasil-inteiro'] .bi-teste__nao {
+  margin-top: 1.1rem;
+  font-size: 0.9rem;
+  color: var(--bi-texto-2);
+}
+
+[data-art='brasil-inteiro'] .bi-teste__nao b {
+  font-weight: 600;
+  color: var(--bi-texto);
+}
+
+[data-art='brasil-inteiro'] .bi-teste__respostas {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1.6rem;
+}
+
+[data-art='brasil-inteiro'] .bi-teste__respostas button.btn {
+  min-width: 8.5rem;
+  justify-content: center;
+}
+
+[data-art='brasil-inteiro'] .bi-btn-escuro {
+  background: transparent;
+  color: var(--bi-texto);
+  border: 1.5px solid var(--bi-fio-forte);
+}
+
+[data-art='brasil-inteiro'] .bi-btn-escuro:hover {
+  border-color: var(--bi-texto);
+}
+
+[data-art='brasil-inteiro'] .bi-teste__refazer {
+  padding: 0.9rem 0.4rem;
+  border: 0;
+  background: none;
+  font: 500 1rem var(--bi-corpo);
+  color: var(--bi-texto-2);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  cursor: pointer;
+}
+
+[data-art='brasil-inteiro'] .bi-teste__refazer:hover {
+  color: var(--bi-texto);
+}
+
+[data-art='brasil-inteiro'] .bi-teste__nota {
+  margin-top: 1.3rem;
   font-size: 0.82rem;
+  color: var(--bi-texto-2);
 }
 
-[data-art='brasil-inteiro'] .fit__col {
-  background: var(--bi-creme-2);
-  border-radius: var(--bi-raio-painel);
+/* no cartão escuro o anel de foco volta ao laranja claro (a regra da banda creme escurece ele) */
+[data-art='brasil-inteiro'] .bi-teste :focus-visible {
+  outline-color: var(--bi-laranja);
 }
 
-[data-art='brasil-inteiro'] .fit__col--yes {
-  background: color-mix(in oklch, var(--bi-laranja) 7%, var(--bi-creme-2));
-}
+@media (max-width: 859px) {
+  [data-art='brasil-inteiro'] .bi-gates__grade {
+    grid-template-columns: 1fr;
+  }
 
-[data-art='brasil-inteiro'] .fit__title {
-  font-size: 1rem;
-}
+  [data-art='brasil-inteiro'] .bi-teste__pergunta {
+    min-height: 4.6em;
+  }
 
+  [data-art='brasil-inteiro'] .bi-medido b small {
+    display: block;
+    margin: 0.1rem 0 0;
+  }
+}
 [data-art='brasil-inteiro'] .faq__item summary {
   font-weight: 600;
 }
@@ -873,7 +1110,7 @@ body:has([data-art='brasil-inteiro']) {
     animation: none;
   }
 
-  [data-art='brasil-inteiro'] .bi-vitrine__seta {
+  [data-art='brasil-inteiro'] :is(.bi-vitrine__seta, .bi-teste__barras i) {
     transition: none;
   }
 

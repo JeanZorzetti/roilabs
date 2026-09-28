@@ -17,6 +17,8 @@ import { EMAIL, whatsLink } from '../data/contato';
 
 const apply = `mailto:${EMAIL}?subject=Candidatura%20%C3%A0%20cadeira`;
 const whatsHref = whatsLink();
+// Quem terminou o teste da cadeira com algum ponto em aberto e quer conversar mesmo assim.
+const whatsTeste = whatsLink('Fiz o teste da cadeira no site e quero conversar sobre o meu nicho');
 
 // Candidaturas vão para o app admin (app.roilabs.com.br), que grava no DB.
 // POST urlencoded simples (sem preflight CORS); a API redireciona pro `redirect`.
@@ -191,9 +193,14 @@ const jsonLdNodes = [
 
     <script>
       import { iniciarVitrine } from '../scripts/brasil-inteiro/vitrine';
+      import { iniciarTeste } from '../scripts/brasil-inteiro/teste';
 
       const vitrine = document.querySelector<HTMLElement>('.bi-vitrine');
       if (vitrine) iniciarVitrine(vitrine);
+
+      // Seção dos gates: o gate 03 vira o teste de quatro perguntas.
+      const teste = document.querySelector<HTMLElement>('[data-teste]');
+      if (teste) iniciarTeste(teste);
 
       // O mapa vivo (e os 22kb de coordenadas) só carrega depois que a página pintou.
       const caixa = document.querySelector<HTMLElement>('.bi-mapa');
@@ -508,65 +515,89 @@ const jsonLdNodes = [
       </div>
     </section>
 
-    <!-- ICP: OS 3 GATES -->
-    <section class="section section--light" id="cadeira-pra-voce" aria-labelledby="icp-title">
-      <div class="wrap">
-        <div class="section__head">
+    <!-- ICP: OS 3 GATES · opção B (escolhida em 28/09/2026): 01 e 02 são afirmação ("nós medimos"), estáticos;
+         o 03 é um teste de 4 perguntas (scripts/brasil-inteiro/teste.ts). Sem JS, o cartão mostra os quatro
+         pontos e o "não é pra você" como lista, com o botão de aplicar. -->
+    <section class="section section--light bi-gates" id="cadeira-pra-voce" aria-labelledby="icp-title">
+      <div class="wrap bi-gates__grade">
+        <div>
           <span class="eyebrow">A cadeira é sua se…</span>
-          <h2 id="icp-title">Três gates. Dois medimos nós. O terceiro é você.</h2>
+          <h2 id="icp-title">Três gates. Dois medimos nós. <em>O terceiro é você.</em></h2>
           <p class="section__lead">
             Não abrimos uma cadeira no escuro. Antes de o seu nicho ganhar
             cadeira, medimos a demanda e a brecha na busca. A peça que falta é o
             fornecedor certo.
           </p>
+          <ul class="bi-medidos" role="list" aria-label="Os dois gates que a ROI Labs mede">
+            <li class="bi-medido">
+              <span class="bi-medido__num" aria-hidden="true">01</span>
+              <b>Demanda comprovada <small>Nós medimos</small></b>
+              <span>Busca real pelo seu nicho, medida no Keyword Planner do Google.</span>
+            </li>
+            <li class="bi-medido">
+              <span class="bi-medido__num" aria-hidden="true">02</span>
+              <b>Brecha na busca <small>Nós medimos</small></b>
+              <span>No Google, só aparecem marketplaces genéricos. Espaço pra dominar.</span>
+            </li>
+          </ul>
+          <a class="bi-simular" href="/simulador/">Quanto sobra pra você? Simule sua receita →</a>
         </div>
 
-        <div class="gate-list" role="list" aria-label="Os três gates da cadeira">
-          <div class="gate gate--done" role="listitem">
-            <span class="gate__check" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M6 10L8.5 12.5L14 7" /></svg></span>
-            <span class="gate__body">
-              <span class="gate__name">Gate 01 — Demanda comprovada</span>
-              <span class="gate__desc">Busca real pelo seu nicho, medida no Keyword Planner do Google.</span>
-            </span>
-            <span class="gate__state">Nós medimos</span>
+        <div class="bi-teste" data-teste>
+          <div class="bi-teste__topo">
+            <span class="bi-teste__rot">Gate 03 · Você</span>
+            <span class="bi-teste__passo" data-passo>Fornecedor de ponta</span>
           </div>
-          <div class="gate gate--done" role="listitem">
-            <span class="gate__check" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M6 10L8.5 12.5L14 7" /></svg></span>
-            <span class="gate__body">
-              <span class="gate__name">Gate 02 — Brecha na busca</span>
-              <span class="gate__desc">No Google, só aparecem marketplaces genéricos. Espaço pra dominar.</span>
-            </span>
-            <span class="gate__state">Nós medimos</span>
-          </div>
-          <div class="gate gate--done" role="listitem">
-            <span class="gate__check" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M6 10L8.5 12.5L14 7" /></svg></span>
-            <span class="gate__body">
-              <span class="gate__name">Gate 03 — Fornecedor de ponta</span>
-              <span class="gate__desc">O produto e a logística que a demanda exige. Esse é você.</span>
-            </span>
-            <span class="gate__state">Você</span>
-          </div>
-        </div>
+          <div class="bi-teste__barras" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
 
-        <div class="fit">
-          <div class="fit__col fit__col--yes">
-            <div class="fit__title">É pra você se</div>
-            <p class="fit__item"><span class="fit__mark" aria-hidden="true">✓</span> Tem catálogo próprio e amplo no seu nicho.</p>
-            <p class="fit__item"><span class="fit__mark" aria-hidden="true">✓</span> Aguenta estoque e despacho rápido — pronta-entrega de verdade.</p>
-            <p class="fit__item"><span class="fit__mark" aria-hidden="true">✓</span> Produto forte, presença online fraca, e quer escalar.</p>
-            <p class="fit__item"><span class="fit__mark" aria-hidden="true">✓</span> Topa exclusividade de cadeira atrelada a SLA.</p>
+          <div data-estatico>
+            <p class="bi-teste__titulo">O produto e a logística que a demanda exige. A cadeira pede quatro pontos:</p>
+            <ul class="bi-teste__lista" role="list">
+              <li>Tem catálogo próprio e amplo no seu nicho.</li>
+              <li>Aguenta estoque e despacho rápido, pronta-entrega de verdade.</li>
+              <li>Produto forte, presença online fraca, e quer escalar.</li>
+              <li>Topa exclusividade de cadeira atrelada a SLA.</li>
+            </ul>
+            <p class="bi-teste__nao">
+              <b>Não é pra você se:</b> revende sem catálogo ou marca próprios · não consegue acompanhar um
+              salto de demanda · procura agência de mídia paga com fee mensal · não quer compromisso de exclusividade.
+            </p>
+            <div class="bi-teste__respostas"><a class="btn btn--primary" href="#candidatar">Aplicar para a cadeira</a></div>
           </div>
-          <div class="fit__col fit__col--no">
-            <div class="fit__title">Não é pra você se</div>
-            <p class="fit__item"><span class="fit__mark" aria-hidden="true">✕</span> Revende sem catálogo ou marca próprios.</p>
-            <p class="fit__item"><span class="fit__mark" aria-hidden="true">✕</span> Não consegue acompanhar um salto de demanda.</p>
-            <p class="fit__item"><span class="fit__mark" aria-hidden="true">✕</span> Procura agência de mídia paga com fee mensal.</p>
-            <p class="fit__item"><span class="fit__mark" aria-hidden="true">✕</span> Não quer compromisso de exclusividade.</p>
-          </div>
-        </div>
 
-        <div class="close__whats" style="margin-top: 2.5rem; text-align: center;">
-          <a class="btn btn--ghost btn--on-light" href="/simulador/">Quanto sobra pra você? Simule sua receita →</a>
+          <div data-vivo hidden>
+            <div data-fluxo>
+              <p class="bi-teste__pergunta" data-pergunta aria-live="polite"></p>
+              <div class="bi-teste__respostas">
+                <button class="btn btn--primary" type="button" data-r="sim">Sim</button>
+                <button class="btn bi-btn-escuro" type="button" data-r="nao">Ainda não</button>
+              </div>
+            </div>
+
+            <div data-ok hidden>
+              <p class="bi-teste__titulo" tabindex="-1">Gate 03 aceso. <em>A cadeira do seu nicho pode ser sua.</em></p>
+              <p class="bi-teste__texto">Você marcou os quatro pontos que a cadeira pede. O próximo passo é a curadoria olhar o seu nicho.</p>
+              <div class="bi-teste__respostas">
+                <a class="btn btn--primary" href="#candidatar">Aplicar para a cadeira</a>
+                <button class="bi-teste__refazer" type="button" data-refazer>Refazer o teste</button>
+              </div>
+            </div>
+
+            <div data-talvez hidden>
+              <p class="bi-teste__titulo" tabindex="-1">Pode não ser a hora ainda.</p>
+              <p class="bi-teste__texto">A cadeira pede os quatro pontos, e ficou em aberto: <b data-aberto></b></p>
+              <div class="bi-teste__respostas">
+                <a class="btn btn--whats" href={whatsTeste} target="_blank" rel="noopener">Conversar mesmo assim</a>
+                <button class="bi-teste__refazer" type="button" data-refazer>Refazer o teste</button>
+              </div>
+            </div>
+
+            <p class="bi-teste__nota">
+              Quatro perguntas, 30 segundos. As respostas não vão para nenhum formulário: servem só para você saber
+              se a cadeira combina com o seu negócio.
+            </p>
+          </div>
+
         </div>
       </div>
     </section>
