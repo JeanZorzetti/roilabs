@@ -1,35 +1,77 @@
 import { Pool } from "pg";
 
 /**
- * Pool único para o Postgres da Vértice (banco `verticemkt`), usado pelas telas
- * da Vértice em /admin. Não é o banco da ROI Labs (`DATABASE_URL`, do Prisma):
- * é o mesmo banco que o site verticemarketing.roilabs.com.br lê para abrir os
- * links públicos de proposta, contrato e termo de entrega.
+ * Pool único para as telas que vieram da Vértice em /admin (clientes,
+ * onboarding, propostas, contratos, entregas). Mora no banco da ROI Labs
+ * (`roilabs_db`, o mesmo `DATABASE_URL` do Prisma), no schema `vertice`.
+ * `VERTICE_DATABASE_URL` só existe para apontar para outro banco.
  *
  * O `globalThis` evita que o hot reload do `next dev` abra um pool novo a cada
  * recompilação e estoure o limite de conexões do servidor.
  */
-const globalForPool = globalThis as unknown as { verticePool?: Pool };
+const globalForPool = globalThis as unknown as { verticePool?: Promise<Pool> };
+
+/**
+ * Schema Postgres das tabelas. Fora do `public` de propósito: o `roilabs_db`
+ * recebe `prisma db push` manual, e o push apaga do `public` toda tabela que
+ * não está no schema.prisma. O `public` no search_path mantém funcionando um
+ * banco sem o schema `vertice` (o `verticemkt` antigo, tabelas no `public`).
+ * Quem cria o schema é `scripts/migrate-vertice.ts` — o `ensureSchema` abaixo
+ * não cria, senão num banco antigo ele abriria tabelas vazias por cima das reais.
+ */
+export const PG_SCHEMA = "vertice";
 
 function connectionString(): string {
-  const url = process.env.VERTICE_DATABASE_URL;
+  const url = process.env.VERTICE_DATABASE_URL || process.env.DATABASE_URL;
   if (!url) {
     throw new Error(
-      "VERTICE_DATABASE_URL não configurada. As telas da Vértice precisam dela para ler e gravar clientes, propostas e entregas."
+      "DATABASE_URL não configurada. As telas de clientes, propostas, contratos e entregas precisam dela para ler e gravar."
     );
   }
   return url;
 }
 
-export function pool(): Pool {
-  if (!globalForPool.verticePool) {
-    globalForPool.verticePool = new Pool({
-      connectionString: connectionString(),
-      max: 4,
-      idleTimeoutMillis: 10_000,
-      connectionTimeoutMillis: 8_000,
-    });
+/** O erro do `pg` quando o servidor responde "não" ao pedido de TLS. */
+const SERVER_WITHOUT_TLS = "The server does not support SSL connections";
+
+/**
+ * Abre o pool lendo a URL como o Prisma lê, porque a DATABASE_URL é escrita para ele:
+ * `sslmode=require` exige TLS, `sslmode=disable` desliga, e todo o resto — `prefer`,
+ * `ssl=true`, `verify-full`, sem sslmode com `PGSSLMODE` no ambiente — é "tenta TLS;
+ * se o servidor recusar, conecta sem". O `pg` não tem essa volta: lê quase tudo isso
+ * como TLS obrigatório e desiste. O roilabs_db não tem TLS, então em produção é a
+ * volta que conecta. A regra não depende do formato da URL de produção: se o Prisma
+ * conecta com ela, este pool conecta também.
+ */
+export async function openPool(url: string): Promise<Pool> {
+  const config = {
+    options: `-c search_path=${PG_SCHEMA},public`,
+    max: 4,
+    idleTimeoutMillis: 10_000,
+    connectionTimeoutMillis: 8_000,
+  };
+  const asWritten = new Pool({ ...config, connectionString: url });
+  try {
+    (await asWritten.connect()).release();
+    return asWritten;
+  } catch (error) {
+    await asWritten.end();
+    const plain = new URL(url);
+    const refusedTls = error instanceof Error && error.message === SERVER_WITHOUT_TLS;
+    if (!refusedTls || plain.searchParams.get("sslmode") === "require") throw error;
+    plain.searchParams.delete("sslmode");
+    plain.searchParams.delete("ssl");
+    // `ssl: false` explícito: sem ele o pg ainda leria a PGSSLMODE do ambiente.
+    return new Pool({ ...config, connectionString: plain.toString(), ssl: false });
   }
+}
+
+export function pool(): Promise<Pool> {
+  globalForPool.verticePool ??= openPool(connectionString()).catch((error) => {
+    // Sem isso, uma falha de rede na primeira conexão ficaria guardada até o próximo deploy.
+    globalForPool.verticePool = undefined;
+    throw error;
+  });
   return globalForPool.verticePool;
 }
 
@@ -38,7 +80,7 @@ export function pool(): Pool {
 // segunda pessoa escrevendo schema, migrar para drizzle-kit ou node-pg-migrate.
 let schemaReady: Promise<void> | null = null;
 
-const SCHEMA = `
+export const SCHEMA = `
 create table if not exists clients (
   id          serial primary key,
   name        text not null,
@@ -138,7 +180,7 @@ create unique index if not exists media_plans_slug_key on media_plans (slug);
 export function ensureSchema(): Promise<void> {
   if (!schemaReady) {
     schemaReady = pool()
-      .query(SCHEMA)
+      .then((db) => db.query(SCHEMA))
       .then(() => undefined)
       .catch((error) => {
         // Sem isso, uma falha de rede no primeiro acesso "cacheia" o erro para
@@ -155,6 +197,6 @@ export async function query<T extends Record<string, unknown>>(
   params: unknown[] = []
 ): Promise<T[]> {
   await ensureSchema();
-  const result = await pool().query(text, params);
+  const result = await (await pool()).query(text, params);
   return result.rows as T[];
 }

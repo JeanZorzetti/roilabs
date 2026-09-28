@@ -406,6 +406,11 @@
   color: var(--bi-texto-2);
 }
 
+/* a etapa 1 é a única que se faz daqui: os dois caminhos da candidatura ficam na própria etapa */
+[data-art='brasil-inteiro'] .bi-trilha .bi-trilha__acoes {
+  margin-top: 1.1rem;
+}
+
 /* apagado até entrar na tela (só quando o script marcou data-espera) */
 [data-art='brasil-inteiro'] .bi-trilha[data-espera]:not([data-aceso]) .bi-trilha__num {
   background: var(--bi-noite);

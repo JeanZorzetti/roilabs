@@ -1,0 +1,30 @@
+// Cria o schema `vertice` e as 6 tabelas das telas vindas da Vértice (clientes, onboarding,
+// propostas, contratos, entregas, planos de mídia) no banco da ROI Labs.
+// Run: node --import tsx scripts/migrate-vertice.ts   (lê DATABASE_URL, ou VERTICE_DATABASE_URL se existir)
+//
+// Idempotente: tudo é `if not exists`. O SQL e a conexão são os do app (`ensureSchema` e
+// `pool` em lib/vertice/db.ts), então app e script nunca divergem — nem no TLS. O que só o
+// script faz é criar o schema — ver o comentário de PG_SCHEMA sobre por que não é o `public`.
+import { PG_SCHEMA, SCHEMA, pool } from "../src/lib/vertice/db";
+
+const db = await pool();
+const client = await db.connect();
+try {
+  await client.query("begin");
+  await client.query(`create schema if not exists ${PG_SCHEMA}`);
+  await client.query(SCHEMA);
+  await client.query("commit");
+} catch (error) {
+  await client.query("rollback");
+  throw error;
+} finally {
+  const { rows } = await client
+    .query(
+      "select table_name from information_schema.tables where table_schema = $1 order by 1",
+      [PG_SCHEMA]
+    )
+    .catch(() => ({ rows: [] as { table_name: string }[] }));
+  console.log(`schema ${PG_SCHEMA}:`, rows.map((r) => r.table_name).join(", ") || "(vazio)");
+  client.release();
+  await db.end();
+}

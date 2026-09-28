@@ -364,10 +364,6 @@ const jsonLdNodes = [
           <span class="eyebrow">Peça 4 · o caminho</span>
           <h2 id="etapas-title">Da candidatura ao contrato, <em>em 6 etapas.</em></h2>
           <p class="section__lead">A primeira leva um minuto e não custa nada.</p>
-          <div class="bi-acoes">
-            <a class="btn btn--primary" href="/#candidatar">Começar a etapa 1 agora</a>
-            <a class="btn btn--whats" href={whatsHref} target="_blank" rel="noopener">Chamar no WhatsApp</a>
-          </div>
         </div>
 
         <ol class="bi-trilha" role="list" data-trilha>
@@ -377,6 +373,19 @@ const jsonLdNodes = [
               <div>
                 <h3>{s.name}</h3>
                 <p>{s.text}</p>
+                {s.acoes && (
+                  <div class="bi-acoes bi-trilha__acoes">
+                    {s.acoes.map((a) => (
+                      <a
+                        class={`btn ${a.classe}`}
+                        href={a.href}
+                        {...(a.externo ? { target: '_blank', rel: 'noopener' } : {})}
+                      >
+                        {a.label}
+                      </a>
+                    ))}
+                  </div>
+                )}
               </div>
             </li>
           ))}
