@@ -2,6 +2,12 @@
 import Base from '../layouts/Base.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import { whatsLink } from '../data/contato';
+// Direção de arte Brasil Inteiro, propagada da home (28/09/2026): mesmos tokens e a mesma
+// releitura do global.css; o que é só desta página mora em simulador.css.
+import '../styles/brasil-inteiro/tokens.css';
+import '../styles/brasil-inteiro/home.css';
+import '../styles/brasil-inteiro/simulador.css';
 
 // Matemática replicada de app/src/lib/success-fee.ts (calcularFaturaMensal):
 // base = soma dos pedidos elegíveis; valor da fatura = base * comissaoPct.
@@ -9,100 +15,236 @@ import Footer from '../components/Footer.astro';
 // a fórmula (base * pct) é replicada aqui, client-side, com dados hipotéticos
 // do fornecedor candidato (não há transação real nem parceiro cadastrado).
 // A anuidade da cadeira (R$ 2.640/ano ÷ 12) é preço de tabela do site: o /app não a fatura.
+const ANUIDADE_MES = 2640 / 12;
+
+// Valores iniciais: a conta sai pronta no HTML, então sem JS a página já mostra um resultado certo.
+const INICIAL = { ticket: 450, pedidos: 40, pct: 10 };
+const receita = INICIAL.ticket * INICIAL.pedidos;
+const fee = receita * (INICIAL.pct / 100);
+const liquido = receita - fee - ANUIDADE_MES;
+const reais = (n: number) => 'R$ ' + Math.round(Math.abs(n)).toLocaleString('pt-BR');
+const fatia = (n: number) => `${((n / receita) * 100).toFixed(2)}%`;
+
+const whatsHref = whatsLink('Fiz a simulação no site e quero conversar sobre a cadeira do meu nicho');
 ---
 
 <Base
   title="Simulador de receita — ROI Labs"
   description="Simule sua receita projetada como fornecedor parceiro e veja o que sobra depois do success fee e da anuidade da cadeira (R$ 2.640/ano)."
+  fontesPadrao={false}
 >
+  <Fragment slot="head">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Gloock&display=swap" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Gloock&display=swap" /></noscript>
+  </Fragment>
+
+  <div class="bi" data-art="brasil-inteiro">
   <Header />
 
   <main>
-    <section class="section section--dark" aria-labelledby="sim-title">
-      <div class="wrap">
-        <div class="section__head">
-          <span class="eyebrow">Simulador · fornecedor candidato</span>
-          <h1 id="sim-title">Quanto sobra pra você no fim do mês?</h1>
-          <p class="section__lead">
+    <!-- TOPO · duas colunas: pergunta e campos | a conta aberta. Abaixo de 900px a conta desce para
+         depois dos campos. A barra mostra a venda inteira: a parte laranja é a que fica com você. -->
+    <section class="bi-sim" aria-labelledby="sim-title">
+      <div class="wrap bi-sim__grade">
+        <div class="bi-sim__texto">
+          <span class="bi-olho">Simulador · fornecedor candidato</span>
+          <h1 id="sim-title">Quanto sobra pra você <em>no fim do mês?</em></h1>
+          <p class="bi-sub">
             Informe seu ticket médio e o volume de pedidos que espera vender por
             mês. O cálculo é o mesmo que usamos para faturar nossos parceiros
             ativos: uma fração variável sobre o que você vendeu, mais a anuidade
-            da cadeira — R$ 2.640/ano, que aqui entra como R$ 220/mês.
+            da cadeira.
           </p>
-        </div>
 
-        <div class="form-card">
-          <form class="form" id="sim-form">
-            <div class="form__row">
-              <div class="field">
-                <label for="s-ticket">Ticket médio (R$)</label>
-                <input id="s-ticket" type="number" min="0" step="1" value="450" inputmode="decimal" />
-              </div>
-              <div class="field">
-                <label for="s-pedidos">Pedidos estimados / mês</label>
-                <input id="s-pedidos" type="number" min="0" step="1" value="40" inputmode="numeric" />
+          <form class="bi-campos" id="sim-form" onsubmit="return false">
+            <div class="bi-campo">
+              <label for="s-ticket">Ticket médio</label>
+              <div class="bi-campo__caixa">
+                <span aria-hidden="true">R$</span>
+                <input id="s-ticket" type="number" min="0" step="1" value={INICIAL.ticket} inputmode="decimal" />
               </div>
             </div>
-            <div class="field">
-              <label for="s-pct">Success fee negociado (%)</label>
-              <input id="s-pct" type="number" min="1" max="40" step="0.5" value="10" inputmode="decimal" />
+            <div class="bi-campo">
+              <label for="s-pedidos">Pedidos por mês</label>
+              <div class="bi-campo__caixa">
+                <input id="s-pedidos" type="number" min="0" step="1" value={INICIAL.pedidos} inputmode="numeric" />
+                <span aria-hidden="true">pedidos</span>
+              </div>
+            </div>
+            <div class="bi-campo bi-campo--largo">
+              <label for="s-pct">Success fee negociado</label>
+              <div class="bi-campo__caixa">
+                <input id="s-pct" type="number" min="1" max="40" step="0.5" value={INICIAL.pct} inputmode="decimal" aria-describedby="s-pct-nota" />
+                <span aria-hidden="true">% da venda</span>
+              </div>
+              <p class="bi-campo__nota" id="s-pct-nota">Definido em contrato, conforme nicho, estoque e SLA de despacho.</p>
             </div>
           </form>
         </div>
 
-        <div class="readout" role="group" aria-label="Resultado da simulação" style="margin-top: 2rem;">
-          <div class="readout__bar">
-            <span class="readout__dotrow" aria-hidden="true"><span></span><span></span><span></span></span>
-            simulação — estimativa mensal
-          </div>
-          <div class="readout__body">
-            <div class="metric">
-              <div class="metric__val" id="out-receita">R$ 0<span class="unit">/mês</span></div>
-              <div class="metric__key">receita projetada (ticket × pedidos)</div>
-            </div>
-            <div class="metric">
-              <div class="metric__val" id="out-fee">R$ 0<span class="unit">/mês</span></div>
-              <div class="metric__key">success fee + anuidade (R$ 220/mês)</div>
-            </div>
-            <div class="metric">
-              <div class="metric__val" id="out-liquido">R$ 0<span class="unit">/mês</span></div>
-              <div class="metric__key">o que fica com você</div>
-            </div>
-          </div>
-        </div>
-        <p class="prova__foot">
-          Estimativa ilustrativa — não é proposta comercial. O % efetivo é
-          definido em contrato, conforme nicho, estoque e SLA de despacho.
-        </p>
+        <div class="bi-conta" role="group" aria-labelledby="conta-rot">
+          <p class="bi-conta__rot" id="conta-rot"><i aria-hidden="true"></i>Fica com você, por mês</p>
+          <p class="bi-conta__valor">
+            <output id="out-liquido" for="s-ticket s-pedidos s-pct" aria-live="polite">{reais(liquido)}</output>
+          </p>
+          <p class="bi-conta__pct" id="out-pct"><b>{Math.round((liquido / receita) * 100)}%</b> da sua venda fica com você.</p>
 
-        <div class="close__whats" style="margin-top: 2.5rem;">
-          <a class="btn btn--primary" href="/#candidatar">Candidatar minha empresa à cadeira</a>
+          <div class="bi-barra" aria-hidden="true">
+            <i class="bi-barra__voce" style={`--w: ${fatia(liquido)}`}></i>
+            <i class="bi-barra__fee" style={`--w: ${fatia(fee)}`}></i>
+            <i class="bi-barra__anuidade" style={`--w: ${fatia(ANUIDADE_MES)}`}></i>
+          </div>
+
+          <dl class="bi-conta__linhas">
+            <div>
+              <dt>Sua venda no mês <small>ticket × pedidos</small></dt>
+              <dd id="out-receita">{reais(receita)}</dd>
+            </div>
+            <div>
+              <dt><i class="bi-conta__cor bi-conta__cor--fee" aria-hidden="true"></i>Success fee <small id="out-pct-fee">{INICIAL.pct}% da venda</small></dt>
+              <dd id="out-fee">− {reais(fee)}</dd>
+            </div>
+            <div>
+              <dt><i class="bi-conta__cor bi-conta__cor--anuidade" aria-hidden="true"></i>Anuidade da cadeira <small>R$ 2.640/ano ÷ 12</small></dt>
+              <dd>− {reais(ANUIDADE_MES)}</dd>
+            </div>
+          </dl>
+
+          <div class="bi-acoes">
+            <a class="btn btn--primary" href="/#candidatar">Aplicar para a cadeira</a>
+            <a class="btn btn--whats" href={whatsHref} target="_blank" rel="noopener">Chamar no WhatsApp</a>
+          </div>
+
+          <p class="bi-conta__aviso">
+            Estimativa ilustrativa, não é proposta comercial. O % efetivo é
+            definido em contrato.
+          </p>
         </div>
+      </div>
+    </section>
+
+    <script>
+      // A conta ao vivo. A barra e o número grande acendem a partir de zero ao carregar (a mesma luz
+      // do mapa da home) e acompanham cada tecla. Com "reduzir movimento", o número troca sem rolar.
+      import 'number-flow';
+      import { continuous } from 'number-flow';
+      import type NumberFlow from 'number-flow';
+
+      const ANUIDADE_MES = 2640 / 12;
+      const calmo = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const reais = (n: number) => 'R$ ' + Math.round(Math.abs(n)).toLocaleString('pt-BR');
+      const campo = (id: string) => document.getElementById(id) as HTMLInputElement;
+      const ticket = campo('s-ticket');
+      const pedidos = campo('s-pedidos');
+      const pct = campo('s-pct');
+      const saida = document.getElementById('out-liquido')!;
+      const conta = document.querySelector<HTMLElement>('.bi-conta')!;
+      const barras = ['voce', 'fee', 'anuidade'].map((k) => conta.querySelector<HTMLElement>(`.bi-barra__${k}`)!);
+
+      // O texto do <output> continua na página (leitor de tela e robô leem ele); o que se vê é o NumberFlow.
+      let flow: NumberFlow | null = null;
+      if (!calmo) {
+        flow = document.createElement('number-flow') as NumberFlow;
+        flow.setAttribute('aria-hidden', 'true');
+        flow.locales = 'pt-BR';
+        flow.format = { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 };
+        flow.plugins = [continuous];
+        const ritmo = { duration: 900, easing: 'cubic-bezier(0.16, 1, 0.3, 1)' };
+        flow.spinTiming = ritmo;
+        flow.transformTiming = ritmo;
+        saida.before(flow);
+        saida.classList.add('bi-sr');
+        flow.update(0);
+      }
+
+      // `entrada`: na primeira conta o número espera a barra começar a acender antes de rolar de zero.
+      function calc(entrada = false) {
+        const t = Math.max(0, Number(ticket.value) || 0);
+        const p = Math.max(0, Number(pedidos.value) || 0);
+        const f = Math.min(100, Math.max(0, Number(pct.value) || 0));
+
+        const receita = t * p;
+        const fee = receita * (f / 100);
+        const liquido = receita - fee - ANUIDADE_MES;
+
+        saida.textContent = (liquido < 0 ? '−' : '') + reais(liquido);
+        if (entrada) window.setTimeout(() => flow?.update(Math.round(liquido)), 300);
+        else flow?.update(Math.round(liquido));
+        document.getElementById('out-receita')!.textContent = reais(receita);
+        document.getElementById('out-fee')!.textContent = '− ' + reais(fee);
+        document.getElementById('out-pct-fee')!.textContent = `${f.toLocaleString('pt-BR')}% da venda`;
+
+        const frase = document.getElementById('out-pct')!;
+        if (receita === 0) frase.textContent = 'Preencha o ticket e os pedidos para ver a conta.';
+        else if (liquido < 0) frase.textContent = 'Com esse volume, a anuidade passa do que sobra da venda: a conta não fecha.';
+        else frase.innerHTML = `<b>${Math.round((liquido / receita) * 100)}%</b> da sua venda fica com você.`;
+        conta.toggleAttribute('data-negativo', liquido < 0);
+        conta.toggleAttribute('data-longo', Math.abs(liquido) >= 1e6);
+
+        // A barra é a venda inteira; se os custos passam dela, a barra vira o total dos custos.
+        const total = Math.max(receita, fee + ANUIDADE_MES);
+        [Math.max(liquido, 0), fee, ANUIDADE_MES].forEach((v, i) => {
+          barras[i].style.setProperty('--w', total ? `${((v / total) * 100).toFixed(2)}%` : '0%');
+        });
+      }
+
+      document.getElementById('sim-form')!.addEventListener('input', () => calc());
+      calc(true);
+    </script>
+
+    <!-- A CONTA, LINHA A LINHA · o que entra e o que fica de fora. Valores do FAQ da home e do JSON-LD;
+         mudar lá muda aqui. -->
+    <section class="section section--light" aria-labelledby="linhas-title">
+      <div class="wrap">
+        <div class="section__head">
+          <span class="eyebrow">A conta, linha a linha</span>
+          <h2 id="linhas-title">Duas linhas de custo. O resto é seu.</h2>
+          <p class="section__lead">
+            O seu custo máximo é conhecido desde o primeiro dia. A parte variável
+            só existe se você vender.
+          </p>
+        </div>
+
+        <div class="steps">
+          <article class="step">
+            <span class="step__num">01 — Anuidade</span>
+            <h3>R$ 2.640 por ano</h3>
+            <p>
+              Reserva o nicho só pra você no Brasil por um ano, renovável por
+              entrega. No simulador, entra como R$ 220 por mês.
+            </p>
+            <span class="step__tag">Custo fixo, conhecido no dia 1</span>
+          </article>
+
+          <article class="step">
+            <span class="step__num">02 — Success fee</span>
+            <h3>Uma fração da venda</h3>
+            <p>
+              Variável, definida em contrato conforme nicho, estoque e SLA de
+              despacho. Não vendeu, não paga.
+            </p>
+            <span class="step__tag">Só depois da venda</span>
+          </article>
+
+          <article class="step">
+            <span class="step__num">03 — Fora da conta</span>
+            <h3>Setup, piso e mídia</h3>
+            <p>
+              Não cobramos setup nem piso de venda, e você não põe verba de mídia:
+              a tecnologia e o tráfego são por nossa conta.
+            </p>
+            <span class="step__tag">Custo da ROI Labs</span>
+          </article>
+        </div>
+
+        <p class="map__caption">
+          Quer ver quem já senta numa cadeira?
+          <a href="/#cadeiras">Ver o mapa de cadeiras →</a>
+        </p>
       </div>
     </section>
   </main>
 
   <Footer />
-
-  <script is:inline>
-    const money = (n) =>
-      (n < 0 ? '−' : '') + 'R$ ' + Math.abs(n).toLocaleString('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-
-    function calc() {
-      const ticket = Math.max(0, Number(document.getElementById('s-ticket').value) || 0);
-      const pedidos = Math.max(0, Number(document.getElementById('s-pedidos').value) || 0);
-      const pct = Math.min(100, Math.max(0, Number(document.getElementById('s-pct').value) || 0)) / 100;
-
-      const receita = ticket * pedidos;
-      const fee = receita * pct + 2640 / 12; // + anuidade da cadeira, mensalizada
-      const liquido = receita - fee;
-
-      document.getElementById('out-receita').innerHTML = money(receita) + '<span class="unit">/mês</span>';
-      document.getElementById('out-fee').innerHTML = money(fee) + '<span class="unit">/mês</span>';
-      document.getElementById('out-liquido').innerHTML = money(liquido) + '<span class="unit">/mês</span>';
-    }
-
-    document.getElementById('sim-form').addEventListener('input', calc);
-    calc();
-  </script>
+  </div>
 </Base>

@@ -17,5 +17,18 @@
       "custom:vitrine (imagem/scroll/escura) — virou a faixa de baixo do palco",
       "custom:seu-nicho (geometria/estado/média)"
     ]
+  },
+  {
+    "data": "2026-09-28",
+    "alvo": "/simulador/",
+    "direcao": "custom:derivada-brasil-inteiro (propagação da home, não direção nova)",
+    "eixos": { "materia": "campo", "motor": "ponteiro", "banda": "escura" },
+    "estrutura": "ferramenta: pergunta e campos 6/5 com a conta aberta ao lado + faixa creme com as linhas da conta",
+    "origem": "pedido da dona: organizar o /simulador como a home; sem 3 direções porque a direção já estava aprovada no ar",
+    "orcamento": { "faixa": "captação", "js_kb": 6.2, "lcp_alvo": 2.0, "lcp_medido_celular_4g_cpu4x": 0.87, "cls": 0 },
+    "deps": ["number-flow (já instalado para a home; 5,2kb gzip, compartilhado)"],
+    "escopo": "tokens.css + home.css (releitura do global) + simulador.css próprio, tudo em [data-art='brasil-inteiro']; nenhuma regra da home mudou",
+    "camadas": "entrada: a barra da venda acende da esquerda por recorte e o número rola de zero · ponteiro: cada tecla move as fatias da barra e rola o número · scroll: nenhuma (página curta, de ferramenta) · transição: nenhuma (como na home)",
+    "recusadas": []
   }
 ]

@@ -1,0 +1,329 @@
+/* art-direction · brasil-inteiro (propagação: /simulador) · eixos: campo/autônomo/escura · orçamento: 30kb · 2026-09-28 */
+/* O /simulador na direção Brasil Inteiro. Usa os tokens e a releitura do global.css de home.css;
+   aqui fica só o que é desta página: a grade do topo, os campos e a conta aberta. */
+
+[data-art='brasil-inteiro'] .bi-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------- topo: pergunta e campos | a conta ---------- */
+[data-art='brasil-inteiro'] .bi-sim {
+  padding-block: clamp(2.5rem, 7vh, 5rem) clamp(3.5rem, 9vh, 6rem);
+  border-bottom: 1px solid var(--bi-fio);
+}
+
+/* 6/5: o título tem o mesmo teto da home (5,35rem); a conta, estreita, encolhe o número pela caixa */
+[data-art='brasil-inteiro'] .bi-sim__grade {
+  display: grid;
+  grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+[data-art='brasil-inteiro'] .bi-sim h1 {
+  margin-top: 1rem;
+  font-size: clamp(2.6rem, 5.9vw, 5.35rem);
+  line-height: 1.02;
+  text-wrap: balance;
+}
+
+[data-art='brasil-inteiro'] .bi-sim h1 em {
+  font-style: normal;
+  color: var(--bi-laranja);
+}
+
+[data-art='brasil-inteiro'] .bi-sim .bi-sub {
+  max-width: 32rem;
+}
+
+/* ---------- os campos: o número digitado na voz da direção ---------- */
+[data-art='brasil-inteiro'] .bi-campos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem 0.9rem;
+  margin-top: 2.2rem;
+}
+
+[data-art='brasil-inteiro'] .bi-campo {
+  display: grid;
+  gap: 0.45rem;
+  align-content: start;
+}
+
+[data-art='brasil-inteiro'] .bi-campo--largo {
+  grid-column: 1 / -1;
+}
+
+[data-art='brasil-inteiro'] .bi-campo label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--bi-texto-2);
+}
+
+[data-art='brasil-inteiro'] .bi-campo__caixa {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0 1rem;
+  border: 1.5px solid var(--bi-fio-forte);
+  border-radius: var(--bi-raio);
+  background: var(--bi-noite-2);
+  cursor: text;
+  transition: border-color var(--bi-dur-rapida) var(--bi-ease-saida);
+}
+
+[data-art='brasil-inteiro'] .bi-campo__caixa:hover {
+  border-color: var(--bi-texto-2);
+}
+
+/* foco: a borda acende e ganha um segundo fio por fora (sem mudar a largura da caixa) */
+[data-art='brasil-inteiro'] .bi-campo__caixa:focus-within {
+  border-color: var(--bi-laranja);
+  box-shadow: 0 0 0 1.5px var(--bi-laranja);
+}
+
+[data-art='brasil-inteiro'] .bi-campo__caixa > span {
+  flex: none;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--bi-texto-2);
+}
+
+/* flex-basis 0 + width 0: o input numérico tem largura intrínseca (~20 caracteres) e estourava a coluna */
+[data-art='brasil-inteiro'] .bi-campo input {
+  flex: 1 1 0;
+  width: 0;
+  min-width: 0;
+  padding: 0.55rem 0;
+  border: 0;
+  background: transparent;
+  color: var(--bi-texto);
+  font-family: var(--bi-display);
+  font-size: clamp(1.7rem, 2.4vw, 2.1rem);
+  font-synthesis: none;
+  line-height: 1.15;
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* o contorno da caixa já acende no foco; o anel no input dobraria a borda */
+[data-art='brasil-inteiro'] .bi-campo input:focus-visible {
+  outline: none;
+}
+
+[data-art='brasil-inteiro'] .bi-campo input::-webkit-inner-spin-button,
+[data-art='brasil-inteiro'] .bi-campo input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+[data-art='brasil-inteiro'] .bi-campo__nota {
+  font-size: 0.85rem;
+  color: var(--bi-texto-2);
+}
+
+/* ---------- a conta aberta: noite com a trama do mapa, como o cartão do teste da home ---------- */
+[data-art='brasil-inteiro'] .bi-conta {
+  container-type: inline-size; /* o número grande mede a caixa, não a tela */
+  padding: clamp(1.6rem, 3.5vw, 2.6rem);
+  border-radius: 16px;
+  background:
+    radial-gradient(circle at 1px 1px, var(--bi-fio) 1px, transparent 1.6px) 0 0 / 18px 18px,
+    var(--bi-noite-2);
+  box-shadow: 0 40px 80px -40px var(--bi-sombra), 0 0 0 1px var(--bi-fio);
+}
+
+[data-art='brasil-inteiro'] .bi-conta__rot {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--bi-laranja);
+}
+
+[data-art='brasil-inteiro'] .bi-conta__rot i {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  background: var(--bi-laranja);
+}
+
+[data-art='brasil-inteiro'] .bi-conta__valor {
+  margin-top: 0.5rem;
+  font-family: var(--bi-display);
+  font-weight: 400;
+  font-synthesis: none;
+  /* "R$ 305.780" (10 caracteres) mede 5em: a 18,5cqi ocupa 93% da caixa */
+  font-size: min(5.4rem, 18.5cqi);
+  line-height: 1;
+  height: 1em; /* o NumberFlow é mais alto que a linha de texto; sem a altura fixa, a conta abaixo pulava */
+  letter-spacing: -0.015em;
+  white-space: nowrap;
+  color: var(--bi-texto);
+}
+
+/* a partir de R$ 1 milhão são 12+ caracteres: o número desce um degrau para não estourar a caixa */
+[data-art='brasil-inteiro'] .bi-conta[data-longo] .bi-conta__valor {
+  font-size: min(4.2rem, 15cqi);
+}
+
+[data-art='brasil-inteiro'] .bi-conta[data-negativo] .bi-conta__valor {
+  color: var(--bi-texto-2);
+}
+
+[data-art='brasil-inteiro'] .bi-conta__pct {
+  margin-top: 1.1rem;
+  min-height: 3.2em; /* a frase do "não fecha" tem duas linhas: reservar evita pulo */
+  color: var(--bi-texto-2);
+}
+
+[data-art='brasil-inteiro'] .bi-conta__pct b {
+  font-weight: 700;
+  color: var(--bi-texto);
+}
+
+/* a barra é a venda inteira; a luz acende da esquerda até onde vai a sua parte */
+[data-art='brasil-inteiro'] .bi-barra {
+  display: flex;
+  gap: 3px;
+  height: 14px;
+  margin-top: 0.6rem;
+  border-radius: 3px;
+  overflow: hidden;
+  background: var(--bi-fio);
+  /* entrada por recorte, não por largura: recorte não desloca as fatias (CLS zero) */
+  animation: bi-acender 1100ms var(--bi-ease-cena) 250ms backwards;
+}
+
+@keyframes bi-acender {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+[data-art='brasil-inteiro'] .bi-barra i {
+  flex: 0 0 var(--w, 0%);
+  min-width: 0;
+  transition: flex-basis var(--bi-dur-base) var(--bi-ease-saida);
+}
+
+[data-art='brasil-inteiro'] .bi-barra__voce {
+  background: linear-gradient(90deg, var(--bi-laranja), var(--bi-frente));
+  box-shadow: 0 0 18px var(--bi-sombra-laranja);
+}
+
+[data-art='brasil-inteiro'] :is(.bi-barra__fee, .bi-conta__cor--fee) {
+  background: var(--bi-texto-2);
+}
+
+[data-art='brasil-inteiro'] :is(.bi-barra__anuidade, .bi-conta__cor--anuidade) {
+  background: var(--bi-fio-forte);
+}
+
+[data-art='brasil-inteiro'] .bi-conta__linhas {
+  margin: 1.6rem 0 0;
+}
+
+[data-art='brasil-inteiro'] .bi-conta__linhas > div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 1rem;
+  padding-block: 0.8rem;
+  border-top: 1px solid var(--bi-fio);
+}
+
+[data-art='brasil-inteiro'] .bi-conta__linhas dt {
+  font-weight: 600;
+  color: var(--bi-texto);
+}
+
+[data-art='brasil-inteiro'] .bi-conta__linhas small {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: var(--bi-texto-2);
+}
+
+[data-art='brasil-inteiro'] .bi-conta__cor {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-right: 0.55rem;
+  border-radius: 2px;
+}
+
+[data-art='brasil-inteiro'] .bi-conta__linhas dd {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--bi-texto);
+}
+
+[data-art='brasil-inteiro'] .bi-conta .bi-acoes {
+  margin-top: 1.4rem;
+}
+
+/* na coluna estreita os botões quebram de linha: cada um ocupa a linha inteira em vez de ficar torto */
+[data-art='brasil-inteiro'] .bi-conta .bi-acoes .btn {
+  flex: 1 1 auto;
+  justify-content: center;
+}
+
+[data-art='brasil-inteiro'] .bi-conta__aviso {
+  margin-top: 1.2rem;
+  font-size: 0.82rem;
+  color: var(--bi-texto-2);
+}
+
+/* ---------- a faixa creme: as linhas da conta ---------- */
+[data-art='brasil-inteiro'] .section--light .map__caption {
+  margin-top: 1.6rem;
+}
+
+/* abaixo de 900px a conta desce para depois dos campos */
+@media (max-width: 899px) {
+  [data-art='brasil-inteiro'] .bi-sim__grade {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ticket e pedidos seguem lado a lado até 360px: no celular isso sobe a conta para perto da dobra */
+@media (max-width: 359px) {
+  [data-art='brasil-inteiro'] .bi-campos {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 479px) {
+  [data-art='brasil-inteiro'] .bi-campo__caixa {
+    padding-inline: 0.8rem;
+  }
+
+  [data-art='brasil-inteiro'] .bi-conta .bi-acoes .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* ---------- parado: a barra já aparece cheia e o número já aparece pronto ---------- */
+@media (prefers-reduced-motion: reduce) {
+  [data-art='brasil-inteiro'] .bi-barra {
+    animation: none;
+  }
+
+  [data-art='brasil-inteiro'] :is(.bi-barra i, .bi-campo__caixa) {
+    transition: none;
+  }
+}
