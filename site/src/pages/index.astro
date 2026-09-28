@@ -347,19 +347,56 @@ const jsonLdNodes = [
           </div>
           <div class="readout__body">
             <div class="metric">
-              <div class="metric__val">369<span class="unit">mil</span></div>
+              <div class="metric__val"><span class="metric__num" data-flow="369000">369.000</span></div>
               <div class="metric__key">vezes aparecendo nas buscas do Google</div>
             </div>
             <div class="metric">
-              <div class="metric__val">4,9<span class="unit">mil</span></div>
+              <div class="metric__val"><span class="metric__num" data-flow="4900">4.900</span></div>
               <div class="metric__key">visitas vindas do Google, sem pagar anúncio</div>
             </div>
             <div class="metric">
-              <div class="metric__val">4,8<span class="unit">posição</span></div>
+              <div class="metric__val"><span class="metric__num" data-flow="4.8" data-decimals="1">4,8</span><span class="unit">posição</span></div>
               <div class="metric__key">média no Google — entre os 5 primeiros</div>
             </div>
           </div>
         </div>
+
+        <script>
+          // Números do readout rolam de 0 até o valor (NumberFlow, versão sem React) quando
+          // a caixa entra na tela. O texto estático do HTML continua na página, só escondido
+          // da vista: é ele que robô de busca/IA e leitor de tela leem. Sem JS ou com
+          // "reduzir movimento" ligado, nada muda — o número já aparece pronto.
+          import 'number-flow';
+          import { continuous } from 'number-flow';
+
+          // A página tem dois .readout; o observado é o que contém os números.
+          const nums = [...document.querySelectorAll<HTMLElement>('.readout [data-flow]')];
+          const box = nums[0]?.closest('.readout');
+          const calmo = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+          if (box && nums.length && !calmo && 'IntersectionObserver' in window) {
+            const flows = nums.map((el) => {
+              const casas = Number(el.dataset.decimals ?? 0);
+              const flow = document.createElement('number-flow');
+              flow.setAttribute('aria-hidden', 'true');
+              flow.locales = 'pt-BR';
+              flow.format = { minimumFractionDigits: casas, maximumFractionDigits: casas };
+              flow.plugins = [continuous];
+              flow.spinTiming = { duration: 1600, easing: 'cubic-bezier(0.16, 1, 0.3, 1)' };
+              el.before(flow);
+              el.classList.add('metric__num--sr');
+              flow.update(0);
+              return { flow, alvo: Number(el.dataset.flow) };
+            });
+
+            const io = new IntersectionObserver((entries) => {
+              if (!entries.some((e) => e.isIntersecting)) return;
+              io.disconnect();
+              flows.forEach(({ flow, alvo }, i) => setTimeout(() => flow.update(alvo), i * 180));
+            }, { threshold: 0.5 });
+            io.observe(box);
+          }
+        </script>
         <p class="prova__foot">
           Fonte: Google Search Console de usealigner.com (alinhadores invisíveis),
           set/2025 a set/2026. Site começou do zero; tráfego 100% orgânico.

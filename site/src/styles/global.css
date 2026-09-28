@@ -855,6 +855,17 @@ a.seat__niche::after {
   margin-left: 0.3rem;
 }
 
+/* Texto estático que o <number-flow> substitui na tela: sai da vista, fica no DOM
+   (robô de busca e leitor de tela seguem lendo o valor final). */
+.metric__num--sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
 .metric__key {
   margin-top: 0.7rem;
   font-size: 0.74rem;

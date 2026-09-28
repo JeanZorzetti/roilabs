@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "astro": "^5.6.0",
-    "astro-og-canvas": "^0.13.0"
+    "astro-og-canvas": "^0.13.0",
+    "number-flow": "^0.6.2"
   }
 }
