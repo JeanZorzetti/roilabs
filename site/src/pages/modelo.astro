@@ -68,7 +68,12 @@ const faq = [
 const howtoSteps = [
   {
     name: 'Candidatura',
-    text: 'Preencha o formulário na home (leva 1 minuto) ou chame no WhatsApp. A candidatura não tem custo nem compromisso — é só o ponto de partida da curadoria.',
+    text: 'Você tem dois caminhos, os dois gratuitos e sem compromisso: preencha o formulário no fim da página inicial — pede só seu nome, a empresa, o WhatsApp e o seu nicho, e leva 1 minuto — ou chame a gente direto no WhatsApp. É o ponto de partida da curadoria.',
+    // Botões que aparecem só na página (o JSON-LD usa o texto puro).
+    acoes: [
+      { label: 'Preencher o formulário', href: '/#candidatar', classe: 'btn--primary' },
+      { label: 'Chamar no WhatsApp', href: whatsHref, classe: 'btn--whats', externo: true },
+    ],
   },
   {
     name: 'Triagem e conversa de curadoria',
@@ -273,7 +278,7 @@ const jsonLdNodes = [
             O percentual é definido em contrato, conforme nicho, margem e SLA.
           </p>
           <p class="bi-formula">
-            <span>fee</span> = ticket médio × pedidos × percentual
+            <span>fee</span> <i>=</i> ticket médio <i>×</i> pedidos <i>×</i> percentual
           </p>
           <p class="bi-mod-nota">
             Vendeu zero? O success fee é zero; fica só a anuidade de R$ 220/mês.
@@ -356,8 +361,9 @@ const jsonLdNodes = [
       </div>
     </section>
 
-    <!-- PEÇA 4 · O CAMINHO · título e ações 4 | a trilha das 6 etapas 7. Os números acendem um a um
-         quando a trilha entra na tela, a mesma luz do mapa da home. Sem JS: todos acesos. -->
+    <!-- PEÇA 4 · O CAMINHO · título 4 | a trilha das 6 etapas 7, que termina numa cadeira no ar. Os números
+         acendem um a um quando a trilha entra na tela, a mesma luz do mapa da home. Sem JS: todos acesos.
+         Os botões da candidatura moram na etapa 1 (não repetidos no título, senão viram quatro lado a lado). -->
     <section class="section section--dark" id="etapas" aria-labelledby="etapas-title">
       <div class="wrap bi-mod-par bi-mod-par--trilha">
         <div class="bi-mod-par__texto bi-mod-par__texto--fixo">
@@ -366,6 +372,7 @@ const jsonLdNodes = [
           <p class="section__lead">A primeira leva um minuto e não custa nada.</p>
         </div>
 
+        <div>
         <ol class="bi-trilha" role="list" data-trilha>
           {howtoSteps.map((s, i) => (
             <li class="bi-trilha__passo" style={`--i: ${i}`}>
@@ -390,6 +397,41 @@ const jsonLdNodes = [
             </li>
           ))}
         </ol>
+
+        <!-- A CHEGADA · o fio da etapa 06 segue tracejado (os meses de travessia do SEO) até o ponto que
+             pulsa, o mesmo da cidade no mapa da home, e ali está uma cadeira de verdade no ar. Fica fora do
+             <ol>: não é etapa (o HowTo do JSON-LD continua com seis). Números e fonte iguais aos da home
+             (#mercado); mudar lá muda aqui. "Visitas" do Search Console, nunca "vendas". -->
+        <div class="bi-chegada" data-acende>
+          <span class="bi-chegada__ponto" aria-hidden="true"><i></i></span>
+          <div>
+            <p class="bi-chegada__rot">Onde o caminho chega</p>
+            <p class="bi-chegada__titulo">Uma cadeira no ar: <em>Use Aligner</em>, alinhadores invisíveis.</p>
+            <a class="bi-chegada__foto" href="https://usealigner.com/" target="_blank" rel="noopener">
+              <img
+                src="/art/brasil-inteiro/vitrine/usealigner.webp"
+                alt="Página inicial do site Use Aligner, no ar"
+                width="880"
+                height="550"
+                loading="lazy"
+                decoding="async"
+              />
+              <span class="bi-chegada__abrir">Abrir o site ↗</span>
+            </a>
+            <div class="bi-chegada__legenda">
+              <dl class="bi-chegada__numeros">
+                <div><dt>vezes aparecendo nas buscas do Google</dt><dd>369 mil</dd></div>
+                <div><dt>visitas vindas do Google, sem anúncio</dt><dd>4.900</dd></div>
+                <div><dt>posição média, entre os 5 primeiros</dt><dd>4,8</dd></div>
+              </dl>
+              <p class="bi-chegada__fonte">
+                Google Search Console de usealigner.com, set/2025 a set/2026. O site começou do zero;
+                tráfego 100% orgânico.
+              </p>
+            </div>
+          </div>
+        </div>
+        </div>
       </div>
     </section>
 

@@ -24,17 +24,19 @@
   border-bottom: 1px solid var(--bi-fio);
 }
 
+/* 8/4: "Growth Partner:" mede 7,4em na Gloock e precisa caber inteiro na primeira linha do título */
 [data-art='brasil-inteiro'] .bi-mod-topo__grade {
   display: grid;
-  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
   gap: clamp(2rem, 5vw, 4.5rem);
   align-items: center;
 }
 
+/* o mesmo teto da home e do /simulador (5,35rem): 5× o texto corrido */
 [data-art='brasil-inteiro'] .bi-mod-topo h1 {
   margin-top: 1rem;
   max-width: 11em;
-  font-size: clamp(2.6rem, 5.2vw, 4.7rem);
+  font-size: clamp(2.6rem, 5.95vw, 5.35rem);
   line-height: 1.02;
   text-wrap: balance;
 }
@@ -252,6 +254,15 @@
   color: var(--bi-laranja);
 }
 
+/* o × e o = da Gloock são miúdos e somem entre as palavras: os sinais vão na grotesca */
+[data-art='brasil-inteiro'] .bi-formula i {
+  padding-inline: 0.08em;
+  font-family: var(--bi-corpo);
+  font-style: normal;
+  font-weight: 500;
+  color: var(--bi-texto-2);
+}
+
 [data-art='brasil-inteiro'] .bi-mod-nota {
   margin-top: 1.4rem;
   max-width: 34rem;
@@ -359,7 +370,7 @@
   padding-bottom: 1.8rem;
 }
 
-[data-art='brasil-inteiro'] .bi-trilha__passo:not(:last-child)::before {
+[data-art='brasil-inteiro'] .bi-trilha__passo::before {
   content: '';
   position: absolute;
   left: 21px;
@@ -406,6 +417,12 @@
   color: var(--bi-texto-2);
 }
 
+/* depois da etapa 06 o fio segue tracejado até a chegada: são os 3 a 6 meses de travessia do SEO */
+[data-art='brasil-inteiro'] .bi-trilha__passo:last-child::before {
+  bottom: -10px;
+  background: repeating-linear-gradient(to bottom, var(--bi-laranja) 0 6px, transparent 6px 12px);
+}
+
 /* a etapa 1 é a única que se faz daqui: os dois caminhos da candidatura ficam na própria etapa */
 [data-art='brasil-inteiro'] .bi-trilha .bi-trilha__acoes {
   margin-top: 1.1rem;
@@ -423,7 +440,169 @@
   scale: 1 0;
 }
 
+/* ---------- a chegada: onde a trilha termina, uma cadeira de verdade no ar ---------- */
+[data-art='brasil-inteiro'] .bi-chegada {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 1.25rem;
+}
+
+/* o ponto que pulsa é o da cidade no mapa da home: a luz que saiu dela chega aqui */
+[data-art='brasil-inteiro'] .bi-chegada__ponto {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+}
+
+[data-art='brasil-inteiro'] .bi-chegada__ponto i {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--bi-laranja);
+  /* três pulsos ao acender e fica aceso: o pulso sem fim é do mapa da home, o palco */
+  animation: bi-farol var(--bi-pulso) var(--bi-ease-saida) 3;
+  transition: background-color var(--bi-dur-base) var(--bi-ease-saida);
+}
+
+[data-art='brasil-inteiro'] .bi-chegada[data-espera]:not([data-aceso]) .bi-chegada__ponto i {
+  background: var(--bi-fio-forte);
+  animation: none;
+}
+
+[data-art='brasil-inteiro'] .bi-chegada__rot {
+  margin-top: 0.7rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--bi-laranja);
+}
+
+[data-art='brasil-inteiro'] .bi-chegada__titulo {
+  margin-top: 0.35rem;
+  font-family: var(--bi-display);
+  font-weight: 400;
+  font-synthesis: none;
+  font-size: clamp(1.6rem, 2.4vw, 2.1rem);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+  color: var(--bi-texto);
+}
+
+[data-art='brasil-inteiro'] .bi-chegada__titulo em {
+  font-style: normal;
+  white-space: nowrap; /* o nome da cadeira não se parte entre linhas */
+  color: var(--bi-laranja);
+}
+
+[data-art='brasil-inteiro'] .bi-chegada__foto {
+  position: relative;
+  display: block;
+  margin-top: 1.2rem;
+  border-radius: 8px;
+  color: inherit;
+  text-decoration: none;
+}
+
+[data-art='brasil-inteiro'] .bi-chegada__foto img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  object-position: top;
+  border-radius: 8px;
+  outline: 1px solid var(--bi-fio);
+  box-shadow: 0 36px 70px -32px var(--bi-sombra);
+  transition:
+    box-shadow var(--bi-dur-rapida) var(--bi-ease-saida),
+    outline-color var(--bi-dur-rapida) var(--bi-ease-saida);
+}
+
+/* o selo sempre à vista diz que a foto é um link; o ponteiro acende ele e a borda, como na vitrine */
+[data-art='brasil-inteiro'] .bi-chegada__abrir {
+  position: absolute;
+  right: 0.75rem;
+  bottom: 0.75rem;
+  padding: 0.45rem 0.75rem;
+  border-radius: var(--bi-raio);
+  background: var(--bi-noite);
+  box-shadow: 0 0 0 1px var(--bi-fio-forte), 0 10px 24px -12px var(--bi-sombra);
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--bi-texto);
+  transition:
+    background-color var(--bi-dur-rapida) var(--bi-ease-saida),
+    color var(--bi-dur-rapida) var(--bi-ease-saida);
+}
+
+@media (hover: hover) {
+  [data-art='brasil-inteiro'] .bi-chegada__foto:hover img {
+    outline-color: var(--bi-laranja);
+    box-shadow: 0 36px 70px -32px var(--bi-sombra), 0 0 32px -6px var(--bi-sombra-laranja);
+  }
+
+  [data-art='brasil-inteiro'] .bi-chegada__foto:hover .bi-chegada__abrir {
+    background: var(--bi-laranja);
+    color: var(--bi-sobre-laranja);
+  }
+}
+
+[data-art='brasil-inteiro'] .bi-chegada__foto:focus-visible {
+  outline: 2px solid var(--bi-laranja);
+  outline-offset: 4px;
+}
+
+[data-art='brasil-inteiro'] .bi-chegada__numeros {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 1.4rem 0 0;
+  border-top: 1px solid var(--bi-fio);
+}
+
+/* o número em cima, a legenda embaixo (no HTML a legenda vem antes, como pede o <dl>) */
+[data-art='brasil-inteiro'] .bi-chegada__numeros > div {
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: flex-end;
+  gap: 0.35rem;
+  padding: 1rem 1rem 0 0;
+}
+
+[data-art='brasil-inteiro'] .bi-chegada__numeros > div + div {
+  padding-left: 1rem;
+  border-left: 1px solid var(--bi-fio);
+}
+
+[data-art='brasil-inteiro'] .bi-chegada__numeros dd {
+  margin: 0;
+  font-family: var(--bi-display);
+  font-weight: 400;
+  font-synthesis: none;
+  font-size: clamp(1.9rem, 2.8vw, 2.5rem);
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--bi-texto);
+}
+
+[data-art='brasil-inteiro'] .bi-chegada__numeros dt {
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: var(--bi-texto-2);
+}
+
+[data-art='brasil-inteiro'] .bi-chegada__fonte {
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  color: var(--bi-texto-2);
+}
+
 /* ---------- FAQ ao lado do título ---------- */
+/* o + do global é o laranja claro; no creme ele passa a ser o laranja de texto (contraste de controle) */
+[data-art='brasil-inteiro'] .section--light .faq__item summary::after {
+  color: var(--bi-laranja-texto);
+}
+
 [data-art='brasil-inteiro'] .bi-mod-leia {
   margin-top: 1.4rem;
   font-size: 0.95rem;
@@ -446,18 +625,46 @@
     grid-template-columns: minmax(0, 1fr);
   }
 
-  [data-art='brasil-inteiro'] :is(.bi-portao, .bi-trilha__passo) {
+  [data-art='brasil-inteiro'] :is(.bi-portao, .bi-trilha__passo, .bi-chegada) {
     grid-template-columns: 36px minmax(0, 1fr);
     gap: 0.9rem;
   }
 
-  [data-art='brasil-inteiro'] :is(.bi-portao__num, .bi-trilha__num) {
+  [data-art='brasil-inteiro'] :is(.bi-portao__num, .bi-trilha__num, .bi-chegada__ponto) {
     width: 36px;
     height: 36px;
     font-size: 1rem;
   }
 
-  [data-art='brasil-inteiro'] .bi-trilha__passo:not(:last-child)::before {
+  [data-art='brasil-inteiro'] .bi-chegada__rot {
+    margin-top: 0.45rem;
+  }
+
+  /* três números lado a lado não cabem na coluna do celular: viram linhas, número e legenda na mesma */
+  [data-art='brasil-inteiro'] .bi-chegada__numeros {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  [data-art='brasil-inteiro'] .bi-chegada__numeros > div,
+  [data-art='brasil-inteiro'] .bi-chegada__numeros > div + div {
+    flex-direction: row-reverse;
+    align-items: baseline;
+    gap: 0.8rem;
+    padding: 0.75rem 0;
+    border-left: 0;
+  }
+
+  [data-art='brasil-inteiro'] .bi-chegada__numeros > div + div {
+    border-top: 1px solid var(--bi-fio);
+  }
+
+  [data-art='brasil-inteiro'] .bi-chegada__numeros dd {
+    flex: none;
+    min-width: 4.2em;
+    font-size: 1.7rem;
+  }
+
+  [data-art='brasil-inteiro'] .bi-trilha__passo::before {
     left: 17px;
     top: 40px;
   }
@@ -470,6 +677,16 @@
 /* ---------- parado: tudo já aceso, nada transiciona ---------- */
 @media (prefers-reduced-motion: reduce) {
   [data-art='brasil-inteiro'] :is(.bi-trilha__num, .bi-trilha__passo::before, .bi-indice__lista a, .bi-indice__num) {
+    transition: none;
+  }
+
+  /* o ponto da chegada fica aceso e parado */
+  [data-art='brasil-inteiro'] .bi-chegada__ponto i {
+    animation: none;
+    transition: none;
+  }
+
+  [data-art='brasil-inteiro'] :is(.bi-chegada__foto img, .bi-chegada__abrir) {
     transition: none;
   }
 }

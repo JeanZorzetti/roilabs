@@ -36,12 +36,22 @@
     "alvo": "/modelo/",
     "direcao": "custom:derivada-brasil-inteiro (propagação da home, não direção nova)",
     "eixos": { "materia": "campo", "motor": "entrada", "banda": "escura" },
-    "estrutura": "documento em peças: topo 7/5 com índice numerado das 4 peças + faixa de preço da home; cada peça num par texto|objeto (gates 5/6, conta aberta do /simulador 6/5, dois lados do contrato, trilha de 6 etapas 4/7, FAQ 4/7 com título fixo)",
+    "estrutura": "documento em peças: topo 8/4 com índice numerado das 4 peças + faixa de preço da home; cada peça num par texto|objeto (gates 5/6, conta aberta do /simulador 6/5, dois lados do contrato, trilha de 6 etapas 4/7 que termina numa cadeira no ar, FAQ 4/7 com título fixo)",
     "origem": "pedido da dona: organizar o /modelo como a home; sem 3 direções porque a direção já estava aprovada no ar. O mapa (assinatura) fica só na home (recusa do Fluxo em gosto.md)",
-    "orcamento": { "faixa": "captação", "js_kb": 0.5, "lcp_alvo": 2.0, "lcp_medido_celular_4g_cpu4x": 1.62, "cls": 0.0057 },
+    "orcamento": { "faixa": "captação", "js_kb": 0.4, "lcp_alvo": 2.0, "lcp_medido_celular_4g_cpu4x": 0.96, "lcp_medido_desktop_4g_cpu4x": 0.89, "cls": 0.0009 },
     "deps": [],
     "escopo": "tokens.css + home.css + simulador.css (a conta aberta) + modelo.css próprio, tudo em [data-art='brasil-inteiro']; nenhuma regra da home ou do simulador mudou",
-    "camadas": "entrada: a barra da conta e os números da trilha acendem ao entrar na tela, uma vez, a mesma luz do mapa · ponteiro: o índice do topo acende o número e o fio · scroll: nenhuma (como na home) · transição: nenhuma (como na home)",
+    "camadas": "entrada: a barra da conta, os números da trilha e o ponto da chegada acendem ao entrar na tela, uma vez, a mesma luz do mapa (o ponto pulsa 3 vezes e fica aceso; o pulso sem fim é do palco da home) · ponteiro: o índice do topo acende o número e o fio; a foto da chegada acende a borda e o selo · scroll: nenhuma (como na home) · transição: nenhuma (como na home)",
+    "recusadas": []
+  },
+  {
+    "data": "2026-09-28",
+    "alvo": "/modelo/ (segunda passada)",
+    "direcao": "custom:derivada-brasil-inteiro (propagação; revisão da passada anterior, que não chegou a ser publicada)",
+    "eixos": { "materia": "campo", "motor": "entrada", "banda": "escura" },
+    "estrutura": "a mesma da entrada anterior; mudou o fim da trilha e o topo",
+    "origem": "a dona pediu de novo /art-direction no /modelo. O ramo art/modelo já tinha a propagação e a main tinha ganhado os botões da etapa 1 depois; juntei os dois e olhei a tela pronta. O fraco era o fim: seis números iguais e a etapa 06 terminando no vazio. O caminho agora chega numa cadeira no ar (foto da Use Aligner + os números do Search Console que a home já publica), pelo viés 'trabalho real à vista' de gosto.md",
+    "gates": "35/35. Reprovou e foi corrigido: G3 (título a 4,7rem, 4,4× o corpo → 5,35rem, o teto da home, com a grade 8/4 para 'Growth Partner:' caber na linha), G16 (ponto da chegada pulsando sem fim fora do palco → 3 pulsos e fica aceso). G31 n/a: a página não tem canvas",
     "recusadas": []
   }
 ]
