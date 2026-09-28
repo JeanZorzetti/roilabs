@@ -60,7 +60,7 @@ export const TIPOS_CADEIRA: TipoCadeira[] = [
             title: 'Loja',
             items: [
               'Vitrine, página de produto, carrinho e checkout no motor de loja da ROI Labs',
-              'Domínio da operação ligado e com HTTPS',
+              'Domínio próprio do cliente, comprado na Hostinger (R$ 50/ano), ligado e com HTTPS',
               'Catálogo cadastrado: produto, preço, foto e os atributos do nicho (ex.: dimensão, acabamento, cor, tamanho)',
               'Frete configurado por cadeira — ou marcado como sem entrega quando a unidade de venda não despacha',
               'Meio de pagamento ligado. Sem meio de cobrança, a loja não oferece checkout',
@@ -151,7 +151,7 @@ export const TIPOS_CADEIRA: TipoCadeira[] = [
             items: [
               'Site completo, com os produtos ou serviços e os preços cadastrados',
               'Botões de WhatsApp com mensagem pronta ("Vim pelo site…") em todas as páginas',
-              'Domínio ligado ao Google Search Console',
+              'Domínio próprio do cliente, comprado na Hostinger (R$ 50/ano) e ligado ao Google Search Console',
               'Primeiras páginas no ar',
             ],
           },
@@ -233,7 +233,7 @@ export const TIPOS_CADEIRA: TipoCadeira[] = [
             items: [
               'Site do software com os planos e o preço público',
               'Página da cadeira com conteúdo no HTML inicial, dados estruturados de produto e FAQ',
-              'Domínio no Google Search Console',
+              'Domínio próprio do cliente, comprado na Hostinger (R$ 50/ano), no Google Search Console',
             ],
           },
           {
@@ -303,6 +303,7 @@ export const REGRAS_GERAIS = {
   roilabs: [
     ['Setup', 'Nenhum. Tecnologia e tráfego são bancados pela ROI Labs'],
     ['Anuidade', `R$ ${ANUIDADE.toLocaleString('pt-BR')}/ano (R$ 220/mês): Pix à vista, ou cartão em até 12x com acréscimo`],
+    ['Domínio', 'Domínio próprio do cliente em toda cadeira, comprado na Hostinger: R$ 50/ano (valor inicial), cobrado junto com a anuidade'],
     ['Exclusividade', 'Uma cadeira por nicho no Brasil inteiro, enquanto o contrato vigorar'],
     ['Contrato', 'Anual, renovável por desempenho dos dois lados'],
     ['Comissões', 'Cobradas todo dia 05, somando o mês anterior. Relatório venda por venda antes da cobrança'],

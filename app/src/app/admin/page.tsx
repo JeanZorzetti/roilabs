@@ -23,8 +23,8 @@ const CARDS = [
   {
     href: '/admin/precos',
     title: 'Preços',
-    lead: 'Preço, horas, custo, margem e piso de cada item — e o simulador que monta a proposta sem furar o piso.',
-    stat: () => 'Interno · custo-hora R$ 150 · piso 40%',
+    lead: 'Anuidade, domínio próprio e comissão pela faixa do nicho — e o simulador que diz quanto o parceiro paga no primeiro ano.',
+    stat: () => 'Anuidade R$ 2.640 · domínio R$ 50/ano · sem setup',
   },
   {
     href: '/admin/propostas',
