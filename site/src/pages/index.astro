@@ -362,8 +362,9 @@ const jsonLdNodes = [
         </div>
 
         <script>
-          // Números do readout rolam de 0 até o valor (NumberFlow, versão sem React) quando
-          // a caixa entra na tela. O texto estático do HTML continua na página, só escondido
+          // Números do readout rolam de 0 até o valor (NumberFlow, versão sem React) toda vez
+          // que a caixa entra na tela; ao sair por inteiro, voltam a 0 sem animar (ninguém vê)
+          // e rolam de novo na próxima passada. O texto estático do HTML continua na página, só escondido
           // da vista: é ele que robô de busca/IA e leitor de tela leem. Sem JS ou com
           // "reduzir movimento" ligado, nada muda — o número já aparece pronto.
           import 'number-flow';
@@ -389,12 +390,24 @@ const jsonLdNodes = [
               return { flow, alvo: Number(el.dataset.flow) };
             });
 
-            const io = new IntersectionObserver((entries) => {
-              if (!entries.some((e) => e.isIntersecting)) return;
-              io.disconnect();
-              flows.forEach(({ flow, alvo }, i) => setTimeout(() => flow.update(alvo), i * 180));
-            }, { threshold: 0.5 });
-            io.observe(box);
+            // Rola com metade da caixa visível; zera só quando ela some de vez — zerar com a
+            // caixa ainda meio visível mostraria o número pulando para 0.
+            let rolou = false;
+            let timers: number[] = [];
+            new IntersectionObserver(([e]) => {
+              if (!rolou && e.intersectionRatio >= 0.5) {
+                rolou = true;
+                timers = flows.map(({ flow, alvo }, i) => window.setTimeout(() => flow.update(alvo), i * 180));
+              } else if (rolou && !e.isIntersecting) {
+                rolou = false;
+                timers.forEach(clearTimeout);
+                flows.forEach(({ flow }) => {
+                  flow.animated = false;
+                  flow.update(0);
+                  flow.animated = true;
+                });
+              }
+            }, { threshold: [0, 0.5] }).observe(box);
           }
         </script>
         <p class="prova__foot">
