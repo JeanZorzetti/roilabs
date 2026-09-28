@@ -7,9 +7,10 @@ import { usePathname } from 'next/navigation';
 const FOCO_NA_BARRA =
   ' focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-light';
 
-// Seis telas da Vértice (vieram do admin do site verticemarketing) e duas da
-// ROI Labs. /admin/precos é a tabela de preços da Vértice; /admin/precificacao
-// é a comissão por nicho da ROI Labs (spec 016).
+// Telas que vieram do admin do site verticemarketing e duas da ROI Labs.
+// /admin/entregaveis usa o esqueleto da Vértice com o escopo das cadeiras da
+// ROI Labs (lib/entregaveis.ts). /admin/precos é a tabela de preços da Vértice;
+// /admin/precificacao é a comissão por nicho da ROI Labs (spec 016).
 const NAV: [string, string][] = [
   ['/admin/entregaveis', 'Entregáveis'],
   ['/admin/onboarding', 'Onboarding'],

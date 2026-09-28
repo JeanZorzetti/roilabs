@@ -1,14 +1,14 @@
 import Link from 'next/link';
 import { AdminShell } from '@/components/vertice/AdminShell';
-import { SERVICES, ALL_OFFERS } from '@/lib/vertice/catalog';
+import { TIPOS_CADEIRA, TOTAL_FASES } from '@/lib/entregaveis';
 import { ONBOARDING, countItems } from '@/lib/vertice/onboarding';
 
 const CARDS = [
   {
     href: '/admin/entregaveis',
     title: 'Entregáveis',
-    lead: 'O que está contratado em cada serviço, item por item — mais o que nunca está incluso e o que vira hora extra.',
-    stat: () => `${SERVICES.length} serviços · ${ALL_OFFERS.length} itens de tabela`,
+    lead: 'O que a ROI Labs entrega em cada tipo de cadeira, fase por fase — mais o que nunca está incluso e para onde vai o pedido de fora.',
+    stat: () => `${TIPOS_CADEIRA.length} tipos de cadeira · ${TOTAL_FASES} fases`,
   },
   {
     href: '/admin/onboarding',
