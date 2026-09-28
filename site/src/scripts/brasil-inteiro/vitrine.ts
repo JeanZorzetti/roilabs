@@ -1,30 +1,35 @@
-// A vitrine anda para o lado enquanto a página desce (desktop, com movimento liberado).
-// No celular e com "reduzir movimento" ela é uma faixa que se arrasta com o dedo; nada aqui roda.
+// A vitrine anda só quando a pessoa pede: setas, arrasto (dedo ou trackpad) ou foco do teclado.
+// Pedido da dona em 28/09/2026: nada de faixa andando sozinha com a rolagem da página.
 export function iniciarVitrine(el: HTMLElement) {
+  const janela = el.querySelector<HTMLElement>('.bi-vitrine__janela');
+  const setas = el.querySelectorAll<HTMLButtonElement>('.bi-vitrine__seta');
+  if (!janela || !setas.length) return;
+
   const reduzido = matchMedia('(prefers-reduced-motion: reduce)');
-  const largo = matchMedia('(min-width: 900px)');
-  let raf = 0;
+
+  // um passo = um cartão + o espaço entre eles
+  const passo = () => {
+    const item = janela.querySelector<HTMLElement>('.bi-vitrine__item');
+    const trilho = janela.firstElementChild as HTMLElement | null;
+    const gap = trilho ? parseFloat(getComputedStyle(trilho).columnGap) || 0 : 0;
+    return item ? item.getBoundingClientRect().width + gap : janela.clientWidth * 0.8;
+  };
 
   const atualizar = () => {
-    raf = 0;
-    // o percurso inteiro cabe em ~80% de uma tela de rolagem
-    const p = Math.min(1, Math.max(0, scrollY / (innerHeight * 0.8)));
-    el.style.setProperty('--bi-trilho', p.toFixed(4));
+    const fim = janela.scrollWidth - janela.clientWidth - 2;
+    setas.forEach((b) => {
+      b.disabled = Number(b.dataset.dir) < 0 ? janela.scrollLeft <= 2 : janela.scrollLeft >= fim;
+    });
   };
-  const aoRolar = () => { if (!raf) raf = requestAnimationFrame(atualizar); };
 
-  const aplicar = () => {
-    if (largo.matches && !reduzido.matches) {
-      el.dataset.movel = '';
-      addEventListener('scroll', aoRolar, { passive: true });
-      atualizar();
-    } else {
-      delete el.dataset.movel;
-      removeEventListener('scroll', aoRolar);
-      el.style.removeProperty('--bi-trilho');
-    }
-  };
-  largo.addEventListener('change', aplicar);
-  reduzido.addEventListener('change', aplicar);
-  aplicar();
+  setas.forEach((b) =>
+    b.addEventListener('click', () => {
+      janela.scrollBy({ left: Number(b.dataset.dir) * passo(), behavior: reduzido.matches ? 'auto' : 'smooth' });
+    }),
+  );
+
+  let raf = 0;
+  janela.addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; atualizar(); }); }, { passive: true });
+  new ResizeObserver(atualizar).observe(janela);
+  atualizar();
 }

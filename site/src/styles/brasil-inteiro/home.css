@@ -349,31 +349,130 @@ body:has([data-art='brasil-inteiro']) {
   color: var(--bi-texto);
 }
 
-[data-art='brasil-inteiro'] .bi-ficha {
-  font-size: 0.92rem;
+/* o preço de entrada, à vista antes da vitrine: número grande na voz da direção, o resto em apoio */
+[data-art='brasil-inteiro'] .bi-preco-wrap {
+  position: relative;
+  z-index: 1;
+  margin-top: clamp(1.25rem, 3vh, 2rem);
+}
+
+[data-art='brasil-inteiro'] .bi-preco {
+  --bi-preco-gap: clamp(1.25rem, 2.5vw, 2.5rem);
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  padding-block: 1rem;
+  border-block: 1px solid var(--bi-fio);
+}
+
+[data-art='brasil-inteiro'] .bi-preco > * {
+  margin: 0;
+  padding-inline: var(--bi-preco-gap);
+}
+
+[data-art='brasil-inteiro'] .bi-preco > :first-child {
+  padding-left: 0;
+}
+
+[data-art='brasil-inteiro'] .bi-preco > :last-child {
+  padding-right: 0;
+}
+
+[data-art='brasil-inteiro'] .bi-preco > * + * {
+  border-left: 1px solid var(--bi-fio);
+}
+
+[data-art='brasil-inteiro'] .bi-preco__valor {
+  display: grid;
+  gap: 0.2rem;
+}
+
+[data-art='brasil-inteiro'] .bi-preco__rot {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--bi-laranja);
+}
+
+[data-art='brasil-inteiro'] .bi-preco__valor p {
+  display: flex;
+  align-items: baseline;
+  gap: 0.3rem;
+  white-space: nowrap;
+}
+
+[data-art='brasil-inteiro'] .bi-preco__valor b {
+  font-family: var(--bi-display);
+  font-weight: 400;
+  font-synthesis: none;
+  font-size: clamp(2.2rem, 3.4vw, 2.9rem);
+  line-height: 1;
+  letter-spacing: -0.01em;
+  color: var(--bi-texto);
+}
+
+[data-art='brasil-inteiro'] .bi-preco__valor p span {
+  font-size: 1rem;
+  font-weight: 600;
   color: var(--bi-texto-2);
 }
 
-[data-art='brasil-inteiro'] .bi-ficha b {
+[data-art='brasil-inteiro'] .bi-preco__nota {
+  max-width: 36rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--bi-texto-2);
+}
+
+[data-art='brasil-inteiro'] .bi-preco__nota b {
   font-weight: 600;
   color: var(--bi-texto);
 }
 
-[data-art='brasil-inteiro'] .bi-ficha span {
+[data-art='brasil-inteiro'] .bi-preco__fatos {
+  display: grid;
+  gap: 0.35rem;
+  list-style: none;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--bi-texto);
   white-space: nowrap;
 }
 
-[data-art='brasil-inteiro'] .bi-ficha span::before {
+[data-art='brasil-inteiro'] .bi-preco__aberta {
+  color: var(--bi-laranja);
+}
+
+[data-art='brasil-inteiro'] .bi-preco__aberta::before {
   content: '';
   display: inline-block;
   width: 7px;
   height: 7px;
-  margin-right: 0.4rem;
+  margin-right: 0.45rem;
   border-radius: 50%;
-  background: var(--bi-laranja);
+  background: currentColor;
   vertical-align: 0.1em;
 }
 
+@media (max-width: 759px) {
+  [data-art='brasil-inteiro'] .bi-preco {
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
+  }
+
+  [data-art='brasil-inteiro'] .bi-preco > * {
+    padding-inline: 0;
+  }
+
+  [data-art='brasil-inteiro'] .bi-preco > * + * {
+    border-left: 0;
+    border-top: 1px solid var(--bi-fio);
+    padding-top: 0.85rem;
+  }
+
+  [data-art='brasil-inteiro'] .bi-preco__fatos {
+    white-space: normal;
+  }
+}
 /* a vitrine: as cadeiras que já estão no ar, de ponta a ponta */
 [data-art='brasil-inteiro'] .bi-vitrine {
   --bi-margem: max(clamp(1.25rem, 5vw, 4rem), calc((100% - 1180px) / 2 + clamp(1.25rem, 5vw, 4rem)));
@@ -386,6 +485,7 @@ body:has([data-art='brasil-inteiro']) {
 [data-art='brasil-inteiro'] .bi-vitrine__rot {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   justify-content: space-between;
   gap: 0.4rem 2rem;
   margin-bottom: 0.6rem;
@@ -512,16 +612,38 @@ body:has([data-art='brasil-inteiro']) {
   opacity: 0;
 }
 
-/* desktop com movimento: a faixa anda para o lado conforme a página desce (vitrine.ts) */
-[data-art='brasil-inteiro'] .bi-vitrine[data-movel] .bi-vitrine__janela {
-  overflow: visible;
-  scroll-snap-type: none;
+/* setas da vitrine: a pessoa passa os sites quando quiser; o hover acende, como o resto da página */
+[data-art='brasil-inteiro'] .bi-vitrine__setas {
+  display: flex;
+  flex: none;
+  gap: 0.5rem;
 }
 
-[data-art='brasil-inteiro'] .bi-vitrine[data-movel] .bi-vitrine__trilho {
-  translate: min(0px, calc(var(--bi-trilho, 0) * (100vw - 100%))) 0;
+[data-art='brasil-inteiro'] .bi-vitrine__seta {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1.5px solid var(--bi-fio-forte);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--bi-texto);
+  font: 600 1.1rem var(--bi-corpo);
+  cursor: pointer;
+  transition:
+    border-color var(--bi-dur-rapida) var(--bi-ease-saida),
+    color var(--bi-dur-rapida) var(--bi-ease-saida);
 }
 
+[data-art='brasil-inteiro'] .bi-vitrine__seta:hover:not(:disabled) {
+  border-color: var(--bi-laranja);
+  color: var(--bi-laranja);
+}
+
+[data-art='brasil-inteiro'] .bi-vitrine__seta:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
 @media (max-width: 899px) {
   [data-art='brasil-inteiro'] .bi-palco {
     padding-top: 0;
@@ -760,6 +882,10 @@ body:has([data-art='brasil-inteiro']) {
 
   [data-art='brasil-inteiro'] :is(.bi-mapa__origem i, .bi-vitrine__item) {
     animation: none;
+  }
+
+  [data-art='brasil-inteiro'] .bi-vitrine__seta {
+    transition: none;
   }
 
   [data-art='brasil-inteiro'] :is(.bi-vitrine__item a, .bi-vitrine__item img, .btn) {
