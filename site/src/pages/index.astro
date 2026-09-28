@@ -104,17 +104,26 @@ const jsonLdNodes = [
          O pôster (imagem estática) pinta primeiro e é o LCP; o canvas assume depois (scripts/brasil-inteiro/palco.ts).
          Com "reduzir movimento", o pôster aceso fica e o canvas nem carrega. -->
     <section class="bi-palco" aria-labelledby="hero-title">
-      <div class="bi-mapa" data-estado="parado">
-        <picture>
-          <source media="(prefers-reduced-motion: reduce)" srcset="/art/brasil-inteiro/mapa-aceso.webp" type="image/webp" />
-          <img class="bi-mapa__poster" src="/art/brasil-inteiro/mapa-apagado.webp" alt="" width="1100" height="1074" fetchpriority="high" decoding="async" />
-        </picture>
-        <canvas class="bi-mapa__vivo" aria-hidden="true"></canvas>
-        <span class="bi-mapa__origem" aria-hidden="true"><i></i>Sua cidade (ex.: Goiânia)</span>
-        <p class="bi-mapa__legenda"><b>5.571 municípios</b> Cada ponto é uma cidade do IBGE.<span> A cadeira do seu nicho vale para todas.</span></p>
-      </div>
+      <!-- Duas colunas no desktop (texto | mapa, centrados na mesma altura); abaixo de 1100px o
+           mapa sobe para cima do texto. O mapa vem primeiro no HTML por causa do celular. -->
+      <div class="bi-palco__topo">
+      <figure class="bi-mapa-fig">
+        <div class="bi-mapa" data-estado="parado">
+          <picture>
+            <source media="(prefers-reduced-motion: reduce)" srcset="/art/brasil-inteiro/mapa-aceso.webp" type="image/webp" />
+            <img class="bi-mapa__poster" src="/art/brasil-inteiro/mapa-apagado.webp" alt="" width="1100" height="1074" fetchpriority="high" decoding="async" />
+          </picture>
+          <canvas class="bi-mapa__vivo" aria-hidden="true"></canvas>
+          <span class="bi-mapa__origem" aria-hidden="true"><i></i>Sua cidade (ex.: Goiânia)</span>
+        </div>
+        <figcaption class="bi-mapa__legenda">
+          <b>5.571 municípios</b>
+          <span>Cada ponto é uma cidade do IBGE.</span>
+          <span class="bi-mapa__legenda-extra">A cadeira do seu nicho vale para todas.</span>
+        </figcaption>
+      </figure>
 
-      <div class="wrap bi-palco__texto">
+      <div class="bi-palco__texto">
         <span class="bi-olho">Growth Partner · Tecnologia e tráfego por nossa conta</span>
         <h1 id="hero-title">Construímos sua venda&nbsp;online. Nosso lucro vem <em>da sua venda.</em></h1>
         <p class="bi-sub">
@@ -127,6 +136,7 @@ const jsonLdNodes = [
           <a class="btn btn--whats" href={whatsHref} target="_blank" rel="noopener">Chamar no WhatsApp</a>
           <a class="bi-mais" href="#mecanica">Ver como funciona ↓</a>
         </div>
+      </div>
       </div>
 
       <!-- Preço de entrada à vista logo depois das ações: quem chega já sabe quanto custa a cadeira.
