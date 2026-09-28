@@ -88,7 +88,7 @@ const jsonLdNodes = [
           <div class="hero__actions">
             <a class="btn btn--primary" href="#candidatar">Aplicar para a cadeira</a>
             <a class="btn btn--whats" href={whatsHref} target="_blank" rel="noopener">Chamar no WhatsApp</a>
-            <a class="btn btn--ghost" href="#mecanica">Ver como funciona</a>
+            <a class="hero__more" href="#mecanica">Ver como funciona ↓</a>
           </div>
         </div>
 
@@ -153,7 +153,7 @@ const jsonLdNodes = [
             <span class="step__num">01 — Curadoria</span>
             <h3>Uma empresa por nicho</h3>
             <p>
-              Selecionamos um único fornecedor A-Player por setor: produto
+              Selecionamos um único fornecedor de ponta por setor: produto
               excelente, presença online fraca. Você passa nos três gates de
               validação — ou a cadeira não abre.
             </p>
@@ -179,7 +179,7 @@ const jsonLdNodes = [
               atrelada a SLA de estoque e despacho. A anuidade de R$ 2.640
               garante a cadeira exclusiva por um ano, renovável por entrega.
             </p>
-            <span class="step__tag">Anuidade + success fee</span>
+            <span class="step__tag">Anuidade + % da venda</span>
           </article>
         </div>
       </div>
@@ -194,10 +194,14 @@ const jsonLdNodes = [
           <p class="section__lead">
             Uma cadeira por nicho no Brasil inteiro, renovável por desempenho.
             Quando uma fecha, ela sai do mapa — e o seu concorrente não senta nela.
-            Cada cadeira do mapa é um produto no ar, não um case.
+            Cada cadeira do mapa é um produto de verdade, não um case.
           </p>
         </div>
 
+        <!-- Dois blocos, uma sequência: o <script is:inline> abaixo casa por ÍNDICE em
+             `#cadeiras .map__grid .seat`, e querySelectorAll segue a ordem do documento —
+             nichos primeiro, cadeiras de projeto depois. Não inverta os blocos. -->
+        <h3 class="map__subtitle">Cadeiras de fornecedores</h3>
         <ul class="map__grid" role="list">
           {seats.map((s) => (
             <li class={`seat ${aceitaCandidatura(s) ? 'seat--open' : ''} ${ocupada(s) ? 'seat--taken' : ''}`}>
@@ -212,6 +216,14 @@ const jsonLdNodes = [
               </span>
             </li>
           ))}
+        </ul>
+
+        <h3 class="map__subtitle">Cadeiras de software</h3>
+        <p class="map__sublead">
+          Produtos digitais que a ROI Labs constrói e opera com o mesmo método de captação,
+          próprios ou com parceiros.
+        </p>
+        <ul class="map__grid map__grid--software" role="list">
           {carteira.map((c) => (
             <li class={`seat ${ocupada(c) ? 'seat--taken' : ''}`} data-projeto>
               <a class="seat__niche" href={c.siteUrl} target="_blank" rel="noopener">{c.niche} ↗</a>
@@ -223,7 +235,8 @@ const jsonLdNodes = [
           ))}
         </ul>
         <p class="map__caption">
-          // cadeira escura = ocupada · nicho fora do mapa = cadeira livre
+          Seu nicho não está no mapa? Então a cadeira dele está livre.
+          <a href="#candidatar">Candidate-se →</a>
         </p>
       </div>
     </section>
@@ -324,6 +337,34 @@ const jsonLdNodes = [
           topo de página, faixa mais alta. Demanda validada antes do investimento.
         </p>
 
+        <!-- Resultado entregue (não custo de concorrente). Números do Search Console da
+             Use Aligner, cadeira ocupada. "Cliques" = visitas, NUNCA "vendas". -->
+        <h3 class="prova__title">E quando alguém captura, é assim.</h3>
+        <div class="readout" role="group" aria-label="Resultado orgânico da Use Aligner em 12 meses">
+          <div class="readout__bar">
+            <span class="readout__dotrow" aria-hidden="true"><span></span><span></span><span></span></span>
+            search_console — usealigner.com — 12 meses
+          </div>
+          <div class="readout__body">
+            <div class="metric">
+              <div class="metric__val">369<span class="unit">mil</span></div>
+              <div class="metric__key">vezes aparecendo nas buscas do Google</div>
+            </div>
+            <div class="metric">
+              <div class="metric__val">4,9<span class="unit">mil</span></div>
+              <div class="metric__key">visitas vindas do Google, sem pagar anúncio</div>
+            </div>
+            <div class="metric">
+              <div class="metric__val">4,8<span class="unit">posição</span></div>
+              <div class="metric__key">média no Google — entre os 5 primeiros</div>
+            </div>
+          </div>
+        </div>
+        <p class="prova__foot">
+          Fonte: Google Search Console de usealigner.com (alinhadores invisíveis),
+          set/2025 a set/2026. Site começou do zero; tráfego 100% orgânico.
+        </p>
+
       </div>
     </section>
 
@@ -341,33 +382,30 @@ const jsonLdNodes = [
         </div>
 
         <div class="gate-list" role="list" aria-label="Os três gates da cadeira">
-          <label class="gate gate--open" role="listitem">
-            <input class="gate__input" type="checkbox" checked />
+          <div class="gate gate--done" role="listitem">
             <span class="gate__check" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M6 10L8.5 12.5L14 7" /></svg></span>
             <span class="gate__body">
               <span class="gate__name">Gate 01 — Demanda comprovada</span>
-              <span class="gate__desc">Busca real pelo seu nicho, medida no Keyword Planner. Exemplo: anunciantes pagam até R$ 32,95 por clique em "fitas adesivas personalizadas".</span>
+              <span class="gate__desc">Busca real pelo seu nicho, medida no Keyword Planner do Google.</span>
             </span>
             <span class="gate__state">Nós medimos</span>
-          </label>
-          <label class="gate gate--open" role="listitem">
-            <input class="gate__input" type="checkbox" checked />
+          </div>
+          <div class="gate gate--done" role="listitem">
             <span class="gate__check" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M6 10L8.5 12.5L14 7" /></svg></span>
             <span class="gate__body">
               <span class="gate__name">Gate 02 — Brecha na busca</span>
-              <span class="gate__desc">SERP local fraca: só marketplace genérico ranqueia. Espaço pra dominar.</span>
+              <span class="gate__desc">No Google, só aparecem marketplaces genéricos. Espaço pra dominar.</span>
             </span>
             <span class="gate__state">Nós medimos</span>
-          </label>
-          <label class="gate gate--open" role="listitem">
-            <input class="gate__input" type="checkbox" checked />
+          </div>
+          <div class="gate gate--done" role="listitem">
             <span class="gate__check" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M6 10L8.5 12.5L14 7" /></svg></span>
             <span class="gate__body">
-              <span class="gate__name">Gate 03 — Fornecedor A-Player</span>
+              <span class="gate__name">Gate 03 — Fornecedor de ponta</span>
               <span class="gate__desc">O produto e a logística que a demanda exige. Esse é você.</span>
             </span>
             <span class="gate__state">Você</span>
-          </label>
+          </div>
         </div>
 
         <div class="fit">
@@ -433,7 +471,7 @@ const jsonLdNodes = [
             <p class="faq__a">
               Não é volume gigante — é consistência. Capacidade de atender o
               aumento de pedidos que o tráfego traz, com pronta-entrega. É o que
-              separa um A-Player na curadoria.
+              separa um fornecedor de ponta na curadoria.
             </p>
           </details>
           <details class="faq__item">

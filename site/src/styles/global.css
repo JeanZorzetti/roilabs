@@ -156,6 +156,86 @@ a {
   }
 }
 
+/* menu mobile: <details> nativo, sem JS. Some quando os links do desktop aparecem. */
+.nav__menu {
+  position: relative;
+}
+
+.nav__toggle {
+  list-style: none;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--d-text);
+  padding: 0.6rem 0.9rem;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--d-line-strong);
+  border-radius: 6px;
+}
+
+.nav__toggle::-webkit-details-marker {
+  display: none;
+}
+
+.nav__menu[open] .nav__toggle {
+  border-color: var(--d-text);
+}
+
+.nav__panel {
+  position: absolute;
+  top: calc(100% + 0.6rem);
+  right: 0;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  padding: 0.4rem;
+  background: var(--ink-2);
+  border: 1px solid var(--d-line-strong);
+  border-radius: 8px;
+  box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.8);
+}
+
+.nav__panel a {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--d-text);
+  padding: 0.85rem 0.9rem;
+  border-radius: 4px;
+}
+
+.nav__panel a:hover {
+  background: var(--d-line);
+}
+
+@media (min-width: 720px) {
+  .nav__menu {
+    display: none;
+  }
+}
+
+/* 360px: logo + Menu + Aplicar precisam caber sem rolagem lateral */
+@media (max-width: 419px) {
+  .brand__logo {
+    height: 26px;
+  }
+
+  .nav {
+    gap: 0.5rem;
+  }
+
+  .nav__toggle {
+    padding-inline: 0.7rem;
+  }
+}
+
 /* ---------- buttons ---------- */
 .btn {
   display: inline-flex;
@@ -303,7 +383,22 @@ a {
   margin-top: 2.2rem;
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 0.85rem;
+}
+
+/* terceira ação do hero: link de texto, não botão — dois CTAs com peso, um de leitura */
+.hero__more {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  color: var(--d-muted);
+  padding: 0.85rem 0.4rem;
+  text-underline-offset: 4px;
+}
+
+.hero__more:hover {
+  color: var(--d-text);
 }
 
 /* cadeira card */
@@ -531,6 +626,9 @@ a {
 
 /* ---------- mapa de cadeiras (signature) ---------- */
 .map__grid {
+  margin: 0;
+  padding: 0;
+  list-style: none;
   display: grid;
   gap: 0.9rem;
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 230px), 1fr));
@@ -542,7 +640,39 @@ a {
   }
 }
 
+/* dois blocos do mapa: fornecedores (o que o visitante compra) e software (portfólio) */
+.map__subtitle {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--l-muted);
+  margin: 0 0 1rem;
+}
+
+.map__grid + .map__subtitle {
+  margin-top: 3rem;
+}
+
+.map__sublead {
+  color: var(--l-muted);
+  font-size: 0.92rem;
+  max-width: 60ch;
+  margin: -0.4rem 0 1.2rem;
+}
+
+.map__grid--software .seat {
+  min-height: 96px;
+  padding-block: 1rem;
+}
+
+.map__grid--software .seat__niche {
+  font-size: 1rem;
+}
+
 .seat {
+  position: relative;
   border: 1px solid var(--l-line-strong);
   border-radius: 10px;
   padding: 1.2rem 1.3rem;
@@ -624,12 +754,32 @@ a {
   border-bottom-color: currentColor;
 }
 
+/* card inteiro clicável: o link do nicho se estica sobre a <li> (alvo de toque de 128px, não 21px) */
+a.seat__niche::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.seat:has(a.seat__niche:hover) {
+  border-color: var(--hivis);
+}
+
 .map__caption {
   margin-top: 2rem;
   font-family: var(--font-mono);
   font-size: 0.82rem;
   color: var(--l-muted);
   letter-spacing: 0.02em;
+}
+
+.map__caption a {
+  display: inline-block;
+  padding-block: 0.7rem;
+  color: var(--hivis-deep);
+  font-weight: 700;
+  text-underline-offset: 4px;
 }
 
 /* ---------- prova / leitura de mercado ---------- */
@@ -713,6 +863,12 @@ a {
   color: var(--d-muted);
 }
 
+.prova__title {
+  margin: clamp(3rem, 6vw, 4.5rem) 0 1.4rem;
+  font-size: clamp(1.5rem, 3vw, 2.1rem);
+  color: var(--d-text);
+}
+
 .prova__foot {
   margin-top: 1.6rem;
   font-family: var(--font-mono);
@@ -746,6 +902,32 @@ a {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--d-muted);
+}
+
+.site-footer__meta a {
+  color: inherit;
+  display: inline-block;
+  padding-block: 0.8rem;
+}
+
+.site-footer__nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1.4rem;
+}
+
+.site-footer__nav a {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--d-muted);
+  padding-block: 0.8rem;
+  text-underline-offset: 4px;
+}
+
+.site-footer__nav a:hover {
+  color: var(--d-text);
 }
 
 /* ---------- ICP: os 3 gates + fit ---------- */
@@ -826,30 +1008,8 @@ a {
   color: var(--l-muted);
 }
 
-/* Gate como checkbox clicável (inspirado no Checkbox do 21st.dev, sem React):
-   o <input> real fica escondido e o estado vem de :has(:checked). */
-label.gate {
-  cursor: pointer;
-  transition: background-color 200ms ease;
-}
-
-label.gate:hover {
-  background: color-mix(in srgb, var(--hivis) 5%, transparent);
-}
-
-.gate__input {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  white-space: nowrap;
-}
-
-.gate__check {
-  transition: background-color 200ms ease, border-color 200ms ease;
-}
-
+/* Gate é afirmação, não controle: ícone estático. Era <input type=checkbox> —
+   dava pra desmarcar "Nós medimos" e o leitor de tela anunciava "caixa de seleção". */
 .gate__check svg {
   width: 16px;
   height: 16px;
@@ -858,39 +1018,6 @@ label.gate:hover {
   stroke-width: 2.2;
   stroke-linecap: round;
   stroke-linejoin: round;
-  stroke-dasharray: 12;
-  stroke-dashoffset: 12;
-  transition: stroke-dashoffset 280ms ease 60ms;
-}
-
-label.gate:hover .gate__check {
-  border-color: var(--hivis);
-}
-
-.gate__input:focus-visible + .gate__check {
-  outline: 2px solid var(--hivis);
-  outline-offset: 3px;
-}
-
-.gate:has(.gate__input:checked) .gate__check {
-  background: var(--hivis);
-  border: 1.5px solid var(--hivis);
-}
-
-.gate:has(.gate__input:checked) .gate__check svg {
-  stroke-dashoffset: 0;
-}
-
-.gate:has(.gate__input:checked) .gate__state {
-  color: var(--hivis-deep);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  label.gate,
-  .gate__check,
-  .gate__check svg {
-    transition: none;
-  }
 }
 
 .fit {
@@ -1071,6 +1198,8 @@ label.gate:hover .gate__check {
 
 .close__fine a {
   color: var(--hivis);
+  display: inline-block;
+  padding-block: 0.8rem;
 }
 
 .form-card {
