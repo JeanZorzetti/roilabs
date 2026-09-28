@@ -855,6 +855,14 @@ a.seat__niche::after {
   margin-left: 0.3rem;
 }
 
+/* Número por extenso + palavra ("369.000 vezes"): no tablet as 3 colunas ficam
+   estreitas e a palavra caía para a linha de baixo; o número encolhe um pouco. */
+@media (min-width: 760px) and (max-width: 1023px) {
+  .metric__val:has(.metric__num) {
+    font-size: clamp(1.7rem, 3.6vw, 2.8rem);
+  }
+}
+
 /* Texto estático que o <number-flow> substitui na tela: sai da vista, fica no DOM
    (robô de busca e leitor de tela seguem lendo o valor final). */
 .metric__num--sr {
