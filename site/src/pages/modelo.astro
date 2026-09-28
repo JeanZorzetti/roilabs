@@ -55,6 +55,8 @@ const howtoSteps = [
   {
     name: 'Candidatura',
     text: 'Preencha o formulário na home (leva 1 minuto) ou chame no WhatsApp. A candidatura não tem custo nem compromisso — é só o ponto de partida da curadoria.',
+    // Trecho do texto que vira link na página (o JSON-LD usa o texto puro).
+    link: { text: 'formulário na home', href: '/#candidatar' },
   },
   {
     name: 'Triagem e conversa de curadoria',
@@ -287,7 +289,15 @@ const jsonLdNodes = [
               <span class="howto__num">{String(i + 1).padStart(2, '0')}</span>
               <div>
                 <h3 class="howto__name">{s.name}</h3>
-                <p class="howto__text">{s.text}</p>
+                <p class="howto__text">
+                  {s.link ? (
+                    <>
+                      {s.text.split(s.link.text)[0]}
+                      <a href={s.link.href} style="color:inherit">{s.link.text}</a>
+                      {s.text.split(s.link.text)[1]}
+                    </>
+                  ) : s.text}
+                </p>
               </div>
             </li>
           ))}
