@@ -30,5 +30,18 @@
     "escopo": "tokens.css + home.css (releitura do global) + simulador.css próprio, tudo em [data-art='brasil-inteiro']; nenhuma regra da home mudou",
     "camadas": "entrada: a barra da venda acende da esquerda por recorte e o número rola de zero · ponteiro: cada tecla move as fatias da barra e rola o número · scroll: nenhuma (página curta, de ferramenta) · transição: nenhuma (como na home)",
     "recusadas": []
+  },
+  {
+    "data": "2026-09-28",
+    "alvo": "/modelo/",
+    "direcao": "custom:derivada-brasil-inteiro (propagação da home, não direção nova)",
+    "eixos": { "materia": "campo", "motor": "entrada", "banda": "escura" },
+    "estrutura": "documento em peças: topo 7/5 com índice numerado das 4 peças + faixa de preço da home; cada peça num par texto|objeto (gates 5/6, conta aberta do /simulador 6/5, dois lados do contrato, trilha de 6 etapas 4/7, FAQ 4/7 com título fixo)",
+    "origem": "pedido da dona: organizar o /modelo como a home; sem 3 direções porque a direção já estava aprovada no ar. O mapa (assinatura) fica só na home (recusa do Fluxo em gosto.md)",
+    "orcamento": { "faixa": "captação", "js_kb": 0.5, "lcp_alvo": 2.0, "lcp_medido_celular_4g_cpu4x": 1.62, "cls": 0.0057 },
+    "deps": [],
+    "escopo": "tokens.css + home.css + simulador.css (a conta aberta) + modelo.css próprio, tudo em [data-art='brasil-inteiro']; nenhuma regra da home ou do simulador mudou",
+    "camadas": "entrada: a barra da conta e os números da trilha acendem ao entrar na tela, uma vez, a mesma luz do mapa · ponteiro: o índice do topo acende o número e o fio · scroll: nenhuma (como na home) · transição: nenhuma (como na home)",
+    "recusadas": []
   }
 ]

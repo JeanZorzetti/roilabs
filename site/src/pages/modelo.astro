@@ -2,19 +2,33 @@
 import Base from '../layouts/Base.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import { whatsLink } from '../data/contato';
+// Direção de arte Brasil Inteiro, propagada da home (28/09/2026): mesmos tokens, a mesma
+// releitura do global.css e a "conta aberta" do /simulador; o que é só desta página mora em modelo.css.
+import '../styles/brasil-inteiro/tokens.css';
+import '../styles/brasil-inteiro/home.css';
+import '../styles/brasil-inteiro/simulador.css';
+import '../styles/brasil-inteiro/modelo.css';
 
-const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
-const whatsHref = `https://wa.me/${whatsapp}?text=${encodeURIComponent(
-  'Quero entender o modelo Growth Partner da ROI Labs'
-)}`;
+const whatsHref = whatsLink('Quero entender o modelo Growth Partner da ROI Labs');
 
 // Exemplo numérico = mesma fórmula do /simulador (fee = ticket × pedidos × pct, + anuidade/12).
 const ANUIDADE = 2640;
 const exemplo = { ticket: 450, pedidos: 40, pct: 0.1 };
 const receita = exemplo.ticket * exemplo.pedidos; // 18.000
-const custo = receita * exemplo.pct + ANUIDADE / 12; // 1.800 + 220
-const liquido = receita - custo; // 15.980
+const fee = receita * exemplo.pct; // 1.800
+const anuidadeMes = ANUIDADE / 12; // 220
+const liquido = receita - fee - anuidadeMes; // 15.980
 const brl = (n: number) => 'R$ ' + n.toLocaleString('pt-BR');
+const fatia = (n: number) => `${((n / receita) * 100).toFixed(2)}%`;
+
+// O índice do topo: as quatro peças da página, na ordem em que aparecem.
+const pecas = [
+  { href: '#gates', nome: 'Os três gates', frase: 'Nenhuma cadeira abre no escuro.' },
+  { href: '#success-fee', nome: 'A conta', frase: 'Anuidade + success fee, sem tabela escondida.' },
+  { href: '#exclusividade', nome: 'Exclusividade e papéis', frase: 'Uma cadeira, dois compromissos.' },
+  { href: '#etapas', nome: 'O caminho', frase: 'Da candidatura ao contrato, em 6 etapas.' },
+];
 
 const faq = [
   {
@@ -87,7 +101,7 @@ const jsonLdNodes = [
     isPartOf: { '@id': 'https://roilabs.com.br/#website' },
     about: { '@id': 'https://roilabs.com.br/#service' },
     inLanguage: 'pt-BR',
-    dateModified: '2026-09-26',
+    dateModified: '2026-09-28',
   },
   {
     '@type': 'Service',
@@ -124,36 +138,76 @@ const jsonLdNodes = [
   title="O modelo Growth Partner — como funciona a cadeira | ROI Labs"
   description="Gates de validação, anuidade de R$ 2.640/ano + success fee, exclusividade de cadeira e o passo a passo da candidatura ao contrato. O modelo ROI Labs com números."
   jsonLdNodes={jsonLdNodes}
+  fontesPadrao={false}
 >
+  <Fragment slot="head">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Gloock&display=swap" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Gloock&display=swap" /></noscript>
+  </Fragment>
+
+  <div class="bi" data-art="brasil-inteiro">
   <Header />
 
   <main>
-    <!-- BLUF -->
-    <section class="section section--dark" aria-labelledby="modelo-title">
+    <!-- TOPO · o modelo numa frase | o índice das quatro peças. Abaixo, a mesma faixa de preço da home.
+         Abaixo de 900px o índice desce para depois do texto. -->
+    <section class="bi-mod-topo" aria-labelledby="modelo-title">
       <div class="wrap">
-        <div class="section__head">
-          <span class="eyebrow">O modelo · em profundidade</span>
-          <h1 id="modelo-title">Growth Partner: sócio de performance, não agência.</h1>
-          <p class="section__lead">
-            O modelo em uma frase: a ROI Labs constrói e opera a venda online de
-            <strong>um único fornecedor por nicho no Brasil</strong> — bancando
-            tecnologia e tráfego — e é remunerada pela
-            <strong>anuidade simbólica da cadeira (R$ 2.640/ano)</strong> mais
-            uma <strong>fração variável da venda concretizada</strong>. Sem
-            setup, sem piso, sem verba de mídia. Esta página detalha cada peça:
-            os gates, a conta, a exclusividade e o caminho da candidatura ao
-            contrato.
+        <div class="bi-mod-topo__grade">
+          <div>
+            <span class="bi-olho">O modelo · em profundidade</span>
+            <h1 id="modelo-title">Growth Partner: sócio de performance, <em>não agência.</em></h1>
+            <p class="bi-sub">
+              O modelo em uma frase: a ROI Labs constrói e opera a venda online de
+              <strong>um único fornecedor por nicho no Brasil</strong> — bancando
+              tecnologia e tráfego — e é remunerada pela
+              <strong>anuidade simbólica da cadeira (R$ 2.640/ano)</strong> mais
+              uma <strong>fração variável da venda concretizada</strong>. Sem
+              setup, sem piso, sem verba de mídia.
+            </p>
+          </div>
+
+          <nav class="bi-indice" aria-labelledby="indice-rot">
+            <p class="bi-indice__rot" id="indice-rot">As quatro peças do modelo</p>
+            <ol class="bi-indice__lista" role="list">
+              {pecas.map((p, i) => (
+                <li>
+                  <a href={p.href}>
+                    <span class="bi-indice__num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                    <span class="bi-indice__nome">{p.nome}</span>
+                    <span class="bi-indice__frase">{p.frase}</span>
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </nav>
+        </div>
+
+        <!-- Mesma faixa de preço da home. Valores do FAQ e do JSON-LD; mudar lá muda aqui. -->
+        <div class="bi-preco bi-mod-topo__preco" role="group" aria-label="Quanto custa a cadeira">
+          <div class="bi-preco__valor">
+            <span class="bi-preco__rot">Anuidade da cadeira</span>
+            <p><b>R$ 2.640</b><span>/ano</span></p>
+          </div>
+          <p class="bi-preco__nota">
+            Equivale a <b>R$ 220 por mês</b>. Sem setup, sem piso de venda e sem verba de mídia:
+            o resto só é cobrado depois da venda.
           </p>
+          <ul class="bi-preco__fatos" role="list">
+            <li>1 cadeira por nicho no Brasil</li>
+            <li class="bi-preco__aberta">Curadoria aberta</li>
+          </ul>
         </div>
       </div>
     </section>
 
-    <!-- GATES -->
+    <!-- PEÇA 1 · GATES · texto 5 | os três gates 6. 01 e 02 medidos por nós (creme, número aceso);
+         o 03 é você, no cartão noite, com o caminho para o teste da home. -->
     <section class="section section--light" id="gates" aria-labelledby="gates-title">
-      <div class="wrap">
-        <div class="section__head">
+      <div class="wrap bi-mod-par">
+        <div class="bi-mod-par__texto">
           <span class="eyebrow">Peça 1 · os três gates</span>
-          <h2 id="gates-title">Nenhuma cadeira abre no escuro.</h2>
+          <h2 id="gates-title">Nenhuma cadeira abre <em>no escuro.</em></h2>
           <p class="section__lead">
             Antes de existir uma cadeira, o nicho passa por três validações em
             sequência. Se qualquer uma falhar, a cadeira não abre — é o que
@@ -161,92 +215,113 @@ const jsonLdNodes = [
           </p>
         </div>
 
-        <div class="steps">
-          <article class="step">
-            <span class="step__num">Gate 01</span>
-            <h3>Demanda comprovada</h3>
-            <p>
-              Busca real pelo nicho, medida no Keyword Planner antes de
-              qualquer investimento. Exemplo: anunciantes pagam até R$&nbsp;32,95
-              por clique em "fitas adesivas personalizadas" (Brasil, ago/2026).
-              Sem demanda medida, não há cadeira.
-            </p>
-            <span class="step__tag">Dados, não intuição</span>
-          </article>
-          <article class="step">
-            <span class="step__num">Gate 02</span>
-            <h3>Brecha na busca</h3>
-            <p>
-              A primeira página do Google precisa estar fraca: se só marketplace
-              genérico ranqueia, há espaço para uma operação especializada dominar. Concorrência
-              orgânica forte demais? A conta não fecha e o nicho fica em estudo.
-            </p>
-            <span class="step__tag">Espaço para dominar</span>
-          </article>
-          <article class="step">
-            <span class="step__num">Gate 03</span>
-            <h3>Fornecedor A-Player</h3>
-            <p>
-              A peça humana: catálogo próprio e amplo, pronta-entrega de
-              verdade e capacidade de acompanhar o salto de demanda. É o gate
-              que a curadoria valida na candidatura — e o único que depende de
-              você.
-            </p>
-            <span class="step__tag">Curadoria aberta</span>
-          </article>
-        </div>
+        <ol class="bi-portoes" role="list">
+          <li class="bi-portao">
+            <span class="bi-portao__num" aria-hidden="true">01</span>
+            <div>
+              <p class="bi-portao__quem">Gate 01 · Nós medimos</p>
+              <h3>Demanda comprovada</h3>
+              <p>
+                Busca real pelo nicho, medida no Keyword Planner antes de
+                qualquer investimento. Exemplo: anunciantes pagam até R$&nbsp;32,95
+                por clique em "fitas adesivas personalizadas" (Brasil, ago/2026).
+                Sem demanda medida, não há cadeira.
+              </p>
+            </div>
+          </li>
+          <li class="bi-portao">
+            <span class="bi-portao__num" aria-hidden="true">02</span>
+            <div>
+              <p class="bi-portao__quem">Gate 02 · Nós medimos</p>
+              <h3>Brecha na busca</h3>
+              <p>
+                A primeira página do Google precisa estar fraca: se só marketplace
+                genérico ranqueia, há espaço para uma operação especializada dominar. Concorrência
+                orgânica forte demais? A conta não fecha e o nicho fica em estudo.
+              </p>
+            </div>
+          </li>
+          <li class="bi-portao bi-portao--voce">
+            <span class="bi-portao__num" aria-hidden="true">03</span>
+            <div>
+              <p class="bi-portao__quem">Gate 03 · Você</p>
+              <h3>Fornecedor A-Player</h3>
+              <p>
+                A peça humana: catálogo próprio e amplo, pronta-entrega de
+                verdade e capacidade de acompanhar o salto de demanda. É o gate
+                que a curadoria valida na candidatura — e o único que depende de
+                você.
+              </p>
+              <a class="bi-portao__link" href="/#cadeira-pra-voce">Faça o teste de 4 perguntas →</a>
+            </div>
+          </li>
+        </ol>
       </div>
     </section>
 
-    <!-- SUCCESS FEE -->
+    <!-- PEÇA 2 · A CONTA · texto 6 | a conta aberta do /simulador 5, parada no exemplo. A barra acende
+         quando a caixa entra na tela (sem JS ou com "reduzir movimento", já aparece cheia). -->
     <section class="section section--dark" id="success-fee" aria-labelledby="fee-title">
-      <div class="wrap">
-        <div class="section__head">
+      <div class="wrap bi-mod-par bi-mod-par--conta">
+        <div class="bi-mod-par__texto">
           <span class="eyebrow">Peça 2 · a conta</span>
-          <h2 id="fee-title">Anuidade + success fee: a conta é pública.</h2>
+          <h2 id="fee-title">Anuidade + success fee: <em>a conta é pública.</em></h2>
           <p class="section__lead">
             Não há tabela escondida. São duas partes: a anuidade da cadeira,
             <strong>R$ 2.640/ano (R$ 220/mês)</strong>, e o success fee, uma
-            fração percentual da receita que a operação gerou para você no mês:
-            <strong>fee = ticket médio × pedidos × percentual</strong>. O
-            percentual é definido em contrato, conforme nicho, margem e SLA.
+            fração percentual da receita que a operação gerou para você no mês.
+            O percentual é definido em contrato, conforme nicho, margem e SLA.
+          </p>
+          <p class="bi-formula">
+            <span>fee</span> = ticket médio × pedidos × percentual
+          </p>
+          <p class="bi-mod-nota">
+            Vendeu zero? O success fee é zero; fica só a anuidade de R$ 220/mês.
+            O alinhamento é estrutural: o grosso do nosso lucro é uma parte do seu.
           </p>
         </div>
 
-        <div class="readout" role="group" aria-label="Exemplo de cálculo do success fee">
-          <div class="readout__bar">
-            <span class="readout__dotrow" aria-hidden="true"><span></span><span></span><span></span></span>
-            exemplo — ticket {brl(exemplo.ticket)} × {exemplo.pedidos} pedidos × {exemplo.pct * 100}% + anuidade
+        <div class="bi-conta" role="group" aria-labelledby="conta-rot" data-acende>
+          <p class="bi-conta__rot" id="conta-rot"><i aria-hidden="true"></i>Exemplo · fica com você, por mês</p>
+          <p class="bi-conta__valor">{brl(liquido)}</p>
+          <p class="bi-conta__pct"><b>{Math.round((liquido / receita) * 100)}%</b> da venda fica com você.</p>
+
+          <div class="bi-barra" aria-hidden="true">
+            <i class="bi-barra__voce" style={`--w: ${fatia(liquido)}`}></i>
+            <i class="bi-barra__fee" style={`--w: ${fatia(fee)}`}></i>
+            <i class="bi-barra__anuidade" style={`--w: ${fatia(anuidadeMes)}`}></i>
           </div>
-          <div class="readout__body">
-            <div class="metric">
-              <div class="metric__val">{brl(receita)}<span class="unit">/mês</span></div>
-              <div class="metric__key">receita projetada (ticket × pedidos)</div>
+
+          <dl class="bi-conta__linhas">
+            <div>
+              <dt>Venda no mês <small>ticket {brl(exemplo.ticket)} × {exemplo.pedidos} pedidos</small></dt>
+              <dd>{brl(receita)}</dd>
             </div>
-            <div class="metric">
-              <div class="metric__val">{brl(custo)}<span class="unit">/mês</span></div>
-              <div class="metric__key">success fee + anuidade (R$ 220/mês)</div>
+            <div>
+              <dt><i class="bi-conta__cor bi-conta__cor--fee" aria-hidden="true"></i>Success fee <small>{exemplo.pct * 100}% da venda</small></dt>
+              <dd>− {brl(fee)}</dd>
             </div>
-            <div class="metric">
-              <div class="metric__val">{brl(liquido)}<span class="unit">/mês</span></div>
-              <div class="metric__key">o que fica com você</div>
+            <div>
+              <dt><i class="bi-conta__cor bi-conta__cor--anuidade" aria-hidden="true"></i>Anuidade da cadeira <small>R$ 2.640/ano ÷ 12</small></dt>
+              <dd>− {brl(anuidadeMes)}</dd>
             </div>
+          </dl>
+
+          <div class="bi-acoes">
+            <a class="btn btn--primary" href="/simulador/">Fazer a conta com os seus números</a>
           </div>
+          <p class="bi-conta__aviso">Exemplo ilustrativo, não é proposta comercial. O % efetivo é definido em contrato.</p>
         </div>
-        <p class="prova__foot">
-          Vendeu zero? O success fee é zero; fica só a anuidade de R$ 220/mês.
-          O alinhamento é estrutural: o grosso do nosso lucro é uma parte do seu. Faça a conta com os seus números no
-          <a href="/simulador/" style="color:inherit">simulador de receita →</a>
-        </p>
       </div>
     </section>
 
-    <!-- EXCLUSIVIDADE + PAPÉIS -->
+    <!-- PEÇA 3 · EXCLUSIVIDADE · os dois lados do contrato: o que a ROI Labs banca (noite) e o que o
+         parceiro sustenta (creme). -->
     <section class="section section--light" id="exclusividade" aria-labelledby="excl-title">
       <div class="wrap">
         <div class="section__head">
           <span class="eyebrow">Peça 3 · exclusividade e papéis</span>
-          <h2 id="excl-title">Uma cadeira, dois compromissos.</h2>
+          <h2 id="excl-title">Uma cadeira, <em>dois compromissos.</em></h2>
           <p class="section__lead">
             A exclusividade é anual e renovável por desempenho — dos dois
             lados. Cada parte tem um papel claro; é isso que o contrato
@@ -254,58 +329,95 @@ const jsonLdNodes = [
           </p>
         </div>
 
-        <div class="fit">
-          <div class="fit__col fit__col--yes">
-            <div class="fit__title">O que a ROI Labs banca</div>
-            <p class="fit__item"><span class="fit__mark" aria-hidden="true">✓</span> Tecnologia inteira: loja online, catálogo, calculadoras, comparador, feed.</p>
-            <p class="fit__item"><span class="fit__mark" aria-hidden="true">✓</span> Tráfego orgânico: centenas de páginas de alta intenção, sem mídia paga.</p>
-            <p class="fit__item"><span class="fit__mark" aria-hidden="true">✓</span> Captação e qualificação do lead até o pedido.</p>
-            <p class="fit__item"><span class="fit__mark" aria-hidden="true">✓</span> Transparência: relatório pedido a pedido na fatura do fee.</p>
+        <div class="bi-lados">
+          <div class="bi-lado bi-lado--roi">
+            <p class="bi-lado__quem">A ROI Labs banca</p>
+            <ul role="list">
+              <li>Tecnologia inteira: loja online, catálogo, calculadoras, comparador, feed.</li>
+              <li>Tráfego orgânico: centenas de páginas de alta intenção, sem mídia paga.</li>
+              <li>Captação e qualificação do lead até o pedido.</li>
+              <li>Transparência: relatório pedido a pedido na fatura do fee.</li>
+            </ul>
           </div>
-          <div class="fit__col fit__col--no">
-            <div class="fit__title">O que o parceiro sustenta</div>
-            <p class="fit__item"><span class="fit__mark" aria-hidden="true">✓</span> Catálogo próprio e amplo, com preço e foto atualizados.</p>
-            <p class="fit__item"><span class="fit__mark" aria-hidden="true">✓</span> Estoque consistente dos produtos anunciados (SLA).</p>
-            <p class="fit__item"><span class="fit__mark" aria-hidden="true">✓</span> Despacho no prazo — pronta-entrega de verdade.</p>
-            <p class="fit__item"><span class="fit__mark" aria-hidden="true">✓</span> A anuidade da cadeira e o success fee sobre o que vendeu.</p>
+          <div class="bi-lado">
+            <p class="bi-lado__quem">O parceiro sustenta</p>
+            <ul role="list">
+              <li>Catálogo próprio e amplo, com preço e foto atualizados.</li>
+              <li>Estoque consistente dos produtos anunciados (SLA).</li>
+              <li>Despacho no prazo — pronta-entrega de verdade.</li>
+              <li>A anuidade da cadeira e o success fee sobre o que vendeu.</li>
+            </ul>
           </div>
         </div>
+        <p class="bi-lados__rodape">
+          Em troca: nenhum concorrente do seu nicho entra na ROI Labs, em nenhum lugar do Brasil,
+          enquanto o contrato vigorar. <a href="/#cadeiras">Ver o mapa de cadeiras →</a>
+        </p>
       </div>
     </section>
 
-    <!-- HOWTO: CANDIDATURA AO CONTRATO -->
+    <!-- PEÇA 4 · O CAMINHO · título e ações 4 | a trilha das 6 etapas 7. Os números acendem um a um
+         quando a trilha entra na tela, a mesma luz do mapa da home. Sem JS: todos acesos. -->
     <section class="section section--dark" id="etapas" aria-labelledby="etapas-title">
-      <div class="wrap">
-        <div class="section__head">
+      <div class="wrap bi-mod-par bi-mod-par--trilha">
+        <div class="bi-mod-par__texto bi-mod-par__texto--fixo">
           <span class="eyebrow">Peça 4 · o caminho</span>
-          <h2 id="etapas-title">Da candidatura ao contrato, em 6 etapas.</h2>
+          <h2 id="etapas-title">Da candidatura ao contrato, <em>em 6 etapas.</em></h2>
+          <p class="section__lead">A primeira leva um minuto e não custa nada.</p>
+          <div class="bi-acoes">
+            <a class="btn btn--primary" href="/#candidatar">Começar a etapa 1 agora</a>
+            <a class="btn btn--whats" href={whatsHref} target="_blank" rel="noopener">Chamar no WhatsApp</a>
+          </div>
         </div>
 
-        <ol class="howto" role="list">
+        <ol class="bi-trilha" role="list" data-trilha>
           {howtoSteps.map((s, i) => (
-            <li class="howto__step">
-              <span class="howto__num">{String(i + 1).padStart(2, '0')}</span>
+            <li class="bi-trilha__passo" style={`--i: ${i}`}>
+              <span class="bi-trilha__num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
               <div>
-                <h3 class="howto__name">{s.name}</h3>
-                <p class="howto__text">{s.text}</p>
+                <h3>{s.name}</h3>
+                <p>{s.text}</p>
               </div>
             </li>
           ))}
         </ol>
-
-        <div class="close__whats" style="margin-top: 2.5rem;">
-          <a class="btn btn--primary" href="/#candidatar">Começar a etapa 1 agora</a>
-          <a class="btn btn--whats" href={whatsHref} target="_blank" rel="noopener" style="margin-left: .75rem;">Chamar no WhatsApp</a>
-        </div>
       </div>
     </section>
 
+    <script>
+      // A barra da conta e a trilha das etapas acendem quando entram na tela, uma vez. Sem JS ou com
+      // "reduzir movimento", este script não segura nada: tudo já aparece aceso.
+      const calmo = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const alvos = [...document.querySelectorAll<HTMLElement>('[data-acende], [data-trilha]')];
+      if (!calmo && 'IntersectionObserver' in window) {
+        const io = new IntersectionObserver(
+          (entradas) =>
+            entradas.forEach((e) => {
+              if (!e.isIntersecting) return;
+              e.target.setAttribute('data-aceso', '');
+              io.unobserve(e.target);
+            }),
+          { threshold: 0.2 }
+        );
+        alvos.forEach((el) => {
+          el.setAttribute('data-espera', '');
+          io.observe(el);
+        });
+      }
+    </script>
+
     <!-- FAQ -->
     <section class="section section--light" id="faq" aria-labelledby="faq-title">
-      <div class="wrap">
-        <div class="section__head">
+      <div class="wrap bi-mod-par bi-mod-par--faq">
+        <div class="bi-mod-par__texto bi-mod-par__texto--fixo">
           <span class="eyebrow">Detalhes do contrato</span>
-          <h2 id="faq-title">O que todo candidato pergunta antes de assinar.</h2>
+          <h2 id="faq-title">O que todo candidato pergunta <em>antes de assinar.</em></h2>
+          <p class="bi-mod-leia">
+            Quer ver o modelo aplicado? Leia
+            <a href="/blog/growth-partner-vs-agencia-revestimentos/">a conta real: Growth Partner vs agência</a>
+            e
+            <a href="/blog/exclusividade-de-cadeira-uma-loja-por-nicho-goiania/">por que só existe uma cadeira por nicho</a>.
+          </p>
         </div>
 
         <div class="faq">
@@ -316,51 +428,10 @@ const jsonLdNodes = [
             </details>
           ))}
         </div>
-
-        <p class="prova__foot" style="margin-top: 2rem;">
-          Quer ver o modelo aplicado? Leia
-          <a href="/blog/growth-partner-vs-agencia-revestimentos/" style="color:inherit">a conta real: Growth Partner vs agência</a>
-          e
-          <a href="/blog/exclusividade-de-cadeira-uma-loja-por-nicho-goiania/" style="color:inherit">por que só existe uma cadeira por nicho</a>.
-        </p>
       </div>
     </section>
   </main>
 
   <Footer />
+  </div>
 </Base>
-
-<style>
-  /* HowTo list — único bloco novo; o resto reusa as classes globais da home. */
-  .howto {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    gap: 1rem;
-  }
-  .howto__step {
-    display: flex;
-    gap: 1.25rem;
-    align-items: baseline;
-    border: 1px solid var(--d-line-strong);
-    border-radius: 12px;
-    padding: 1.25rem 1.5rem;
-  }
-  .howto__num {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.85rem;
-    color: var(--hivis);
-    flex: 0 0 auto;
-  }
-  .howto__name {
-    font-size: 1.05rem;
-    margin: 0 0 0.35rem;
-  }
-  .howto__text {
-    margin: 0;
-    font-size: 0.95rem;
-    opacity: 0.85;
-    line-height: 1.6;
-  }
-</style>

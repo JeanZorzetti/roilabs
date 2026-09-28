@@ -1,0 +1,470 @@
+/* art-direction · brasil-inteiro (propagação: /modelo) · eixos: campo/autônomo/escura · orçamento: 30kb · 2026-09-28 */
+/* O /modelo na direção Brasil Inteiro. Usa os tokens e a releitura do global.css de home.css e a conta aberta
+   de simulador.css; aqui fica só o que é desta página: o índice do topo, os gates, os dois lados e a trilha. */
+
+[data-art='brasil-inteiro'] :is(.bi-mod-topo, .section) h2 em,
+[data-art='brasil-inteiro'] .bi-mod-topo h1 em {
+  font-style: normal;
+  color: var(--bi-laranja);
+}
+
+[data-art='brasil-inteiro'] .section--light h2 em {
+  color: var(--bi-laranja-texto);
+}
+
+[data-art='brasil-inteiro'] .section__lead strong,
+[data-art='brasil-inteiro'] .bi-sub strong {
+  font-weight: 600;
+  color: var(--bi-texto);
+}
+
+/* ---------- topo: o modelo numa frase | as quatro peças ---------- */
+[data-art='brasil-inteiro'] .bi-mod-topo {
+  padding-block: clamp(2.5rem, 7vh, 5rem) clamp(2.5rem, 6vh, 4rem);
+  border-bottom: 1px solid var(--bi-fio);
+}
+
+[data-art='brasil-inteiro'] .bi-mod-topo__grade {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: center;
+}
+
+[data-art='brasil-inteiro'] .bi-mod-topo h1 {
+  margin-top: 1rem;
+  max-width: 11em;
+  font-size: clamp(2.6rem, 5.2vw, 4.7rem);
+  line-height: 1.02;
+  text-wrap: balance;
+}
+
+[data-art='brasil-inteiro'] .bi-mod-topo .bi-sub {
+  max-width: 38rem;
+}
+
+/* o índice: quatro linhas numeradas; o ponteiro acende o número e o fio de baixo */
+[data-art='brasil-inteiro'] .bi-indice__rot {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--bi-laranja);
+}
+
+[data-art='brasil-inteiro'] .bi-indice__lista {
+  margin: 0.8rem 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--bi-fio);
+}
+
+[data-art='brasil-inteiro'] .bi-indice__lista a {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 0.1rem 1rem;
+  align-items: center;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--bi-fio);
+  color: inherit;
+  text-decoration: none;
+  transition: border-color var(--bi-dur-rapida) var(--bi-ease-saida);
+}
+
+[data-art='brasil-inteiro'] .bi-indice__num {
+  grid-row: span 2;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1.5px solid var(--bi-fio-forte);
+  border-radius: 50%;
+  font-family: var(--bi-display);
+  font-size: 1.15rem;
+  color: var(--bi-texto);
+  transition:
+    background-color var(--bi-dur-rapida) var(--bi-ease-saida),
+    border-color var(--bi-dur-rapida) var(--bi-ease-saida),
+    color var(--bi-dur-rapida) var(--bi-ease-saida);
+}
+
+[data-art='brasil-inteiro'] .bi-indice__nome {
+  font-weight: 700;
+}
+
+[data-art='brasil-inteiro'] .bi-indice__frase {
+  font-size: 0.92rem;
+  color: var(--bi-texto-2);
+}
+
+[data-art='brasil-inteiro'] .bi-indice__lista a:is(:hover, :focus-visible) {
+  border-bottom-color: var(--bi-laranja);
+}
+
+[data-art='brasil-inteiro'] .bi-indice__lista a:is(:hover, :focus-visible) .bi-indice__num {
+  border-color: var(--bi-laranja);
+  background: var(--bi-laranja);
+  color: var(--bi-sobre-laranja);
+}
+
+[data-art='brasil-inteiro'] .bi-mod-topo__preco {
+  margin-top: clamp(2rem, 5vh, 3rem);
+}
+
+/* ---------- o par texto | objeto, usado pelas seções de baixo ---------- */
+[data-art='brasil-inteiro'] .bi-mod-par {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+[data-art='brasil-inteiro'] .bi-mod-par--conta {
+  grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+}
+
+[data-art='brasil-inteiro'] .bi-mod-par--trilha,
+[data-art='brasil-inteiro'] .bi-mod-par--faq {
+  grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+}
+
+[data-art='brasil-inteiro'] .bi-mod-par__texto .eyebrow {
+  display: block;
+  margin-bottom: 1rem;
+}
+
+/* o título acompanha a leitura da lista comprida ao lado */
+[data-art='brasil-inteiro'] .bi-mod-par__texto--fixo {
+  position: sticky;
+  top: 6rem;
+}
+
+/* coluna de 4/11: o título desce um degrau para não virar torre de cinco linhas */
+[data-art='brasil-inteiro'] .bi-mod-par__texto--fixo h2 {
+  font-size: clamp(2rem, 3.1vw, 2.7rem);
+}
+
+[data-art='brasil-inteiro'] .bi-mod-par .bi-acoes {
+  margin-top: 1.8rem;
+}
+
+/* ---------- peça 1: os gates ---------- */
+[data-art='brasil-inteiro'] .bi-portoes {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+[data-art='brasil-inteiro'] .bi-portao {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 1.1rem;
+  padding: clamp(1.1rem, 2.4vw, 1.5rem);
+  border-radius: var(--bi-raio-painel);
+  background: var(--bi-creme-2);
+  box-shadow: inset 0 0 0 1px var(--bi-fio-c), 0 24px 48px -36px var(--bi-sombra-c);
+}
+
+[data-art='brasil-inteiro'] .bi-portao__num {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  font-family: var(--bi-display);
+  font-size: 1.2rem;
+  background: var(--bi-laranja);
+  color: var(--bi-sobre-laranja);
+  box-shadow: 0 10px 22px -12px var(--bi-sombra-laranja);
+}
+
+[data-art='brasil-inteiro'] .bi-portao__quem {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--bi-laranja-texto);
+}
+
+[data-art='brasil-inteiro'] .bi-portao h3 {
+  margin-top: 0.2rem;
+  font-size: 1.3rem;
+}
+
+[data-art='brasil-inteiro'] .bi-portao h3 + p {
+  margin-top: 0.45rem;
+  font-size: 0.97rem;
+  color: var(--bi-tinta-2);
+}
+
+/* o gate 03 é você: cartão noite com a trama do mapa, como o teste da home */
+[data-art='brasil-inteiro'] .bi-portao--voce {
+  background:
+    radial-gradient(circle at 1px 1px, var(--bi-fio) 1px, transparent 1.6px) 0 0 / 18px 18px,
+    var(--bi-noite);
+  color: var(--bi-texto);
+  box-shadow: 0 0 0 1px var(--bi-fio), 0 36px 70px -36px var(--bi-sombra);
+}
+
+[data-art='brasil-inteiro'] .bi-portao--voce .bi-portao__num {
+  background: transparent;
+  border: 1.5px dashed var(--bi-laranja);
+  color: var(--bi-laranja);
+  box-shadow: none;
+}
+
+[data-art='brasil-inteiro'] .bi-portao--voce .bi-portao__quem {
+  color: var(--bi-laranja);
+}
+
+[data-art='brasil-inteiro'] .bi-portao--voce h3 + p {
+  color: var(--bi-texto-2);
+}
+
+[data-art='brasil-inteiro'] .bi-portao__link {
+  display: inline-block;
+  margin-top: 0.9rem;
+  padding-block: 0.35rem;
+  font-weight: 600;
+  color: var(--bi-texto);
+  text-underline-offset: 4px;
+}
+
+[data-art='brasil-inteiro'] .bi-portao__link:hover {
+  color: var(--bi-laranja);
+}
+
+[data-art='brasil-inteiro'] .bi-portao--voce :focus-visible {
+  outline-color: var(--bi-laranja);
+}
+
+/* ---------- peça 2: a conta ---------- */
+[data-art='brasil-inteiro'] .bi-formula {
+  display: inline-block;
+  margin-top: 1.6rem;
+  padding: 0.7rem 1rem;
+  border: 1px solid var(--bi-fio-forte);
+  border-radius: var(--bi-raio);
+  font-family: var(--bi-display);
+  font-size: clamp(1.15rem, 1.8vw, 1.4rem);
+  color: var(--bi-texto);
+}
+
+[data-art='brasil-inteiro'] .bi-formula span {
+  color: var(--bi-laranja);
+}
+
+[data-art='brasil-inteiro'] .bi-mod-nota {
+  margin-top: 1.4rem;
+  max-width: 34rem;
+  font-size: 0.95rem;
+  color: var(--bi-texto-2);
+}
+
+/* a barra do exemplo espera a caixa da conta entrar na tela (o script marca data-espera e depois data-aceso).
+   Quem é observado é a caixa, não a barra: a barra começa recortada e o observador nem sempre a via entrar. */
+[data-art='brasil-inteiro'] .bi-conta[data-espera]:not([data-aceso]) .bi-barra {
+  animation-play-state: paused;
+}
+
+/* ---------- peça 3: os dois lados do contrato ---------- */
+[data-art='brasil-inteiro'] .bi-lados {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+[data-art='brasil-inteiro'] .bi-lado {
+  padding: clamp(1.5rem, 3vw, 2.2rem);
+  border-radius: var(--bi-raio-painel);
+  background: var(--bi-creme-2);
+  box-shadow: inset 0 0 0 1px var(--bi-fio-c), 0 24px 48px -36px var(--bi-sombra-c);
+}
+
+[data-art='brasil-inteiro'] .bi-lado--roi {
+  background:
+    radial-gradient(circle at 1px 1px, var(--bi-fio) 1px, transparent 1.6px) 0 0 / 18px 18px,
+    var(--bi-noite);
+  color: var(--bi-texto);
+  box-shadow: 0 0 0 1px var(--bi-fio), 0 36px 70px -36px var(--bi-sombra);
+}
+
+[data-art='brasil-inteiro'] .bi-lado__quem {
+  font-family: var(--bi-display);
+  font-size: clamp(1.5rem, 2.4vw, 1.9rem);
+  line-height: 1.1;
+}
+
+[data-art='brasil-inteiro'] .bi-lado ul {
+  display: grid;
+  gap: 0;
+  margin: 1.2rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+[data-art='brasil-inteiro'] .bi-lado li {
+  display: flex;
+  gap: 0.75rem;
+  padding-block: 0.75rem;
+  border-top: 1px solid var(--bi-fio-c);
+  color: var(--bi-tinta-2);
+}
+
+[data-art='brasil-inteiro'] .bi-lado li::before {
+  content: '✓';
+  flex: none;
+  font-weight: 700;
+  color: var(--bi-laranja-texto);
+}
+
+[data-art='brasil-inteiro'] .bi-lado--roi li {
+  border-top-color: var(--bi-fio);
+  color: var(--bi-texto-2);
+}
+
+[data-art='brasil-inteiro'] .bi-lado--roi li::before {
+  color: var(--bi-laranja);
+}
+
+[data-art='brasil-inteiro'] .bi-lados__rodape {
+  margin-top: 1.6rem;
+  max-width: 46rem;
+  font-size: 0.95rem;
+  color: var(--bi-tinta-2);
+}
+
+[data-art='brasil-inteiro'] .bi-lados__rodape a,
+[data-art='brasil-inteiro'] .bi-mod-leia a {
+  font-weight: 600;
+  color: var(--bi-tinta);
+  text-underline-offset: 4px;
+}
+
+[data-art='brasil-inteiro'] :is(.bi-lados__rodape, .bi-mod-leia) a:hover {
+  color: var(--bi-laranja-texto);
+}
+
+/* ---------- peça 4: a trilha das etapas ---------- */
+[data-art='brasil-inteiro'] .bi-trilha {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* o fio que liga os números: sai do centro de um e chega no próximo */
+[data-art='brasil-inteiro'] .bi-trilha__passo {
+  position: relative;
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 1.25rem;
+  padding-bottom: 1.8rem;
+}
+
+[data-art='brasil-inteiro'] .bi-trilha__passo:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  left: 21px;
+  top: 48px;
+  bottom: 4px;
+  width: 2px;
+  border-radius: 2px;
+  background: var(--bi-laranja);
+  transform-origin: top;
+  transition: scale var(--bi-dur-cena) var(--bi-ease-cena);
+  transition-delay: calc(var(--i) * 140ms + 120ms);
+}
+
+[data-art='brasil-inteiro'] .bi-trilha__num {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1.5px solid var(--bi-laranja);
+  border-radius: 50%;
+  font-family: var(--bi-display);
+  font-size: 1.15rem;
+  background: var(--bi-laranja);
+  color: var(--bi-sobre-laranja);
+  box-shadow: 0 0 18px -4px var(--bi-sombra-laranja);
+  transition:
+    background-color var(--bi-dur-base) var(--bi-ease-saida),
+    border-color var(--bi-dur-base) var(--bi-ease-saida),
+    color var(--bi-dur-base) var(--bi-ease-saida),
+    box-shadow var(--bi-dur-base) var(--bi-ease-saida);
+  transition-delay: calc(var(--i) * 140ms);
+}
+
+[data-art='brasil-inteiro'] .bi-trilha h3 {
+  margin-top: 0.55rem;
+  font-size: 1.2rem;
+}
+
+[data-art='brasil-inteiro'] .bi-trilha h3 + p {
+  margin-top: 0.4rem;
+  max-width: 40rem;
+  font-size: 0.97rem;
+  color: var(--bi-texto-2);
+}
+
+/* apagado até entrar na tela (só quando o script marcou data-espera) */
+[data-art='brasil-inteiro'] .bi-trilha[data-espera]:not([data-aceso]) .bi-trilha__num {
+  background: var(--bi-noite);
+  border-color: var(--bi-fio-forte);
+  color: var(--bi-texto-2);
+  box-shadow: none;
+}
+
+[data-art='brasil-inteiro'] .bi-trilha[data-espera]:not([data-aceso]) .bi-trilha__passo::before {
+  scale: 1 0;
+}
+
+/* ---------- FAQ ao lado do título ---------- */
+[data-art='brasil-inteiro'] .bi-mod-leia {
+  margin-top: 1.4rem;
+  font-size: 0.95rem;
+  color: var(--bi-tinta-2);
+}
+
+/* ---------- tamanhos ---------- */
+@media (max-width: 899px) {
+  [data-art='brasil-inteiro'] :is(.bi-mod-topo__grade, .bi-mod-par, .bi-mod-par--conta, .bi-mod-par--trilha, .bi-mod-par--faq) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  [data-art='brasil-inteiro'] .bi-mod-par__texto--fixo {
+    position: static;
+  }
+}
+
+@media (max-width: 699px) {
+  [data-art='brasil-inteiro'] .bi-lados {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  [data-art='brasil-inteiro'] :is(.bi-portao, .bi-trilha__passo) {
+    grid-template-columns: 36px minmax(0, 1fr);
+    gap: 0.9rem;
+  }
+
+  [data-art='brasil-inteiro'] :is(.bi-portao__num, .bi-trilha__num) {
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+  }
+
+  [data-art='brasil-inteiro'] .bi-trilha__passo:not(:last-child)::before {
+    left: 17px;
+    top: 40px;
+  }
+
+  [data-art='brasil-inteiro'] .bi-trilha h3 {
+    margin-top: 0.3rem;
+  }
+}
+
+/* ---------- parado: tudo já aceso, nada transiciona ---------- */
+@media (prefers-reduced-motion: reduce) {
+  [data-art='brasil-inteiro'] :is(.bi-trilha__num, .bi-trilha__passo::before, .bi-indice__lista a, .bi-indice__num) {
+    transition: none;
+  }
+}
