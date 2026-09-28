@@ -88,7 +88,25 @@ export const PROJETOS_CADEIRA = [
   // de front-end para a vaga da FitNext — polimento visual, não o setor. Não houve pivô;
   // o rótulo nasceu de ler o apelido do projeto como se fosse o nicho dele.
   { slug: 'meridian', niche: 'Finanças pessoais', status: 'Em preparação · Meridian', estado: 'em-preparacao', gateway: null, daCasa: true, exibirDaCasa: true, siteUrl: 'https://meridian.roilabs.com.br/', repoUrl: 'https://github.com/JeanZorzetti/meridian' },
+  // ── Cadeiras de SERVIÇO (Maria, 28/09/2026) ────────────────────────────────
+  // `tipo: 'servico'` separa estas das de software no mapa da home (bloco próprio). Sem `tipo`,
+  // a cadeira é de software. Rótulos tirados do que cada site diz de si, lido no ar em 28/09.
+  // `repoUrl`: `vertex-landing-craft` vem de roihub/data/projects.json; os outros três, da lista
+  // pública de repositórios do GitHub, casados pelo título idêntico do deploy na Vercel.
+  // Anexadas NO FIM de propósito: o seed dá a elas `ordem` depois das existentes e o laço ao
+  // vivo da home casa card com linha por índice (ver seed.ts).
+  // verticemarketing é DA CASA e exibida como tal (decisão da Maria em 28/09: "já são nossa empresa").
+  { slug: 'verticemarketing', tipo: 'servico', niche: 'Agência de marketing digital', status: 'Ocupada · Vértice Marketing', estado: 'ocupada-vendavel', gateway: null, daCasa: true, exibirDaCasa: true, siteUrl: 'https://verticemarketing.roilabs.com.br/', repoUrl: 'https://github.com/JeanZorzetti/vertex-landing-craft' },
+  // Parceiros (Maria, 28/09): `daCasa: false` põe a venda deles na régua do success fee — é o
+  // que "parceiro" quer dizer aqui, dito por ela, não inferido.
+  { slug: 'autogestor', tipo: 'servico', niche: 'Seguros, crédito e veículos', status: 'Ocupada · Autogestor', estado: 'ocupada-vendavel', gateway: null, daCasa: false, exibirDaCasa: false, siteUrl: 'https://autogestor.roilabs.com.br/', repoUrl: 'https://github.com/JeanZorzetti/autogestor' },
+  { slug: 'coopluz', tipo: 'servico', niche: 'Desconto na conta de luz', status: 'Ocupada · Coopluz', estado: 'ocupada-vendavel', gateway: null, daCasa: false, exibirDaCasa: false, siteUrl: 'https://coopluz.roilabs.com.br/', repoUrl: 'https://github.com/JeanZorzetti/coopluz' },
+  { slug: 'viagens', tipo: 'servico', niche: 'Passagens e pacotes de viagem', status: 'Ocupada · Autogestor Viagens', estado: 'ocupada-vendavel', gateway: null, daCasa: false, exibirDaCasa: false, siteUrl: 'https://viagens.roilabs.com.br/', repoUrl: 'https://github.com/JeanZorzetti/autogestor_viagens' },
 ] as const;
+
+/** Bloco do mapa da home em que a cadeira de projeto aparece. Sem `tipo` no seed = software. */
+export const tipoDaCadeira = (p: (typeof PROJETOS_CADEIRA)[number]): 'software' | 'servico' =>
+  'tipo' in p ? p.tipo : 'software';
 
 /**
  * ⚠️ T069 — hosts que servem TUDO em 200 (shell de SPA). "200" nestes NÃO é caminho de

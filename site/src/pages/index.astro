@@ -312,7 +312,27 @@ const jsonLdNodes = [
           próprios ou com parceiros.
         </p>
         <ul class="map__grid map__grid--software" role="list">
-          {carteira.map((c) => (
+          {carteira.filter((c) => c.tipo === 'software').map((c) => (
+            <li class={`seat ${ocupada(c) ? 'seat--taken' : ''}`} data-projeto>
+              <a class="seat__niche" href={c.siteUrl} target="_blank" rel="noopener">{c.niche} ↗</a>
+              <span class="seat__status">
+                <span class="seat__ring" aria-hidden="true"></span>
+                {' '}{ESTADO[c.estado] ?? c.estado}{c.nome ? ` · ${c.nome}` : ''}{c.rotulo === 'casa' ? ' · Da casa' : ''}
+              </span>
+            </li>
+          ))}
+        </ul>
+
+        <!-- 28/09/2026: cadeiras de SERVIÇO (agência, seguros, energia, viagens) num bloco próprio —
+             no de software a página diria que são produtos digitais. O laço ao vivo continua
+             certo porque as de serviço são as ÚLTIMAS de PROJETOS_CADEIRA (e do banco, por `ordem`):
+             a ordem do documento (fornecedores → software → serviços) é a ordem da API. -->
+        <h3 class="map__subtitle">Cadeiras de serviços</h3>
+        <p class="map__sublead">
+          Serviços captados com o mesmo método, da própria ROI Labs ou de parceiros.
+        </p>
+        <ul class="map__grid map__grid--software" role="list">
+          {carteira.filter((c) => c.tipo === 'servico').map((c) => (
             <li class={`seat ${ocupada(c) ? 'seat--taken' : ''}`} data-projeto>
               <a class="seat__niche" href={c.siteUrl} target="_blank" rel="noopener">{c.niche} ↗</a>
               <span class="seat__status">
