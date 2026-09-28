@@ -189,4 +189,44 @@ const termo = (t, volume, dificuldade, mensal = volume == null ? null : serie(vo
   console.log('ok ponte do simulador');
 }
 
+// ── a cadeia aberta (US3): multiplicar os degraus mostrados reproduz o mês estável ──────
+{
+  const termos = [termo('fita gomada', 10000, 5), termo('fita kraft', 3000, 18), termo('fita difícil', 5000, 60), termo('rara', null, 3)];
+  for (const nichoId of ['moda', 'saas', 'clinicas']) {
+    const p = projetar(termos, nichoId);
+    for (const c of CENARIOS) {
+      const r = p[c];
+      assert.equal(r.cadeia[0].n, r.demanda.alcancavel, `${nichoId}/${c}: começa pela demanda alcançável`);
+      assert.equal(r.cadeia.length, 2 + FUNIS[nichoId].degraus.length, `${nichoId}: buscas, cliques e um elo por degrau`);
+      const produto = r.cadeia.slice(1).reduce((v, e) => v * e.taxa, r.cadeia[0].n);
+      perto(produto, r.vendasEstaveis, `${nichoId}/${c}: produto da cadeia`);
+      for (let i = 1; i < r.cadeia.length; i++) perto(r.cadeia[i].n, r.cadeia[i - 1].n * r.cadeia[i].taxa, `${nichoId}/${c} elo ${i}`);
+      perto(r.cadeia.at(-1).n, r.vendasEstaveis, `${nichoId}/${c}: último elo = vendas`);
+      assert.equal(r.vendasEstaveis, r.porMes[11], `${nichoId}/${c}: mês 12 = mês estável`);
+      for (const e of r.cadeia) assert.ok(e.fonte, `${nichoId}/${c}: elo "${e.rotulo}" sem fonte`);
+    }
+  }
+
+  // taxa do parceiro: vale nos 3 cenários, que passam a diferir só na captura
+  const parceiro = projetar([termo('fita gomada', 10000, 5)], 'moda', { 0: 0.02 });
+  perto(parceiro.base.vendasEstaveis, 219.2 * 0.02, 'base com a taxa do parceiro');
+  perto(parceiro.conservador.vendasEstaveis, 32.88 * 0.02, 'conservador com a taxa do parceiro');
+  for (const c of CENARIOS) {
+    assert.equal(parceiro[c].cadeia[2].origem, 'parceiro');
+    assert.equal(parceiro[c].cadeia[2].taxa, 0.02);
+  }
+  assert.equal(projetar([termo('fita gomada', 10000, 5)], 'moda').base.cadeia[2].origem, 'mercado');
+  // só o degrau informado muda; os outros continuam no benchmark
+  const clinica = projetar([termo('dentista', 10000, 5)], 'clinicas', { 1: 0.5 }).base;
+  assert.deepEqual(clinica.cadeia.slice(2).map((e) => e.origem), ['mercado', 'parceiro', 'mercado']);
+  perto(clinica.vendasEstaveis, 219.2 * 0.0407 * 0.5 * 0.75, 'clínica com agendamento do parceiro');
+  // taxa inválida é ignorada, nunca vira NaN
+  for (const t of [NaN, -0.1, 1.5, Infinity]) {
+    const r = projetar([termo('fita gomada', 10000, 5)], 'moda', { 0: t }).base;
+    perto(r.vendasEstaveis, 2.192, `taxa ${t}`);
+    assert.equal(r.cadeia[2].origem, 'mercado');
+  }
+  console.log('ok cadeia (US3)');
+}
+
 process.stdout.write('projecao: ok\n');

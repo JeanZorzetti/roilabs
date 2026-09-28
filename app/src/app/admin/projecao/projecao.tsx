@@ -16,10 +16,11 @@ import {
   urlSimulador,
   validarTermos,
   type Cenario,
+  type TaxasDoParceiro,
   type TermoConsultado,
   type Unidade,
 } from "@/lib/projecao";
-import { Cobertura, Curva, TabelaTermos } from "./resultado";
+import { Cadeia, Cobertura, Curva, TabelaTermos } from "./resultado";
 
 /**
  * Projeção do ritmo de venda (spec 017). A consulta paga só acontece no clique (FR-003); trocar
@@ -66,6 +67,7 @@ export function Projecao() {
   const [erroTermos, setErroTermos] = useState<string | null>(null);
   const [erroCidade, setErroCidade] = useState<string | null>(null);
   const [cenario, setCenario] = useState<Cenario>(CENARIO_PADRAO);
+  const [taxas, setTaxas] = useState<TaxasDoParceiro>({});
   const titulo = useRef<HTMLHeadingElement>(null);
   const campoTermos = useRef<HTMLTextAreaElement>(null);
   const campoCidade = useRef<HTMLInputElement>(null);
@@ -75,7 +77,10 @@ export function Projecao() {
   // Só vale cidade que a rota devolveu: o nome precisa ser o que a DataForSEO aceita.
   const cidade = textoCidade.trim() ? (sugestoes.find((l) => l.nome === textoCidade) ?? null) : null;
 
-  const resultado = useMemo(() => (consulta ? projetar(consulta.termos, nicho.id) : null), [consulta, nicho.id]);
+  const resultado = useMemo(
+    () => (consulta ? projetar(consulta.termos, nicho.id, taxas) : null),
+    [consulta, nicho.id, taxas],
+  );
 
   useEffect(() => {
     const q = textoCidade.trim();
@@ -149,7 +154,9 @@ export function Projecao() {
 
   const r = resultado?.[cenario];
   const maxMedia = resultado ? Math.max(...CENARIOS.map((c) => resultado[c].mediaAno1)) : 0;
-  const fontesConversao = [...new Set(funil.degraus.map((d) => d.fonte.split(/ [·(]/)[0]))].join(" + ");
+  const fontesConversao = r
+    ? [...new Set(r.cadeia.filter((e) => e.degrau !== undefined).map((e) => e.fonte.split(/ [·(]/)[0]))].join(" + ")
+    : "";
 
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_380px]">
@@ -164,7 +171,10 @@ export function Projecao() {
               <select
                 id="proj-nicho"
                 value={nichoId}
-                onChange={(e) => setNichoId(e.target.value)}
+                onChange={(e) => {
+                  setNichoId(e.target.value);
+                  setTaxas({}); // os degraus são outros: a taxa do parceiro não vale para o nicho novo
+                }}
                 className={CAMPO}
               >
                 {GRUPOS.map(([faixa, nichos]) => (
@@ -422,6 +432,14 @@ export function Projecao() {
       {resultado && r && consulta ? (
         <div className={`min-w-0 space-y-6 lg:col-start-1 lg:row-start-2 ${consultando ? "opacity-60" : ""}`}>
           <Curva porMes={r.porMes} media={r.mediaAno1} unidade={funil.unidade} cenario={cenario} />
+          <Cadeia
+            key={nicho.id}
+            cadeia={r.cadeia}
+            degraus={funil.degraus}
+            taxas={taxas}
+            onTaxaChange={(i, t) => setTaxas((prev) => ({ ...prev, [i]: t }))}
+            cenario={cenario}
+          />
           <Cobertura demanda={r.demanda} cenario={cenario} />
           <TabelaTermos termos={r.termos} cenario={cenario} />
         </div>

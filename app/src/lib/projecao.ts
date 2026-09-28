@@ -307,6 +307,18 @@ export interface Demanda {
   agrupados: number;
 }
 
+/** Um elo da cadeia buscas → cliques → degraus do funil, no mês estável (US3). */
+export interface Elo {
+  rotulo: string;
+  n: number;
+  taxa?: number; // do elo anterior para este; o 1º elo não tem
+  fonte: string;
+  origem: 'mercado' | 'parceiro' | 'premissa';
+  degrau?: number; // índice no funil do nicho, para trocar pela taxa do parceiro
+  premissa?: string;
+  confianca?: Confianca;
+}
+
 export interface ResultadoCenario {
   termos: TermoProjetado[];
   demanda: Demanda;
@@ -314,7 +326,13 @@ export interface ResultadoCenario {
   vendasEstaveis: number;
   porMes: number[]; // 12 meses
   mediaAno1: number; // o número que vai ao simulador (FR-010)
+  cadeia: Elo[];
 }
+
+/** Taxa real do parceiro por índice de degrau (fração). Vale para os 3 cenários (FR-009). */
+export type TaxasDoParceiro = Record<number, number | undefined>;
+
+const taxaValida = (t: number | undefined): t is number => typeof t === 'number' && Number.isFinite(t) && t >= 0 && t <= 1;
 
 /**
  * Para cada termo, o texto do 1º termo do mesmo grupo (ou null). Grupo = mesmo volume > 0 e a mesma
@@ -356,6 +374,7 @@ function projetarCenario(
   grupos: (string | null)[],
   funil: FunilNicho,
   c: Cenario,
+  taxasDoParceiro: TaxasDoParceiro,
 ): ResultadoCenario {
   const demanda: Demanda = { total: 0, alcancavel: 0, foraDoAlcance: 0, semVolume: 0, semDificuldade: 0, agrupados: 0 };
   let cliquesEstaveis = 0;
@@ -380,21 +399,54 @@ function projetarCenario(
     return { ...t, posicao, ctr, cliquesEstaveis: cliques, grupo };
   });
   demanda.foraDoAlcance = demanda.total - demanda.alcancavel;
-  const vendasEstaveis = funil.degraus.reduce((v, d) => v * d.taxa[c], cliquesEstaveis);
+
+  const cadeia: Elo[] = [
+    { rotulo: 'buscas alcançáveis por mês', n: demanda.alcancavel, fonte: 'Google Ads via DataForSEO', origem: 'mercado' },
+    {
+      rotulo: 'cliques (visitas)',
+      n: cliquesEstaveis,
+      taxa: demanda.alcancavel > 0 ? cliquesEstaveis / demanda.alcancavel : 0,
+      fonte: `CTR ponderado pela posição de cada termo · ${FONTE_CTR}`,
+      origem: 'premissa', // a posição sai da tabela de dificuldade (D7), que é premissa
+      premissa: PREMISSA_POSICAO,
+    },
+  ];
+  let vendasEstaveis = cliquesEstaveis;
+  funil.degraus.forEach((d, i) => {
+    const doParceiro = taxasDoParceiro[i];
+    const parceiro = taxaValida(doParceiro);
+    const taxa = parceiro ? doParceiro : d.taxa[c];
+    vendasEstaveis *= taxa;
+    cadeia.push({
+      rotulo: d.para,
+      n: vendasEstaveis,
+      taxa,
+      fonte: parceiro ? 'taxa do parceiro' : `${d.fonte} (${d.data})`,
+      origem: parceiro ? 'parceiro' : 'mercado',
+      degrau: i,
+      premissa: parceiro ? undefined : d.premissa,
+      confianca: parceiro ? undefined : d.confianca,
+    });
+  });
+
   const porMes = Array.from({ length: 12 }, (_, i) => vendasEstaveis * captura(i + 1, c));
   const mediaAno1 = porMes.reduce((s, v) => s + v, 0) / 12;
-  return { termos: projetados, demanda, cliquesEstaveis, vendasEstaveis, porMes, mediaAno1 };
+  return { termos: projetados, demanda, cliquesEstaveis, vendasEstaveis, porMes, mediaAno1, cadeia };
 }
 
 /** Os 3 cenários a partir dos termos já consultados. Não chama a API (FR-003). */
-export function projetar(termos: TermoConsultado[], nichoId: string): Record<Cenario, ResultadoCenario> {
+export function projetar(
+  termos: TermoConsultado[],
+  nichoId: string,
+  taxasDoParceiro: TaxasDoParceiro = {},
+): Record<Cenario, ResultadoCenario> {
   const funil = FUNIS[nichoId];
   if (!funil) throw new Error(`projetar: nicho desconhecido "${nichoId}"`);
   const grupos = agruparVariantes(termos);
   return {
-    conservador: projetarCenario(termos, grupos, funil, 'conservador'),
-    base: projetarCenario(termos, grupos, funil, 'base'),
-    otimista: projetarCenario(termos, grupos, funil, 'otimista'),
+    conservador: projetarCenario(termos, grupos, funil, 'conservador', taxasDoParceiro),
+    base: projetarCenario(termos, grupos, funil, 'base', taxasDoParceiro),
+    otimista: projetarCenario(termos, grupos, funil, 'otimista', taxasDoParceiro),
   };
 }
 

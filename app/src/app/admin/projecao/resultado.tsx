@@ -1,10 +1,15 @@
 "use client";
 
+import { useState } from "react";
+import { lerNumeroBR, type Confianca } from "@/lib/precificacao";
 import {
   ROTULO_CENARIO,
   formatarVendas,
   type Cenario,
+  type Degrau,
   type Demanda,
+  type Elo,
+  type TaxasDoParceiro,
   type TermoProjetado,
   type Unidade,
 } from "@/lib/projecao";
@@ -145,6 +150,148 @@ export function Curva({
     </figure>
   );
 }
+
+// ── ③ Cadeia da busca à venda ─────────────────────────────────────────────────────────
+
+const CONFIANCA: Record<Confianca, string> = {
+  alta: "confiança alta",
+  "media-alta": "confiança média-alta",
+  media: "confiança média",
+  "media-baixa": "confiança média-baixa",
+  baixa: "confiança baixa",
+};
+
+export function Cadeia({
+  cadeia,
+  degraus,
+  taxas,
+  onTaxaChange,
+  cenario,
+}: {
+  cadeia: Elo[];
+  degraus: Degrau[];
+  taxas: TaxasDoParceiro;
+  onTaxaChange: (degrau: number, taxa: number | undefined) => void;
+  cenario: Cenario;
+}) {
+  // O texto digitado mora aqui; a taxa válida sobe para projecao.tsx, que recalcula.
+  const [textos, setTextos] = useState<Record<number, string>>({});
+  const [abertos, setAbertos] = useState<Record<number, boolean>>({});
+
+  function digitar(i: number, valor: string) {
+    setTextos((t) => ({ ...t, [i]: valor }));
+    const v = lerNumeroBR(valor);
+    onTaxaChange(i, Number.isNaN(v) || v > 100 ? undefined : v / 100);
+  }
+
+  function fechar(i: number) {
+    setAbertos((a) => ({ ...a, [i]: false }));
+    setTextos((t) => ({ ...t, [i]: "" }));
+    onTaxaChange(i, undefined);
+  }
+
+  return (
+    <section aria-labelledby="cadeia" className={CARTAO}>
+      <h3 id="cadeia" className="font-semibold text-navy">
+        Da busca à venda, no mês estável
+      </h3>
+      <p className="mt-0.5 text-sm text-muted-foreground">
+        Cenário {ROTULO_CENARIO[cenario].toLowerCase()}. Multiplique os degraus e o resultado é o mês 12 da curva. Cada
+        barra vai de 0 a 100% e mostra só a taxa daquele degrau. Se o parceiro sabe a taxa dele, troque a do mercado.
+      </p>
+      <ol className="mt-3">
+        {cadeia.map((e, k) => {
+          const i = e.degrau;
+          const texto = i !== undefined ? (textos[i] ?? "") : "";
+          const invalido = texto.trim() !== "" && (Number.isNaN(lerNumeroBR(texto)) || lerNumeroBR(texto) > 100);
+          const id = `cadeia-taxa-${i}`;
+          return (
+            <li key={k} className="grid gap-1.5 border-t border-border py-3 first:border-t-0 first:pt-0">
+              <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
+                <p className="text-sm text-navy">
+                  <strong className="font-mono text-base font-bold tabular-nums">{formatarVendas(e.n)}</strong> {e.rotulo}
+                </p>
+                {e.taxa !== undefined ? (
+                  <p className="font-mono text-sm font-bold tabular-nums text-navy">
+                    {pct(e.taxa)}
+                  </p>
+                ) : null}
+              </div>
+              {e.taxa !== undefined ? (
+                <div aria-hidden="true" className="h-1.5 overflow-hidden rounded-full bg-border/60">
+                  <div className="h-full rounded-full bg-navy" style={{ width: `max(2px, ${e.taxa * 100}%)` }} />
+                </div>
+              ) : null}
+              <p className="text-xs text-muted-foreground">
+                {e.origem === "parceiro" ? (
+                  <span className="mr-1 rounded bg-gold/15 px-1.5 py-0.5 font-semibold text-gold-dark">taxa do parceiro</span>
+                ) : (
+                  <>
+                    {e.fonte}
+                    {e.confianca ? ` · ${CONFIANCA[e.confianca]}` : ""}
+                  </>
+                )}
+                {e.premissa ? (
+                  <span className="mt-0.5 block">
+                    <strong className="font-semibold text-navy">Premissa:</strong> {e.premissa}
+                  </span>
+                ) : null}
+              </p>
+
+              {i !== undefined ? (
+                abertos[i] ? (
+                  <div className="flex flex-wrap items-end gap-x-3 gap-y-1">
+                    <label htmlFor={id} className="flex flex-col gap-1 text-xs font-semibold text-navy">
+                      Taxa do parceiro de {degraus[i].de} para {degraus[i].para} (%)
+                      <input
+                        id={id}
+                        inputMode="decimal"
+                        value={texto}
+                        onChange={(ev) => digitar(i, ev.target.value)}
+                        placeholder="ex.: 1,5"
+                        aria-invalid={invalido}
+                        aria-describedby={`${id}-ajuda`}
+                        className="w-32 rounded-md border border-border bg-white px-3 py-2 text-right text-base font-normal text-foreground sm:text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+                      />
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => fechar(i)}
+                      className={`min-h-11 rounded-md px-2 text-xs font-semibold text-navy underline underline-offset-2 ${FOCO_CADEIA}`}
+                    >
+                      Voltar à taxa do mercado
+                    </button>
+                    <p
+                      id={`${id}-ajuda`}
+                      className={`w-full text-xs ${invalido ? "text-red-700" : "text-muted-foreground"}`}
+                    >
+                      {invalido
+                        ? "Use um percentual entre 0 e 100, como 1,5."
+                        : taxas[i] !== undefined
+                          ? "Vale para os 3 cenários, que passam a diferir só na posição e na rampa. Nada é salvo."
+                          : "Vazio = taxa do mercado."}
+                    </p>
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setAbertos((a) => ({ ...a, [i]: true }))}
+                    className={`min-h-11 justify-self-start rounded-md px-1 text-xs font-semibold text-navy underline underline-offset-2 ${FOCO_CADEIA}`}
+                  >
+                    Usar a taxa do parceiro
+                  </button>
+                )
+              ) : null}
+            </li>
+          );
+        })}
+      </ol>
+    </section>
+  );
+}
+
+const FOCO_CADEIA =
+  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold";
 
 // ── ④ Cobertura da demanda ────────────────────────────────────────────────────────────
 
