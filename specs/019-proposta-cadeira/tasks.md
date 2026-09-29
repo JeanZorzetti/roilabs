@@ -46,9 +46,9 @@
 ## Phase 6: Polish
 
 - [x] T015 `npm test` (whole suite) and a local `next build` check in a worktree outside OneDrive if the local build misbehaves
-- [ ] T016 Commit only this feature's paths (`git commit -- <paths>`: the tree has other writers), push `main`
-- [ ] T017 Production pass (quickstart step 3) with `ui-verification`: 3 widths, console, keyboard, WhatsApp link; delete the test proposals
-- [ ] T018 Write specs/019-proposta-cadeira/handoff.md; commit + push
+- [x] T016 Commit only this feature's paths (`git commit -- <paths>`: the tree has other writers), push `main`
+- [x] T017 Production pass (quickstart step 3) with `ui-verification`: 3 widths, console, keyboard, WhatsApp link; delete the test proposals
+- [x] T018 Write specs/019-proposta-cadeira/handoff.md; commit + push
 
 ## Dependencies
 
