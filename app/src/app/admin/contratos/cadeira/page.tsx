@@ -82,6 +82,7 @@ export default async function ContratoCadeiraPage({ searchParams }: Props) {
     pagamento: dados?.ultimo?.pagamento ?? "",
     extra: "",
     subdominios: "",
+    dominio: "",
   };
   const vencida = doc ? Date.now() > new Date(doc.validaAte).getTime() : false;
 
@@ -163,6 +164,25 @@ export default async function ContratoCadeiraPage({ searchParams }: Props) {
                 defaultValue={initial.subdominios ?? ""}
                 placeholder="ex.: Subdomínio da Dra. Ana, com os procedimentos dela: botox e preenchimento"
                 aria-describedby="contrato-subdominios-hint"
+                className={`mt-1 font-mono ${FIELD}`}
+              />
+            </div>
+
+            <div className="flex flex-col gap-1 rounded-xl border border-border bg-white p-4 shadow-soft">
+              <label htmlFor="contrato-dominio" className="text-sm font-bold text-navy">
+                Domínio da cadeira
+              </label>
+              <p id="contrato-dominio-hint" className={HINT}>
+                Opcional, para quando o domínio já foi escolhido. Uma regra por linha: nas condições, troca a linha “valor
+                inicial, para .com.br”. O valor da entrada continua o da proposta.
+              </p>
+              <textarea
+                id="contrato-dominio"
+                name="dominio"
+                rows={3}
+                defaultValue={initial.dominio ?? ""}
+                placeholder="ex.: O domínio da cadeira é loja.com, comprado na Hostinger"
+                aria-describedby="contrato-dominio-hint"
                 className={`mt-1 font-mono ${FIELD}`}
               />
             </div>

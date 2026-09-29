@@ -38,6 +38,9 @@ export type ContratoCadeiraInput = {
   /** Subdomínios do site da cadeira, um por linha; entram no Objeto logo depois de "site". Ausente em contratos
    *  anteriores a este campo. */
   subdominios?: string;
+  /** Domínio já escolhido, uma linha por regra: troca, nas condições, a linha genérica do valor inicial para .com.br.
+   *  Ausente em contratos anteriores a este campo. */
+  dominio?: string;
 };
 
 export type ContratoCadeiraDoc = {
@@ -93,12 +96,17 @@ export function pendenciasDoContrato(input: ContratoCadeiraInput, temAnexo: bool
   if (!temAnexo) falta.push('Entregáveis da cadeira (proposta antiga, sem escopo: guarde uma proposta nova)');
 
   // Marcador digitado à mão ("[percentual]") também trava, como no contrato da Vértice.
-  const livres = [input.titulo, input.pagamento, input.extra, input.subdominios ?? '', input.foro,...papeis.flatMap(([, p]) => Object.values(p))];
+  const livres = [input.titulo, input.pagamento, input.extra, input.subdominios ?? '', input.dominio ?? '', input.foro, ...papeis.flatMap(([, p]) => Object.values(p))];
   for (const texto of livres) {
     for (const m of String(texto).match(/\[[^\]]+\]/g) ?? []) falta.push(`Texto com ${m}`);
   }
   return [...new Set(falta)];
 }
+
+// A proposta congela a regra genérica do domínio (REGRAS_DOMINIO e a nota do item de entrada). Com o domínio já
+// escolhido, o contrato troca só essas duas frases; o valor da entrada continua o da proposta.
+const ehRegraDominioGenerica = (c: string) => c.includes('é o valor inicial, para .com.br');
+const semPontoFinal = (s: string) => s.replace(/\.+$/, '');
 
 /** O que conta como venda originada, por modelo de cobrança do nicho (FR-010). */
 function vendaOriginada(modelo: ContratoCadeiraDoc['proposta']['modelo']): string {
@@ -122,6 +130,15 @@ export function montarContratoCadeira(
   const pagamento = splitLines(input.pagamento);
   const extra = splitLines(input.extra);
   const subdominios = splitLines(input.subdominios ?? '');
+  const dominio = splitLines(input.dominio ?? '').map(semPontoFinal);
+  const entrada = dominio.length > 0
+    ? p.entrada.map((l) => ({ ...l, nota: l.nota.replace('Valor inicial, para .com.br. ', 'Valor do 1º ano. ') }))
+    : p.entrada;
+  const condicoes = dominio.length === 0
+    ? p.condicoes
+    : p.condicoes.some(ehRegraDominioGenerica)
+      ? p.condicoes.flatMap((c) => (ehRegraDominioGenerica(c) ? dominio : [c]))
+      : [...p.condicoes, ...dominio];
   const e = p.entregaveis;
   const anexo: ContratoCadeiraDoc['anexo'] = e
     ? { cadeira: e.cadeira, fases: e.fases, precisamos: e.precisamos, naoInclui: e.naoInclui, extras: e.extras ?? [] }
@@ -149,7 +166,7 @@ export function montarContratoCadeira(
       heading: 'Remuneração',
       body: [
         'A CONTRATANTE paga à CONTRATADA uma entrada anual, na assinatura deste contrato e a cada renovação:',
-        p.entrada.map((l) => `${l.item}: ${l.valor}. ${l.nota}.`),
+        entrada.map((l) => `${l.item}: ${l.valor}. ${l.nota}.`),
         ...(pagamento.length > 0 ? ['Formas de pagamento da entrada:', pagamento] : []),
         `E uma comissão sobre as vendas originadas pela cadeira: ${p.comissao.resumo}.`,
         ...(p.comissao.regras.length > 0 ? [p.comissao.regras] : []),
@@ -176,7 +193,7 @@ export function montarContratoCadeira(
     {
       id: 'condicoes',
       heading: 'Condições comerciais da proposta',
-      body: ['Valem também as condições da proposta, que este contrato incorpora:', p.condicoes.map((c) => `${c}.`)],
+      body: ['Valem também as condições da proposta, que este contrato incorpora:', condicoes.map((c) => `${c}.`)],
     },
     {
       id: 'resultado',
@@ -299,7 +316,7 @@ export function montarContratoCadeira(
     contratada: input.contratada,
     pessoaFisica: pf,
     proposta: { slug: proposta.slug, paraQuem: p.paraQuem, nicho: p.nicho.nome, modelo: p.nicho.modelo, criadaEm: p.criadaEm },
-    entrada: p.entrada,
+    entrada,
     entradaTotal: p.entradaTotal,
     comissao: p.comissao,
     anexo,

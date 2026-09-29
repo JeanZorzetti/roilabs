@@ -41,6 +41,7 @@ function lerInput(formData: FormData): ContratoCadeiraInput {
     pagamento: texto(formData, "pagamento", 2000),
     extra: texto(formData, "extra", 2000),
     subdominios: texto(formData, "subdominios", 2000),
+    dominio: texto(formData, "dominio", 2000),
   };
 }
 

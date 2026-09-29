@@ -107,6 +107,22 @@ const clausula = (doc, id) => doc.clausulas.find((c) => c.id === id);
   assert.ok(marcador.pendencias.some((x) => x.includes('[subdomínio]')), 'marcador nos subdomínios trava o aceite');
 }
 
+// ── domínio escolhido: troca só a regra genérica do .com.br e a nota da entrada ─────────
+{
+  const p = proposta('moda');
+  const c = montarContratoCadeira(input({ dominio: 'O domínio da cadeira é loja.com.\nRenovação pelo preço do dia' }), p, agora);
+  const conds = clausula(c, 'condicoes').body[1];
+  assert.ok(!texto(c).includes('.com.br'), 'nenhuma menção a .com.br');
+  assert.ok(conds.includes('O domínio da cadeira é loja.com.'), 'sem ponto duplo');
+  assert.ok(conds.includes('Renovação pelo preço do dia.'));
+  assert.equal(conds.length, p.doc.condicoes.length + 1, 'só a linha genérica sai');
+  assert.equal(c.entradaTotal, p.doc.entradaTotal, 'valor da entrada não muda');
+  assert.ok(c.entrada.some((l) => l.nota.startsWith('Valor do 1º ano.')));
+  const semCampo = montarContratoCadeira(input(), p, agora);
+  assert.deepEqual(clausula(semCampo, 'condicoes').body[1], p.doc.condicoes.map((x) => `${x}.`));
+  assert.deepEqual(semCampo.entrada, p.doc.entrada);
+}
+
 // ── hash: estável quando o jsonb reordena as chaves, muda quando o texto muda ───────────
 {
   const c = montarContratoCadeira(input(), proposta('moda'), agora);
