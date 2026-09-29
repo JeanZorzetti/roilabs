@@ -896,7 +896,7 @@ a.seat__niche::after {
 }
 
 /* ---------- footer ---------- */
-/* frase de fechamento + CTA · marca e o que a ROI Labs é · o modelo · contato · faixa das cadeiras · base */
+/* frase de fechamento + CTA · grade (marca · o modelo · cadeiras no ar · contato) · base */
 .site-footer {
   border-top: 1px solid var(--d-line);
   padding-block: clamp(3rem, 6vw, 4.5rem) 1.75rem;
@@ -927,17 +927,43 @@ a.seat__niche::after {
   color: var(--hivis);
 }
 
+/* as colunas de links medem o próprio conteúdo: o número do WhatsApp nunca quebra no meio */
 .site-footer__grade {
   display: grid;
   gap: 2rem 2.5rem;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: 'marca' 'modelo' 'cadeiras' 'contato';
   padding-block: clamp(2rem, 4vw, 3rem);
 }
 
-/* a coluna de contato mede o próprio conteúdo: o número do WhatsApp nunca quebra no meio */
-@media (min-width: 1000px) {
+.site-footer__marca { grid-area: marca; }
+.site-footer__modelo { grid-area: modelo; }
+.site-footer__cadeiras { grid-area: cadeiras; }
+.site-footer__contato { grid-area: contato; }
+
+/* tablet: a marca em cima; o modelo e as cadeiras lado a lado; o contato embaixo */
+@media (min-width: 600px) {
   .site-footer__grade {
-    grid-template-columns: minmax(0, 1.6fr) 1fr max-content;
+    grid-template-columns: max-content minmax(0, 1fr);
+    grid-template-areas: 'marca marca' 'modelo cadeiras' 'contato contato';
+  }
+}
+
+/* a marca em cima; as três colunas de links numa linha, espalhadas na largura */
+@media (min-width: 900px) {
+  .site-footer__grade {
+    grid-template-columns: repeat(3, max-content);
+    grid-template-areas: 'marca marca marca' 'modelo cadeiras contato';
+    justify-content: space-between;
+  }
+}
+
+/* desktop: as quatro numa linha só, a marca fica com o que sobra */
+@media (min-width: 1150px) {
+  .site-footer__grade {
+    grid-template-columns: minmax(0, 1fr) repeat(3, max-content);
+    grid-template-areas: 'marca modelo cadeiras contato';
+    column-gap: clamp(2.5rem, 3.5vw, 3.5rem);
   }
 }
 
@@ -987,63 +1013,17 @@ a.seat__niche::after {
   text-decoration: underline;
 }
 
-/* cadeiras no ar: uma linha por divisão (clientes / ROI Labs), só os nomes; no celular o rótulo sobe */
-.site-footer__cadeiras {
-  padding-block: clamp(1.5rem, 3vw, 2rem);
-  border-top: 1px solid var(--d-line);
+/* cadeiras no ar: a lista enche a 1ª subcoluna e depois a 2ª (--linhas vem do Footer.astro);
+   numa tela estreita o nome pode quebrar em vez de empurrar a página para o lado */
+.site-footer__cadeiras ul {
+  grid-template-rows: repeat(var(--linhas, 6), auto);
+  grid-auto-flow: column;
+  justify-content: start;
+  column-gap: 1.75rem;
 }
 
-.site-footer__grupo {
-  display: grid;
-  gap: 0.2rem 1.5rem;
-  align-items: baseline;
-}
-
-.site-footer__grupo + .site-footer__grupo {
-  margin-top: 0.6rem;
-}
-
-@media (min-width: 700px) {
-  .site-footer__grupo {
-    grid-template-columns: 7.5rem 1fr;
-  }
-}
-
-.site-footer__rotulo {
-  font-size: 0.85rem;
-  color: var(--d-muted);
-}
-
-.site-footer__grupo ul {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0 1.5rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.site-footer__grupo a {
-  display: inline-block;
-  white-space: nowrap;
-  padding-block: 0.3rem;
-  font-size: 0.95rem;
-  color: var(--d-text);
-  text-decoration: none;
-  text-underline-offset: 4px;
-}
-
-.site-footer__grupo a span {
-  color: var(--d-muted);
-}
-
-.site-footer__grupo a:hover {
-  color: var(--hivis);
-  text-decoration: underline;
-}
-
-.site-footer__grupo a:hover span {
-  color: inherit;
+.site-footer__cadeiras li a {
+  white-space: normal;
 }
 
 .site-footer__base {
