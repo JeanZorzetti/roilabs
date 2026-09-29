@@ -2,6 +2,7 @@
 // Run: node --import tsx test/precos-cadeira.test.mjs
 import assert from 'node:assert/strict';
 import { NICHOS } from '../src/lib/precificacao.ts';
+import { TIPOS_CADEIRA } from '../src/lib/entregaveis.ts';
 import {
   ANUIDADE,
   DOMINIO_ANO,
@@ -9,6 +10,7 @@ import {
   REGRA_COMISSAO_PEDIDO,
   REGRAS_NEGOCIACAO,
   brl,
+  lerAnuidadeManual,
   lerTaxaManual,
   montarPropostaCadeira,
   simular,
@@ -150,6 +152,43 @@ const base = {
   // só uma preenchida: a outra segue a tabela com o desconto de distribuidor (10 − 2)
   const meio = montarPropostaCadeira({ ...base, nicho: moda, distribuidor: true, taxaManual: { aquisicao: 0.2, recorrencia: null } }, 'M', new Date());
   assert.equal(meio.comissao.resumo, '20% na 1ª compra · 8% na recompra');
+}
+
+// ── anuidade manual: troca a da tabela na conta, na entrada e na proposta ─────────────
+{
+  assert.equal(lerAnuidadeManual(''), null, 'vazio = tabela');
+  assert.equal(lerAnuidadeManual('1.200,00'), 1200);
+  assert.equal(lerAnuidadeManual('0'), 0, 'anuidade zero é negociação válida');
+  for (const ruim of ['-1', '1.000.001', 'abc']) assert.ok(Number.isNaN(lerAnuidadeManual(ruim)), ruim);
+
+  const r = simular({ ...base, nicho: nicho('moda'), pedidosMes: 30, ticket: 200, recompra: 0.2, anuidade: 1200 });
+  assert.equal(r.entrada, 1250);
+  assert.equal(r.totalAno, 1250 + 10080);
+  const doc = montarPropostaCadeira({ ...base, nicho: nicho('moda'), anuidade: 1200 }, 'A', new Date());
+  assert.equal(doc.entradaTotal, 1250);
+  const linha = doc.entrada.find((i) => i.item === 'Anuidade da cadeira');
+  assert.equal(linha.valor, `${brl(1200)}/ano`);
+  assert.ok(linha.nota.startsWith(`${brl(100)}/mês`));
+}
+
+// ── entregáveis: o tipo de cadeira sai do nicho, dá para trocar, e regra interna não vai ─
+{
+  const agora = new Date();
+  const tipo = (id) => montarPropostaCadeira({ ...base, nicho: nicho(id) }, 'E', agora).entregaveis.cadeira;
+  assert.equal(tipo('moda'), 'Cadeira de loja');
+  assert.equal(tipo('cursos'), 'Cadeira de serviço', 'curso fecha no WhatsApp');
+  assert.equal(tipo('saas'), 'Cadeira de software');
+  assert.equal(tipo('clinicas'), 'Cadeira de serviço');
+
+  const servico = TIPOS_CADEIRA.find((t) => t.id === 'servico');
+  const doc = montarPropostaCadeira({ ...base, nicho: nicho('moda') }, 'E', agora, servico);
+  assert.equal(doc.entregaveis.cadeira, 'Cadeira de serviço', 'o operador escolhe outro tipo');
+  assert.equal(doc.entregaveis.fases.length, servico.fases.length);
+  assert.ok(doc.entregaveis.fases[0].itens.length > 0);
+  assert.ok(doc.entregaveis.precisamos.length > 0);
+  const texto = JSON.stringify(doc);
+  for (const regra of servico.fases.flatMap((f) => f.rules ?? [])) assert.ok(!texto.includes(regra), `regra interna no doc: ${regra}`);
+  assert.ok(!texto.includes('CFO/CFM'));
 }
 
 console.log('precos-cadeira: ok');

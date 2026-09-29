@@ -6,7 +6,8 @@ import { redirect } from "next/navigation";
 import { isAuthed } from "@/lib/auth";
 import { log } from "@/lib/log";
 import { NICHOS, lerNumeroBR } from "@/lib/precificacao";
-import { lerTaxaManual, montarPropostaCadeira } from "@/lib/precos-cadeira";
+import { TIPOS_CADEIRA } from "@/lib/entregaveis";
+import { lerAnuidadeManual, lerTaxaManual, montarPropostaCadeira } from "@/lib/precos-cadeira";
 import { prisma } from "@/lib/prisma";
 
 /**
@@ -48,6 +49,12 @@ export async function guardarPropostaCadeira(_: EstadoGuardar, formData: FormDat
   if (taxaManual && (Number.isNaN(taxaManual.aquisicao) || Number.isNaN(taxaManual.recorrencia))) {
     return { erro: "A comissão manual vai de 0,1% a 100%. Corrija o campo, ou apague para usar a tabela." };
   }
+  const anuidade = lerAnuidadeManual(String(formData.get("anuidade") ?? ""));
+  if (Number.isNaN(anuidade)) {
+    return { erro: "A anuidade vai de R$ 0 a R$ 1.000.000. Corrija o campo, ou apague para usar a tabela." };
+  }
+  const tipo = TIPOS_CADEIRA.find((t) => t.id === formData.get("tipoCadeira"));
+  if (!tipo) return { erro: "Escolha o tipo de cadeira antes de guardar." };
 
   // A conta é refeita aqui: número vindo da tela não é gravado.
   const doc = montarPropostaCadeira(
@@ -62,9 +69,11 @@ export async function guardarPropostaCadeira(_: EstadoGuardar, formData: FormDat
       consultasMes: numero(formData, "consultas"),
       valorConsulta: numero(formData, "valorConsulta"),
       taxaManual,
+      anuidade,
     },
     paraQuem,
     new Date(),
+    tipo,
   );
 
   try {

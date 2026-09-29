@@ -6,7 +6,7 @@
 // É referência para a proposta: nada aqui é lido pela cobrança, que continua lendo a taxa
 // gravada no cadastro do Parceiro (spec 010).
 
-import { ANUIDADE } from './entregaveis';
+import { ANUIDADE, TIPOS_CADEIRA, type TipoCadeira } from './entregaveis';
 import { calcularComissao, lerNumeroBR, type NichoPreco, type TipoCompra } from './precificacao';
 
 export { ANUIDADE };
@@ -39,7 +39,22 @@ export type EntradaSimulacao = {
   valorConsulta: number;
   /** Percentual: taxa negociada à mão (fração). Ausente ou null = a da tabela do nicho. */
   taxaManual?: Partial<Record<TipoCompra, number | null>>;
+  /** Anuidade negociada à mão (R$/ano). Ausente ou null = ANUIDADE. */
+  anuidade?: number | null;
 };
+
+/** Anuidade digitada em R$. Vazio = null (vale a tabela); fora de [0, 1.000.000] = NaN. */
+export function lerAnuidadeManual(s: string): number | null {
+  if (!s.trim()) return null;
+  const v = lerNumeroBR(s);
+  return v >= 0 && v <= 1_000_000 ? Math.round(v * 100) / 100 : NaN;
+}
+
+/** O tipo de cadeira do nicho: o do nicho, se ele disser; senão, o que o modelo de cobrança pede. */
+export function tipoPadrao(nicho: NichoPreco): TipoCadeira {
+  const id = nicho.cadeira ?? { percentual: 'loja', mensalidade: 'software', consulta: 'servico' }[nicho.modelo];
+  return TIPOS_CADEIRA.find((t) => t.id === id) ?? TIPOS_CADEIRA[0];
+}
 
 /**
  * Comissão manual digitada em %, arredondada a 0,1 ponto (o que a tela mostra é o que vale).
@@ -52,6 +67,8 @@ export function lerTaxaManual(s: string): number | null {
 }
 
 export type Simulacao = {
+  /** Anuidade (a da tabela ou a negociada) + domínio. */
+  entrada: number;
   /** Comissão de um mês no ritmo informado (SaaS: o 12º mês, com a carteira do ano toda pagando). */
   comissaoMes: number;
   /** Comissão somada nos 12 primeiros meses no ritmo informado. */
@@ -104,8 +121,10 @@ export function simular(e: EntradaSimulacao): Simulacao {
 
   comissaoMes = Math.round(comissaoMes * 100) / 100;
   comissaoAno = Math.round(comissaoAno * 100) / 100;
-  const totalAno = ENTRADA_ANO + comissaoAno;
+  const entrada = (e.anuidade ?? ANUIDADE) + DOMINIO_ANO;
+  const totalAno = entrada + comissaoAno;
   return {
+    entrada,
     comissaoMes,
     comissaoAno,
     vendasAno,
@@ -115,14 +134,14 @@ export function simular(e: EntradaSimulacao): Simulacao {
   };
 }
 
-/** Linhas fixas que toda cadeira paga, na ordem em que entram na proposta. */
-export const ITENS_FIXOS: { item: string; valor: string; quando: string; nota: string }[] = [
+/** Linhas fixas que toda cadeira paga, na ordem em que entram na proposta. A anuidade pode ser a negociada. */
+export const itensFixos = (anuidade = ANUIDADE): { item: string; valor: string; quando: string; nota: string }[] => [
   { item: 'Setup', valor: 'R$ 0', quando: '—', nota: 'Loja, site, tecnologia e tráfego são bancados pela ROI Labs' },
   {
     item: 'Anuidade da cadeira',
-    valor: `${brl(ANUIDADE)}/ano`,
+    valor: `${brl(anuidade)}/ano`,
     quando: 'Na assinatura e a cada renovação',
-    nota: `${brl(ANUIDADE_MES)}/mês. Pix à vista, ou cartão em até 12x com acréscimo`,
+    nota: `${brl(anuidade / 12)}/mês. Pix à vista, ou cartão em até 12x com acréscimo`,
   },
   {
     item: 'Domínio próprio (Hostinger)',
@@ -137,6 +156,7 @@ export const ITENS_FIXOS: { item: string; valor: string; quando: string; nota: s
     nota: 'Só sobre venda paga e originada pela cadeira. Vendeu zero, comissão zero',
   },
 ];
+export const ITENS_FIXOS = itensFixos();
 
 export const REGRAS_DOMINIO = [
   'A ROI Labs compra o domínio na Hostinger antes de o site ir ao ar e repassa o valor ao cliente junto com a anuidade',
@@ -192,6 +212,13 @@ export type PropostaCadeiraDoc = {
     pctDaVenda: number | null;
   } | null;
   condicoes: string[];
+  /** Escopo da cadeira. Ausente nas propostas guardadas antes de 29/09/2026. */
+  entregaveis?: {
+    cadeira: string;
+    fases: { nome: string; prazo: string; itens: string[] }[];
+    precisamos: string[];
+    naoInclui: string[];
+  };
 };
 
 const pctTexto = (v: number) => `${(v * 100).toLocaleString('pt-BR', { maximumFractionDigits: 1 })}%`;
@@ -244,7 +271,22 @@ function ritmoInformado(e: EntradaSimulacao): PropostaCadeiraDoc['ritmo'] {
   ];
 }
 
-export function montarPropostaCadeira(e: EntradaSimulacao, paraQuem: string, agora: Date): PropostaCadeiraDoc {
+// As `rules` de cada fase ficam de fora: são orientação ao operador (a de serviço traz o CFO/CFM).
+function entregaveisParaCliente(tipo: TipoCadeira): NonNullable<PropostaCadeiraDoc['entregaveis']> {
+  return {
+    cadeira: tipo.name,
+    fases: tipo.fases.map((f) => ({ nome: f.name, prazo: f.prazo, itens: f.deliverables.flatMap((g) => g.items) })),
+    precisamos: tipo.fases.flatMap((f) => f.prereq ?? []),
+    naoInclui: tipo.fases.flatMap((f) => f.excludes ?? []),
+  };
+}
+
+export function montarPropostaCadeira(
+  e: EntradaSimulacao,
+  paraQuem: string,
+  agora: Date,
+  tipo: TipoCadeira = tipoPadrao(e.nicho),
+): PropostaCadeiraDoc {
   const r = simular(e);
   return {
     versao: 1,
@@ -254,8 +296,10 @@ export function montarPropostaCadeira(e: EntradaSimulacao, paraQuem: string, ago
     nicho: { id: e.nicho.id, nome: e.nicho.nicho, modelo: e.nicho.modelo },
     comissao: comissaoParaCliente(e),
     ritmo: ritmoInformado(e),
-    entrada: ITENS_FIXOS.filter((i) => i.item !== 'Comissão').map(({ item, valor, nota }) => ({ item, valor, nota })),
-    entradaTotal: ENTRADA_ANO,
+    entrada: itensFixos(e.anuidade ?? ANUIDADE)
+      .filter((i) => i.item !== 'Comissão')
+      .map(({ item, valor, nota }) => ({ item, valor, nota })),
+    entradaTotal: r.entrada,
     estimativa:
       r.comissaoAno > 0
         ? {
@@ -271,5 +315,6 @@ export function montarPropostaCadeira(e: EntradaSimulacao, paraQuem: string, ago
       ...REGRAS_CONTRATO.filter((c) => e.nicho.modelo === 'percentual' || c !== REGRA_COMISSAO_PEDIDO),
       ...REGRAS_DOMINIO,
     ],
+    entregaveis: entregaveisParaCliente(tipo),
   };
 }

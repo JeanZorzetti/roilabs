@@ -12,17 +12,19 @@ import {
   type NichoPreco,
   type TipoCompra,
 } from "@/lib/precificacao";
+import { TIPOS_CADEIRA } from "@/lib/entregaveis";
 import { ROTULO_CENARIO, type PonteSimulador } from "@/lib/projecao";
 import {
   ANUIDADE,
   CONSULTA_MAX,
   CONSULTA_MIN,
   DOMINIO_ANO,
-  ENTRADA_ANO,
   brl,
   comissaoParaCliente,
+  lerAnuidadeManual,
   lerTaxaManual,
   simular,
+  tipoPadrao,
   type EntradaSimulacao,
 } from "@/lib/precos-cadeira";
 
@@ -106,6 +108,9 @@ export function SimuladorCadeira({ inicial }: { inicial?: PonteSimulador | null 
   const [valorConsulta, setValorConsulta] = useState("200");
   const [aqManual, setAqManual] = useState("");
   const [recManual, setRecManual] = useState("");
+  const [anuidadeManual, setAnuidadeManual] = useState("");
+  // null = segue o tipo do nicho; trocar de nicho volta para ele.
+  const [tipoEscolhido, setTipoEscolhido] = useState<string | null>(null);
   const [copiado, setCopiado] = useState(false);
   const [paraQuem, setParaQuem] = useState("");
   const [estado, guardar, guardando] = useActionState(guardarPropostaCadeira, { erro: null });
@@ -113,6 +118,9 @@ export function SimuladorCadeira({ inicial }: { inicial?: PonteSimulador | null 
   const nicho = NICHOS.find((n) => n.id === nichoId) ?? NICHOS[0];
   const aqManualTaxa = lerTaxaManual(aqManual);
   const recManualTaxa = lerTaxaManual(recManual);
+  const anuidadeLida = lerAnuidadeManual(anuidadeManual);
+  const anuidade = anuidadeLida === null || Number.isNaN(anuidadeLida) ? ANUIDADE : anuidadeLida;
+  const tipo = TIPOS_CADEIRA.find((t) => t.id === tipoEscolhido) ?? tipoPadrao(nicho);
   const entrada: EntradaSimulacao = {
     nicho,
     pedidosMes: ler(pedidos),
@@ -128,6 +136,7 @@ export function SimuladorCadeira({ inicial }: { inicial?: PonteSimulador | null 
       aquisicao: Number.isNaN(aqManualTaxa) ? null : aqManualTaxa,
       recorrencia: Number.isNaN(recManualTaxa) ? null : recManualTaxa,
     },
+    anuidade,
   };
   const r = simular(entrada);
   /** Taxa da tabela do nicho, já com o desconto de distribuidor: é o que vale com o campo manual vazio. */
@@ -136,7 +145,7 @@ export function SimuladorCadeira({ inicial }: { inicial?: PonteSimulador | null 
 
   const resumo = [
     `Cadeira — ${nicho.nicho}`,
-    `Anuidade: ${brl(ANUIDADE)}/ano`,
+    `${tipo.name} — anuidade: ${brl(anuidade)}/ano`,
     `Domínio próprio: ${brl(DOMINIO_ANO)}/ano`,
     `Comissão: ${comissaoParaCliente(entrada).resumo}`,
     `Estimativa no ritmo informado: ${brl(r.comissaoMes)}/mês de comissão, ${brl(r.totalAno)} no 1º ano com anuidade e domínio`,
@@ -164,7 +173,10 @@ export function SimuladorCadeira({ inicial }: { inicial?: PonteSimulador | null 
             <select
               id="sim-nicho"
               value={nichoId}
-              onChange={(e) => setNichoId(e.target.value)}
+              onChange={(e) => {
+                setNichoId(e.target.value);
+                setTipoEscolhido(null);
+              }}
               className={` w-full min-w-0`}
             >
               {GRUPOS.map(([faixa, nichos]) => (
@@ -208,6 +220,45 @@ export function SimuladorCadeira({ inicial }: { inicial?: PonteSimulador | null 
               </p>
             </>
           ) : null}
+        </fieldset>
+
+        <fieldset className="min-w-0 rounded-xl border border-border bg-white p-4 shadow-soft">
+          <legend className="px-1 text-sm font-bold text-navy">Cadeira</legend>
+          <div className="mt-2 grid gap-3 sm:grid-cols-2">
+            <label htmlFor="sim-tipo" className={ROTULO}>
+              Tipo de cadeira
+              <select
+                id="sim-tipo"
+                value={tipo.id}
+                onChange={(e) => setTipoEscolhido(e.target.value)}
+                className="w-full min-w-0"
+              >
+                {TIPOS_CADEIRA.map((t) => (
+                  <option key={t.id} value={t.id}>
+                    {t.name}
+                  </option>
+                ))}
+              </select>
+              <span className="font-normal">Os entregáveis deste tipo vão na proposta.</span>
+            </label>
+            <Numero
+              id="sim-anuidade"
+              label="Anuidade (R$/ano)"
+              value={anuidadeManual}
+              onChange={setAnuidadeManual}
+              hint={`Vazio: ${brl(ANUIDADE)} da tabela`}
+              erro={Number.isNaN(anuidadeLida) ? "Use de 0 a 1.000.000." : null}
+            />
+          </div>
+          <p className="mt-2 text-xs text-muted-foreground">
+            {tipo.tagline}{" "}
+            <Link
+              href={`/admin/entregaveis?cadeira=${tipo.id}`}
+              className="font-semibold text-navy underline underline-offset-2"
+            >
+              Ver os entregáveis
+            </Link>
+          </p>
         </fieldset>
 
         <fieldset className="min-w-0 rounded-xl border border-border bg-white p-4 shadow-soft">
@@ -303,7 +354,7 @@ export function SimuladorCadeira({ inicial }: { inicial?: PonteSimulador | null 
               <ul className="mt-1 space-y-1">
                 <li className="flex justify-between gap-2 text-sm">
                   <span className="text-foreground">Anuidade da cadeira</span>
-                  <span className="shrink-0 font-mono">{brl(ANUIDADE)}</span>
+                  <span className="shrink-0 font-mono">{brl(anuidade)}</span>
                 </li>
                 <li className="flex justify-between gap-2 text-sm">
                   <span className="text-foreground">Domínio próprio (Hostinger)</span>
@@ -319,7 +370,7 @@ export function SimuladorCadeira({ inicial }: { inicial?: PonteSimulador | null 
             <dl className="space-y-1 border-t border-border pt-3 text-sm">
               <div className="flex justify-between">
                 <dt className="font-semibold text-navy">Entrada</dt>
-                <dd className="font-mono font-bold text-navy">{brl(ENTRADA_ANO)}</dd>
+                <dd className="font-mono font-bold text-navy">{brl(r.entrada)}</dd>
               </div>
               <div className="flex justify-between">
                 <dt className="font-semibold text-navy">
@@ -368,6 +419,8 @@ export function SimuladorCadeira({ inicial }: { inicial?: PonteSimulador | null 
               <input type="hidden" name="valorConsulta" value={valorConsulta} />
               <input type="hidden" name="aquisicaoManual" value={aqManual} />
               <input type="hidden" name="recorrenciaManual" value={recManual} />
+              <input type="hidden" name="anuidade" value={anuidadeManual} />
+              <input type="hidden" name="tipoCadeira" value={tipo.id} />
 
               <label htmlFor="sim-para-quem" className={ROTULO}>
                 Para quem

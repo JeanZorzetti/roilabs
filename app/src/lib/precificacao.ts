@@ -22,6 +22,8 @@ interface NichoBase {
   // Radicais (sem acento, minúsculos) que casam com o INÍCIO de uma palavra do nicho de um
   // parceiro. Só alimenta a sugestão da tabela "Taxas em vigor" — nunca a cobrança.
   radicais: string[];
+  /** Tipo de cadeira (lib/entregaveis.ts) quando o modelo de cobrança não basta para decidir. */
+  cadeira?: 'loja' | 'servico' | 'software';
 }
 
 export interface NichoPercentual extends NichoBase {
@@ -75,6 +77,7 @@ export const NICHOS: NichoPreco[] = [
     regra: null,
     porque: 'Sem pesquisa de mercado: 18% / 10% decididos pelo Jean em 29/09/2026 para a cadeira de cursos da Belle Vitaly.',
     confianca: 'baixa', radicais: ['curso', 'formaca', 'treinament', 'capacitac', 'mentori'],
+    cadeira: 'servico', // a venda do curso fecha no WhatsApp
   },
   {
     id: 'moda', faixa: 'padrao', nicho: 'Moda, vestuário e calçados', ...pct(0.15, 0.1),

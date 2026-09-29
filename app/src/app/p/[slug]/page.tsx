@@ -167,6 +167,45 @@ export default async function PropostaPage({ params }: Props) {
           )}
         </section>
 
+        {doc.entregaveis ? (
+          <section aria-labelledby="prop-entregaveis">
+            <h2 id="prop-entregaveis">O que a ROI Labs entrega</h2>
+            <p className="prop-taxa">{doc.entregaveis.cadeira}</p>
+            {doc.entregaveis.fases.map((f) => (
+              <div key={f.nome}>
+                <h3 className="prop-h3">
+                  {f.prazo} · {f.nome}
+                </h3>
+                <ul className="prop-lista">
+                  {f.itens.map((item) => (
+                    <li key={item}>{item}.</li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+            {doc.entregaveis.precisamos.length > 0 ? (
+              <>
+                <h3 className="prop-h3">O que precisamos de você</h3>
+                <ul className="prop-lista">
+                  {doc.entregaveis.precisamos.map((item) => (
+                    <li key={item}>{item}.</li>
+                  ))}
+                </ul>
+              </>
+            ) : null}
+            {doc.entregaveis.naoInclui.length > 0 ? (
+              <>
+                <h3 className="prop-h3">Não inclui</h3>
+                <ul className="prop-lista">
+                  {doc.entregaveis.naoInclui.map((item) => (
+                    <li key={item}>{item}.</li>
+                  ))}
+                </ul>
+              </>
+            ) : null}
+          </section>
+        ) : null}
+
         <section aria-labelledby="prop-condicoes">
           <h2 id="prop-condicoes">Condições</h2>
           <ul className="prop-lista">
