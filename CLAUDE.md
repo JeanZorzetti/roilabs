@@ -1,5 +1,5 @@
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
-at specs/019-proposta-cadeira/plan.md
+at specs/020-contrato-cadeira/plan.md
 <!-- SPECKIT END -->

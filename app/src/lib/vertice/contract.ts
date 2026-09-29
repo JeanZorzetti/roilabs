@@ -94,7 +94,7 @@ export function addMonths(ymd: string, months: number): string {
   return end.toISOString().slice(0, 10);
 }
 
-const splitLines = (text: string) =>
+export const splitLines = (text: string) =>
   String(text ?? "")
     .split(/\r?\n/)
     .map((line) => line.replace(/^\s*[-*•·]\s*/, "").trim())

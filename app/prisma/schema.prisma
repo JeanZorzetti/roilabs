@@ -490,7 +490,31 @@ model PropostaCadeira {
   slug     String   @unique // 48 random bits: whoever has the link reads the proposal
   criadaEm DateTime @default(now()) @map("criada_em")
   doc      Json
+  contrato ContratoCadeira?
 
   @@index([criadaEm])
   @@map("propostas_cadeira")
+}
+
+// 020 — contrato emitido de uma proposta de cadeira, aberto em app.roilabs.com.br/c/<slug>.
+// RESTRICT: proposta com contrato não se exclui. Aceito (aceitoEm) = imutável; editadoEm é a
+// trava otimista do aceite, e aceitoIp/Ua/Hash são a prova de autoria (MP 2.200-2/2001, art. 10, § 2º).
+model ContratoCadeira {
+  id         String          @id @default(cuid())
+  slug       String          @unique
+  propostaId String          @unique @map("proposta_id")
+  proposta   PropostaCadeira @relation(fields: [propostaId], references: [id], onDelete: Restrict)
+  input      Json
+  doc        Json
+  criadoEm   DateTime        @default(now()) @map("criado_em")
+  editadoEm  DateTime        @default(now()) @map("editado_em")
+  aceitoEm   DateTime?       @map("aceito_em")
+  aceitoPor  String?         @map("aceito_por")
+  aceitoCpf  String?         @map("aceito_cpf")
+  aceitoIp   String?         @map("aceito_ip")
+  aceitoUa   String?         @map("aceito_ua")
+  aceitoHash String?         @map("aceito_hash")
+
+  @@index([criadoEm])
+  @@map("contratos_cadeira")
 }

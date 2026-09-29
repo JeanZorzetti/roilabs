@@ -1,6 +1,7 @@
 "use server";
 
 import { randomBytes } from "node:crypto";
+import { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { isAuthed } from "@/lib/auth";
@@ -108,6 +109,15 @@ export async function excluirPropostaCadeira(formData: FormData): Promise<void> 
   const id = String(formData.get("id") ?? "");
   if (!id) throw new Error("Proposta inválida.");
   // deleteMany: excluir duas vezes (clique duplo, aba velha) não é erro.
-  await prisma.propostaCadeira.deleteMany({ where: { id } });
+  try {
+    await prisma.propostaCadeira.deleteMany({ where: { id } });
+  } catch (err) {
+    // Proposta com contrato: o RESTRICT do banco recusa (spec 020). O cartão nem mostra o botão;
+    // isto só chega aqui por aba velha.
+    if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2003") {
+      throw new Error("Esta proposta tem contrato. Exclua o contrato antes, se ele ainda não foi aceito.");
+    }
+    throw err;
+  }
   revalidatePath("/admin/propostas");
 }

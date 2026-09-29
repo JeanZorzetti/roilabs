@@ -1,17 +1,34 @@
+import Link from "next/link";
 import { excluirPropostaCadeira } from "@/app/admin/propostas/actions";
+import { EstadoContrato, type ContratoCadeiraResumo } from "@/components/vertice/ContratoCadeiraCard";
 import { DocLink, ROI_APP } from "@/components/vertice/DocLink";
 import { brl, type PropostaCadeiraDoc } from "@/lib/precos-cadeira";
 
 /**
  * Cartão de uma proposta de cadeira (spec 019) em /admin/propostas. Mesmo esqueleto do
  * ProposalCard da Vértice, sem margem nem aceite: a cadeira não tem custo por linha, e o
- * fechamento acontece fora do link (contrato e cobrança da anuidade).
+ * fechamento acontece no contrato (spec 020), emitido daqui.
  */
+
+const ACAO =
+  "-mx-1 inline-block min-h-[24px] px-1 py-1 text-xs font-semibold text-navy underline underline-offset-2 hover:text-navy-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold";
 
 const TZ = "America/Sao_Paulo";
 const data = (iso: string) => new Date(iso).toLocaleDateString("pt-BR", { timeZone: TZ });
 
-export function PropostaCadeiraCard({ id, slug, doc }: { id: string; slug: string; doc: PropostaCadeiraDoc }) {
+type Contrato = Pick<ContratoCadeiraResumo, "id" | "slug" | "aceitoEm" | "aceitoPor" | "doc">;
+
+export function PropostaCadeiraCard({
+  id,
+  slug,
+  doc,
+  contrato,
+}: {
+  id: string;
+  slug: string;
+  doc: PropostaCadeiraDoc;
+  contrato: Contrato | null;
+}) {
   const vencida = Date.now() > new Date(doc.validaAte).getTime();
   const e = doc.estimativa;
 
@@ -56,15 +73,34 @@ export function PropostaCadeiraCard({ id, slug, doc }: { id: string; slug: strin
         </span>
       </div>
 
-      <form action={excluirPropostaCadeira} className="mt-3">
-        <input type="hidden" name="id" value={id} />
-        <button
-          type="submit"
-          className="-mx-1 inline-block min-h-[24px] px-1 py-1 text-xs font-semibold text-red-700 underline underline-offset-2 hover:text-red-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-700"
-        >
-          Excluir esta proposta
-        </button>
-      </form>
+      {contrato ? (
+        <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-border pt-3">
+          <span className="text-xs font-bold uppercase tracking-wider text-navy/50">Contrato</span>
+          <DocLink prefix="/c/" slug={contrato.slug} site={ROI_APP} />
+          <EstadoContrato c={contrato} />
+          {contrato.aceitoEm ? null : (
+            <Link href={`/admin/contratos/cadeira?editar=${contrato.id}`} className={ACAO}>
+              Editar o contrato
+            </Link>
+          )}
+        </div>
+      ) : (
+        // Sem contrato, a proposta ainda se exclui; com contrato, o banco recusa (RESTRICT) e o botão some.
+        <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1">
+          <Link href={`/admin/contratos/cadeira?proposta=${id}`} className={ACAO}>
+            Emitir contrato
+          </Link>
+          <form action={excluirPropostaCadeira}>
+            <input type="hidden" name="id" value={id} />
+            <button
+              type="submit"
+              className="-mx-1 inline-block min-h-[24px] px-1 py-1 text-xs font-semibold text-red-700 underline underline-offset-2 hover:text-red-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-700"
+            >
+              Excluir esta proposta
+            </button>
+          </form>
+        </div>
+      )}
     </li>
   );
 }

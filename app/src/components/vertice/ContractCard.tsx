@@ -22,8 +22,11 @@ export function ContractCard({
 
   return (
     <li className="rounded-xl border border-border bg-white p-4 shadow-soft">
+      <div className="mb-1 flex flex-wrap items-center gap-2">
+        <span className="rounded-full border border-border px-2 py-0.5 text-xs font-semibold text-navy">Vértice</span>
+        <p className="font-semibold text-navy">{title}</p>
+      </div>
       <p className="mb-1 text-xs font-bold uppercase tracking-wider text-navy/50">{clientName}</p>
-      <p className="font-semibold text-navy">{title}</p>
       <p className="mt-1 font-mono text-sm text-muted-foreground">
         emitido em{" "}
         {new Date(contract.created_at).toLocaleString("pt-BR", {

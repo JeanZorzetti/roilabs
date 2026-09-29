@@ -24,3 +24,7 @@ decida e registre. Começou com a spec 017 (Projeção).
 | Proposta de cadeira | "Proposta para {para quem}", selo "Cadeira" na lista | orçamento, cotação, proposta comercial | `/admin/propostas`, página pública `/p/<slug>` |
 | Válida até / Vencida em | "Válida até dd/mm/aaaa", "Vencida em dd/mm/aaaa" (15 dias) | expira, prazo, validade expirada | cartão da proposta, página pública |
 | Falar com a ROI Labs no WhatsApp | CTA único da página pública da proposta | aceitar, fechar, contratar agora | `/p/<slug>` |
+| Emitir contrato | "Emitir contrato" no cartão da proposta de cadeira (e da Vértice) | gerar, criar, fechar contrato | `/admin/propostas` |
+| Contrato de cadeira | "Contrato de parceria — cadeira de {nicho}", selo "Cadeira" na lista | termo, acordo, contrato de serviço | `/admin/contratos`, página pública `/c/<slug>` |
+| Aceitar o contrato | CTA único do aceite; estado "Aceito em dd/mm/aaaa às hh:mm por {nome}" | assinar, confirmar, concordar | `/c/<slug>`, cartões da proposta e do contrato |
+| Não envie ainda | "Não envie ainda: N pendências travam o aceite" (contrato com "[a preencher]") | incompleto, rascunho, erro | cartões da proposta e do contrato |

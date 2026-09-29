@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { AdminShell, DbErrorState } from "@/components/vertice/AdminShell";
 import { ProposalCard } from "@/components/vertice/ProposalCard";
 import { PropostaCadeiraCard } from "@/components/vertice/PropostaCadeiraCard";
+import type { ContratoCadeiraDoc } from "@/lib/contrato-cadeira";
 import type { PropostaCadeiraDoc } from "@/lib/precos-cadeira";
 import { prisma } from "@/lib/prisma";
 import { listAllProposals, type ProposalRow } from "@/lib/vertice/data";
@@ -15,7 +16,8 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 type Vertice = ProposalRow & { client_name: string };
-type Cadeira = { id: string; slug: string; criadaEm: Date; doc: PropostaCadeiraDoc };
+type Contrato = { id: string; slug: string; aceitoEm: Date | null; aceitoPor: string | null; doc: ContratoCadeiraDoc };
+type Cadeira = { id: string; slug: string; criadaEm: Date; doc: PropostaCadeiraDoc; contrato: Contrato | null };
 type Item = { tipo: "vertice"; quando: number; p: Vertice } | { tipo: "cadeira"; quando: number; p: Cadeira };
 
 const mensagem = (error: unknown) => (error instanceof Error ? error.message : String(error));
@@ -25,7 +27,11 @@ export default async function PropostasPage() {
   const [vertice, cadeira] = await Promise.allSettled([
     listAllProposals(),
     // ponytail: teto de 200, pagina por criada_em se um dia passar disso.
-    prisma.propostaCadeira.findMany({ orderBy: { criadaEm: "desc" }, take: 200 }),
+    prisma.propostaCadeira.findMany({
+      orderBy: { criadaEm: "desc" },
+      take: 200,
+      include: { contrato: { select: { id: true, slug: true, aceitoEm: true, aceitoPor: true, doc: true } } },
+    }),
   ]);
 
   const erros = [
@@ -41,7 +47,11 @@ export default async function PropostasPage() {
       (p): Item => ({
         tipo: "cadeira",
         quando: p.criadaEm.getTime(),
-        p: { ...p, doc: p.doc as PropostaCadeiraDoc },
+        p: {
+          ...p,
+          doc: p.doc as PropostaCadeiraDoc,
+          contrato: p.contrato ? { ...p.contrato, doc: p.contrato.doc as ContratoCadeiraDoc } : null,
+        },
       })
     ),
   ].sort((a, b) => b.quando - a.quando);
@@ -53,7 +63,7 @@ export default async function PropostasPage() {
   return (
     <AdminShell
       title="Propostas"
-      lead="Toda proposta guardada, com o link que vai para o cliente. A de cadeira abre com a marca da ROI Labs; a da Vértice abre no site da Vértice, com o registro de aceite. Número e margem aqui são internos: o cliente só vê o documento do link."
+      lead="Toda proposta guardada, com o link que vai para o cliente. A de cadeira abre com a marca da ROI Labs e fecha pelo contrato que você emite no cartão dela; a da Vértice abre no site da Vértice. Número e margem aqui são internos: o cliente só vê o documento do link."
       action={
         <Link
           href="/admin/precos#simulador"
@@ -87,7 +97,13 @@ export default async function PropostasPage() {
           <ul className="space-y-3">
             {itens.map((item) =>
               item.tipo === "cadeira" ? (
-                <PropostaCadeiraCard key={`c-${item.p.id}`} id={item.p.id} slug={item.p.slug} doc={item.p.doc} />
+                <PropostaCadeiraCard
+                  key={`c-${item.p.id}`}
+                  id={item.p.id}
+                  slug={item.p.slug}
+                  doc={item.p.doc}
+                  contrato={item.p.contrato}
+                />
               ) : (
                 <ProposalCard key={`v-${item.p.id}`} proposal={item.p} clientName={item.p.client_name} />
               )

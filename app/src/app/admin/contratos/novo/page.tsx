@@ -1,8 +1,9 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { AdminShell, DbErrorState } from "@/components/vertice/AdminShell";
+import { EMPTY_PARTY, FIELD, FOCUS, HINT, LABEL, PartyFields } from "@/components/vertice/PartyFields";
 import { saveContract } from "@/lib/vertice/actions";
-import { CONTRACT_MONTHS, type ContractInput, type ContractParty } from "@/lib/vertice/contract";
+import { CONTRACT_MONTHS, type ContractInput } from "@/lib/vertice/contract";
 import {
   getClient,
   getContract,
@@ -20,81 +21,9 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-dynamic";
 
-const FOCUS =
-  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold";
-const LABEL = "text-xs font-bold uppercase tracking-wider text-muted-foreground";
-const FIELD = `rounded-md border border-border px-2 py-1.5 text-base sm:text-sm ${FOCUS}`;
-const HINT = "text-xs text-muted-foreground";
-
-const EMPTY_PARTY: ContractParty = {
-  name: "",
-  document: "",
-  address: "",
-  representative: "",
-  email: "",
-};
-
 // As condições de pagamento da proposta viram o ponto de partida do campo. O
 // resto das condições já está nas cláusulas fixas.
 const PAYMENT_TERM = /pix|cart[aã]o|boleto|pagamento|faturamento|parcela/i;
-
-const PARTY_FIELDS: {
-  key: keyof ContractParty;
-  label: string;
-  hint: string;
-  type?: string;
-}[] = [
-  { key: "name", label: "Razão social ou nome", hint: "Como está no cartão CNPJ ou no documento." },
-  {
-    key: "document",
-    label: "CNPJ ou CPF",
-    hint: "Com 11 dígitos, o contrato trata a parte como pessoa física.",
-  },
-  { key: "address", label: "Endereço", hint: "Rua, número, bairro, cidade/UF e CEP." },
-  {
-    key: "representative",
-    label: "Representante legal",
-    hint: "Nome e CPF de quem assina pela empresa. Pessoa física deixa em branco.",
-  },
-  { key: "email", label: "E-mail para avisos", type: "email", hint: "Opcional." },
-];
-
-function PartyFields({
-  role,
-  heading,
-  party,
-}: {
-  role: "contratante" | "contratada";
-  heading: string;
-  party: ContractParty;
-}) {
-  return (
-    <fieldset className="min-w-0 space-y-3 rounded-xl border border-border bg-white p-4 shadow-soft">
-      <legend className="px-1 text-sm font-bold text-navy">{heading}</legend>
-      {PARTY_FIELDS.map((field) => {
-        const id = `${role}-${field.key}`;
-        return (
-          <div key={field.key} className="flex flex-col gap-1">
-            <label htmlFor={id} className={LABEL}>
-              {field.label}
-            </label>
-            <input
-              id={id}
-              name={`${role}.${field.key}`}
-              type={field.type ?? "text"}
-              defaultValue={party[field.key]}
-              aria-describedby={`${id}-hint`}
-              className={FIELD}
-            />
-            <p id={`${id}-hint`} className={HINT}>
-              {field.hint}
-            </p>
-          </div>
-        );
-      })}
-    </fieldset>
-  );
-}
 
 type Props = {
   searchParams: Promise<{ proposta?: string; editar?: string }>;

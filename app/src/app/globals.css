@@ -513,6 +513,33 @@ a { color: inherit; }
 .prop-fim h2 { font-size: clamp(1.5rem, 5vw, 2rem); }
 .prop-fim p { margin: 0.6rem 0 0; color: var(--d-muted); }
 
+/* 020 — contrato da cadeira (/c/<slug>): a mesma pele da proposta. O aceite fica no rodapé ink,
+   onde o foco hi-vis tem 5,8:1; o erro usa o par da faixa de vencida (hi-vis + #1a0c05). */
+.prop-cta--hivis { background: var(--hivis); color: #1a0c05; }
+.prop-cta--hivis:hover { background: #ff7a45; }
+.prop-cifras .contrato-cifra-texto { font-size: clamp(1.05rem, 4vw, 1.3rem); white-space: normal; }
+.contrato-estado { max-width: 52ch; margin: 1.5rem 0 0; font-weight: 600; }
+
+.contrato-corpo p { max-width: 62ch; margin: 0 0 0.75rem; }
+.contrato-corpo .prop-lista { margin-bottom: 0.9rem; }
+.contrato-clausulas { display: grid; gap: 2rem; margin: 0; padding: 0; list-style: none; }
+.contrato-clausulas h2 { margin-bottom: 0.6rem; font-size: clamp(1.1rem, 3.5vw, 1.3rem); }
+.contrato-clausulas h2::before { display: none; }
+.contrato-num { font-family: var(--font-mono), monospace; color: var(--l-muted); }
+
+.contrato-aceite { display: grid; gap: 1rem; max-width: 34rem; }
+.contrato-aceite h2 { margin: 0; }
+.contrato-aceite > p { margin: 0; }
+.contrato-aceite .contrato-erro { margin: 0; padding: 0.75rem 1rem; border-radius: 6px; background: var(--hivis); color: #1a0c05; font-weight: 600; }
+.contrato-campo { display: grid; gap: 0.35rem; }
+.contrato-campo label { font-weight: 600; }
+.contrato-campo input { min-height: 48px; padding: 0.6rem 0.8rem; border: 2px solid transparent; border-radius: 6px; background: #fff; color: var(--ink); font: inherit; font-size: 1rem; }
+.contrato-campo input[aria-invalid='true'] { border-color: var(--hivis); }
+.contrato-caixa { display: flex; gap: 0.75rem; align-items: flex-start; cursor: pointer; }
+.contrato-caixa input { flex: none; width: 1.35rem; height: 1.35rem; margin-top: 0.1rem; accent-color: var(--hivis); }
+.contrato-aceite .prop-cta { margin-top: 0.25rem; border: 0; cursor: pointer; }
+.contrato-nota { font-size: 0.85rem; color: var(--d-muted); }
+
 @media (max-width: 520px) {
   .prop-cta { width: 100%; }
 }
