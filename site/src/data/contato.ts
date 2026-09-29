@@ -4,9 +4,10 @@
 export const WHATSAPP: string = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
 export const EMAIL = 'roilabs.ia@gmail.com';
 
-// Os mesmos perfis do `sameAs` do JSON-LD (layouts/Base.astro).
+// Perfis da ROI Labs: ícones do rodapé e `sameAs` do JSON-LD (layouts/Base.astro) leem daqui.
 export const INSTAGRAM = 'https://www.instagram.com/roilabs.curadoria/';
 export const LINKEDIN = 'https://www.linkedin.com/company/roi-labs-curadoria/';
+export const YOUTUBE = 'https://www.youtube.com/@ROI360podcast';
 
 export const whatsLink = (texto = 'Quero saber se a cadeira do meu nicho está livre') =>
   `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(texto)}`;

@@ -1004,6 +1004,33 @@ a.seat__niche::after {
   text-decoration: underline;
 }
 
+/* redes: só o ícone, 22px numa área de toque de 40px; a fileira recua o que sobra da área
+   para o desenho do 1º ícone alinhar com o texto de cima */
+.site-footer__contato .site-footer__redes {
+  display: flex;
+  gap: 0.35rem;
+  margin: 0.45rem 0 0 -0.65rem;
+  padding: 0;
+  list-style: none;
+}
+
+.site-footer__redes li a {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  color: var(--d-text);
+}
+
+.site-footer__redes li a:hover {
+  color: var(--hivis);
+}
+
+.site-footer__redes svg {
+  display: block;
+}
+
 .site-footer__base {
   display: flex;
   flex-wrap: wrap;
