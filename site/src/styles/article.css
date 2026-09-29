@@ -232,6 +232,17 @@
 .post-card__desc { color: var(--l-muted); }
 .post-card:hover .post-card__title { color: var(--hivis-deep); }
 
+/* ---- página de autor ---- */
+.article__author { color: inherit; text-underline-offset: 3px; }
+.article__author:hover { color: var(--hivis-deep); }
+.autor__eyebrow + h1 { margin-top: 0.6rem; }
+.autor__titulo {
+  margin-top: 2.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--l-line);
+  font-size: 1.4rem;
+}
+
 .article__back, .blog-index__back {
   display: inline-block;
   margin-top: 2rem;

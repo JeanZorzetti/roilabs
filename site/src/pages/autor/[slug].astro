@@ -1,0 +1,78 @@
+---
+import Base from '../../layouts/Base.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { getCollection } from 'astro:content';
+import { AUTORES, autorUrl, personId, personNode, type Autor } from '../../data/autores';
+import '../../styles/article.css';
+
+// Só autor com pelo menos um post publicado ganha página (sem página vazia no índice).
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  return AUTORES.filter((a) => posts.some((p) => p.data.author === a.nome)).map((autor) => ({
+    params: { slug: autor.slug },
+    props: { autor },
+  }));
+}
+
+interface Props {
+  autor: Autor;
+}
+
+const { autor } = Astro.props;
+const url = autorUrl(autor);
+const posts = (await getCollection('blog', ({ data }) => !data.draft && data.author === autor.nome)).sort(
+  (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime(),
+);
+
+// ProfilePage + Person: é o que o Google lê como "quem escreveu" (E-E-A-T).
+const nodes = [
+  {
+    '@type': 'ProfilePage',
+    '@id': `${url}#webpage`,
+    url,
+    name: `${autor.nome} — ROI Labs`,
+    inLanguage: 'pt-BR',
+    isPartOf: { '@id': 'https://roilabs.com.br/#website' },
+    mainEntity: { '@id': personId(autor) },
+    breadcrumb: { '@id': `${url}#breadcrumb` },
+  },
+  personNode(autor),
+  {
+    '@type': 'BreadcrumbList',
+    '@id': `${url}#breadcrumb`,
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://roilabs.com.br/' },
+      { '@type': 'ListItem', position: 2, name: 'Blog', item: 'https://roilabs.com.br/blog/' },
+      { '@type': 'ListItem', position: 3, name: autor.nome, item: url },
+    ],
+  },
+];
+---
+
+<Base title={`${autor.nome} — ROI Labs`} description={autor.bio[0]} jsonLdNodes={nodes}>
+  <Header />
+  <main class="blog-index">
+    <div class="blog-index__wrap">
+      <span class="post-card__eyebrow autor__eyebrow">Autora · Blog ROI Labs</span>
+      <h1>{autor.nome}</h1>
+      {autor.bio.map((p) => <p class="blog-index__lead">{p}</p>)}
+
+      <h2 class="autor__titulo">Artigos</h2>
+      <div class="post-list">
+        {
+          posts.map((post) => (
+            <a class="post-card" href={`/blog/${post.id}/`}>
+              {post.data.eyebrow && <span class="post-card__eyebrow">{post.data.eyebrow}</span>}
+              <h3 class="post-card__title">{post.data.title}</h3>
+              <p class="post-card__desc">{post.data.description}</p>
+            </a>
+          ))
+        }
+      </div>
+
+      <a class="blog-index__back" href="/blog/">← Todos os artigos</a>
+    </div>
+  </main>
+  <Footer />
+</Base>

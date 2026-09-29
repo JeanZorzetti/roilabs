@@ -4,7 +4,7 @@ seoTitle: 'Agência que cobra por resultado: como funciona e quanto custa'
 description: 'Pagar só quando vender existe, mas tem letra miúda. Veja os modelos de cobrança por resultado, a conta com números e o que exigir no contrato.'
 eyebrow: Guia · Modelo de cobrança
 pubDate: 2026-09-29
-author: Equipe ROI Labs
+author: Maria Eduarda Zorzetti
 cover: ./img/agencia-que-cobra-por-resultado/empresario-analisando-custo-agencia-por-resultado.jpg
 coverAlt: 'Empresário revisa documentos financeiros sobre a mesa ao lado de um tablet, avaliando uma agência que cobra por resultado'
 coverCaption: 'Antes de assinar, refaça a conta da margem.'

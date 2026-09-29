@@ -544,6 +544,10 @@ da resposta de IA do Google; ele entra no total.
   de quem é o domínio na ROI Labs; título sem medir volume; foto de banco com legenda "Foto ilustrativa" em
   "quem atende". O preço segue a frase do site ("R$ 3.960/ano"), sem prometer 12x sem acréscimo.
 - Próximo passo dela: Search Console → Inspeção de URL → pedir indexação (seção 14).
+- **29/09/2026 — decisão 1 fechada:** ela assina os artigos como **Maria Eduarda Zorzetti**. Página
+  https://roilabs.com.br/autor/maria-eduarda-zorzetti/ (ProfilePage + Person, dados em `site/src/data/autores.ts`);
+  assinatura com link no artigo, que agora aponta para o Person dela. Bio só com o que ela contou (carreira em vendas:
+  vendedora, BDR, SDR). Faltam o LinkedIn dela (`sameAs`) e foto real. Os 9 posts antigos seguem "Equipe ROI Labs".
 
 ## Fontes consultadas (29/09/2026)
 

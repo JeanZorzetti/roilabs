@@ -1,6 +1,7 @@
 import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
 import { getImage } from 'astro:assets';
+import { AUTORES } from '../data/autores';
 
 const SITE = 'https://roilabs.com.br';
 
@@ -24,6 +25,13 @@ export const GET: APIRoute = async () => {
         images: p.data.cover ? [new URL((await getImage({ src: p.data.cover, width: 1600 })).src, SITE).toString()] : [],
       })),
     )),
+    // Página de autor (mesma regra do [slug].astro: só quem tem post). lastmod = post mais recente dele.
+    ...AUTORES.flatMap((a) => {
+      const datas = posts.filter((p) => p.data.author === a.nome).map((p) => p.data.updatedDate ?? p.data.pubDate);
+      if (datas.length === 0) return [];
+      const ultima = new Date(Math.max(...datas.map((d) => d.valueOf())));
+      return [{ loc: `${SITE}/autor/${a.slug}/`, lastmod: ultima.toISOString().slice(0, 10) }];
+    }),
   ];
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>

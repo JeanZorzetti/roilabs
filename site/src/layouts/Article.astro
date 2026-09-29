@@ -6,6 +6,7 @@ import { Image, getImage } from 'astro:assets';
 import Base from './Base.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import { autorPorNome, personId, personNode } from '../data/autores';
 import '../styles/article.css';
 
 interface Props {
@@ -39,8 +40,11 @@ const sumario = headings.filter((h) => h.depth === 2);
 const capa = cover ? await getImage({ src: cover, width: 1600 }) : null;
 const capaUrl = capa ? new URL(capa.src, SITE).toString() : null;
 
-const authorNode =
-  author === 'Equipe ROI Labs'
+// Autor cadastrado em data/autores.ts = Person com página própria; "Equipe ROI Labs" = a empresa.
+const autor = autorPorNome(author);
+const authorNode = autor
+  ? { '@id': personId(autor) }
+  : author === 'Equipe ROI Labs'
     ? { '@id': ORG_ID }
     : { '@type': 'Person', name: author, worksFor: { '@id': ORG_ID } };
 
@@ -80,6 +84,8 @@ const nodes: Record<string, unknown>[] = [
     ],
   },
 ];
+
+if (autor) nodes.push(personNode(autor));
 
 // Foto de banco: crédito e licença no ImageObject (selo "Licenciável" no Google Imagens).
 if (capa && capaUrl) {
@@ -137,7 +143,7 @@ const fmtDate = (d: Date) =>
         <h1 class="article__title">{title}</h1>
         <p class="article__lead">{description}</p>
         <div class="article__meta">
-          <span>Por {author}</span>
+          <span>Por {autor ? <a class="article__author" href={`/autor/${autor.slug}/`} rel="author">{author}</a> : author}</span>
           <span>Publicado em {fmtDate(pubDate)}</span>
           {updatedDate && <span>Atualizado em {fmtDate(updatedDate)}</span>}
           <span>{minutos} min de leitura</span>
