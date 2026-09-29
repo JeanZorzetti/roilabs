@@ -40,6 +40,7 @@ function lerInput(formData: FormData): ContratoCadeiraInput {
     foro: texto(formData, "foro", 120),
     pagamento: texto(formData, "pagamento", 2000),
     extra: texto(formData, "extra", 2000),
+    subdominios: texto(formData, "subdominios", 2000),
   };
 }
 

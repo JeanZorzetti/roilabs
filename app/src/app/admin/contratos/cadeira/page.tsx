@@ -81,6 +81,7 @@ export default async function ContratoCadeiraPage({ searchParams }: Props) {
     foro: dados?.ultimo?.foro ?? "",
     pagamento: dados?.ultimo?.pagamento ?? "",
     extra: "",
+    subdominios: "",
   };
   const vencida = doc ? Date.now() > new Date(doc.validaAte).getTime() : false;
 
@@ -143,6 +144,25 @@ export default async function ContratoCadeiraPage({ searchParams }: Props) {
                 defaultValue={initial.pagamento}
                 placeholder="ex.: Pix à vista, ou cartão em até 12x com acréscimo"
                 aria-describedby="contrato-pagamento-hint"
+                className={`mt-1 font-mono ${FIELD}`}
+              />
+            </div>
+
+            <div className="flex flex-col gap-1 rounded-xl border border-border bg-white p-4 shadow-soft">
+              <label htmlFor="contrato-subdominios" className="text-sm font-bold text-navy">
+                Subdomínios do site
+              </label>
+              <p id="contrato-subdominios-hint" className={HINT}>
+                Opcional. Um por linha: entram na cláusula Objeto, logo depois de “com site”. Em branco, o Objeto fala só
+                do site.
+              </p>
+              <textarea
+                id="contrato-subdominios"
+                name="subdominios"
+                rows={3}
+                defaultValue={initial.subdominios ?? ""}
+                placeholder="ex.: Subdomínio da Dra. Ana, com os procedimentos dela: botox e preenchimento"
+                aria-describedby="contrato-subdominios-hint"
                 className={`mt-1 font-mono ${FIELD}`}
               />
             </div>

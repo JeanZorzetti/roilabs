@@ -35,6 +35,9 @@ export type ContratoCadeiraInput = {
   pagamento: string;
   /** Condições combinadas só com este parceiro, uma por linha. */
   extra: string;
+  /** Subdomínios do site da cadeira, um por linha; entram no Objeto logo depois de "site". Ausente em contratos
+   *  anteriores a este campo. */
+  subdominios?: string;
 };
 
 export type ContratoCadeiraDoc = {
@@ -90,7 +93,7 @@ export function pendenciasDoContrato(input: ContratoCadeiraInput, temAnexo: bool
   if (!temAnexo) falta.push('Entregáveis da cadeira (proposta antiga, sem escopo: guarde uma proposta nova)');
 
   // Marcador digitado à mão ("[percentual]") também trava, como no contrato da Vértice.
-  const livres = [input.titulo, input.pagamento, input.extra, input.foro, ...papeis.flatMap(([, p]) => Object.values(p))];
+  const livres = [input.titulo, input.pagamento, input.extra, input.subdominios ?? '', input.foro,...papeis.flatMap(([, p]) => Object.values(p))];
   for (const texto of livres) {
     for (const m of String(texto).match(/\[[^\]]+\]/g) ?? []) falta.push(`Texto com ${m}`);
   }
@@ -118,6 +121,7 @@ export function montarContratoCadeira(
   const inicio = brDate(input.inicio);
   const pagamento = splitLines(input.pagamento);
   const extra = splitLines(input.extra);
+  const subdominios = splitLines(input.subdominios ?? '');
   const e = p.entregaveis;
   const anexo: ContratoCadeiraDoc['anexo'] = e
     ? { cadeira: e.cadeira, fases: e.fases, precisamos: e.precisamos, naoInclui: e.naoInclui, extras: e.extras ?? [] }
@@ -128,7 +132,8 @@ export function montarContratoCadeira(
       id: 'objeto',
       heading: 'Objeto',
       body: [
-        `A CONTRATADA monta e opera, para a CONTRATANTE, a cadeira de ${p.nicho.nome}${anexo ? ` (${anexo.cadeira})` : ''}: o canal de venda online do nicho, com site, tecnologia, tráfego e equipe de vendas bancados pela CONTRATADA, como descrito no Anexo I.`,
+        `A CONTRATADA monta e opera, para a CONTRATANTE, a cadeira de ${p.nicho.nome}${anexo ? ` (${anexo.cadeira})` : ''}: o canal de venda online do nicho, com site${subdominios.length > 0 ? ' e os subdomínios listados abaixo' : ''}, tecnologia, tráfego e equipe de vendas bancados pela CONTRATADA, como descrito no Anexo I.`,
+        ...(subdominios.length > 0 ? [subdominios] : []),
         `O Anexo I reproduz os entregáveis da proposta feita para ${p.paraQuem} em ${brDate(p.criadaEm.slice(0, 10))}. O que não está no Anexo I não está contratado.`,
       ],
     },

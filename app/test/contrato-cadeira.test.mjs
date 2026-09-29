@@ -94,6 +94,19 @@ const clausula = (doc, id) => doc.clausulas.find((c) => c.id === id);
   assert.deepEqual(clausula(c, 'especificas').body, [['Reunião mensal de resultado']]);
 }
 
+// ── subdomínios: entram no Objeto depois de "site"; ausentes (contrato antigo), o Objeto fica igual ──
+{
+  const c = montarContratoCadeira(input({ subdominios: 'Subdomínio A\nSubdomínio B' }), proposta('moda'), agora);
+  const objeto = clausula(c, 'objeto').body;
+  assert.ok(objeto[0].includes('com site e os subdomínios listados abaixo, tecnologia'));
+  assert.deepEqual(objeto[1], ['Subdomínio A', 'Subdomínio B']);
+  const antigo = montarContratoCadeira(input(), proposta('moda'), agora);
+  assert.ok(clausula(antigo, 'objeto').body[0].includes('com site, tecnologia'));
+  assert.equal(clausula(antigo, 'objeto').body.length, 2);
+  const marcador = montarContratoCadeira(input({ subdominios: '[subdomínio].exemplo.com.br' }), proposta('moda'), agora);
+  assert.ok(marcador.pendencias.some((x) => x.includes('[subdomínio]')), 'marcador nos subdomínios trava o aceite');
+}
+
 // ── hash: estável quando o jsonb reordena as chaves, muda quando o texto muda ───────────
 {
   const c = montarContratoCadeira(input(), proposta('moda'), agora);
