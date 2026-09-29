@@ -96,7 +96,7 @@ Logo abaixo: sumário com links para cada H2 (gerado automaticamente, seção 8)
 | Fixo + comissão | Sim, um fixo menor | Venda ou meta | Em geral você (verba de anúncio à parte) | O risco do anúncio volta para você |
 | Por contato (lead) | Por contato entregue | Contato | A agência | Contato ruim custa igual a contato bom |
 | Por reunião | Por reunião feita | Reunião | A agência | Reunião não é venda |
-| Anuidade + comissão (a cadeira da ROI Labs) | Só a anuidade: R$ 2.640/ano (R$ 220/mês) | Venda concretizada | A ROI Labs | Exige margem, estoque e despacho no prazo |
+| Anuidade + comissão (a cadeira da ROI Labs) | Só a anuidade: R$ 3.960/ano, em 12x de R$ 330 | Venda concretizada | A ROI Labs | Exige margem, estoque e despacho no prazo |
 
 - Link: "a fórmula completa está no [modelo](/modelo/)".
 - **Imagem 2** (acordo com calculadora).
@@ -118,9 +118,11 @@ Logo abaixo: sumário com links para cada H2 (gerado automaticamente, seção 8)
 
 - Primeira frase: "A conta tem duas linhas, a parte fixa e o percentual sobre a venda, e o que sobra é seu."
 - Usar **o mesmo exemplo público do /modelo** para o site inteiro dar o mesmo número: ticket R$ 450 × 40 pedidos =
-  R$ 18.000; success fee de 10% = R$ 1.800; anuidade R$ 220/mês; fica com você R$ 15.980 (89%). No mês sem venda o
-  custo é R$ 220.
-- Métrica que ninguém mostra: **custo por venda** = (220 + 1.800) ÷ 40 = **R$ 50,50**.
+  R$ 18.000; success fee de 10% = R$ 1.800; anuidade de R$ 3.960/ano em 12x de R$ 330; fica com você R$ 15.870
+  (88%). No mês sem venda o custo é R$ 330.
+- Métrica que ninguém mostra: **custo por venda** = (330 + 1.800) ÷ 40 = **R$ 53,25**.
+- ⚠️ Em 29/09/2026 o site no ar (home, /modelo, /simulador, blog, llms.txt) e o painel ainda dizem R$ 2.640/ano
+  (R$ 220/mês). O artigo só vai ao ar depois de o site mostrar o valor novo; senão o site dá dois preços.
 - Comparação marcada como hipótese: se 1 em cada 50 cliques comprar (2%, troque pela sua taxa), a R$ 32,95 o clique
   cada venda custaria R$ 1.647,50 só em anúncio.
 - Aviso igual ao do /modelo: "Exemplo ilustrativo, não é proposta. O percentual é definido em contrato."
@@ -266,7 +268,7 @@ legendada como a equipe da ROI Labs**. Todas conferidas uma a uma. Descartadas: 
 ![Notas de 100 reais](https://images.pexels.com/photos/7542641/pexels-photo-7542641.jpeg?auto=compress&cs=tinysrgb&w=480)
 
 - Alt: "Notas de 100 reais espalhadas, vistas de perto"
-- Legenda: "No mês sem venda, o modelo de anuidade + comissão custa R$ 220." Crédito: Daniel Dan / Pexels
+- Legenda: "No mês sem venda, o modelo de anuidade + comissão custa R$ 330." Crédito: Daniel Dan / Pexels
 - Página: https://www.pexels.com/photo/brazilian-real-banknotes-in-closeup-7542641/ (5184 × 3456)
 
 **5 · H2 5, quem atende** — `atendente-de-vendas-com-fone.jpg`
