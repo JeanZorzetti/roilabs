@@ -75,7 +75,7 @@ export const FATIA_IA: Record<Cenario, { s: number; fonte: string }> = {
 // ── Posição alcançável pela dificuldade (research D7, premissa) ────────────────────────
 
 export const PREMISSA_POSICAO =
-  'Premissa, não estudo: a loja nova não tem backlink, e a dificuldade mede o backlink do top 10. Só 1,74% das páginas novas chega ao top 10 em um ano (Ahrefs, 2025).';
+  'A tabela não sai de estudo. A loja nova não tem backlink, e a dificuldade mede o backlink do top 10: só 1,74% das páginas novas chega ao top 10 em um ano (Ahrefs, 2025).';
 
 // [dificuldade máxima, posição]. Acima da última faixa = fora do alcance no ano 1.
 export const POSICAO_POR_DIFICULDADE: Record<Cenario, [number, number][]> = {
@@ -96,7 +96,7 @@ export const limiteDificuldade = (c: Cenario) => POSICAO_POR_DIFICULDADE[c].at(-
 /** Mês em que a posição se estabiliza. Antes dele, a captura sobe em reta a partir de zero no mês 1. */
 export const MES_ESTAVEL: Record<Cenario, number> = { conservador: 9, base: 6, otimista: 4 };
 export const PREMISSA_RAMPA =
-  'Premissa: o mês 1 é zero (a loja entra no ar e é indexada) e a captura sobe em reta até o mês em que a posição se estabiliza. O simulador já fala em 3 a 6 meses; o conservador estica até o 9º para cobrir uma loja sem autoridade nenhuma.';
+  'O mês 1 é zero (a loja entra no ar e é indexada) e a captura sobe em reta até o mês em que a posição se estabiliza. O simulador já fala em 3 a 6 meses; o conservador estica até o 9º para cobrir uma loja sem autoridade nenhuma.';
 
 export const LIMITE = { termos: 200, caracteres: 80, palavras: 10 };
 
@@ -421,7 +421,7 @@ function projetarCenario(
       rotulo: d.para,
       n: vendasEstaveis,
       taxa,
-      fonte: parceiro ? 'taxa do parceiro' : `${d.fonte} (${d.data})`,
+      fonte: parceiro ? 'taxa do parceiro' : `${d.fonte} (${d.data.split('-').reverse().join('/')})`,
       origem: parceiro ? 'parceiro' : 'mercado',
       degrau: i,
       premissa: parceiro ? undefined : d.premissa,

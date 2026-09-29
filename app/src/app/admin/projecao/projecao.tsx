@@ -402,6 +402,7 @@ export function Projecao() {
                   alcancavel={r.demanda.alcancavel}
                   media={r.mediaAno1}
                   cenario={cenario}
+                  outroCenarioAlcanca={CENARIOS.some((c) => resultado[c].demanda.alcancavel > 0)}
                   clinicaNoBrasil={nicho.modelo === "consulta" && consulta.local.codigo === BRASIL.codigo}
                 />
 
@@ -458,12 +459,14 @@ function Avisos({
   alcancavel,
   media,
   cenario,
+  outroCenarioAlcanca,
   clinicaNoBrasil,
 }: {
   total: number;
   alcancavel: number;
   media: number;
   cenario: Cenario;
+  outroCenarioAlcanca: boolean;
   clinicaNoBrasil: boolean;
 }) {
   const avisos: string[] = [];
@@ -471,7 +474,7 @@ function Avisos({
     avisos.push("Nenhum termo da lista tem volume medido no Google Ads. Peça ao Claude termos mais buscados.");
   } else if (alcancavel === 0) {
     avisos.push(
-      `Nenhum termo da lista é alcançável no ano 1 neste cenário: todos têm dificuldade acima de ${limiteDificuldade(cenario)}. Troque o cenário ou peça ao Claude termos de cauda longa.`,
+      `Nenhum termo da lista é alcançável no ano 1 neste cenário: todos têm dificuldade acima de ${limiteDificuldade(cenario)}. ${outroCenarioAlcanca ? "Troque o cenário ou peça" : "Peça"} ao Claude termos de cauda longa.`,
     );
   } else if (arredondarVendas(media) < 1) {
     avisos.push(
