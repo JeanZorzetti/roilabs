@@ -5,9 +5,10 @@ import type { ProposalRow } from "@/lib/vertice/data";
 import { brl, findOffer, marginBand } from "@/lib/vertice/catalog";
 
 /**
- * Cartão de uma proposta salva. Mora aqui porque aparece em dois lugares: na
- * /admin/propostas (todas) e na /admin/precos (as do cliente que está
- * sendo negociado). Interno — mostra custo e margem, ao contrário da /p/<slug>.
+ * Cartão de uma proposta da Vértice em /admin/propostas. Interno — mostra custo e
+ * margem, ao contrário da /p/<slug>. O simulador que montava e editava estas
+ * propostas saiu de /admin/precos (hoje é o preço da cadeira da ROI Labs, spec
+ * 019), então o cartão não oferece mais "Editar".
  */
 
 const MARGIN_CLASS = {
@@ -56,9 +57,10 @@ export function ProposalCard({
 
   return (
     <li className="rounded-xl border border-border bg-white p-4 shadow-soft">
-      {proposal.doc?.title ? (
-        <p className="mb-1 font-semibold text-navy">{proposal.doc.title}</p>
-      ) : null}
+      <div className="mb-1 flex flex-wrap items-center gap-2">
+        <span className="rounded-full border border-border px-2 py-0.5 text-xs font-semibold text-navy">Vértice</span>
+        {proposal.doc?.title ? <p className="font-semibold text-navy">{proposal.doc.title}</p> : null}
+      </div>
       {clientName ? (
         <p className="mb-1 text-xs font-bold uppercase tracking-wider text-navy/50">{clientName}</p>
       ) : null}
@@ -154,18 +156,6 @@ export function ProposalCard({
       </div>
 
       <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1">
-        {/* Proposta aceita não abre para edição: o server action recusa o update
-            de qualquer jeito, e oferecer o link seria prometer o que não vai
-            acontecer. Para mudar preço depois do aceite, monte outra. */}
-        {proposal.accepted_at || handBuilt ? null : (
-          <Link
-            href={`/admin/precos?editar=${proposal.id}#simulador`}
-            className="-mx-1 inline-block min-h-[24px] px-1 py-1 text-xs font-semibold text-navy underline underline-offset-2 hover:text-navy-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
-          >
-            Editar esta proposta
-          </Link>
-        )}
-
         {/* Contrato nasce de qualquer proposta ainda em jogo: aceitar o contrato
             aceita a proposta junto. Opção preterida no pacote não fecha mais. */}
         {proposal.doc && !proposal.sibling_accepted ? (

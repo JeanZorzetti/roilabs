@@ -482,3 +482,15 @@ model ConsultaProjecao {
   @@index([criadaEm])
   @@map("projecao_consultas")
 }
+
+// 019 — a cadeira proposal saved from /admin/precos. `doc` (PropostaCadeiraDoc) is frozen at save and is
+// the only thing the public page /p/<slug> reads. Never updated: to change it, save another one.
+model PropostaCadeira {
+  id       String   @id @default(cuid())
+  slug     String   @unique // 48 random bits: whoever has the link reads the proposal
+  criadaEm DateTime @default(now()) @map("criada_em")
+  doc      Json
+
+  @@index([criadaEm])
+  @@map("propostas_cadeira")
+}

@@ -9,13 +9,24 @@ import { useState } from "react";
  */
 export const VERTICE_SITE = "https://verticemarketing.roilabs.com.br";
 
+/** A proposta de cadeira (spec 019) abre neste app, com a marca da ROI Labs. */
+export const ROI_APP = "https://app.roilabs.com.br";
+
 /**
  * Link público de um documento — proposta (`/p/`), termo de entrega (`/e/`) ou
  * contrato (`/c/`).
  */
-export function DocLink({ prefix, slug }: { prefix: "/p/" | "/e/" | "/c/"; slug: string }) {
+export function DocLink({
+  prefix,
+  slug,
+  site = VERTICE_SITE,
+}: {
+  prefix: "/p/" | "/e/" | "/c/";
+  slug: string;
+  site?: string;
+}) {
   const [copied, setCopied] = useState(false);
-  const url = `${VERTICE_SITE}${prefix}${slug}`;
+  const url = `${site}${prefix}${slug}`;
 
   async function copy() {
     try {

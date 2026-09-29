@@ -11,6 +11,7 @@ import {
   ITENS_FIXOS,
   REGRAS_CONTRATO,
   REGRAS_DOMINIO,
+  REGRAS_NEGOCIACAO,
   brl,
 } from "@/lib/precos-cadeira";
 import { lerPonteSimulador } from "@/lib/projecao";
@@ -229,7 +230,7 @@ export default async function PrecosPage({
         <div className="rounded-xl border border-border bg-white p-4">
           <h2 className="font-semibold text-navy">Contrato e cobrança</h2>
           <ul className="mt-3 space-y-1.5">
-            {REGRAS_CONTRATO.map((regra) => (
+            {[...REGRAS_CONTRATO, ...REGRAS_NEGOCIACAO].map((regra) => (
               <li key={regra} className="flex gap-2 text-sm">
                 <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-gold" aria-hidden="true" />
                 <span>{regra}</span>
