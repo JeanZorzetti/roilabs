@@ -896,7 +896,7 @@ a.seat__niche::after {
 }
 
 /* ---------- footer ---------- */
-/* frase de fechamento + CTA · grade (marca · o modelo · cadeiras no ar · contato) · base */
+/* frase de fechamento + CTA · grade (marca | o modelo · contato) · base */
 .site-footer {
   border-top: 1px solid var(--d-line);
   padding-block: clamp(3rem, 6vw, 4.5rem) 1.75rem;
@@ -927,43 +927,34 @@ a.seat__niche::after {
   color: var(--hivis);
 }
 
-/* as colunas de links medem o próprio conteúdo: o número do WhatsApp nunca quebra no meio */
+/* dois blocos com as bordas da chamada: a marca sob a frase, os links sob o botão.
+   As colunas de links medem o próprio conteúdo: o número do WhatsApp nunca quebra no meio */
 .site-footer__grade {
   display: grid;
-  gap: 2rem 2.5rem;
+  gap: 2rem clamp(2.5rem, 5vw, 5rem);
   grid-template-columns: minmax(0, 1fr);
-  grid-template-areas: 'marca' 'modelo' 'cadeiras' 'contato';
+  grid-template-areas: 'marca' 'modelo' 'contato';
   padding-block: clamp(2rem, 4vw, 3rem);
 }
 
 .site-footer__marca { grid-area: marca; }
 .site-footer__modelo { grid-area: modelo; }
-.site-footer__cadeiras { grid-area: cadeiras; }
 .site-footer__contato { grid-area: contato; }
 
-/* tablet: a marca em cima; o modelo e as cadeiras lado a lado; o contato embaixo */
+/* tablet estreito: a marca em cima, as duas colunas de links lado a lado embaixo */
 @media (min-width: 600px) {
   .site-footer__grade {
-    grid-template-columns: max-content minmax(0, 1fr);
-    grid-template-areas: 'marca marca' 'modelo cadeiras' 'contato contato';
+    grid-template-columns: repeat(2, max-content);
+    grid-template-areas: 'marca marca' 'modelo contato';
   }
 }
 
-/* a marca em cima; as três colunas de links numa linha, espalhadas na largura */
-@media (min-width: 900px) {
+/* daqui para cima o botão da chamada fica à direita: uma linha só, a marca fica com a sobra
+   e os links encostam na borda do botão */
+@media (min-width: 800px) {
   .site-footer__grade {
-    grid-template-columns: repeat(3, max-content);
-    grid-template-areas: 'marca marca marca' 'modelo cadeiras contato';
-    justify-content: space-between;
-  }
-}
-
-/* desktop: as quatro numa linha só, a marca fica com o que sobra */
-@media (min-width: 1150px) {
-  .site-footer__grade {
-    grid-template-columns: minmax(0, 1fr) repeat(3, max-content);
-    grid-template-areas: 'marca modelo cadeiras contato';
-    column-gap: clamp(2.5rem, 3.5vw, 3.5rem);
+    grid-template-columns: minmax(0, 1fr) repeat(2, max-content);
+    grid-template-areas: 'marca modelo contato';
   }
 }
 
@@ -1011,19 +1002,6 @@ a.seat__niche::after {
 .site-footer__col li a:hover {
   color: var(--hivis);
   text-decoration: underline;
-}
-
-/* cadeiras no ar: a lista enche a 1ª subcoluna e depois a 2ª (--linhas vem do Footer.astro);
-   numa tela estreita o nome pode quebrar em vez de empurrar a página para o lado */
-.site-footer__cadeiras ul {
-  grid-template-rows: repeat(var(--linhas, 6), auto);
-  grid-auto-flow: column;
-  justify-content: start;
-  column-gap: 1.75rem;
-}
-
-.site-footer__cadeiras li a {
-  white-space: normal;
 }
 
 .site-footer__base {

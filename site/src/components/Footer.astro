@@ -1,27 +1,10 @@
 ---
-// Footer compartilhado (home, blog, /modelo, /simulador, 404). Diz o que a ROI Labs é hoje e
-// lista as cadeiras no ar com os MESMOS dados do mapa de cadeiras da home: cadeira nova entra
-// aqui sozinha quando entra em src/data/fornecedores.ts ou na carteira gerada do app.
-// As cadeiras são uma coluna da grade, ao lado de "O modelo": só os nomes (clientes primeiro,
-// depois as da ROI Labs), em duas subcolunas; o nicho vai no title do link.
+// Footer compartilhado (home, blog, /modelo, /simulador, 404): a frase de fechamento com o CTA,
+// e embaixo dois blocos com as mesmas bordas dela — a marca à esquerda (sob a frase) e as colunas
+// de links à direita (sob o botão). As cadeiras não entram no rodapé: moram no mapa da home.
 // Estilo em global.css (.site-footer*); a home reveste com os tokens da direção Brasil Inteiro.
-import { carteira } from '../data/carteira';
-import { fornecedores } from '../data/fornecedores';
 import { EMAIL, INSTAGRAM, LINKEDIN, whatsLegivel, whatsLink } from '../data/contato';
 
-const daCarteira = (grupo: string) =>
-  carteira
-    .filter((c) => c.estado === 'ocupada-vendavel' && c.grupo === grupo)
-    .map((c) => ({ nome: c.nome, nicho: c.niche, href: c.siteUrl }));
-const noAr = [
-  ...fornecedores
-    .filter((s) => s.estado.startsWith('ocupada'))
-    .map((s) => ({ nome: s.status.split('·').pop()!.trim(), nicho: s.niche, href: s.href })),
-  ...daCarteira('cliente'),
-  ...daCarteira('roilabs'),
-];
-// a lista enche a 1ª subcoluna e depois a 2ª (grid-auto-flow: column no CSS)
-const linhas = Math.ceil(noAr.length / 2);
 const ano = new Date().getFullYear();
 ---
 <footer class="site-footer">
@@ -51,17 +34,6 @@ const ano = new Date().getFullYear();
           <li><a href="/#candidatar">Candidatar-se</a></li>
         </ul>
       </nav>
-
-      {noAr.length > 0 && (
-        <nav class="site-footer__col site-footer__cadeiras" aria-label="Cadeiras no ar">
-          <p class="site-footer__titulo">Cadeiras no ar</p>
-          <ul role="list" style={`--linhas: ${linhas}`}>
-            {noAr.map((c) => (
-              <li><a href={c.href} target="_blank" rel="noopener" title={c.nicho}>{c.nome}</a></li>
-            ))}
-          </ul>
-        </nav>
-      )}
 
       <div class="site-footer__col site-footer__contato">
         <p class="site-footer__titulo">Fale com a gente</p>

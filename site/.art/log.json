@@ -30,5 +30,21 @@
     "escopo": "tokens.css + home.css (releitura do global) + simulador.css próprio, tudo em [data-art='brasil-inteiro']; nenhuma regra da home mudou",
     "camadas": "entrada: a barra da venda acende da esquerda por recorte e o número rola de zero · ponteiro: cada tecla move as fatias da barra e rola o número · scroll: nenhuma (página curta, de ferramenta) · transição: nenhuma (como na home)",
     "recusadas": []
+  },
+  {
+    "data": "2026-09-28",
+    "alvo": "rodapé compartilhado (Footer.astro: home, blog, /modelo, /simulador, 404)",
+    "direcao": "custom:derivada-brasil-inteiro (arrumação de estrutura dentro da direção aprovada, não direção nova)",
+    "eixos": { "materia": "campo", "motor": "nenhum", "banda": "escura" },
+    "estrutura": "chamada (frase à esquerda, botão à direita) e embaixo dois blocos com as mesmas bordas: a marca sob a frase (1fr) e 'O modelo' + 'Fale com a gente' sob o botão (max-content, a borda direita dos links = a do botão a partir de 800px); base com o copyright",
+    "origem": "a dona recusou a faixa 'Cadeiras no ar' e depois a mesma lista como coluna ('não quero que no rodapé tenha cadeira') e pediu a decisão pela direção de arte; sem 3 direções porque a direção já estava aprovada no ar",
+    "orcamento": { "js_kb": 0, "altura_rodape_home_1517px": "856 → 677", "deps_novas": 0 },
+    "deps": [],
+    "escopo": "Footer.astro + regras .site-footer* do global.css; nenhum token novo",
+    "camadas": "nenhuma: o rodapé fica parado de propósito, o gesto é do palco da home",
+    "recusadas": [
+      "faixa 'Cadeiras no ar' em duas linhas, De clientes / Da ROI Labs (ec76893)",
+      "coluna 'Cadeiras no ar' na grade, nomes em duas subcolunas (457cc65)"
+    ]
   }
 ]
