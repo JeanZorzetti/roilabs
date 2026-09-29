@@ -3,7 +3,7 @@ title: 'Mercado Livre, Shopee ou canal próprio: onde o fornecedor regional vend
 description: Marketplace é excelente para produto leve, padronizado, de alto giro e margem folgada. Para o fornecedor regional de produto pesado, sob medida ou de venda consultiva, a comissão, o frete e a devolução comem a margem — e o cliente fica com o canal. Este artigo abre a conta dos três caminhos (marketplace, loja própria e polo por success fee).
 eyebrow: Comparativo · Canais de venda
 pubDate: 2026-07-12
-updatedDate: 2026-09-24
+updatedDate: 2026-09-29
 author: Equipe ROI Labs
 faq:
   - q: 'Vale a pena vender no Mercado Livre ou na Shopee como fornecedor regional?'
@@ -17,7 +17,7 @@ faq:
   - q: 'Qual a diferença entre vender no marketplace e vender pelo canal próprio?'
     a: 'No marketplace, o cliente é do canal: você aluga a audiência, disputa preço lado a lado com o concorrente e paga comissão sobre cada venda, para sempre. No canal próprio, o cliente é seu, a margem é cheia e o atendimento é consultivo — mas a captação passa a ser um problema seu, e é aí que a maioria dos fornecedores trava.'
   - q: 'Como o polo da ROI Labs se encaixa nessa comparação?'
-    a: 'O polo é a terceira via: a ROI Labs constrói a captação de busca local do seu nicho (malha de páginas de alta intenção, catálogo, ferramentas, Google Shopping) e o pedido fecha no seu WhatsApp ou balcão — o cliente é seu. A remuneração é a anuidade simbólica da cadeira (R$ 2.640/ano) e um success fee sobre o que vendeu: não vendeu, não há success fee.'
+    a: 'O polo é a terceira via: a ROI Labs constrói a captação de busca local do seu nicho (malha de páginas de alta intenção, catálogo, ferramentas, Google Shopping), e a equipe de vendas da ROI Labs atende quem chega, fecha a venda e entrega a venda pronta para você. A venda sai no seu nome: o cliente compra de você. A remuneração é a anuidade simbólica da cadeira (R$ 2.640/ano) e um success fee sobre o que vendeu: não vendeu, não há success fee.'
   - q: 'Posso usar marketplace e canal próprio ao mesmo tempo?'
     a: 'Pode, e é a configuração mais saudável: marketplace para o item leve e de giro, canal próprio (ou polo) para o carro-chefe de margem, que é onde a venda consultiva local ganha. A única disciplina obrigatória é a coerência de preço e estoque entre os canais.'
   - q: 'Como eu faço a conta para o meu caso?'
@@ -53,14 +53,14 @@ O problema do canal próprio nunca foi o mérito — é o custo de construir a c
 | :-- | :-- | :-- | :-- |
 | Custo antes da 1ª venda | Zero (só cadastro) | Plataforma + catálogo + integrações + tráfego | Só a anuidade da cadeira (R$ 2.640/ano) |
 | Custo por venda | Comissão (10–20%) + frete + devolução | Taxas de pagamento e frete | % sobre a venda (em contrato) |
-| De quem é o cliente | Do canal | Seu | Seu — fecha no seu WhatsApp ou balcão |
+| De quem é o cliente | Do canal | Seu | Seu — a venda sai no seu nome, e a equipe da ROI Labs trabalha a recompra |
 | Produto pesado, volumoso ou frágil | Ruim (frete e devolução) | Bom (frete local ou retirada) | Bom (frete local ou retirada) |
-| Venda consultiva | Não existe | Sua | Sua — com páginas e ferramentas que qualificam o lead |
+| Venda consultiva | Não existe | Sua | Da equipe de vendas da ROI Labs, com páginas e ferramentas que qualificam o lead |
 | Onde ganha | Item leve, giro, ponta de estoque | Marca própria com demanda | Busca local de alta intenção |
 
 ## Qual é a terceira via entre marketplace e loja própria?
 
-O polo da ROI Labs inverte as duas trocas ruins do marketplace: **a captação é construída pela ROI Labs** (malha de páginas de alta intenção, páginas de produto, ferramentas como calculadora e comparador, feed no Google Shopping) e **o cliente continua sendo seu** — o pedido cai no seu WhatsApp ou balcão, com o seu atendimento. A remuneração é a anuidade simbólica da cadeira (R$ 2.640/ano) e um success fee sobre o que vendeu: sem CAPEX, e sem success fee em mês sem venda. Rode a sua conta no [simulador](/simulador/).
+O polo da ROI Labs inverte as duas trocas ruins do marketplace: **a captação é construída pela ROI Labs** (malha de páginas de alta intenção, páginas de produto, ferramentas como calculadora e comparador, feed no Google Shopping) e **quem atende e fecha a venda é a equipe de vendas da ROI Labs**, que entrega a venda pronta para você. O cliente continua comprando de você, e a equipe trabalha para ele comprar de novo. A remuneração é a anuidade simbólica da cadeira (R$ 2.640/ano) e um success fee sobre o que vendeu: sem CAPEX, e sem success fee em mês sem venda. Rode a sua conta no [simulador](/simulador/).
 
 O modelo inteiro — exclusividade de cadeira por nicho, o que a ROI Labs assume e o que fica com o fornecedor — está na página do [modelo Growth Partner](/modelo/). Se a conta fechou, o passo seguinte é [candidatar sua empresa à cadeira do seu nicho](/#candidatar).
 

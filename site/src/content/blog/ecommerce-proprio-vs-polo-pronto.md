@@ -3,21 +3,21 @@ title: 'E-commerce próprio vs entrar num polo pronto: a conta real'
 description: Montar um e-commerce próprio envolve CAPEX de plataforma, fotos, integrações e tráfego antes da primeira venda. Entrar num polo pronto inverte a conta — a infraestrutura já existe, o fornecedor paga uma anuidade simbólica de R$ 2.640/ano e um success fee sobre o que vendeu. Este artigo abre as duas contas, com a fórmula exata.
 eyebrow: Modelo de negócio · Fornecedores
 pubDate: 2026-07-06
-updatedDate: 2026-09-24
+updatedDate: 2026-09-29
 author: Equipe ROI Labs
 faq:
   - q: 'Quanto custa montar um e-commerce próprio?'
     a: 'Depende da ambição, mas a estrutura de custo é sempre a mesma: plataforma (mensalidade ou desenvolvimento), produção de fotos e cadastro do catálogo, integrações de frete e pagamento, e — o item mais subestimado — tráfego. Sem investir em mídia ou SEO por meses, o site pronto não recebe visita. O CAPEX vem todo antes da primeira venda.'
   - q: 'O que é um polo pronto?'
-    a: 'É uma operação de venda online com a infraestrutura já construída: templates de páginas de alta intenção, páginas de produto, ferramentas como calculadora e comparador, feed no Google Shopping e canal de pedido por WhatsApp. A ROI Labs replica a mesma máquina para o nicho de cada fornecedor que ocupa uma cadeira.'
+    a: 'É uma operação de venda online com a infraestrutura já construída: templates de páginas de alta intenção, páginas de produto, ferramentas como calculadora e comparador, feed no Google Shopping e uma equipe de vendas que atende quem chega e fecha a venda. A ROI Labs replica a mesma máquina para o nicho de cada fornecedor que ocupa uma cadeira.'
   - q: 'Como funciona a cobrança no polo?'
     a: 'São duas partes. A anuidade da cadeira, de R$ 2.640/ano (R$ 220/mês), e o success fee: a base é a soma dos pedidos elegíveis do mês, e a fatura é essa base vezes o percentual negociado em contrato. Vendeu R$ 20.000 num mês com fee de 10%, o success fee é R$ 2.000. Não vendeu nada, o success fee é zero — fica só a anuidade.'
   - q: 'Qual o percentual do success fee?'
     a: 'É definido em contrato, conforme nicho, margem e SLA de estoque e despacho. O simulador público da ROI Labs permite testar qualquer percentual sobre o seu ticket médio e volume de pedidos antes de qualquer conversa comercial.'
   - q: 'Se eu já tenho um e-commerce, o polo ainda faz sentido?'
-    a: 'Pode fazer, porque os dois não competem: o polo captura a busca local de alta intenção e entrega o pedido ao seu atendimento, enquanto o e-commerce atende quem já conhece sua marca. O ponto de atenção é operacional — preço e estoque precisam estar coerentes entre os canais.'
+    a: 'Pode fazer, porque os dois não competem: o polo captura a busca local de alta intenção e a equipe de vendas da ROI Labs entrega a venda pronta para você, enquanto o e-commerce atende quem já conhece sua marca. O ponto de atenção é operacional — preço e estoque precisam estar coerentes entre os canais.'
   - q: 'Qual o risco de cada caminho?'
-    a: 'No e-commerce próprio, o risco é financeiro e antecipado: você paga tudo antes de saber se vende. No polo, o risco financeiro fica quase todo com a operação do polo (o success fee só existe se você vender; o seu custo fixo é a anuidade de R$ 2.640/ano) e o seu risco é de dependência do canal — mitigado pelo fato de o cliente fechar no seu WhatsApp ou balcão.'
+    a: 'No e-commerce próprio, o risco é financeiro e antecipado: você paga tudo antes de saber se vende. No polo, o risco financeiro fica quase todo com a operação do polo (o success fee só existe se você vender; o seu custo fixo é a anuidade de R$ 2.640/ano) e o seu risco é de dependência do canal — mitigado pelo fato de a venda sair no seu nome: o cliente compra de você.'
 ---
 
 A diferença entre montar um e-commerce próprio e entrar num polo pronto não é de grau, é de estrutura de risco: no e-commerce próprio, todo o custo (plataforma, catálogo, integrações, tráfego) vem **antes** da primeira venda; no polo pronto, a infraestrutura já existe, o custo fixo se resume a uma anuidade simbólica da cadeira (R$ 2.640/ano) e a operação é remunerada por um **success fee** — uma fração da venda, cobrada só quando ela acontece. Este artigo abre as duas contas.
@@ -35,7 +35,7 @@ Depois do lançamento o CAPEX vira OPEX: mensalidades, mídia contínua, atualiz
 
 ## O que muda num polo pronto?
 
-No polo, a infraestrutura de captação já existe: templates de páginas de alta intenção, páginas de produto, ferramentas como calculadora e comparador, feed no Google Shopping e canal de pedido. A ROI Labs replica essa infraestrutura para o nicho de cada fornecedor que ocupa uma cadeira. O fornecedor entra com o que só ele tem — produto, estoque, preço competitivo e atendimento — e a ROI Labs entra com o resto.
+No polo, a infraestrutura de captação já existe: templates de páginas de alta intenção, páginas de produto, ferramentas como calculadora e comparador, feed no Google Shopping, canal de pedido e uma equipe de vendas que atende quem chega e fecha a venda. A ROI Labs replica essa infraestrutura para o nicho de cada fornecedor que ocupa uma cadeira. O fornecedor entra com o que só ele tem — produto, estoque, preço competitivo e despacho no prazo — e a ROI Labs entra com o resto.
 
 A contrapartida é o modelo de remuneração. Em vez de mensalidade de plataforma, uma anuidade simbólica da cadeira (R$ 2.640/ano) e um **success fee**: a mesma fórmula que a ROI Labs usa para faturar parceiros ativos, e que o [simulador](/simulador/) do site replica publicamente.
 
@@ -56,7 +56,8 @@ Um exemplo hipotético para dar escala — ticket de R$ 450, 40 pedidos por mês
 | Custo variável | Taxas de pagamento e frete | % sobre a venda (definido em contrato) |
 | Quem carrega o risco de não vender | Você | A operação do polo (o seu teto é a anuidade) |
 | Tempo até a primeira visita qualificada | Meses (SEO) ou pago (mídia) | Infraestrutura pronta; as páginas do seu nicho maturam em 3 a 6 meses |
-| De quem é o cliente | Seu | Seu — o pedido fecha no seu WhatsApp ou balcão |
+| Quem atende e fecha a venda | Você ou o seu time | A equipe de vendas da ROI Labs, que entrega a venda pronta |
+| De quem é o cliente | Seu | Seu — a venda sai no seu nome |
 
 ## Quando o e-commerce próprio ainda é o caminho certo?
 
