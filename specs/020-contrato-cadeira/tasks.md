@@ -56,8 +56,8 @@ Todos os caminhos são relativos a `app/`.
 
 - [x] T018 Run `accessibility` + `ux-writing` over the acceptance form and the admin form; fix findings
 - [x] T019 `npm test` + `npx tsc --noEmit`; Docker build if the OneDrive lies
-- [ ] T020 Push to `main`; production run of quickstart.md steps 1–9 with `ui-verification` (3 widths, keyboard, console); clean the test rows
-- [ ] T021 Write specs/020-contrato-cadeira/handoff.md (feito / decisões / próximos passos / pendências / gotchas), update memory, commit + push
+- [x] T020 Push to `main`; production run of quickstart.md steps 1–9 with `ui-verification` (3 widths, keyboard, console); clean the test rows
+- [x] T021 Write specs/020-contrato-cadeira/handoff.md (feito / decisões / próximos passos / pendências / gotchas), update memory, commit + push
 
 ## Dependencies & Execution Order
 

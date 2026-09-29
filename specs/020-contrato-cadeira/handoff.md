@@ -32,6 +32,10 @@
   só pelo teclado → registro com IP/UA/hash (o hash recalculado confere) → cartões sem editar/excluir → `RESTRICT`
   recusa excluir a proposta (P2003) → "Emitir" de aba velha redireciona para o contrato. 360/768/1440 px sem rolagem
   lateral; console sem erro.
+- **Produção (29/09, `9df042b`)**: no ar ~90 s depois do push. Contrato de teste semeado por script, aberto em
+  360 px (noindex, 17 cláusulas, sem rolagem lateral), aceito pelo navegador; no banco, IP real (não `::1`), UA e hash
+  conferindo. `/admin/contratos` e `/admin/propostas` mostram "Aceito … · Fulano de Teste" sem editar/excluir e sem
+  erro de banco. Linhas de teste apagadas direto no banco; o link voltou a "Contrato não encontrado".
 - Achado e consertado na verificação: `ROI_APP` vem de módulo `"use client"` e, lido como string num server component,
   vira referência de cliente. O link da proposta no cartão do contrato agora é relativo (`/p/<slug>`).
 
