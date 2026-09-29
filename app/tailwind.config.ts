@@ -11,7 +11,7 @@ export default {
     './src/app/admin/admin-nav.tsx',
     './src/app/admin/layout.tsx',
     './src/app/admin/page.tsx',
-    './src/app/admin/{entregaveis,onboarding,precos,propostas,contratos,entregas}/**/*.tsx',
+    './src/app/admin/{entregaveis,onboarding,precos,projecao,propostas,contratos,entregas}/**/*.tsx',
   ],
   corePlugins: { preflight: false, container: false },
   theme: {

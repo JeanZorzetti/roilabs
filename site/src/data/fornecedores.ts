@@ -1,4 +1,4 @@
-// Cadeiras de FORNECEDOR (o mapa de nichos da home e a lista "Cadeiras no ar" do rodapé).
+// Cadeiras de FORNECEDOR (o mapa de nichos da home).
 // Skeleton ESTÁTICO (SEO + no-JS): a verdade vem do DB AO VIVO — o <script is:inline> do mapa de
 // cadeiras na home busca /api/cadeiras no NAVEGADOR e atualiza status/aberta a cada carregamento.
 // Build-time fetch foi removido de propósito: o Docker cacheia o layer do `npm run build`, então

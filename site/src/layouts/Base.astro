@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import { INSTAGRAM, LINKEDIN, YOUTUBE } from '../data/contato';
 
 interface Props {
   title?: string;
@@ -41,10 +42,7 @@ const graph = {
       logo: { '@type': 'ImageObject', url: 'https://roilabs.com.br/roilabs-icon.png' },
       areaServed: { '@type': 'Country', name: 'Brasil' },
       slogan: 'Construímos sua venda online. Nosso lucro vem da sua venda.',
-      sameAs: [
-        'https://www.linkedin.com/company/roi-labs-curadoria/',
-        'https://www.instagram.com/roilabs.curadoria/',
-      ],
+      sameAs: [LINKEDIN, INSTAGRAM, YOUTUBE],
     },
     {
       '@type': 'WebSite',

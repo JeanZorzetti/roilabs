@@ -463,3 +463,22 @@ model FaturaSuccessFee {
   @@unique([parceiroId, competencia])
   @@map("faturas_success_fee")
 }
+
+// 018 — a paid Projeção query, stored as DataForSEO answered it. Never updated: the projection is
+// recomputed from these terms with the current funnel premises every time it is read.
+model ConsultaProjecao {
+  id          String   @id @default(cuid())
+  criadaEm    DateTime @default(now()) @map("criada_em")
+  paraQuem    String?  @map("para_quem")
+  nichoId     String   @map("nicho_id")
+  localCodigo Int      @map("local_codigo")
+  localNome   String   @map("local_nome")
+  termos      Json // TermoConsultado[]
+  janelaDe    String?  @map("janela_de")
+  janelaAte   String?  @map("janela_ate")
+  removidos   Int
+  custoUsd    Float    @map("custo_usd")
+
+  @@index([criadaEm])
+  @@map("projecao_consultas")
+}

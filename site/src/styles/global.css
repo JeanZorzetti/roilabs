@@ -896,7 +896,7 @@ a.seat__niche::after {
 }
 
 /* ---------- footer ---------- */
-/* frase de fechamento + CTA · marca e o que a ROI Labs é · cadeiras no ar · o modelo · contato · base */
+/* frase de fechamento + CTA · grade (marca | o modelo · contato) · base */
 .site-footer {
   border-top: 1px solid var(--d-line);
   padding-block: clamp(3rem, 6vw, 4.5rem) 1.75rem;
@@ -927,17 +927,34 @@ a.seat__niche::after {
   color: var(--hivis);
 }
 
+/* dois blocos com as bordas da chamada: a marca sob a frase, os links sob o botão.
+   As colunas de links medem o próprio conteúdo: o número do WhatsApp nunca quebra no meio */
 .site-footer__grade {
   display: grid;
-  gap: 2rem 2.5rem;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+  gap: 2rem clamp(2.5rem, 5vw, 5rem);
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: 'marca' 'modelo' 'contato';
   padding-block: clamp(2rem, 4vw, 3rem);
 }
 
-/* a coluna de contato mede o próprio conteúdo: o número do WhatsApp nunca quebra no meio */
-@media (min-width: 1000px) {
+.site-footer__marca { grid-area: marca; }
+.site-footer__modelo { grid-area: modelo; }
+.site-footer__contato { grid-area: contato; }
+
+/* tablet estreito: a marca em cima, as duas colunas de links lado a lado embaixo */
+@media (min-width: 600px) {
   .site-footer__grade {
-    grid-template-columns: 1.4fr 1.2fr 1fr max-content;
+    grid-template-columns: repeat(2, max-content);
+    grid-template-areas: 'marca marca' 'modelo contato';
+  }
+}
+
+/* daqui para cima o botão da chamada fica à direita: uma linha só, a marca fica com a sobra
+   e os links encostam na borda do botão */
+@media (min-width: 800px) {
+  .site-footer__grade {
+    grid-template-columns: minmax(0, 1fr) repeat(2, max-content);
+    grid-template-areas: 'marca modelo contato';
   }
 }
 
@@ -987,11 +1004,31 @@ a.seat__niche::after {
   text-decoration: underline;
 }
 
-.site-footer__nicho {
+/* redes: só o ícone, 22px numa área de toque de 40px; a fileira recua o que sobra da área
+   para o desenho do 1º ícone alinhar com o texto de cima */
+.site-footer__contato .site-footer__redes {
+  display: flex;
+  gap: 0.35rem;
+  margin: 0.45rem 0 0 -0.65rem;
+  padding: 0;
+  list-style: none;
+}
+
+.site-footer__redes li a {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  color: var(--d-text);
+}
+
+.site-footer__redes li a:hover {
+  color: var(--hivis);
+}
+
+.site-footer__redes svg {
   display: block;
-  margin: -0.2rem 0 0.35rem;
-  font-size: 0.8rem;
-  color: var(--d-muted);
 }
 
 .site-footer__base {

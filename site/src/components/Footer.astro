@@ -1,19 +1,30 @@
 ---
-// Footer compartilhado (home, blog, /modelo, /simulador, 404). Diz o que a ROI Labs é hoje e
-// lista as cadeiras no ar com os MESMOS dados do mapa de cadeiras da home: cadeira nova entra
-// aqui sozinha quando entra em src/data/fornecedores.ts ou na carteira gerada do app.
+// Footer compartilhado (home, blog, /modelo, /simulador, 404): a frase de fechamento com o CTA,
+// e embaixo dois blocos com as mesmas bordas dela — a marca à esquerda (sob a frase) e as colunas
+// de links à direita (sob o botão). As cadeiras não entram no rodapé: moram no mapa da home.
 // Estilo em global.css (.site-footer*); a home reveste com os tokens da direção Brasil Inteiro.
-import { carteira } from '../data/carteira';
-import { fornecedores } from '../data/fornecedores';
-import { EMAIL, INSTAGRAM, LINKEDIN, whatsLegivel, whatsLink } from '../data/contato';
+import { EMAIL, INSTAGRAM, LINKEDIN, YOUTUBE, whatsLegivel, whatsLink } from '../data/contato';
 
-const noAr = [
-  ...fornecedores
-    .filter((s) => s.estado.startsWith('ocupada'))
-    .map((s) => ({ nome: s.status.split('·').pop()!.trim(), nicho: s.niche, href: s.href })),
-  ...carteira
-    .filter((c) => c.estado === 'ocupada-vendavel')
-    .map((c) => ({ nome: c.nome, nicho: c.niche, href: c.siteUrl })),
+// Redes só com o ícone (Lucide, ISC, traço de 24px); o nome vai no aria-label e no title.
+const redes = [
+  {
+    nome: 'Instagram',
+    href: INSTAGRAM,
+    desenho:
+      '<rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>',
+  },
+  {
+    nome: 'LinkedIn',
+    href: LINKEDIN,
+    desenho:
+      '<path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/>',
+  },
+  {
+    nome: 'YouTube',
+    href: YOUTUBE,
+    desenho:
+      '<path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"/><path d="m10 15 5-3-5-3z"/>',
+  },
 ];
 const ano = new Date().getFullYear();
 ---
@@ -34,19 +45,7 @@ const ano = new Date().getFullYear();
         </p>
       </div>
 
-      <nav class="site-footer__col" aria-label="Cadeiras no ar">
-        <p class="site-footer__titulo">Cadeiras no ar</p>
-        <ul role="list">
-          {noAr.map((c) => (
-            <li>
-              <a href={c.href} target="_blank" rel="noopener">{c.nome} ↗</a>
-              <span class="site-footer__nicho">{c.nicho}</span>
-            </li>
-          ))}
-        </ul>
-      </nav>
-
-      <nav class="site-footer__col" aria-label="O modelo">
+      <nav class="site-footer__col site-footer__modelo" aria-label="O modelo">
         <p class="site-footer__titulo">O modelo</p>
         <ul role="list">
           <li><a href="/modelo/">Como funciona o modelo</a></li>
@@ -57,13 +56,20 @@ const ano = new Date().getFullYear();
         </ul>
       </nav>
 
-      <div class="site-footer__col">
+      <div class="site-footer__col site-footer__contato">
         <p class="site-footer__titulo">Fale com a gente</p>
         <ul role="list">
           <li><a href={whatsLink()} target="_blank" rel="noopener">WhatsApp {whatsLegivel()}</a></li>
           <li><a href={`mailto:${EMAIL}`}>{EMAIL}</a></li>
-          <li><a href={INSTAGRAM} target="_blank" rel="noopener">Instagram ↗</a></li>
-          <li><a href={LINKEDIN} target="_blank" rel="noopener">LinkedIn ↗</a></li>
+        </ul>
+        <ul class="site-footer__redes" role="list" aria-label="Redes sociais">
+          {redes.map((r) => (
+            <li>
+              <a href={r.href} target="_blank" rel="noopener" aria-label={`ROI Labs no ${r.nome}`} title={r.nome}>
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" set:html={r.desenho} />
+              </a>
+            </li>
+          ))}
         </ul>
       </div>
     </div>

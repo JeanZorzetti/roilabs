@@ -53,5 +53,21 @@
     "origem": "a dona pediu de novo /art-direction no /modelo. O ramo art/modelo já tinha a propagação e a main tinha ganhado os botões da etapa 1 depois; juntei os dois e olhei a tela pronta. O fraco era o fim: seis números iguais e a etapa 06 terminando no vazio. O caminho agora chega numa cadeira no ar (foto da Use Aligner + os números do Search Console que a home já publica), pelo viés 'trabalho real à vista' de gosto.md",
     "gates": "35/35. Reprovou e foi corrigido: G3 (título a 4,7rem, 4,4× o corpo → 5,35rem, o teto da home, com a grade 8/4 para 'Growth Partner:' caber na linha), G16 (ponto da chegada pulsando sem fim fora do palco → 3 pulsos e fica aceso). G31 n/a: a página não tem canvas",
     "recusadas": []
+  },
+  {
+    "data": "2026-09-28",
+    "alvo": "rodapé compartilhado (Footer.astro: home, blog, /modelo, /simulador, 404)",
+    "direcao": "custom:derivada-brasil-inteiro (arrumação de estrutura dentro da direção aprovada, não direção nova)",
+    "eixos": { "materia": "campo", "motor": "nenhum", "banda": "escura" },
+    "estrutura": "chamada (frase à esquerda, botão à direita) e embaixo dois blocos com as mesmas bordas: a marca sob a frase (1fr) e 'O modelo' + 'Fale com a gente' sob o botão (max-content, a borda direita dos links = a do botão a partir de 800px); base com o copyright",
+    "origem": "a dona recusou a faixa 'Cadeiras no ar' e depois a mesma lista como coluna ('não quero que no rodapé tenha cadeira') e pediu a decisão pela direção de arte; sem 3 direções porque a direção já estava aprovada no ar",
+    "orcamento": { "js_kb": 0, "altura_rodape_home_1517px": "856 → 677", "deps_novas": 0 },
+    "deps": [],
+    "escopo": "Footer.astro + regras .site-footer* do global.css; nenhum token novo",
+    "camadas": "nenhuma: o rodapé fica parado de propósito, o gesto é do palco da home",
+    "recusadas": [
+      "faixa 'Cadeiras no ar' em duas linhas, De clientes / Da ROI Labs (ec76893)",
+      "coluna 'Cadeiras no ar' na grade, nomes em duas subcolunas (457cc65)"
+    ]
   }
 ]

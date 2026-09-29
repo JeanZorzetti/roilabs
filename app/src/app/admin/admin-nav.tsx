@@ -10,11 +10,13 @@ const FOCO_NA_BARRA =
 // Telas que vieram do admin do site verticemarketing e duas da ROI Labs.
 // /admin/entregaveis usa o esqueleto da Vértice com o escopo das cadeiras da
 // ROI Labs (lib/entregaveis.ts); /admin/precos, com os preços da ROI Labs
-// (lib/precos-cadeira.ts). /admin/precificacao é a comissão por nicho (spec 016).
+// (lib/precos-cadeira.ts). /admin/precificacao é a comissão por nicho (spec 016);
+// /admin/projecao, o ritmo de venda pela demanda de busca que alimenta o simulador (spec 017).
 const NAV: [string, string][] = [
   ['/admin/entregaveis', 'Entregáveis'],
   ['/admin/onboarding', 'Onboarding'],
   ['/admin/precos', 'Preços'],
+  ['/admin/projecao', 'Projeção'],
   ['/admin/propostas', 'Propostas'],
   ['/admin/contratos', 'Contratos'],
   ['/admin/entregas', 'Entregas'],
