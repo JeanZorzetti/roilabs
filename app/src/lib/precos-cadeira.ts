@@ -135,12 +135,134 @@ export const REGRAS_DOMINIO = [
   'Renova todo ano junto com a anuidade. Domínio vencido derruba o site: a renovação automática fica ligada na Hostinger',
 ];
 
+/** Só vale para nicho de % por pedido: a proposta de SaaS ou clínica não leva esta linha. */
+export const REGRA_COMISSAO_PEDIDO = 'Comissão sobre o produto com desconto, nunca sobre o frete. Piso de R$ 5 por pedido';
+
+/** Condições do contrato. Todas vão para a proposta do cliente (spec 019). */
 export const REGRAS_CONTRATO = [
   'Contrato anual, renovável por desempenho dos dois lados',
   'Uma cadeira por nicho no Brasil inteiro enquanto o contrato vigorar',
-  'Comissão sobre o produto com desconto, nunca sobre o frete. Piso de R$ 5 por pedido',
+  REGRA_COMISSAO_PEDIDO,
   'Devolução, cancelamento ou chargeback devolvem a comissão',
   'Relatório venda por venda antes de cada cobrança do dia 05',
   'A recompra dos clientes que a ROI Labs trouxe segue comissionada por 12 meses depois do fim do contrato',
+];
+
+/** Regra de negociação do operador: aparece em /admin/precos, nunca na proposta do cliente. */
+export const REGRAS_NEGOCIACAO = [
   'Desconto na comissão só até a faixa logo abaixo, e só em troca de algo (ex.: contrato de 24 meses).',
 ];
+
+// ── 019: proposta guardada ──────────────────────────────────────────────────────────────
+// O documento é a única coisa que a página pública /p/<slug> lê. Congelado no save: mudar
+// preço ou nicho amanhã não reescreve proposta já enviada. Nada interno entra aqui — nem
+// `nicho.regra`, nem a faixa, nem os `avisos` de simular() (o do CFO/CFM é para o operador),
+// nem REGRAS_NEGOCIACAO. A regra de comissão é reescrita para o cliente, com as taxas já
+// ajustadas (distribuidor) e o valor por consulta que foi digitado.
+
+export const PROPOSTA_VALIDADE_DIAS = 15;
+
+export type PropostaCadeiraDoc = {
+  versao: 1;
+  paraQuem: string;
+  criadaEm: string; // ISO
+  validaAte: string; // ISO
+  nicho: { id: string; nome: string; modelo: NichoPreco['modelo'] };
+  comissao: { resumo: string; regras: string[]; quando: string };
+  /** O ritmo informado na simulação, já formatado: é a premissa da estimativa. */
+  ritmo: { rotulo: string; valor: string }[];
+  entrada: { item: string; valor: string; nota: string }[];
+  entradaTotal: number;
+  /** null quando o ritmo não gera comissão: a proposta não promete "R$ 0,00". */
+  estimativa: {
+    comissaoMes: number;
+    mesReferencia: string | null;
+    comissaoAno: number;
+    totalAno: number;
+    vendasAno: number | null;
+    pctDaVenda: number | null;
+  } | null;
+  condicoes: string[];
+};
+
+const pctTexto = (v: number) => `${(v * 100).toLocaleString('pt-BR', { maximumFractionDigits: 1 })}%`;
+const numTexto = (v: number) => positivo(v).toLocaleString('pt-BR', { maximumFractionDigits: 1 });
+
+function comissaoParaCliente(e: EntradaSimulacao): PropostaCadeiraDoc['comissao'] {
+  const quando = 'Todo dia 05, sobre o mês anterior. Só sobre venda paga e originada pela cadeira: vendeu zero, comissão zero.';
+  const n = e.nicho;
+  if (n.modelo === 'percentual') {
+    const aq = calcularComissao(n, 'aquisicao', 0, e.distribuidor);
+    const rec = calcularComissao(n, 'recorrencia', 0, e.distribuidor);
+    return {
+      resumo: `${pctTexto(aq.taxaAplicada)} na 1ª compra · ${pctTexto(rec.taxaAplicada)} na recompra`,
+      regras: [
+        `Na parte do produto acima de ${brl(n.corte)}, a taxa cai para ${pctTexto(aq.taxaAcimaCorte)} na 1ª compra e ${pctTexto(rec.taxaAcimaCorte)} na recompra.`,
+      ],
+      quando,
+    };
+  }
+  if (n.modelo === 'mensalidade') {
+    return {
+      resumo: `${n.aquisicaoTexto} · ${n.recorrenciaTexto}`,
+      regras: [`A taxa de implantação que você cobrar do seu cliente também paga ${pctTexto(SAAS_ANO_1)}.`],
+      quando,
+    };
+  }
+  const valor = positivo(e.valorConsulta);
+  return {
+    resumo: valor > 0 ? `${brl(valor)} por consulta comparecida` : n.aquisicaoTexto,
+    regras: [`${n.recorrenciaTexto}.`],
+    quando,
+  };
+}
+
+function ritmoInformado(e: EntradaSimulacao): PropostaCadeiraDoc['ritmo'] {
+  if (e.nicho.modelo === 'percentual') {
+    return [
+      { rotulo: 'Pedidos pagos por mês', valor: numTexto(e.pedidosMes) },
+      { rotulo: 'Valor médio do produto', valor: brl(positivo(e.ticket)) },
+      { rotulo: 'Pedidos de recompra', valor: pctTexto(Math.min(1, positivo(e.recompra))) },
+    ];
+  }
+  if (e.nicho.modelo === 'mensalidade') {
+    return [
+      { rotulo: 'Assinaturas novas por mês', valor: numTexto(e.assinaturasMes) },
+      { rotulo: 'Mensalidade do plano', valor: brl(positivo(e.mensalidade)) },
+    ];
+  }
+  return [
+    { rotulo: 'Consultas comparecidas por mês', valor: numTexto(e.consultasMes) },
+    { rotulo: 'Valor por consulta', valor: brl(positivo(e.valorConsulta)) },
+  ];
+}
+
+export function montarPropostaCadeira(e: EntradaSimulacao, paraQuem: string, agora: Date): PropostaCadeiraDoc {
+  const r = simular(e);
+  return {
+    versao: 1,
+    paraQuem: paraQuem.trim(),
+    criadaEm: agora.toISOString(),
+    validaAte: new Date(agora.getTime() + PROPOSTA_VALIDADE_DIAS * 86_400_000).toISOString(),
+    nicho: { id: e.nicho.id, nome: e.nicho.nicho, modelo: e.nicho.modelo },
+    comissao: comissaoParaCliente(e),
+    ritmo: ritmoInformado(e),
+    entrada: ITENS_FIXOS.filter((i) => i.item !== 'Comissão').map(({ item, valor, nota }) => ({ item, valor, nota })),
+    entradaTotal: ENTRADA_ANO,
+    estimativa:
+      r.comissaoAno > 0
+        ? {
+            comissaoMes: r.comissaoMes,
+            mesReferencia: e.nicho.modelo === 'mensalidade' ? 'no 12º mês' : null,
+            comissaoAno: r.comissaoAno,
+            totalAno: r.totalAno,
+            vendasAno: r.vendasAno > 0 ? r.vendasAno : null,
+            pctDaVenda: r.pctDaVenda,
+          }
+        : null,
+    condicoes: [
+      ...REGRAS_CONTRATO.filter((c) => e.nicho.modelo === 'percentual' || c !== REGRA_COMISSAO_PEDIDO),
+      ...REGRAS_DOMINIO,
+    ],
+  };
+}

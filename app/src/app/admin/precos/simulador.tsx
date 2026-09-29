@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useActionState, useState } from "react";
+import { guardarPropostaCadeira } from "../propostas/actions";
 import { FAIXAS, NICHOS, lerNumeroBR, type Faixa, type NichoPreco } from "@/lib/precificacao";
 import { ROTULO_CENARIO, type PonteSimulador } from "@/lib/projecao";
 import {
@@ -17,9 +18,9 @@ import {
 /**
  * Simulador da proposta de uma cadeira.
  *
- * Não salva nada: a proposta da ROI Labs sai do modelo em slides. Aqui é só a
- * conta, para responder na reunião "quanto eu pago no primeiro ano?" com o
- * número do nicho dele, não com o 15/10 de cabeça.
+ * Responde na reunião "quanto eu pago no primeiro ano?" com o número do nicho
+ * dele, não com o 15/10 de cabeça. Guardar (spec 019) congela a proposta e dá a
+ * ela um link público da ROI Labs; "Copiar resumo" continua para os slides.
  */
 
 const pct = (v: number) => `${(v * 100).toLocaleString("pt-BR", { maximumFractionDigits: 1 })}%`;
@@ -90,6 +91,8 @@ export function SimuladorCadeira({ inicial }: { inicial?: PonteSimulador | null 
   const [consultas, setConsultas] = useState(modeloInicial === "consulta" ? ritmoInicial : "10");
   const [valorConsulta, setValorConsulta] = useState("200");
   const [copiado, setCopiado] = useState(false);
+  const [paraQuem, setParaQuem] = useState("");
+  const [estado, guardar, guardando] = useActionState(guardarPropostaCadeira, { erro: null });
 
   const nicho = NICHOS.find((n) => n.id === nichoId) ?? NICHOS[0];
   const r = simular({
@@ -295,19 +298,66 @@ export function SimuladorCadeira({ inicial }: { inicial?: PonteSimulador | null 
                 ))}
               </ul>
             ) : null}
+          </div>
 
-            <div className="space-y-1 border-t border-border pt-3">
+          {/* Fora da região aria-live: o erro já tem role="alert", e "Guardando…" não precisa ser anunciado duas vezes. */}
+          <div className="space-y-3 px-4 pb-4">
+            <form action={guardar} className="space-y-2 border-t border-border pt-3">
+              {/* A conta é refeita no servidor a partir destes campos crus (spec 019, FR-002). */}
+              <input type="hidden" name="nichoId" value={nichoId} />
+              <input type="hidden" name="pedidos" value={pedidos} />
+              <input type="hidden" name="ticket" value={ticket} />
+              <input type="hidden" name="recompra" value={recompra} />
+              <input type="hidden" name="distribuidor" value={distribuidor ? "1" : "0"} />
+              <input type="hidden" name="assinaturas" value={assinaturas} />
+              <input type="hidden" name="mensalidade" value={mensalidade} />
+              <input type="hidden" name="consultas" value={consultas} />
+              <input type="hidden" name="valorConsulta" value={valorConsulta} />
+
+              <label htmlFor="sim-para-quem" className={ROTULO}>
+                Para quem
+                <input
+                  id="sim-para-quem"
+                  name="paraQuem"
+                  value={paraQuem}
+                  onChange={(e) => setParaQuem(e.target.value)}
+                  maxLength={120}
+                  autoComplete="off"
+                  placeholder="ex.: Loja Aurora"
+                  aria-invalid={estado.erro ? true : undefined}
+                  aria-describedby={`sim-para-quem-dica${estado.erro ? " sim-guardar-erro" : ""}`}
+                  className={CAMPO}
+                />
+                <span id="sim-para-quem-dica" className="font-normal">
+                  Aparece no título da proposta que o cliente abre.
+                </span>
+              </label>
+
+              {estado.erro ? (
+                <p id="sim-guardar-erro" role="alert" className="text-sm text-red-700">
+                  {estado.erro}
+                </p>
+              ) : null}
+
               <button
-                type="button"
-                onClick={copiar}
-                className="w-full rounded-md bg-navy px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-navy-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+                type="submit"
+                disabled={guardando}
+                className="w-full rounded-md bg-navy px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-navy-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold disabled:cursor-wait disabled:opacity-70"
               >
-                {copiado ? "Copiado ✓" : "Copiar resumo"}
+                {guardando ? "Guardando…" : "Guardar proposta"}
               </button>
               <p className="text-xs text-muted-foreground">
-                Para colar na proposta em slides. Nada é salvo aqui.
+                Guardada, ela vai para Propostas com um link para mandar ao cliente.
               </p>
-            </div>
+            </form>
+
+            <button
+              type="button"
+              onClick={copiar}
+              className="w-full rounded-md border border-border px-4 py-2 text-sm font-semibold text-navy transition-colors hover:bg-card focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+            >
+              {copiado ? "Copiado ✓" : "Copiar resumo para os slides"}
+            </button>
           </div>
         </div>
       </div>

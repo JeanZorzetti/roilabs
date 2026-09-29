@@ -18,5 +18,9 @@ decida e registre. Começou com a spec 017 (Projeção).
 | Ritmo esperado de venda | "Ritmo esperado de venda" | volume de vendas, meta | simulador em `/admin/precos` |
 | Consulta guardada | "consulta guardada", "Consultas guardadas" (toda consulta paga que deu certo) | consulta salva, histórico de buscas, log, registro | `/admin/projecao/consultas`, link no cabeçalho da Projeção, procedência |
 | Guardar | "guardada", "não entrou nas consultas guardadas" | salvar, gravar, registrar (na interface) | aviso e procedência da Projeção |
-| Para quem | "Para quem (opcional)" (nome da consulta) | cliente, parceiro, projeto, rótulo | campo da Projeção, 1ª coluna das consultas guardadas |
+| Para quem | "Para quem (opcional)" (nome da consulta); "Para quem" obrigatório na proposta de cadeira | cliente, parceiro, projeto, rótulo | campo da Projeção, 1ª coluna das consultas guardadas, simulador de Preços, título da proposta |
 | Nova consulta | "Nova consulta" (volta à Projeção vazia) | nova busca, novo cálculo | cabeçalho das consultas guardadas |
+| Guardar proposta | "Guardar proposta", "Guardando…" (congela a proposta de cadeira e dá o link) | salvar, gerar, emitir, enviar proposta | simulador em `/admin/precos` |
+| Proposta de cadeira | "Proposta para {para quem}", selo "Cadeira" na lista | orçamento, cotação, proposta comercial | `/admin/propostas`, página pública `/p/<slug>` |
+| Válida até / Vencida em | "Válida até dd/mm/aaaa", "Vencida em dd/mm/aaaa" (15 dias) | expira, prazo, validade expirada | cartão da proposta, página pública |
+| Falar com a ROI Labs no WhatsApp | CTA único da página pública da proposta | aceitar, fechar, contratar agora | `/p/<slug>` |
