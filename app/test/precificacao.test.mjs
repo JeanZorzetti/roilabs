@@ -16,6 +16,7 @@ const nicho = (id) => NICHOS_PERCENTUAIS.find((n) => n.id === id);
 // ── a tabela em si: ids únicos, taxas em [mínimo, 1], aquisição ≥ recorrência ──────────
 {
   assert.equal(new Set(NICHOS.map((n) => n.id)).size, NICHOS.length, 'id duplicado');
+  for (const n of NICHOS) assert.ok(!/reduzida|acima de R\$/i.test(n.regra ?? ''), `${n.id}: sobra da regra do corte`);
   for (const n of NICHOS_PERCENTUAIS) {
     assert.ok(n.aquisicao <= 1 && n.recorrencia >= TAXA_MINIMA, `${n.id}: taxa fora da faixa`);
     assert.ok(n.aquisicao >= n.recorrencia, `${n.id}: recompra não pode custar mais que a 1ª compra`);
@@ -98,6 +99,7 @@ const nicho = (id) => NICHOS_PERCENTUAIS.find((n) => n.id === id);
   assert.equal(id('Clínica odontológica'), 'clinicas');
   assert.equal(id('Ortodontia / Alinhadores'), 'saude');
   assert.equal(id('Moda social masculina'), 'moda');
+  assert.equal(id('Cursos e formação profissional'), 'cursos');
   assert.equal(id('Revestimentos / Porcelanato'), 'construcao');
   assert.equal(id('ERP / Gestão empresarial'), 'saas');
   assert.equal(id('Orquestração de agentes IA'), null);

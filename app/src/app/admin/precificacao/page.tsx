@@ -207,7 +207,7 @@ export default async function PrecificacaoPage() {
 
       <section className="pr-section" aria-labelledby="regras">
         <h2 id="regras">Regras que valem para todos os nichos</h2>
-        <p>Protegem os dois lados: o pedido pequeno que não pagaria o trabalho, o pedido grande que sairia mais caro que anúncio e o fornecedor que cresce muito.</p>
+        <p>Protegem os dois lados: o pedido pequeno que não pagaria o trabalho e o fornecedor que cresce muito.</p>
         <div className="pr-regras">
           {REGRAS.map(([titulo, texto]) => (
             <div key={titulo} className="pr-regra">

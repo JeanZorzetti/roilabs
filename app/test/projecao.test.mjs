@@ -29,7 +29,8 @@ const termo = (t, volume, dificuldade, mensal = volume == null ? null : serie(vo
     assert.ok(f, `${n.id}: sem funil`);
     assert.equal(f.nichoId, n.id);
     assert.equal(f.unidade, UNIDADES[n.modelo], `${n.id}: unidade não segue o modelo`);
-    assert.equal(f.degraus.length, DEGRAUS_POR_MODELO[n.modelo], `${n.id}: degraus`);
+    // cursos é % por pedido, mas vende pelo WhatsApp: visita → contato → matrícula paga.
+    assert.equal(f.degraus.length, n.id === 'cursos' ? 2 : DEGRAUS_POR_MODELO[n.modelo], `${n.id}: degraus`);
     for (const d of f.degraus) {
       assert.ok(d?.fonte?.trim(), `${n.id}: degrau sem fonte`);
       assert.ok(d.data?.trim(), `${n.id}: degrau sem data`);

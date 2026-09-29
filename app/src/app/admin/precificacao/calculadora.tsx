@@ -74,7 +74,7 @@ export default function Calculadora() {
         <h2 id="calc-pedido">Quanto a ROI Labs recebe num pedido</h2>
         <p className="pr-panel__lead">
           Escolha o nicho e o valor do produto. A conta mostra a 1ª compra e a recompra lado a lado,
-          já com o piso e a taxa reduzida em pedido grande.
+          já com o piso.
         </p>
         <div className="pr-form">
           <label className="pr-field pr-field--grow">

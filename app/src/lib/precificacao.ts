@@ -66,9 +66,15 @@ export const NICHOS: NichoPreco[] = [
   },
   {
     id: 'joias', faixa: 'premium', nicho: 'Joias (fabricação própria)', ...pct(0.18, 0.1),
-    regra: 'Taxa reduzida acima de R$ 1.500.',
+    regra: null,
     porque: 'A Vivara tem margem bruta de 69,6%. Em joias, o anúncio consome cerca de 40% da venda. Quase ninguém recompra, então a primeira venda paga a conta.',
     confianca: 'media-baixa', radicais: ['joia', 'joalher', 'semijoia'],
+  },
+  {
+    id: 'cursos', faixa: 'premium', nicho: 'Cursos e formação profissional', ...pct(0.18, 0.1),
+    regra: null,
+    porque: 'Sem pesquisa de mercado: 18% / 10% decididos pelo Jean em 29/09/2026 para a cadeira de cursos da Belle Vitaly.',
+    confianca: 'baixa', radicais: ['curso', 'formaca', 'treinament', 'capacitac', 'mentori'],
   },
   {
     id: 'moda', faixa: 'padrao', nicho: 'Moda, vestuário e calçados', ...pct(0.15, 0.1),
@@ -78,7 +84,7 @@ export const NICHOS: NichoPreco[] = [
   },
   {
     id: 'esporte', faixa: 'padrao', nicho: 'Esporte e fitness', ...pct(0.15, 0.1),
-    regra: 'Equipamentos grandes usam a taxa reduzida acima de R$ 1.500.',
+    regra: null,
     porque: 'Centauro e Track&Field têm margem de 50% a 58%. A Netshoes cobra de 20% a 30%. O anúncio custa cerca de 38% do pedido.',
     confianca: 'media', radicais: ['esporte', 'esportiv', 'fitness', 'academia', 'bike', 'ciclismo'],
   },
@@ -96,13 +102,13 @@ export const NICHOS: NichoPreco[] = [
   },
   {
     id: 'casa', faixa: 'intermediaria', nicho: 'Casa, móveis, decoração e cama-mesa-banho', ...pct(0.12, 0.08),
-    regra: 'Taxa reduzida acima de R$ 1.500. Decoração leve com margem de 45% ou mais: 15% / 10%.',
+    regra: 'Decoração leve com margem de 45% ou mais: 15% / 10%.',
     porque: 'O varejo do setor tem margem de 41% a 44%, mas o frete de móveis consome cerca de 8% do valor. Pouca gente recompra. A Amazon cobra 15% até R$ 200 e 10% no que passar.',
     confianca: 'media', radicais: ['casa', 'movel', 'moveis', 'decora', 'colchao', 'enxoval', 'utilidade'],
   },
   {
     id: 'construcao', faixa: 'intermediaria', nicho: 'Materiais de construção e revestimentos', ...pct(0.12, 0.08),
-    regra: 'Taxa reduzida acima de R$ 1.500. Argumento de venda: a ROI Labs não cobra sobre o frete.',
+    regra: 'Argumento de venda: a ROI Labs não cobra sobre o frete.',
     porque: 'Margem entre 35% e 36% (IBGE e Portobello). A Leroy Merlin cobra 18% + mensalidade; a MadeiraMadeira cobra também sobre o frete. Afiliados ganham de 6% a 8%.',
     confianca: 'media-baixa', radicais: ['construc', 'revestiment', 'porcelanato', 'piso', 'ceramic', 'telha', 'cimento', 'tinta'],
   },
@@ -150,7 +156,7 @@ export const NICHOS: NichoPreco[] = [
   },
   {
     id: 'eletronicos', faixa: 'margem-fina', nicho: 'Eletrodomésticos, eletrônicos e informática', ...pct(0.08, 0.05),
-    regra: 'Acima de R$ 1.500, a parte que passar paga 5%.',
+    regra: null,
     porque: 'Margem de 25% a 31% (Magalu, Multi, Intelbras). A Amazon cobra de 10% a 13%. Afiliados ganham de 4% a 8%. De 10% a 20% dos pedidos são devolvidos.',
     confianca: 'media', radicais: ['eletronic', 'eletrodomest', 'informatic', 'celular', 'computador', 'notebook'],
   },

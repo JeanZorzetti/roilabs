@@ -203,7 +203,31 @@ const CLINICA: Degrau[] = [
   },
 ];
 
-const DEGRAUS_ESPECIAIS: Record<string, Degrau[]> = { saas: SAAS, clinicas: CLINICA };
+// Cursos (29/09/2026): a Prax não tem linha de educação, e a venda do curso fecha no WhatsApp, como a da
+// clínica. Só o 1º degrau tem fonte; o 2º é premissa declarada.
+const CURSOS: Degrau[] = [
+  {
+    de: 'visita',
+    para: 'contato (formulário ou WhatsApp)',
+    taxa: cenarios(0.0267),
+    fonte: 'Leadster, Panorama de Geração de Leads no Brasil 2025 · Educacional (156 sites)',
+    data: '2025',
+    confianca: 'media',
+    premissa:
+      'O segmento junta escolas, idiomas, cursos profissionalizantes, graduação e pós, sem recorte de curso livre. Conservador e otimista = base × 0,7 e × 1,3.',
+  },
+  {
+    de: 'contato',
+    para: 'matrícula paga',
+    taxa: { conservador: 0.18, base: 0.25, otimista: 0.35 },
+    fonte: 'Sem estudo de matrícula: usa a faixa de contato → agendamento da clínica (18% a 35%, relato de fornecedores de software para clínica)',
+    data: '2026',
+    confianca: 'baixa',
+    premissa: 'Matrícula paga pede mais do que um agendamento: o número real tende a ficar abaixo. Troque pela taxa do parceiro assim que ele tiver a dele.',
+  },
+];
+
+const DEGRAUS_ESPECIAIS: Record<string, Degrau[]> = { saas: SAAS, clinicas: CLINICA, cursos: CURSOS };
 
 export const FUNIS: Record<string, FunilNicho> = Object.fromEntries(
   NICHOS.map((n) => [
