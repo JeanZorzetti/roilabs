@@ -136,7 +136,7 @@ export function simular(e: EntradaSimulacao): Simulacao {
 
 /** Linhas fixas que toda cadeira paga, na ordem em que entram na proposta. A anuidade pode ser a negociada. */
 export const itensFixos = (anuidade = ANUIDADE): { item: string; valor: string; quando: string; nota: string }[] => [
-  { item: 'Setup', valor: 'R$ 0', quando: '—', nota: 'Loja, site, tecnologia e tráfego são bancados pela ROI Labs' },
+  { item: 'Setup', valor: 'R$ 0', quando: '—', nota: 'Loja, site, tecnologia, tráfego e equipe de vendas são bancados pela ROI Labs' },
   {
     item: 'Anuidade da cadeira',
     valor: `${brl(anuidade)}/ano`,

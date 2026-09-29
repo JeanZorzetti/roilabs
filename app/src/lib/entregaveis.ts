@@ -41,6 +41,17 @@ export type TipoCadeira = {
 
 const MES_6 = 'No 6º mês: balanço dos números e o plano dos seis meses seguintes';
 
+// Equipe de vendas e carteira valem para toda cadeira (/modelo, "A ROI Labs banca"). Só muda o que a venda
+// vira na mão do parceiro.
+const equipeDeVendas = (entregue: string): GrupoEntregavel => ({
+  title: 'Equipe de vendas',
+  items: ['Equipe de vendas da ROI Labs atendendo todo cliente que chega pelo site: tira as dúvidas e fecha a venda', entregue],
+});
+const CARTEIRA: GrupoEntregavel = {
+  title: 'Carteira',
+  items: ['Quem comprou pode ficar na carteira da ROI Labs, e a equipe trabalha para esse cliente comprar de novo'],
+};
+
 export const TIPOS_CADEIRA: TipoCadeira[] = [
   {
     id: 'loja',
@@ -74,6 +85,7 @@ export const TIPOS_CADEIRA: TipoCadeira[] = [
               'Primeiras páginas de alta intenção no ar',
             ],
           },
+          equipeDeVendas('Venda entregue pronta ao parceiro, para faturar e despachar'),
         ],
         prereq: [
           'Catálogo com foto em padrão (boa resolução, fundo neutro), preço e atributos estruturados do nicho',
@@ -122,6 +134,7 @@ export const TIPOS_CADEIRA: TipoCadeira[] = [
               'Avaliações e fotos reais de clientes no ar',
             ],
           },
+          CARTEIRA,
           { title: 'Fechamento do ciclo', items: [MES_6] },
         ],
         rules: [
@@ -136,7 +149,7 @@ export const TIPOS_CADEIRA: TipoCadeira[] = [
   {
     id: 'servico',
     name: 'Cadeira de serviço',
-    tagline: 'Quem vende por conversa. O site leva o cliente da busca até o WhatsApp do parceiro.',
+    tagline: 'Quem vende por conversa. O site leva o cliente da busca até o WhatsApp da equipe de vendas da ROI Labs.',
     cobranca: 'Anuidade + 15% na primeira compra e 10% para quem já é da base',
     exemplos: ['Autogestor', 'Coopluz', 'Autogestor Viagens'],
     fases: [
@@ -150,7 +163,7 @@ export const TIPOS_CADEIRA: TipoCadeira[] = [
             title: 'Site',
             items: [
               'Site completo, com os produtos ou serviços e os preços cadastrados',
-              'Botões de WhatsApp com mensagem pronta ("Vim pelo site…") em todas as páginas',
+              'Botões de WhatsApp da equipe de vendas, com mensagem pronta ("Vim pelo site…"), em todas as páginas',
               'Domínio próprio do cliente, comprado na Hostinger (R$ 50/ano) e ligado ao Google Search Console',
               'Primeiras páginas no ar',
             ],
@@ -159,6 +172,7 @@ export const TIPOS_CADEIRA: TipoCadeira[] = [
             title: 'Painel',
             items: ['Painel administrativo com cada contato registrado, visível para o parceiro'],
           },
+          equipeDeVendas('Venda entregue pronta ao parceiro, para faturar e prestar o serviço'),
         ],
         prereq: [
           'Lista de produtos ou serviços, com preço e foto',
@@ -205,6 +219,7 @@ export const TIPOS_CADEIRA: TipoCadeira[] = [
               'Depoimentos e fotos reais no ar',
             ],
           },
+          CARTEIRA,
           { title: 'Fechamento do ciclo', items: [MES_6] },
         ],
         excludes: ['Acompanhar a entrega do serviço depois da venda — é do parceiro'],
@@ -244,6 +259,7 @@ export const TIPOS_CADEIRA: TipoCadeira[] = [
               'Pagamento de conta de teste fica fora da receita apurada',
             ],
           },
+          equipeDeVendas('Cliente assinante entregue ao parceiro, para o onboarding'),
         ],
         prereq: [
           'Gateway de pagamento com webhook (sem gateway ligado, a cadeira não oferece checkout)',
@@ -286,6 +302,7 @@ export const TIPOS_CADEIRA: TipoCadeira[] = [
               'Casos e depoimentos de clientes reais',
             ],
           },
+          CARTEIRA,
           { title: 'Fechamento do ciclo', items: [MES_6] },
         ],
         excludes: ['Suporte, onboarding e sucesso do cliente do software — são do parceiro'],
@@ -301,7 +318,7 @@ export const TIPOS_CADEIRA: TipoCadeira[] = [
 /** Regras que valem para toda cadeira. */
 export const REGRAS_GERAIS = {
   roilabs: [
-    ['Setup', 'Nenhum. Tecnologia e tráfego são bancados pela ROI Labs'],
+    ['Setup', 'Nenhum. Tecnologia, tráfego e equipe de vendas são bancados pela ROI Labs'],
     ['Equipe de vendas', 'A equipe de vendas da ROI Labs atende todo cliente que chega pelo site, fecha a venda e entrega a venda pronta ao parceiro'],
     ['Carteira', 'Quem comprou pode ficar na carteira da ROI Labs, e a equipe trabalha para esse cliente comprar de novo'],
     ['Anuidade', `R$ ${ANUIDADE.toLocaleString('pt-BR')}/ano (R$ 330/mês): Pix à vista, ou cartão em até 12x com acréscimo`],

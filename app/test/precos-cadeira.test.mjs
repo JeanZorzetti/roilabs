@@ -189,6 +189,13 @@ const base = {
   const texto = JSON.stringify(doc);
   for (const regra of servico.fases.flatMap((f) => f.rules ?? [])) assert.ok(!texto.includes(regra), `regra interna no doc: ${regra}`);
   assert.ok(!texto.includes('CFO/CFM'));
+
+  // toda cadeira vende: a equipe de vendas e a carteira da ROI Labs estão no escopo dos três tipos (/modelo)
+  for (const t of TIPOS_CADEIRA) {
+    const itens = montarPropostaCadeira({ ...base, nicho: nicho('moda') }, 'E', agora, t).entregaveis.fases.flatMap((f) => f.itens);
+    assert.ok(itens.some((i) => i.startsWith('Equipe de vendas da ROI Labs')), `${t.id}: sem equipe de vendas`);
+    assert.ok(itens.some((i) => i.includes('carteira da ROI Labs')), `${t.id}: sem carteira`);
+  }
 }
 
 console.log('precos-cadeira: ok');

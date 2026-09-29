@@ -157,7 +157,7 @@ export default async function EntregaveisPage({ searchParams }: Props) {
   return (
     <AdminShell
       title="Entregáveis por cadeira"
-      lead="O que não está aqui não está na cadeira. A ROI Labs banca tecnologia e tráfego e só ganha quando o parceiro vende — por isso o escopo é fechado: pedido fora desta lista vai para outro produto da casa ou vira orçamento à parte, aprovado por escrito antes."
+      lead="O que não está aqui não está na cadeira. A ROI Labs banca tecnologia, tráfego e a equipe de vendas e só ganha quando o parceiro vende — por isso o escopo é fechado: pedido fora desta lista vai para outro produto da casa ou vira orçamento à parte, aprovado por escrito antes."
       action={
         <Link
           href={toggleHref()}
