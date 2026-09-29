@@ -33,6 +33,6 @@
 
 - [x] T011 Importação das 2 consultas da Karla (FR-013), por script fora do repo
 - [x] T012 Comentários da 017 que dizem "nada é gravado" e `GLOSSARIO.md` (Consultas guardadas, Para quem)
-- [ ] T013 `npm test` + typecheck, commit, push
-- [ ] T014 Verificação em produção (quickstart §3 a §7), com screenshots nas 3 larguras
-- [ ] T015 `handoff.md` da 018 + `.info/log.json` (information-design)
+- [x] T013 `npm test` + typecheck, commit, push
+- [x] T014 Verificação em produção (quickstart §3 a §7), com screenshots nas 3 larguras
+- [x] T015 `handoff.md` da 018 + `.info/log.json` (information-design)

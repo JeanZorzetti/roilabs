@@ -1,0 +1,18 @@
+{
+  "telas": [
+    {
+      "data": "2026-09-28",
+      "rota": "/admin/projecao/consultas",
+      "pergunta": "Qual consulta da Projeção eu abro, e quanto cada uma projetou?",
+      "forma": "tabela de 5 colunas (identidade da consulta numa célula: nome, data e hora, local, termos) que vira cartões abaixo de 768 px; cada linha abre a tela da Projeção com a consulta guardada",
+      "descartada": "barra de buscas/mês proporcional entre linhas: comparava nichos e cidades diferentes, e uma linha de 22.200 achatou as de 100 e 260; tela de detalhe própria: duplicaria a da 017",
+      "fonte": "pg roilabs_db · tabela projecao_consultas (resposta da DataForSEO como veio) · projeção recalculada com as premissas de lib/projecao.ts a cada leitura",
+      "granularidade": "consulta",
+      "latencia": "tempo real (gravada na resposta da consulta paga)",
+      "estados": ["com dado", "vazio (nenhuma consulta guardada)", "erro na fonte (banco fora)", "não encontrada (?consulta inexistente)", "nicho que saiu da tabela", "não guardada (pagou e a gravação falhou)"],
+      "pior_caso": "2 linhas reais + 1 de teste (1 termo, 22.200 buscas); nome de 22 caracteres; nicho mais longo 44 caracteres; 1440/768/390 sem rolagem",
+      "gates": "G31 reprovou a 768 px na 1ª versão (coluna de vendas escondida pela rolagem interna); corrigido e revisto na imagem",
+      "obs": "duas consultas do mesmo parceiro só se separam por data e local: por isso moram na célula da identidade, e entram no nome acessível do link"
+    }
+  ]
+}
