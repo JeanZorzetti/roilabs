@@ -50,6 +50,16 @@ export function lerAnuidadeManual(s: string): number | null {
   return v >= 0 && v <= 1_000_000 ? Math.round(v * 100) / 100 : NaN;
 }
 
+export const EXTRAS_MAX = { itens: 20, caracteres: 200 } as const;
+
+/** Entregáveis extras digitados um por linha: sem linha vazia, sem repetição e sem ponto final (a proposta põe). */
+export function lerExtras(texto: string): string[] {
+  return [...new Set(texto.split(/\r?\n/).map((l) => l.trim().replace(/\.+$/, '').trim()).filter(Boolean))];
+}
+
+export const extrasForaDoLimite = (extras: string[]) =>
+  extras.length > EXTRAS_MAX.itens || extras.some((x) => x.length > EXTRAS_MAX.caracteres);
+
 /** O tipo de cadeira do nicho: o do nicho, se ele disser; senão, o que o modelo de cobrança pede. */
 export function tipoPadrao(nicho: NichoPreco): TipoCadeira {
   const id = nicho.cadeira ?? { percentual: 'loja', mensalidade: 'software', consulta: 'servico' }[nicho.modelo];
@@ -218,6 +228,8 @@ export type PropostaCadeiraDoc = {
     fases: { nome: string; prazo: string; itens: string[] }[];
     precisamos: string[];
     naoInclui: string[];
+    /** Digitados no simulador só para esta proposta. */
+    extras?: string[];
   };
 };
 
@@ -272,12 +284,13 @@ function ritmoInformado(e: EntradaSimulacao): PropostaCadeiraDoc['ritmo'] {
 }
 
 // As `rules` de cada fase ficam de fora: são orientação ao operador (a de serviço traz o CFO/CFM).
-function entregaveisParaCliente(tipo: TipoCadeira): NonNullable<PropostaCadeiraDoc['entregaveis']> {
+function entregaveisParaCliente(tipo: TipoCadeira, extras: string[]): NonNullable<PropostaCadeiraDoc['entregaveis']> {
   return {
     cadeira: tipo.name,
     fases: tipo.fases.map((f) => ({ nome: f.name, prazo: f.prazo, itens: f.deliverables.flatMap((g) => g.items) })),
     precisamos: tipo.fases.flatMap((f) => f.prereq ?? []),
     naoInclui: tipo.fases.flatMap((f) => f.excludes ?? []),
+    extras,
   };
 }
 
@@ -286,6 +299,7 @@ export function montarPropostaCadeira(
   paraQuem: string,
   agora: Date,
   tipo: TipoCadeira = tipoPadrao(e.nicho),
+  extras: string[] = [],
 ): PropostaCadeiraDoc {
   const r = simular(e);
   return {
@@ -315,6 +329,6 @@ export function montarPropostaCadeira(
       ...REGRAS_CONTRATO.filter((c) => e.nicho.modelo === 'percentual' || c !== REGRA_COMISSAO_PEDIDO),
       ...REGRAS_DOMINIO,
     ],
-    entregaveis: entregaveisParaCliente(tipo),
+    entregaveis: entregaveisParaCliente(tipo, extras),
   };
 }

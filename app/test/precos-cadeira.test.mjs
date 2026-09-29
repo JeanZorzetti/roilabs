@@ -10,7 +10,9 @@ import {
   REGRA_COMISSAO_PEDIDO,
   REGRAS_NEGOCIACAO,
   brl,
+  extrasForaDoLimite,
   lerAnuidadeManual,
+  lerExtras,
   lerTaxaManual,
   montarPropostaCadeira,
   simular,
@@ -196,6 +198,24 @@ const base = {
     assert.ok(itens.some((i) => i.startsWith('Equipe de vendas da ROI Labs')), `${t.id}: sem equipe de vendas`);
     assert.ok(itens.some((i) => i.includes('carteira da ROI Labs')), `${t.id}: sem carteira`);
   }
+}
+
+// ── entregáveis extras: um por linha, limpos, e só nesta proposta ─────────────────────
+{
+  assert.deepEqual(lerExtras('  Página de cada curso. \r\n\n Fotos das turmas \n Página de cada curso'), [
+    'Página de cada curso',
+    'Fotos das turmas',
+  ], 'sem vazio, sem ponto final (a proposta põe), sem repetição');
+  assert.deepEqual(lerExtras(''), []);
+  assert.equal(extrasForaDoLimite(Array.from({ length: 20 }, (_, i) => `item ${i}`)), false);
+  assert.equal(extrasForaDoLimite(Array.from({ length: 21 }, (_, i) => `item ${i}`)), true);
+  assert.equal(extrasForaDoLimite(['x'.repeat(201)]), true);
+
+  const servico = TIPOS_CADEIRA.find((t) => t.id === 'servico');
+  const agora = new Date();
+  const com = montarPropostaCadeira({ ...base, nicho: nicho('cursos') }, 'X', agora, servico, ['Página de cada curso']);
+  assert.deepEqual(com.entregaveis.extras, ['Página de cada curso']);
+  assert.deepEqual(montarPropostaCadeira({ ...base, nicho: nicho('cursos') }, 'X', agora).entregaveis.extras, []);
 }
 
 console.log('precos-cadeira: ok');

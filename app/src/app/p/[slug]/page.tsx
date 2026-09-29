@@ -183,6 +183,16 @@ export default async function PropostaPage({ params }: Props) {
                 </ul>
               </div>
             ))}
+            {doc.entregaveis.extras?.length ? (
+              <>
+                <h3 className="prop-h3">Também incluído</h3>
+                <ul className="prop-lista">
+                  {doc.entregaveis.extras.map((item) => (
+                    <li key={item}>{item}.</li>
+                  ))}
+                </ul>
+              </>
+            ) : null}
             {doc.entregaveis.precisamos.length > 0 ? (
               <>
                 <h3 className="prop-h3">O que precisamos de você</h3>

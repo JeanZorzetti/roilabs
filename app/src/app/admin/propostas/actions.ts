@@ -7,7 +7,14 @@ import { isAuthed } from "@/lib/auth";
 import { log } from "@/lib/log";
 import { NICHOS, lerNumeroBR } from "@/lib/precificacao";
 import { TIPOS_CADEIRA } from "@/lib/entregaveis";
-import { lerAnuidadeManual, lerTaxaManual, montarPropostaCadeira } from "@/lib/precos-cadeira";
+import {
+  EXTRAS_MAX,
+  extrasForaDoLimite,
+  lerAnuidadeManual,
+  lerExtras,
+  lerTaxaManual,
+  montarPropostaCadeira,
+} from "@/lib/precos-cadeira";
 import { prisma } from "@/lib/prisma";
 
 /**
@@ -55,6 +62,12 @@ export async function guardarPropostaCadeira(_: EstadoGuardar, formData: FormDat
   }
   const tipo = TIPOS_CADEIRA.find((t) => t.id === formData.get("tipoCadeira"));
   if (!tipo) return { erro: "Escolha o tipo de cadeira antes de guardar." };
+  const extras = lerExtras(String(formData.get("extras") ?? ""));
+  if (extrasForaDoLimite(extras)) {
+    return {
+      erro: `Os entregáveis extras vão até ${EXTRAS_MAX.itens} itens, com até ${EXTRAS_MAX.caracteres} caracteres cada.`,
+    };
+  }
 
   // A conta é refeita aqui: número vindo da tela não é gravado.
   const doc = montarPropostaCadeira(
@@ -74,6 +87,7 @@ export async function guardarPropostaCadeira(_: EstadoGuardar, formData: FormDat
     paraQuem,
     new Date(),
     tipo,
+    extras,
   );
 
   try {

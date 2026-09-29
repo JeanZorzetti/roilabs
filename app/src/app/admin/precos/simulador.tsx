@@ -19,9 +19,12 @@ import {
   CONSULTA_MAX,
   CONSULTA_MIN,
   DOMINIO_ANO,
+  EXTRAS_MAX,
   brl,
   comissaoParaCliente,
+  extrasForaDoLimite,
   lerAnuidadeManual,
+  lerExtras,
   lerTaxaManual,
   simular,
   tipoPadrao,
@@ -111,6 +114,7 @@ export function SimuladorCadeira({ inicial }: { inicial?: PonteSimulador | null 
   const [anuidadeManual, setAnuidadeManual] = useState("");
   // null = segue o tipo do nicho; trocar de nicho volta para ele.
   const [tipoEscolhido, setTipoEscolhido] = useState<string | null>(null);
+  const [extrasTexto, setExtrasTexto] = useState("");
   const [copiado, setCopiado] = useState(false);
   const [paraQuem, setParaQuem] = useState("");
   const [estado, guardar, guardando] = useActionState(guardarPropostaCadeira, { erro: null });
@@ -121,6 +125,8 @@ export function SimuladorCadeira({ inicial }: { inicial?: PonteSimulador | null 
   const anuidadeLida = lerAnuidadeManual(anuidadeManual);
   const anuidade = anuidadeLida === null || Number.isNaN(anuidadeLida) ? ANUIDADE : anuidadeLida;
   const tipo = TIPOS_CADEIRA.find((t) => t.id === tipoEscolhido) ?? tipoPadrao(nicho);
+  const extras = lerExtras(extrasTexto);
+  const extrasInvalidos = extrasForaDoLimite(extras);
   const entrada: EntradaSimulacao = {
     nicho,
     pedidosMes: ler(pedidos),
@@ -149,6 +155,7 @@ export function SimuladorCadeira({ inicial }: { inicial?: PonteSimulador | null 
     `Domínio próprio: ${brl(DOMINIO_ANO)}/ano`,
     `Comissão: ${comissaoParaCliente(entrada).resumo}`,
     `Estimativa no ritmo informado: ${brl(r.comissaoMes)}/mês de comissão, ${brl(r.totalAno)} no 1º ano com anuidade e domínio`,
+    ...(extras.length ? [`Entregáveis extras: ${extras.join("; ")}`] : []),
   ].join("\n");
 
   async function copiar() {
@@ -258,6 +265,27 @@ export function SimuladorCadeira({ inicial }: { inicial?: PonteSimulador | null 
             >
               Ver os entregáveis
             </Link>
+          </p>
+          <label htmlFor="sim-extras" className={`${ROTULO} mt-3`}>
+            Entregáveis extras
+            <textarea
+              id="sim-extras"
+              value={extrasTexto}
+              onChange={(e) => setExtrasTexto(e.target.value)}
+              rows={3}
+              placeholder="ex.: Cadastro do catálogo feito pela equipe da ROI Labs"
+              aria-invalid={extrasInvalidos || undefined}
+              aria-describedby="sim-extras-dica"
+              className={`${CAMPO} w-full`}
+            />
+          </label>
+          <p
+            id="sim-extras-dica"
+            className={`mt-1 text-xs ${extrasInvalidos ? "text-red-700" : "text-muted-foreground"}`}
+          >
+            {extrasInvalidos
+              ? `Até ${EXTRAS_MAX.itens} itens, com até ${EXTRAS_MAX.caracteres} caracteres cada.`
+              : "Um por linha. Entram na proposta depois dos entregáveis do tipo de cadeira."}
           </p>
         </fieldset>
 
@@ -421,6 +449,7 @@ export function SimuladorCadeira({ inicial }: { inicial?: PonteSimulador | null 
               <input type="hidden" name="recorrenciaManual" value={recManual} />
               <input type="hidden" name="anuidade" value={anuidadeManual} />
               <input type="hidden" name="tipoCadeira" value={tipo.id} />
+              <input type="hidden" name="extras" value={extrasTexto} />
 
               <label htmlFor="sim-para-quem" className={ROTULO}>
                 Para quem
