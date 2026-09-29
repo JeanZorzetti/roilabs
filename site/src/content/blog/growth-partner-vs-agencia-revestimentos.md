@@ -62,7 +62,7 @@ A conta do Growth Partner tem duas partes: a anuidade da cadeira, R$ 3.960/ano (
 | Desembolso num mês sem venda | R$ 5.000 a R$ 15.000 | R$ 330 |
 | O que fica com você (mês bom) | R$ 3.000 a R$ 13.000 | R$ 15.870 |
 
-Os valores de agência são ilustrativos, não uma pesquisa de preço: troque-os pelos orçamentos reais que você receber. O lado Growth Partner é a fórmula contratual aplicada ao exemplo. O ponto da tabela não é o valor absoluto — é a assimetria no pior cenário: no mês em que nada vende, a agência custa a mesma coisa e o Growth Partner custa só a anuidade, R$ 330.
+Os valores de agência são ilustrativos, não uma pesquisa de preço: troque-os pelos orçamentos reais que você receber. O lado Growth Partner é a fórmula contratual aplicada ao exemplo. O ponto da tabela não é o valor absoluto — é a assimetria no pior cenário: no mês em que nada vende, a agência custa a mesma coisa e o Growth Partner custa só a anuidade, R$ 330. Se você está comparando propostas de quem cobra comissão, o guia [agência que cobra por resultado](/blog/agencia-que-cobra-por-resultado/) mostra os cinco modelos de cobrança e o que exigir no contrato.
 
 ## Qual modelo escolher?
 

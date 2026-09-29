@@ -1,5 +1,8 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import type { MarkdownHeading } from 'astro';
+import { getCollection } from 'astro:content';
+import { Image, getImage } from 'astro:assets';
 import Base from './Base.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
@@ -7,14 +10,34 @@ import '../styles/article.css';
 
 interface Props {
   post: CollectionEntry<'blog'>;
+  headings?: MarkdownHeading[];
 }
 
-const { post } = Astro.props;
-const { title, description, eyebrow, pubDate, updatedDate, author, faq } = post.data;
+const { post, headings = [] } = Astro.props;
+const { title, seoTitle, description, eyebrow, pubDate, updatedDate, author, faq, cover, coverAlt, coverCredit, coverCaption } =
+  post.data;
 
-const ORG_ID = 'https://roilabs.com.br/#org';
+const SITE = 'https://roilabs.com.br';
+const ORG_ID = `${SITE}/#org`;
 const canonical = new URL(`/blog/${post.id}/`, Astro.site).toString();
 const modified = updatedDate ?? pubDate;
+
+// Palavras do corpo + FAQ: alimenta wordCount do JSON-LD e o tempo de leitura (200 palavras/min).
+// Fotos e endereços de link não são texto lido: saem da conta.
+const contar = (s = '') =>
+  s
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, '')
+    .replace(/\]\([^)]*\)/g, ']')
+    .split(/\s+/)
+    .filter((w) => /[\p{L}\p{N}]/u.test(w)).length;
+const palavras = contar(post.body) + faq.reduce((n, f) => n + contar(f.q) + contar(f.a), 0);
+const minutos = Math.max(1, Math.round(palavras / 200));
+
+// Sumário só com os H2 do texto, e só quando o texto é longo o bastante para precisar dele.
+const sumario = headings.filter((h) => h.depth === 2);
+
+const capa = cover ? await getImage({ src: cover, width: 1600 }) : null;
+const capaUrl = capa ? new URL(capa.src, SITE).toString() : null;
 
 const authorNode =
   author === 'Equipe ROI Labs'
@@ -23,7 +46,17 @@ const authorNode =
 
 const nodes: Record<string, unknown>[] = [
   {
-    '@type': 'Article',
+    '@type': 'WebPage',
+    '@id': `${canonical}#webpage`,
+    url: canonical,
+    name: seoTitle ?? title,
+    inLanguage: 'pt-BR',
+    isPartOf: { '@id': `${SITE}/#website` },
+    breadcrumb: { '@id': `${canonical}#breadcrumb` },
+    ...(capa && { primaryImageOfPage: { '@id': `${canonical}#capa` } }),
+  },
+  {
+    '@type': 'BlogPosting',
     '@id': `${canonical}#article`,
     headline: title,
     description,
@@ -32,18 +65,40 @@ const nodes: Record<string, unknown>[] = [
     dateModified: modified.toISOString(),
     author: authorNode,
     publisher: { '@id': ORG_ID },
-    mainEntityOfPage: canonical,
+    mainEntityOfPage: { '@id': `${canonical}#webpage` },
+    wordCount: palavras,
+    ...(eyebrow && { articleSection: eyebrow }),
+    ...(capa && { image: { '@id': `${canonical}#capa` } }),
   },
   {
     '@type': 'BreadcrumbList',
     '@id': `${canonical}#breadcrumb`,
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://roilabs.com.br/' },
-      { '@type': 'ListItem', position: 2, name: 'Blog', item: 'https://roilabs.com.br/blog/' },
+      { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE}/` },
+      { '@type': 'ListItem', position: 2, name: 'Blog', item: `${SITE}/blog/` },
       { '@type': 'ListItem', position: 3, name: title, item: canonical },
     ],
   },
 ];
+
+// Foto de banco: crédito e licença no ImageObject (selo "Licenciável" no Google Imagens).
+if (capa && capaUrl) {
+  nodes.push({
+    '@type': 'ImageObject',
+    '@id': `${canonical}#capa`,
+    url: capaUrl,
+    contentUrl: capaUrl,
+    width: capa.attributes.width,
+    height: capa.attributes.height,
+    caption: coverCaption ?? coverAlt,
+    ...(coverCredit && {
+      creditText: `${coverCredit.name} / ${coverCredit.source}`,
+      creator: { '@type': 'Person', name: coverCredit.name },
+      license: coverCredit.license,
+      acquireLicensePage: coverCredit.page,
+    }),
+  });
+}
 
 if (faq.length > 0) {
   nodes.push({
@@ -57,12 +112,18 @@ if (faq.length > 0) {
   });
 }
 
+// "Leia também": os 3 posts mais recentes além deste.
+const outros = (await getCollection('blog', ({ data, id }) => !data.draft && id !== post.id))
+  .sort((a, b) => (b.data.updatedDate ?? b.data.pubDate).valueOf() - (a.data.updatedDate ?? a.data.pubDate).valueOf())
+  .slice(0, 3);
+
+// UTC: a data do frontmatter é meia-noite UTC; no fuso de Brasília ela voltaria um dia.
 const fmtDate = (d: Date) =>
-  new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' }).format(d);
+  new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(d);
 ---
 
 <Base
-  title={`${title} — ROI Labs`}
+  title={seoTitle ?? `${title} — ROI Labs`}
   description={description}
   ogType="article"
   ogImage={`/open-graph/${post.id}.png`}
@@ -79,8 +140,50 @@ const fmtDate = (d: Date) =>
           <span>Por {author}</span>
           <span>Publicado em {fmtDate(pubDate)}</span>
           {updatedDate && <span>Atualizado em {fmtDate(updatedDate)}</span>}
+          <span>{minutos} min de leitura</span>
         </div>
       </header>
+
+      {
+        cover && (
+          <figure class="article__cover">
+            {/* Maior elemento da tela: carrega na hora, sem lazy. */}
+            <Image
+              src={cover}
+              alt={coverAlt ?? ''}
+              widths={[480, 800, 1200, 1600]}
+              sizes="(min-width: 760px) 720px, 100vw"
+              loading="eager"
+              fetchpriority="high"
+            />
+            {(coverCaption || coverCredit) && (
+              <figcaption>
+                {coverCaption}
+                {coverCredit && (
+                  <span class="article__credit">
+                    {' '}Foto: {coverCredit.name} / <a href={coverCredit.page} rel="noopener" target="_blank">{coverCredit.source}</a>
+                  </span>
+                )}
+              </figcaption>
+            )}
+          </figure>
+        )
+      }
+
+      {
+        sumario.length >= 3 && (
+          <nav class="article__toc" aria-label="Neste artigo">
+            <p class="article__toc-title">Neste artigo</p>
+            <ol>
+              {sumario.map((h) => (
+                <li>
+                  <a href={`#${h.slug}`}>{h.text}</a>
+                </li>
+              ))}
+            </ol>
+          </nav>
+        )
+      }
 
       <div class="prose">
         <slot />
@@ -106,6 +209,24 @@ const fmtDate = (d: Date) =>
               </details>
             ))}
           </section>
+        )
+      }
+
+      {
+        outros.length > 0 && (
+          <nav class="article__related" aria-label="Leia também">
+            <h2>Leia também</h2>
+            <ul>
+              {outros.map((p) => (
+                <li>
+                  <a href={`/blog/${p.id}/`}>
+                    {p.data.eyebrow && <span class="article__related-eyebrow">{p.data.eyebrow}</span>}
+                    <span class="article__related-title">{p.data.title}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
         )
       }
 

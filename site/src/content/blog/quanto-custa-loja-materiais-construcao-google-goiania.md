@@ -40,7 +40,7 @@ O prazo é o motivo pelo qual transparência importa mais que promessa. Um opera
 
 ## Por que o custo fixo é só simbólico com um Growth Partner?
 
-O custo fixo se resume à anuidade da cadeira, R$ 3.960/ano (R$ 330/mês), porque no modelo Growth Partner quem banca a infraestrutura e o tráfego é a ROI Labs, não o fornecedor. A ROI Labs assume o risco de tecnologia e de captação e é remunerada principalmente por uma fração variável atrelada à venda. O fornecedor não paga setup nem verba de mídia; o success fee chega apenas depois da venda realizada.
+O custo fixo se resume à anuidade da cadeira, R$ 3.960/ano (R$ 330/mês), porque no modelo Growth Partner quem banca a infraestrutura e o tráfego é a ROI Labs, não o fornecedor. A ROI Labs assume o risco de tecnologia e de captação e é remunerada principalmente por uma fração variável atrelada à venda. O fornecedor não paga setup nem verba de mídia; o success fee chega apenas depois da venda realizada. Para comparar esse formato com outros jeitos de pagar por resultado, veja [como funciona o marketing por comissão](/blog/agencia-que-cobra-por-resultado/).
 
 | Modo | Custo para o fornecedor | Prazo | O que acontece se parar |
 | :-- | :-- | :-- | :-- |

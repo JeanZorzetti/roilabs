@@ -48,6 +48,45 @@
   flex-wrap: wrap;
 }
 
+/* ---- capa (foto do topo, com crédito) ---- */
+.article__cover { margin: 0 0 2rem; }
+.article__cover img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+}
+.article__cover figcaption,
+.prose p > img + em {
+  display: block;
+  margin-top: 0.6rem;
+  font-size: 0.85rem;
+  font-style: normal;
+  line-height: 1.5;
+  color: var(--l-muted);
+}
+.article__credit a { color: inherit; }
+
+/* ---- sumário ---- */
+.article__toc {
+  margin: 0 0 2.5rem;
+  padding: 1.1rem 1.25rem;
+  background: var(--porcelain-2);
+  border-radius: 12px;
+}
+.article__toc-title {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--hivis-deep);
+  margin: 0 0 0.6rem;
+}
+.article__toc ol { margin: 0; padding-left: 1.2rem; }
+.article__toc li + li { margin-top: 0.35rem; }
+.article__toc a { color: var(--l-text); text-underline-offset: 3px; }
+.article__toc a:hover { color: var(--hivis-deep); }
+
 /* ---- prose (markdown renderizado) ---- */
 .prose {
   font-size: 1.0625rem;
@@ -99,6 +138,18 @@
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
+/* Foto no meio do texto: a legenda é o *itálico* da linha de baixo no markdown. */
+.prose img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+}
+/* Tabela larga rola de lado no celular em vez de estourar a página. */
+@media (max-width: 40rem) {
+  .prose table { display: block; overflow-x: auto; }
+  .prose th, .prose td { min-width: 8.5rem; }
+}
 .prose code {
   font-family: var(--font-mono);
   font-size: 0.9em;
@@ -128,6 +179,31 @@
 .article__faq summary::before { content: '+ '; color: var(--hivis-deep); }
 .article__faq details[open] summary::before { content: '– '; }
 .article__faq details p { margin-top: 0.6rem; color: var(--l-muted); }
+
+/* ---- leia também ---- */
+.article__related {
+  margin-top: 2.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--l-line);
+}
+.article__related h2 { font-size: 1.5rem; margin-bottom: 0.75rem; }
+.article__related ul { list-style: none; margin: 0; padding: 0; }
+.article__related a {
+  display: block;
+  padding: 0.9rem 0;
+  border-bottom: 1px solid var(--l-line);
+  text-decoration: none;
+}
+.article__related-eyebrow {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--hivis-deep);
+}
+.article__related-title { display: block; margin-top: 0.2rem; font-weight: 700; color: var(--l-text); }
+.article__related a:hover .article__related-title { color: var(--hivis-deep); }
 
 /* ---- CTA pro formulário ---- */
 .article__cta {

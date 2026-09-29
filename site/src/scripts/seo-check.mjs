@@ -27,7 +27,8 @@ for (const [, loc] of sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)) {
 
 // 2. /obrigado/ é noindex (destino do form) — rastreá-la é crawl desperdiçado.
 if (sitemap.includes('/obrigado/')) errors.push('sitemap: /obrigado/ é noindex, não pode estar no sitemap');
-if (!readFileSync(join(DIST, 'obrigado', 'index.html'), 'utf8').includes('name="robots"'))
+// Toda página tem <meta name="robots"> (max-image-preview:large); a do /obrigado/ precisa dizer noindex.
+if (!/<meta name="robots" content="noindex/.test(readFileSync(join(DIST, 'obrigado', 'index.html'), 'utf8')))
   errors.push('obrigado: perdeu o <meta name="robots" content="noindex">');
 
 // 3. Nenhum HTML/feed emite URL absoluta de rota sem barra (JSON-LD, form redirect, links).
@@ -38,9 +39,16 @@ for (const file of [...htmlFiles(DIST), join(DIST, 'rss.xml'), join(DIST, 'llms.
   }
 }
 
+// 4. Toda foto do blog tem alt de verdade (Google Imagens e leitor de tela dependem dele).
+for (const file of htmlFiles(join(DIST, 'blog'))) {
+  for (const [tag] of readFileSync(file, 'utf8').matchAll(/<img\b[^>]*>/g)) {
+    if (!/\balt="[^"]+"/.test(tag)) errors.push(`${file}: <img> sem alt — ${tag.slice(0, 120)}`);
+  }
+}
+
 if (errors.length) {
   console.error(`\nseo-check FALHOU (${errors.length}):`);
   for (const e of new Set(errors)) console.error(`  ✗ ${e}`);
   process.exit(1);
 }
-console.log('seo-check ok — toda URL de rota termina com barra, /obrigado/ fora do sitemap.');
+console.log('seo-check ok — toda URL de rota termina com barra, /obrigado/ fora do sitemap, toda foto do blog com alt.');

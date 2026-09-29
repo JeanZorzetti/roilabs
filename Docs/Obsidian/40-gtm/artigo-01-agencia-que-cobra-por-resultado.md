@@ -1,5 +1,5 @@
 ---
-status: draft
+status: decided
 data: 2026-09-29
 depends_on:
   - "[[gtm]]"
@@ -531,6 +531,19 @@ da resposta de IA do Google; ele entra no total.
   artigo a diz com todas as letras; se mudou (a anuidade já prevê domínio próprio do parceiro), o painel muda antes.
 - [ ] **3. Título final:** confirmar no Keyword Planner qual das 4 buscas tem mais volume.
 - [ ] **4. Seção "quem atende":** foto de banco (ilustrativa) ou o desenho Humaaans do /modelo?
+
+## Registro
+
+- **29/09/2026 — publicado** em https://roilabs.com.br/blog/agencia-que-cobra-por-resultado/ (1.926 palavras no
+  corpo + 327 no FAQ; 7 fotos do Pexels em `site/src/content/blog/img/agencia-que-cobra-por-resultado/`).
+  Feito junto: itens 1 a 5 e 7 da seção 8 (capa com crédito, sumário, tempo de leitura, "Leia também", WebPage +
+  BlogPosting + ImageObject, `max-image-preview:large`, `seoTitle`, capa no sitemap, alt obrigatório no
+  `seo-check`), data dos posts em UTC (saía um dia antes) e links para o artigo em growth-partner-vs-agencia e
+  quanto-custa-loja. **Não feito:** página de autor (item 6) e `about`/`mentions` no schema.
+- Decisões 1 a 4 ainda abertas; publicado com os padrões: assinatura "Equipe ROI Labs"; item 7 do contrato sem dizer
+  de quem é o domínio na ROI Labs; título sem medir volume; foto de banco com legenda "Foto ilustrativa" em
+  "quem atende". O preço segue a frase do site ("R$ 3.960/ano"), sem prometer 12x sem acréscimo.
+- Próximo passo dela: Search Console → Inspeção de URL → pedir indexação (seção 14).
 
 ## Fontes consultadas (29/09/2026)
 
