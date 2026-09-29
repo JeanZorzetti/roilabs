@@ -126,7 +126,7 @@ export const TIPOS_CADEIRA: TipoCadeira[] = [
         ],
         rules: [
           'O fee incide sobre o produto com desconto, nunca sobre o frete',
-          'Acima do corte do nicho (R$ 1.500; B2B R$ 5.000) a parte que passa paga 2/3 da taxa. Piso de R$ 5 por pedido',
+          'Piso de R$ 5 por pedido',
           'A taxa fica congelada no pedido: mudar o percentual do parceiro não reescreve pedido antigo',
           'Em moda, produto devolvido estorna a comissão',
         ],

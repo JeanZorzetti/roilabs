@@ -28,7 +28,6 @@ export interface NichoPercentual extends NichoBase {
   modelo: 'percentual';
   aquisicao: number; // fração [0,1] sobre o produto com desconto, nunca sobre o frete
   recorrencia: number;
-  corte: number; // R$ de produto a partir do qual a taxa cai para 2/3
 }
 
 // SaaS e clínicas não cabem em "% por pedido": a primeira compra de um SaaS é uma
@@ -42,8 +41,6 @@ export interface NichoOutroModelo extends NichoBase {
 export type NichoPreco = NichoPercentual | NichoOutroModelo;
 
 export const PISO_POR_PEDIDO = 5; // R$ — abaixo do fixo que ML e Shopee cobram em item < R$79
-export const CORTE_VAREJO = 1500; // R$ — acima disso o anúncio passa a custar < 15% do pedido
-export const CORTE_B2B = 5000;
 export const TAXA_MINIMA = 0.05;
 export const AJUSTE_DISTRIBUIDOR: Record<TipoCompra, number> = { aquisicao: 0.03, recorrencia: 0.02 };
 // Premissas da régua de margem (projecao-financeira.md): Simples ~9% efetivo, cartão ~4%.
@@ -58,8 +55,7 @@ export const FAIXAS: Record<Faixa, { rotulo: string; criterio: string }> = {
   especial: { rotulo: 'Modelo especial', criterio: 'Formato próprio de cobrança' },
 };
 
-const pct = (aquisicao: number, recorrencia: number, corte = CORTE_VAREJO) =>
-  ({ modelo: 'percentual', aquisicao, recorrencia, corte }) as const;
+const pct = (aquisicao: number, recorrencia: number) => ({ modelo: 'percentual', aquisicao, recorrencia }) as const;
 
 export const NICHOS: NichoPreco[] = [
   {
@@ -165,8 +161,8 @@ export const NICHOS: NichoPreco[] = [
     confianca: 'baixa', radicais: ['agro', 'agricol', 'fertiliz', 'defensiv', 'adubo', 'semente'],
   },
   {
-    id: 'b2b', faixa: 'especial', nicho: 'Embalagens, fitas adesivas e suprimentos B2B', ...pct(0.15, 0.08, CORTE_B2B),
-    regra: 'Recorrência sobe para 10% se a margem for de 40% ou mais. Taxa reduzida acima de R$ 5.000. Cliente que já comprava do fornecedor paga a taxa de recorrência.',
+    id: 'b2b', faixa: 'especial', nicho: 'Embalagens, fitas adesivas e suprimentos B2B', ...pct(0.15, 0.08),
+    regra: 'Recorrência sobe para 10% se a margem for de 40% ou mais. Cliente que já comprava do fornecedor paga a taxa de recorrência.',
     porque: 'Conquistar um cliente industrial por anúncio custa de R$ 1.700 a R$ 5.500 (clique de até R$ 32,95 em "fitas adesivas personalizadas", ago/2026). O fabricante tem margem de 24% a 40%. Representante industrial ganha de 5% a 10% nas recompras.',
     confianca: 'media-baixa', radicais: ['embalage', 'fita', 'adesiv', 'industrial', 'suprimento'],
   },
@@ -194,10 +190,6 @@ const fracao = (v: number) => Math.round(v * 10000) / 10000;
 export interface ResultadoComissao {
   taxaTabela: number;
   taxaAplicada: number; // já com o ajuste de distribuidor, nunca abaixo de TAXA_MINIMA (a manual vale como está)
-  taxaAcimaCorte: number;
-  corte: number;
-  ateCorte: number; // R$ de comissão na parte do pedido até o corte
-  acimaCorte: number; // R$ de comissão na parte que passa do corte
   pisoAplicado: boolean;
   comissao: number;
   pctEfetivo: number;
@@ -218,11 +210,8 @@ export function calcularComissao(
     taxaManual !== null
       ? fracao(taxaManual)
       : Math.max(TAXA_MINIMA, fracao(taxaTabela - (distribuidor ? AJUSTE_DISTRIBUIDOR[tipo] : 0)));
-  // 2/3 da taxa, arredondado ao ponto inteiro (18→12, 15→10, 12→8, 8→5), sem furar o mínimo.
-  const taxaAcimaCorte = Math.min(taxaAplicada, Math.max(TAXA_MINIMA, Math.round((taxaAplicada * 2 * 100) / 3) / 100));
-  const ateCorte = reais(Math.min(valor, nicho.corte) * taxaAplicada);
-  const acimaCorte = reais(Math.max(0, valor - nicho.corte) * taxaAcimaCorte);
-  const pelaTaxa = reais(ateCorte + acimaCorte);
+  // Taxa única sobre o pedido inteiro: não há faixa reduzida em pedido grande (Jean, 29/09/2026).
+  const pelaTaxa = reais(valor * taxaAplicada);
   // O piso nunca passa do valor do pedido: num item de R$ 3, cobrar R$ 5 seria absurdo.
   const piso = Math.min(PISO_POR_PEDIDO, valor);
   const pisoAplicado = valor > 0 && pelaTaxa < piso;
@@ -230,10 +219,6 @@ export function calcularComissao(
   return {
     taxaTabela,
     taxaAplicada,
-    taxaAcimaCorte,
-    corte: nicho.corte,
-    ateCorte,
-    acimaCorte,
     pisoAplicado,
     comissao,
     pctEfetivo: valor > 0 ? comissao / valor : 0,

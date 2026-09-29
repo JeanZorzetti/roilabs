@@ -19,7 +19,6 @@ const ORDEM_FAIXAS: Faixa[] = ['premium', 'padrao', 'intermediaria', 'margem-fin
 
 const REGRAS: [string, string][] = [
   ['Piso por pedido', 'A ROI Labs recebe o maior valor entre o percentual e R$ 5 por pedido. Mercado Livre e Shopee cobram mais que isso em item abaixo de R$ 79.'],
-  ['Taxa reduzida em pedido grande', 'Na parte do produto que passar de R$ 1.500 (R$ 5.000 no B2B), a taxa cai para 2/3: 18% vira 12%, 15% vira 10%, 12% vira 8%. Mesma lógica da Amazon em móveis.'],
   ['Distribuidor ou revendedor', 'Paga 3 pontos a menos na 1ª compra e 2 a menos na recompra, com mínimo de 5%. No atacado, a margem fica 8 a 15 pontos abaixo da do varejo (IBGE).'],
   ['Estorno', 'Comissão só sobre pedido pago. Devolução, cancelamento ou chargeback devolvem a comissão. Fechamento mensal, pagamento até o dia 15 do mês seguinte.'],
   ['Cliente novo', 'É o CPF/CNPJ na primeira compra pela loja. Se o fornecedor provar que a pessoa comprou dele nos últimos 12 meses por outro canal, paga a taxa de recompra.'],
@@ -258,7 +257,7 @@ export default async function PrecificacaoPage() {
         <strong>Sobre os números.</strong>
         <ul>
           <li>Confiança alta: várias fontes oficiais concordam. Média: fontes secundárias ou dado oficial combinado com conta da pesquisa. Baixa: faltam dados brasileiros do nicho.</li>
-          <li>Sem fonte de mercado, propostas da pesquisa: a regra de 1/3 da folga, o piso de R$ 5, o corte de R$ 1.500 e as faixas de volume.</li>
+          <li>Sem fonte de mercado, propostas da pesquisa: a regra de 1/3 da folga, o piso de R$ 5 e as faixas de volume.</li>
           <li>Comissões do Mercado Livre e da Shopee vêm de blogs (as páginas oficiais bloquearam a leitura); margens de empresas vêm de resumos dos balanços.</li>
           <li>Cláusulas de contrato: validar com advogado. Impostos: confirmar com o contador.</li>
         </ul>

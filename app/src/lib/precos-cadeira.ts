@@ -82,9 +82,6 @@ export function simular(e: EntradaSimulacao): Simulacao {
     comissaoAno = comissaoMes * 12;
     vendasAno = pedidos * ticket * 12;
     if (aq.pisoAplicado) avisos.push('Ticket baixo: o percentual dá menos que o piso de R$ 5 por pedido, e vale o piso.');
-    if (ticket > e.nicho.corte) {
-      avisos.push(`Ticket acima de ${brl(e.nicho.corte)}: a parte que passa paga 2/3 da taxa.`);
-    }
   } else if (e.nicho.modelo === 'mensalidade') {
     const novas = positivo(e.assinaturasMes);
     const mensalidade = positivo(e.mensalidade);
@@ -208,9 +205,7 @@ export function comissaoParaCliente(e: EntradaSimulacao): PropostaCadeiraDoc['co
     const rec = calcularComissao(n, 'recorrencia', 0, e.distribuidor, e.taxaManual?.recorrencia);
     return {
       resumo: `${pctTexto(aq.taxaAplicada)} na 1ª compra · ${pctTexto(rec.taxaAplicada)} na recompra`,
-      regras: [
-        `Na parte do produto acima de ${brl(n.corte)}, a taxa cai para ${pctTexto(aq.taxaAcimaCorte)} na 1ª compra e ${pctTexto(rec.taxaAcimaCorte)} na recompra.`,
-      ],
+      regras: [],
       quando,
     };
   }

@@ -31,7 +31,6 @@ function Resultado({ titulo, tipo, r, valor, distribuidor }: {
   valor: number;
   distribuidor: boolean;
 }) {
-  const passouCorte = valor > r.corte;
   return (
     <div className="pr-result">
       <div className="pr-result__label">{titulo}</div>
@@ -43,11 +42,6 @@ function Resultado({ titulo, tipo, r, valor, distribuidor }: {
             ? `${pct(r.taxaTabela)} − ${Math.round(AJUSTE_DISTRIBUIDOR[tipo] * 100)} pts de distribuidor = ${pct(r.taxaAplicada)}`
             : pct(r.taxaAplicada)}
         </li>
-        {passouCorte && (
-          <li>
-            Até {brl(r.corte)} a {pct(r.taxaAplicada)}: {brl(r.ateCorte)} · acima a {pct(r.taxaAcimaCorte)}: {brl(r.acimaCorte)}
-          </li>
-        )}
         {r.pisoAplicado && <li>O percentual daria menos que o piso: vale o piso de {brl(PISO_POR_PEDIDO)}</li>}
         {valor > 0 && <li>Fica com o fornecedor: {brl(r.fornecedorFica)}</li>}
       </ul>

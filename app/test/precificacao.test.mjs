@@ -5,7 +5,6 @@ import {
   NICHOS,
   NICHOS_PERCENTUAIS,
   TAXA_MINIMA,
-  CORTE_B2B,
   calcularComissao,
   encaixarPorMargem,
   nichoSugerido,
@@ -21,7 +20,6 @@ const nicho = (id) => NICHOS_PERCENTUAIS.find((n) => n.id === id);
     assert.ok(n.aquisicao <= 1 && n.recorrencia >= TAXA_MINIMA, `${n.id}: taxa fora da faixa`);
     assert.ok(n.aquisicao >= n.recorrencia, `${n.id}: recompra não pode custar mais que a 1ª compra`);
   }
-  assert.equal(nicho('b2b').corte, CORTE_B2B, 'B2B corta em R$ 5.000');
 }
 
 // ── os exemplos do relatório batem ─────────────────────────────────────────────────────
@@ -30,29 +28,16 @@ const nicho = (id) => NICHOS_PERCENTUAIS.find((n) => n.id === id);
   assert.equal(calcularComissao(nicho('moda'), 'aquisicao', 200).comissao, 30);
   assert.equal(calcularComissao(nicho('moda'), 'recorrencia', 200).comissao, 20);
 
-  // móveis de R$ 4.000 a 12%: 1.500 × 12% + 2.500 × 8% = 180 + 200 = R$ 380 (9,5%)
+  // pedido grande paga a taxa cheia no pedido inteiro: móveis de R$ 4.000 a 12% = R$ 480
   const m = calcularComissao(nicho('casa'), 'aquisicao', 4000);
-  assert.equal(m.ateCorte, 180);
-  assert.equal(m.acimaCorte, 200);
-  assert.equal(m.comissao, 380);
-  assert.equal(m.pctEfetivo, 0.095);
+  assert.equal(m.comissao, 480);
+  assert.equal(m.pctEfetivo, 0.12);
 
   // papelaria de R$ 25 a 12% daria R$ 3 → piso de R$ 5
   const p = calcularComissao(nicho('papelaria'), 'aquisicao', 25);
   assert.equal(p.pisoAplicado, true);
   assert.equal(p.comissao, 5);
   assert.equal(p.fornecedorFica, 20);
-}
-
-// ── 2/3 da taxa acima do corte, arredondado ao ponto: 18→12, 15→10, 12→8, 8→5 ──────────
-{
-  const acima = (id) => calcularComissao(nicho(id), 'aquisicao', 1).taxaAcimaCorte;
-  assert.equal(acima('beleza'), 0.12);
-  assert.equal(acima('moda'), 0.1);
-  assert.equal(acima('casa'), 0.08);
-  assert.equal(acima('eletronicos'), 0.05);
-  // recorrência de 5%: 2/3 furaria o mínimo — fica em 5%
-  assert.equal(calcularComissao(nicho('eletronicos'), 'recorrencia', 1).taxaAcimaCorte, TAXA_MINIMA);
 }
 
 // ── distribuidor: −3 pontos na aquisição, −2 na recorrência, nunca abaixo de 5% ────────
@@ -62,12 +47,9 @@ const nicho = (id) => NICHOS_PERCENTUAIS.find((n) => n.id === id);
   assert.equal(calcularComissao(nicho('eletronicos'), 'recorrencia', 100, true).taxaAplicada, TAXA_MINIMA);
 }
 
-// ── B2B: corte em R$ 5.000, não em R$ 1.500 ───────────────────────────────────────────
+// ── B2B também sem faixa reduzida: R$ 6.000 × 15% ─────────────────────────────────────
 {
-  const r = calcularComissao(nicho('b2b'), 'aquisicao', 6000);
-  assert.equal(r.ateCorte, 750, '5.000 × 15%');
-  assert.equal(r.acimaCorte, 100, '1.000 × 10%');
-  assert.equal(r.comissao, 850);
+  assert.equal(calcularComissao(nicho('b2b'), 'aquisicao', 6000).comissao, 900);
 }
 
 // ── entradas ruins não viram dinheiro ────────────────────────────────────────────────

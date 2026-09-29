@@ -64,7 +64,7 @@ export default async function PrecosPage({
           <Link href="/admin/precificacao" className="font-semibold text-navy underline underline-offset-2">
             tabela de Precificação
           </Link>
-          , com piso de {brl(PISO_POR_PEDIDO)} por pedido e taxa reduzida em pedido grande.
+          , com piso de {brl(PISO_POR_PEDIDO)} por pedido.
         </p>
         <SimuladorCadeira inicial={inicial} />
       </section>

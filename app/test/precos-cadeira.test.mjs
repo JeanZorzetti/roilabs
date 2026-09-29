@@ -48,10 +48,10 @@ const base = {
   assert.ok(r.avisos.some((a) => a.includes('piso')));
 }
 {
-  // acima do corte: aviso de 2/3
+  // ticket alto paga a taxa cheia no pedido inteiro, sem aviso de faixa
   const r = simular({ ...base, nicho: nicho('casa'), pedidosMes: 1, ticket: 3000 });
-  assert.equal(r.comissaoMes, 1500 * 0.12 + 1500 * 0.08);
-  assert.ok(r.avisos.some((a) => a.includes('2/3')));
+  assert.equal(r.comissaoMes, 3000 * 0.12);
+  assert.deepEqual(r.avisos, []);
 }
 
 // ── SaaS: 20% nas 12 primeiras mensalidades; no ano 1 toda assinatura está nelas ─────
@@ -103,6 +103,7 @@ const base = {
   assert.equal(doc.estimativa.comissaoMes, 840);
   assert.equal(doc.estimativa.totalAno, 12770);
   assert.equal(doc.comissao.resumo, '15% na 1ª compra · 10% na recompra');
+  assert.deepEqual(doc.comissao.regras, [], 'sem faixa reduzida em pedido grande');
   assert.ok(doc.condicoes.includes(REGRA_COMISSAO_PEDIDO));
   semInterno(doc, moda);
 
