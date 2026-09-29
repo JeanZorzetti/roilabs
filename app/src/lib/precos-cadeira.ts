@@ -7,7 +7,7 @@
 // gravada no cadastro do Parceiro (spec 010).
 
 import { ANUIDADE } from './entregaveis';
-import { calcularComissao, type NichoPreco } from './precificacao';
+import { calcularComissao, lerNumeroBR, type NichoPreco, type TipoCompra } from './precificacao';
 
 export { ANUIDADE };
 export const ANUIDADE_MES = ANUIDADE / 12; // R$ 220 — como aparece no /modelo
@@ -37,7 +37,19 @@ export type EntradaSimulacao = {
   /** Clínica: consultas comparecidas por mês e valor combinado por consulta. */
   consultasMes: number;
   valorConsulta: number;
+  /** Percentual: taxa negociada à mão (fração). Ausente ou null = a da tabela do nicho. */
+  taxaManual?: Partial<Record<TipoCompra, number | null>>;
 };
+
+/**
+ * Comissão manual digitada em %, arredondada a 0,1 ponto (o que a tela mostra é o que vale).
+ * Vazio = null (vale a tabela); fora de (0, 100] = NaN.
+ */
+export function lerTaxaManual(s: string): number | null {
+  if (!s.trim()) return null;
+  const taxa = Math.round(lerNumeroBR(s) * 10) / 1000;
+  return taxa > 0 && taxa <= 1 ? taxa : NaN;
+}
 
 export type Simulacao = {
   /** Comissão de um mês no ritmo informado (SaaS: o 12º mês, com a carteira do ano toda pagando). */
@@ -64,8 +76,8 @@ export function simular(e: EntradaSimulacao): Simulacao {
     const pedidos = positivo(e.pedidosMes);
     const ticket = positivo(e.ticket);
     const recompra = Math.min(1, positivo(e.recompra));
-    const aq = calcularComissao(e.nicho, 'aquisicao', ticket, e.distribuidor);
-    const rec = calcularComissao(e.nicho, 'recorrencia', ticket, e.distribuidor);
+    const aq = calcularComissao(e.nicho, 'aquisicao', ticket, e.distribuidor, e.taxaManual?.aquisicao);
+    const rec = calcularComissao(e.nicho, 'recorrencia', ticket, e.distribuidor, e.taxaManual?.recorrencia);
     comissaoMes = pedidos * ((1 - recompra) * aq.comissao + recompra * rec.comissao);
     comissaoAno = comissaoMes * 12;
     vendasAno = pedidos * ticket * 12;
@@ -188,12 +200,12 @@ export type PropostaCadeiraDoc = {
 const pctTexto = (v: number) => `${(v * 100).toLocaleString('pt-BR', { maximumFractionDigits: 1 })}%`;
 const numTexto = (v: number) => positivo(v).toLocaleString('pt-BR', { maximumFractionDigits: 1 });
 
-function comissaoParaCliente(e: EntradaSimulacao): PropostaCadeiraDoc['comissao'] {
+export function comissaoParaCliente(e: EntradaSimulacao): PropostaCadeiraDoc['comissao'] {
   const quando = 'Todo dia 05, sobre o mês anterior. Só sobre venda paga e originada pela cadeira: vendeu zero, comissão zero.';
   const n = e.nicho;
   if (n.modelo === 'percentual') {
-    const aq = calcularComissao(n, 'aquisicao', 0, e.distribuidor);
-    const rec = calcularComissao(n, 'recorrencia', 0, e.distribuidor);
+    const aq = calcularComissao(n, 'aquisicao', 0, e.distribuidor, e.taxaManual?.aquisicao);
+    const rec = calcularComissao(n, 'recorrencia', 0, e.distribuidor, e.taxaManual?.recorrencia);
     return {
       resumo: `${pctTexto(aq.taxaAplicada)} na 1ª compra · ${pctTexto(rec.taxaAplicada)} na recompra`,
       regras: [

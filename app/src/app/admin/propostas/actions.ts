@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 import { isAuthed } from "@/lib/auth";
 import { log } from "@/lib/log";
 import { NICHOS, lerNumeroBR } from "@/lib/precificacao";
-import { montarPropostaCadeira } from "@/lib/precos-cadeira";
+import { lerTaxaManual, montarPropostaCadeira } from "@/lib/precos-cadeira";
 import { prisma } from "@/lib/prisma";
 
 /**
@@ -37,6 +37,18 @@ export async function guardarPropostaCadeira(_: EstadoGuardar, formData: FormDat
   const nicho = NICHOS.find((n) => n.id === formData.get("nichoId"));
   if (!nicho) return { erro: "Escolha um nicho da lista antes de guardar." };
 
+  // Só o nicho de % por pedido tem as duas taxas; nos outros os campos nem aparecem.
+  const taxaManual =
+    nicho.modelo === "percentual"
+      ? {
+          aquisicao: lerTaxaManual(String(formData.get("aquisicaoManual") ?? "")),
+          recorrencia: lerTaxaManual(String(formData.get("recorrenciaManual") ?? "")),
+        }
+      : undefined;
+  if (taxaManual && (Number.isNaN(taxaManual.aquisicao) || Number.isNaN(taxaManual.recorrencia))) {
+    return { erro: "A comissão manual vai de 0,1% a 100%. Corrija o campo, ou apague para usar a tabela." };
+  }
+
   // A conta é refeita aqui: número vindo da tela não é gravado.
   const doc = montarPropostaCadeira(
     {
@@ -49,6 +61,7 @@ export async function guardarPropostaCadeira(_: EstadoGuardar, formData: FormDat
       mensalidade: numero(formData, "mensalidade"),
       consultasMes: numero(formData, "consultas"),
       valorConsulta: numero(formData, "valorConsulta"),
+      taxaManual,
     },
     paraQuem,
     new Date(),

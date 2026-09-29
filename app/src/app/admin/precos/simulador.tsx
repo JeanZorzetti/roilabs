@@ -3,7 +3,15 @@
 import Link from "next/link";
 import { useActionState, useState } from "react";
 import { guardarPropostaCadeira } from "../propostas/actions";
-import { FAIXAS, NICHOS, lerNumeroBR, type Faixa, type NichoPreco } from "@/lib/precificacao";
+import {
+  FAIXAS,
+  NICHOS,
+  calcularComissao,
+  lerNumeroBR,
+  type Faixa,
+  type NichoPreco,
+  type TipoCompra,
+} from "@/lib/precificacao";
 import { ROTULO_CENARIO, type PonteSimulador } from "@/lib/projecao";
 import {
   ANUIDADE,
@@ -12,7 +20,10 @@ import {
   DOMINIO_ANO,
   ENTRADA_ANO,
   brl,
+  comissaoParaCliente,
+  lerTaxaManual,
   simular,
+  type EntradaSimulacao,
 } from "@/lib/precos-cadeira";
 
 /**
@@ -43,14 +54,17 @@ function Numero({
   value,
   onChange,
   hint,
+  erro,
 }: {
   id: string;
   label: string;
   value: string;
   onChange: (v: string) => void;
   hint?: string;
+  /** Regra além do formato numérico; quando vem, é a mensagem mostrada. */
+  erro?: string | null;
 }) {
-  const invalido = value.trim() !== "" && Number.isNaN(lerNumeroBR(value));
+  const invalido = Boolean(erro) || (value.trim() !== "" && Number.isNaN(lerNumeroBR(value)));
   return (
     <label htmlFor={id} className={ROTULO}>
       {label}
@@ -63,7 +77,7 @@ function Numero({
         className={`${CAMPO} text-right`}
       />
       {invalido ? (
-        <span className="font-normal text-red-700">Use só números, como 1.500,00.</span>
+        <span className="font-normal text-red-700">{erro || "Use só números, como 1.500,00."}</span>
       ) : hint ? (
         <span className="font-normal">{hint}</span>
       ) : null}
@@ -90,12 +104,16 @@ export function SimuladorCadeira({ inicial }: { inicial?: PonteSimulador | null 
   const [mensalidade, setMensalidade] = useState("300");
   const [consultas, setConsultas] = useState(modeloInicial === "consulta" ? ritmoInicial : "10");
   const [valorConsulta, setValorConsulta] = useState("200");
+  const [aqManual, setAqManual] = useState("");
+  const [recManual, setRecManual] = useState("");
   const [copiado, setCopiado] = useState(false);
   const [paraQuem, setParaQuem] = useState("");
   const [estado, guardar, guardando] = useActionState(guardarPropostaCadeira, { erro: null });
 
   const nicho = NICHOS.find((n) => n.id === nichoId) ?? NICHOS[0];
-  const r = simular({
+  const aqManualTaxa = lerTaxaManual(aqManual);
+  const recManualTaxa = lerTaxaManual(recManual);
+  const entrada: EntradaSimulacao = {
     nicho,
     pedidosMes: ler(pedidos),
     ticket: ler(ticket),
@@ -105,13 +123,22 @@ export function SimuladorCadeira({ inicial }: { inicial?: PonteSimulador | null 
     mensalidade: ler(mensalidade),
     consultasMes: ler(consultas),
     valorConsulta: ler(valorConsulta),
-  });
+    // Inválida vale a tabela na conta: o campo mostra o erro e o servidor recusa ao guardar.
+    taxaManual: {
+      aquisicao: Number.isNaN(aqManualTaxa) ? null : aqManualTaxa,
+      recorrencia: Number.isNaN(recManualTaxa) ? null : recManualTaxa,
+    },
+  };
+  const r = simular(entrada);
+  /** Taxa da tabela do nicho, já com o desconto de distribuidor: é o que vale com o campo manual vazio. */
+  const taxaTabela = (tipo: TipoCompra) =>
+    nicho.modelo === "percentual" ? calcularComissao(nicho, tipo, 0, distribuidor).taxaAplicada : 0;
 
   const resumo = [
     `Cadeira — ${nicho.nicho}`,
     `Anuidade: ${brl(ANUIDADE)}/ano`,
     `Domínio próprio: ${brl(DOMINIO_ANO)}/ano`,
-    `Comissão: ${taxaDoNicho(nicho)}`,
+    `Comissão: ${comissaoParaCliente(entrada).resumo}`,
     `Estimativa no ritmo informado: ${brl(r.comissaoMes)}/mês de comissão, ${brl(r.totalAno)} no 1º ano com anuidade e domínio`,
   ].join("\n");
 
@@ -155,6 +182,32 @@ export function SimuladorCadeira({ inicial }: { inicial?: PonteSimulador | null 
             <strong className="font-semibold">{FAIXAS[nicho.faixa].rotulo}:</strong> {taxaDoNicho(nicho)}
             {nicho.regra ? <span className="block text-xs text-muted-foreground">{nicho.regra}</span> : null}
           </p>
+          {nicho.modelo === "percentual" ? (
+            <>
+              <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                <Numero
+                  id="sim-aquisicao-manual"
+                  label="Comissão na 1ª compra (%)"
+                  value={aqManual}
+                  onChange={setAqManual}
+                  hint={`Vazio: ${pct(taxaTabela("aquisicao"))} da tabela`}
+                  erro={Number.isNaN(aqManualTaxa) ? "Use de 0,1 a 100." : null}
+                />
+                <Numero
+                  id="sim-recorrencia-manual"
+                  label="Comissão na recompra (%)"
+                  value={recManual}
+                  onChange={setRecManual}
+                  hint={`Vazio: ${pct(taxaTabela("recorrencia"))} da tabela`}
+                  erro={Number.isNaN(recManualTaxa) ? "Use de 0,1 a 100." : null}
+                />
+              </div>
+              <p className="mt-2 text-xs text-muted-foreground">
+                Preenchida, a taxa vale como está: troca a da tabela e o desconto de distribuidor, e vai assim
+                para a proposta.
+              </p>
+            </>
+          ) : null}
         </fieldset>
 
         <fieldset className="min-w-0 rounded-xl border border-border bg-white p-4 shadow-soft">
@@ -313,6 +366,8 @@ export function SimuladorCadeira({ inicial }: { inicial?: PonteSimulador | null 
               <input type="hidden" name="mensalidade" value={mensalidade} />
               <input type="hidden" name="consultas" value={consultas} />
               <input type="hidden" name="valorConsulta" value={valorConsulta} />
+              <input type="hidden" name="aquisicaoManual" value={aqManual} />
+              <input type="hidden" name="recorrenciaManual" value={recManual} />
 
               <label htmlFor="sim-para-quem" className={ROTULO}>
                 Para quem

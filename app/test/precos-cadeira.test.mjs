@@ -9,6 +9,7 @@ import {
   REGRA_COMISSAO_PEDIDO,
   REGRAS_NEGOCIACAO,
   brl,
+  lerTaxaManual,
   montarPropostaCadeira,
   simular,
 } from '../src/lib/precos-cadeira.ts';
@@ -127,6 +128,27 @@ const base = {
   assert.equal(c.estimativa.vendasAno, null);
   assert.equal(c.estimativa.pctDaVenda, null);
   semInterno(c, clin);
+}
+
+// ── taxa manual: troca a tabela e o desconto de distribuidor, e vai para a proposta ────
+{
+  assert.equal(lerTaxaManual(''), null, 'vazio = tabela');
+  assert.equal(lerTaxaManual(' 12,5 '), 0.125);
+  assert.equal(lerTaxaManual('3%'), 0.03, 'abaixo do mínimo da tabela vale: é negociação');
+  assert.equal(lerTaxaManual('12,34'), 0.123, 'arredonda a 0,1 ponto, como a tela mostra');
+  for (const ruim of ['0', '0,04', '-5', '101', 'abc']) assert.ok(Number.isNaN(lerTaxaManual(ruim)), ruim);
+
+  const moda = nicho('moda');
+  const taxaManual = { aquisicao: 0.2, recorrencia: 0.03 };
+  // 24 × 20% de 200 + 6 × max(3% de 200, piso 5) = 960 + 36 = 996, com distribuidor marcado
+  const r = simular({ ...base, nicho: moda, pedidosMes: 30, ticket: 200, recompra: 0.2, distribuidor: true, taxaManual });
+  assert.equal(r.comissaoMes, 996);
+  const doc = montarPropostaCadeira({ ...base, nicho: moda, distribuidor: true, taxaManual }, 'M', new Date());
+  assert.equal(doc.comissao.resumo, '20% na 1ª compra · 3% na recompra');
+
+  // só uma preenchida: a outra segue a tabela com o desconto de distribuidor (10 − 2)
+  const meio = montarPropostaCadeira({ ...base, nicho: moda, distribuidor: true, taxaManual: { aquisicao: 0.2, recorrencia: null } }, 'M', new Date());
+  assert.equal(meio.comissao.resumo, '20% na 1ª compra · 8% na recompra');
 }
 
 console.log('precos-cadeira: ok');

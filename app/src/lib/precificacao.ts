@@ -193,7 +193,7 @@ const fracao = (v: number) => Math.round(v * 10000) / 10000;
 
 export interface ResultadoComissao {
   taxaTabela: number;
-  taxaAplicada: number; // já com o ajuste de distribuidor, nunca abaixo de TAXA_MINIMA
+  taxaAplicada: number; // já com o ajuste de distribuidor, nunca abaixo de TAXA_MINIMA (a manual vale como está)
   taxaAcimaCorte: number;
   corte: number;
   ateCorte: number; // R$ de comissão na parte do pedido até o corte
@@ -209,10 +209,15 @@ export function calcularComissao(
   tipo: TipoCompra,
   valorProduto: number,
   distribuidor = false,
+  /** Taxa negociada à mão (fração): troca a da tabela e o ajuste de distribuidor, sem piso de TAXA_MINIMA. */
+  taxaManual: number | null = null,
 ): ResultadoComissao {
   const valor = Number.isFinite(valorProduto) && valorProduto > 0 ? reais(valorProduto) : 0;
   const taxaTabela = nicho[tipo];
-  const taxaAplicada = Math.max(TAXA_MINIMA, fracao(taxaTabela - (distribuidor ? AJUSTE_DISTRIBUIDOR[tipo] : 0)));
+  const taxaAplicada =
+    taxaManual !== null
+      ? fracao(taxaManual)
+      : Math.max(TAXA_MINIMA, fracao(taxaTabela - (distribuidor ? AJUSTE_DISTRIBUIDOR[tipo] : 0)));
   // 2/3 da taxa, arredondado ao ponto inteiro (18→12, 15→10, 12→8, 8→5), sem furar o mínimo.
   const taxaAcimaCorte = Math.min(taxaAplicada, Math.max(TAXA_MINIMA, Math.round((taxaAplicada * 2 * 100) / 3) / 100));
   const ateCorte = reais(Math.min(valor, nicho.corte) * taxaAplicada);
