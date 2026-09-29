@@ -117,93 +117,96 @@ function Lista({ linhas, total }: { linhas: Linha[]; total: Total }) {
         {total._count > linhas.length ? ` · mostrando as ${linhas.length} mais recentes` : ""}
       </p>
 
-      <table className="pr-table pr-table--cards">
-        <caption className="sr-only">
-          Consultas guardadas, da mais recente para a mais antiga, com local, nicho, termos, buscas, vendas projetadas e
-          custo
-        </caption>
-        <thead>
-          <tr>
-            <th scope="col">Consulta</th>
-            <th scope="col">Consultada em</th>
-            <th scope="col">Onde</th>
-            <th scope="col">Nicho</th>
-            <th scope="col" className="md:text-right">
-              Buscas/mês
-            </th>
-            <th scope="col" className="md:text-right">
-              Vendas/mês no ano 1
-            </th>
-            <th scope="col" className="md:text-right">
-              Custo
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {itens.map(({ c, termos, resumo }) => {
-            const nicho = NICHOS.find((n) => n.id === c.nichoId);
-            const primeiros = termos.slice(0, 3).map((t) => t.termo);
-            const resto = termos.length - primeiros.length;
-            const onde = c.localCodigo === 2076 ? "Brasil" : c.localNome.split(",")[0];
-            return (
-              <tr key={c.id}>
-                <td className="pr-table__nicho min-w-[240px]">
-                  <Link
-                    href={`/admin/projecao?consulta=${c.id}`}
-                    className={`text-navy underline decoration-border underline-offset-4 hover:decoration-navy ${FOCO}`}
-                  >
-                    {c.paraQuem ?? <span className="italic">Sem nome</span>}
-                    <span className="sr-only">, consultada em {quando(c.criadaEm)}</span>
-                  </Link>
-                  <span className="mt-1 block text-xs font-normal text-muted-foreground">
-                    {termos.length} {termos.length === 1 ? "termo" : "termos"}: {primeiros.join(" · ")}
-                    {resto > 0 ? ` e mais ${resto}` : ""}
-                  </span>
-                </td>
-                <td data-label="Consultada em" className="whitespace-nowrap tabular-nums">
-                  {quando(c.criadaEm)}
-                </td>
-                <td data-label="Onde">{onde}</td>
-                <td data-label="Nicho" className="min-w-[160px]">
-                  {nicho ? nicho.nicho : <span className="text-muted-foreground">«{c.nichoId}» saiu da tabela</span>}
-                </td>
-                <td data-label="Buscas/mês" className="md:text-right">
-                  {resumo ? (
-                    <span className="inline-block min-w-[5rem]">
-                      <span className="font-mono tabular-nums">{inteiro.format(resumo.demanda)}</span>
-                      <span aria-hidden="true" className="mt-1 block h-1 overflow-hidden rounded-full bg-border/60">
-                        <span
-                          className="ml-auto block h-full rounded-full bg-navy"
-                          style={{ width: `${maxDemanda > 0 ? (resumo.demanda / maxDemanda) * 100 : 0}%` }}
-                        />
-                      </span>
+      {/* Rede de segurança para nome longo na largura de tablet; no celular a tabela vira cartões. */}
+      <div className="overflow-x-auto">
+        <table className="pr-table pr-table--cards">
+          <caption className="sr-only">
+            Consultas guardadas, da mais recente para a mais antiga, com local, nicho, termos, buscas, vendas projetadas e
+            custo
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">Consulta</th>
+              <th scope="col">Consultada em</th>
+              <th scope="col">Onde</th>
+              <th scope="col">Nicho</th>
+              <th scope="col" className="md:text-right">
+                Buscas/mês
+              </th>
+              <th scope="col" className="md:text-right">
+                Vendas/mês no ano 1
+              </th>
+              <th scope="col" className="md:text-right">
+                Custo
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {itens.map(({ c, termos, resumo }) => {
+              const nicho = NICHOS.find((n) => n.id === c.nichoId);
+              const primeiros = termos.slice(0, 3).map((t) => t.termo);
+              const resto = termos.length - primeiros.length;
+              const onde = c.localCodigo === 2076 ? "Brasil" : c.localNome.split(",")[0];
+              return (
+                <tr key={c.id}>
+                  <td className="pr-table__nicho">
+                    <Link
+                      href={`/admin/projecao?consulta=${c.id}`}
+                      className={`text-navy underline decoration-border underline-offset-4 hover:decoration-navy ${FOCO}`}
+                    >
+                      {c.paraQuem ?? <span className="italic">Sem nome</span>}
+                      <span className="sr-only">, consultada em {quando(c.criadaEm)}</span>
+                    </Link>
+                    <span className="mt-1 block text-xs font-normal text-muted-foreground">
+                      {termos.length} {termos.length === 1 ? "termo" : "termos"}: {primeiros.join(" · ")}
+                      {resto > 0 ? ` e mais ${resto}` : ""}
                     </span>
-                  ) : (
-                    <span className="text-muted-foreground">—</span>
-                  )}
-                </td>
-                <td data-label="Vendas/mês no ano 1" className="md:text-right">
-                  {resumo ? (
-                    <>
-                      <span className="whitespace-nowrap font-mono font-semibold tabular-nums text-navy">
-                        {formatarVendas(resumo.conservador) === formatarVendas(resumo.otimista)
-                          ? formatarVendas(resumo.conservador)
-                          : `${formatarVendas(resumo.conservador)} a ${formatarVendas(resumo.otimista)}`}
+                  </td>
+                  <td data-label="Consultada em" className="whitespace-nowrap tabular-nums">
+                    {quando(c.criadaEm)}
+                  </td>
+                  <td data-label="Onde">{onde}</td>
+                  <td data-label="Nicho">
+                    {nicho ? nicho.nicho : <span className="text-muted-foreground">«{c.nichoId}» saiu da tabela</span>}
+                  </td>
+                  <td data-label="Buscas/mês" className="md:text-right">
+                    {resumo ? (
+                      <span className="inline-block min-w-[5rem] align-top">
+                        <span className="font-mono tabular-nums">{inteiro.format(resumo.demanda)}</span>
+                        <span aria-hidden="true" className="mt-1 block h-1 overflow-hidden rounded-full bg-border/60">
+                          <span
+                            className="ml-auto block h-full rounded-full bg-navy"
+                            style={{ width: `${maxDemanda > 0 ? (resumo.demanda / maxDemanda) * 100 : 0}%` }}
+                          />
+                        </span>
                       </span>
-                      <span className="block text-xs text-muted-foreground">{resumo.unidade.plural}</span>
-                    </>
-                  ) : (
-                    <span className="text-muted-foreground">sem funil para o nicho guardado</span>
-                  )}
-                </td>
-                <td data-label="Custo" className="whitespace-nowrap font-mono tabular-nums md:text-right">
-                  US$ {usd(c.custoUsd)}
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+                    ) : (
+                      <span className="text-muted-foreground">—</span>
+                    )}
+                  </td>
+                  <td data-label="Vendas/mês no ano 1" className="md:text-right">
+                    {resumo ? (
+                      <>
+                        <span className="whitespace-nowrap font-mono font-semibold tabular-nums text-navy">
+                          {formatarVendas(resumo.conservador) === formatarVendas(resumo.otimista)
+                            ? formatarVendas(resumo.conservador)
+                            : `${formatarVendas(resumo.conservador)} a ${formatarVendas(resumo.otimista)}`}
+                        </span>
+                        <span className="block text-xs text-muted-foreground">{resumo.unidade.plural}</span>
+                      </>
+                    ) : (
+                      <span className="text-muted-foreground">sem funil para o nicho guardado</span>
+                    )}
+                  </td>
+                  <td data-label="Custo" className="whitespace-nowrap font-mono tabular-nums md:text-right">
+                    US$ {usd(c.custoUsd)}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
     </section>
   );
 }

@@ -63,8 +63,15 @@ const MESES = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "o
 
 const mesAno = (ym: string) => `${MESES[Number(ym.slice(5, 7)) - 1]}/${ym.slice(2, 4)}`;
 const usd = (v: number) => v.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 3 });
+// Fuso fixo: a consulta guardada chega renderizada do servidor (UTC), e sem ele a hora do navegador diverge (018).
 const quando = (iso: string) =>
-  new Date(iso).toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" });
+  new Date(iso).toLocaleString("pt-BR", {
+    timeZone: "America/Sao_Paulo",
+    day: "2-digit",
+    month: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 const unidadeDe = (u: Unidade, n: number) => (arredondarVendas(n) === 1 ? u.singular : u.plural);
 
 export function Projecao({ inicial }: { inicial?: Inicial }) {
