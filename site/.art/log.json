@@ -1,5 +1,47 @@
 [
   {
+    "data": "2026-09-29",
+    "alvo": "/modelo/ (topo)",
+    "direcao": "custom:cartaz-da-equipe (derivada do papel da equipe de vendas, dentro da pele Brasil Inteiro)",
+    "eixos": {
+      "materia": "pigmento",
+      "motor": "entrada",
+      "banda": "média"
+    },
+    "estrutura": "cartaz: manchete na largura toda sobre o laranja da marca com a trama da home + a venda desenhada em três quadros 3/5/3 na mesma linha de chão (seu cliente → nossa equipe de vendas, no quadro noite → você) com legenda em lista; abaixo, o modelo numa frase e a faixa de preço da home; o resto da página igual (gates, conta, dois lados, trilha, FAQ)",
+    "origem": "a dona pediu que o /modelo falasse da equipe de vendas que atende e fecha a venda de todo lead do site. Seis folhas até aqui: A/B/C (sem gente), D/E/F (foto de 1943 como exemplo), G/H/I (foto de banco), J/K/L (desenho Open Peeps). Escolheu o L e pediu personagens melhores; na folha L1/L2/L3 escolheu L1 (Humaaans) e trocou a legenda do 'você' de 'Fatura e despacha' para 'Recebe a venda pronta'",
+    "personagens": "Humaaans, de Pablo Stanley (CC0), montados fora do repo a partir das partes do pacote npm humaaans e repintados com os hex dos tokens (noite, creme, laranja); 4 SVG em site/src/assets/modelo/, embutidos no HTML via ?raw (23 kb crus, sem requisição)",
+    "orcamento": {
+      "faixa": "captação",
+      "js_kb": 0,
+      "css_novo": "só modelo.css",
+      "lcp_alvo": 2,
+      "lcp_medido_celular_4g_cpu4x": "1,50–1,82 s (3 medidas)",
+      "lcp_medido_desktop_4g_cpu4x": "1,62–1,83 s (3 medidas)",
+      "lcp_elemento": "h1",
+      "cls_celular": 0.0001,
+      "cls_desktop": 0.001
+    },
+    "deps": [],
+    "escopo": "modelo.astro + modelo.css (tudo em [data-art='brasil-inteiro']); nenhuma regra da home, do /simulador ou do global mudou",
+    "camadas": "entrada: o quadro da equipe sobe do chão por máscara e as setas se revelam da esquerda para a direita, uma vez (~1,3 s) · scroll: nenhuma (como na home) · ponteiro: nenhuma no cartaz (é ilustração, não controle; o cursor responde na foto da chegada) · transição: nenhuma (como na home). Reduzir movimento: a cena aparece inteira, parada",
+    "gates": "35/35. Reprovou e foi corrigido: G3 (título a 3,8rem, 3,6× o corpo → 5,35rem, o teto da home, na largura toda), G15 (5 primitivas na página → setas pela mesma máscara do quadro e sem o passo à frente no hover), G17 (laranja chapado → a trama de pontos da home), G26 (CLS 0,029 → 0,001: 'não agência.' inteira numa linha e o texto de apoio com largura em que a fonte de reserva e a Figtree quebram igual). G6: os SVG são ilustração (como foto), com os hex tirados dos tokens; o CSS e o .astro não têm cor solta. G13, G14 e G31 n/a: sem animação de scroll, sem camada de ponteiro no cartaz, sem canvas",
+    "recusadas": [
+      "custom:indice (campo/estado/escura) — o ramo anterior",
+      "custom:dois-lados (pigmento/ponteiro/média)",
+      "custom:travessia (imagem/scroll/escura)",
+      "custom:plantao (imagem/scroll/escura) — foto de exemplo de 1943",
+      "custom:venda-pronta (pigmento/scroll/média)",
+      "custom:roteiro (geometria/scroll/clara)",
+      "custom:capa (imagem/scroll/média) — foto de banco",
+      "custom:cracha (imagem/ponteiro/escura) — foto de banco",
+      "custom:mesa (imagem/entrada/clara) — foto de banco",
+      "custom:traco (pigmento/entrada/clara) — Open Peeps",
+      "custom:equipe (pigmento/entrada/escura) — Open Peeps",
+      "personagens Open Peeps no cartaz; Micah (L2) e Notionists (L3) perderam para Humaaans (L1)"
+    ]
+  },
+  {
     "data": "2026-09-28",
     "alvo": "home / (roilabs.com.br)",
     "direcao": "custom:derivada-brasil-inteiro",

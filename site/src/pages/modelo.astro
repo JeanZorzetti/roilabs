@@ -9,6 +9,14 @@ import '../styles/brasil-inteiro/tokens.css';
 import '../styles/brasil-inteiro/home.css';
 import '../styles/brasil-inteiro/simulador.css';
 import '../styles/brasil-inteiro/modelo.css';
+// Os personagens do cartaz do topo: Humaaans, de Pablo Stanley (CC0), já pintados com os tokens da direção
+// (gerados fora do repo; as cores são os hex de --bi-noite, --bi-creme e --bi-laranja). Vão embutidos no HTML.
+import svgCliente from '../assets/modelo/cliente.svg?raw';
+import svgEquipe1 from '../assets/modelo/equipe-1.svg?raw';
+import svgEquipe2 from '../assets/modelo/equipe-2.svg?raw';
+import svgVoce from '../assets/modelo/voce.svg?raw';
+
+const boneco = (svg: string) => svg.replace('<svg', '<svg class="bi-boneco" focusable="false"');
 
 const whatsHref = whatsLink('Quero entender o modelo Growth Partner da ROI Labs');
 
@@ -22,18 +30,14 @@ const liquido = receita - fee - anuidadeMes; // 15.980
 const brl = (n: number) => 'R$ ' + n.toLocaleString('pt-BR');
 const fatia = (n: number) => `${((n / receita) * 100).toFixed(2)}%`;
 
-// O índice do topo: as quatro peças da página, na ordem em que aparecem.
-const pecas = [
-  { href: '#gates', nome: 'Os três gates', frase: 'Nenhuma cadeira abre no escuro.' },
-  { href: '#success-fee', nome: 'A conta', frase: 'Anuidade + success fee, sem tabela escondida.' },
-  { href: '#exclusividade', nome: 'Exclusividade e papéis', frase: 'Uma cadeira, dois compromissos.' },
-  { href: '#etapas', nome: 'O caminho', frase: 'Da candidatura ao contrato, em 6 etapas.' },
-];
-
 const faq = [
   {
     q: 'Quanto custa ocupar uma cadeira?',
     a: 'A anuidade é de R$ 2.640 por ano (R$ 220/mês) e reserva o nicho só para você no Brasil enquanto o contrato vigorar. É simbólica de propósito: a tecnologia e o tráfego continuam bancados pela ROI Labs, e o grosso da remuneração segue sendo o success fee sobre a venda concretizada.',
+  },
+  {
+    q: 'Quem atende o cliente que chega pelo site?',
+    a: 'A equipe de vendas da ROI Labs. Todo cliente que chega pelo site da cadeira fala com ela: a equipe tira as dúvidas, fecha a venda e entrega a venda pronta para você faturar e despachar. Quem comprou pode ficar na carteira da ROI Labs, e a equipe trabalha para esse cliente comprar de novo. O acompanhamento da entrega do pedido fica com você.',
   },
   {
     q: 'Como o percentual do success fee é definido?',
@@ -154,42 +158,57 @@ const jsonLdNodes = [
   <Header />
 
   <main>
-    <!-- TOPO · o modelo numa frase | o índice das quatro peças. Abaixo, a mesma faixa de preço da home.
-         Abaixo de 900px o índice desce para depois do texto. -->
-    <section class="bi-mod-topo" aria-labelledby="modelo-title">
+    <!-- TOPO · o cartaz: o laranja da marca é o papel inteiro e a venda é desenhada em três quadros, o seu
+         cliente, a nossa equipe de vendas (no quadro noite) e você. Os desenhos são decoração (aria-hidden): quem
+         conta a história é a lista das legendas. Escolhido pela dona na folha de 28/09 (L1). -->
+    <section class="bi-cartaz" aria-labelledby="modelo-title">
       <div class="wrap">
-        <div class="bi-mod-topo__grade">
+        <div class="bi-cartaz__topo">
           <div>
             <span class="bi-olho">O modelo · em profundidade</span>
             <h1 id="modelo-title">Growth Partner: sócio de performance, <em>não agência.</em></h1>
-            <p class="bi-sub">
-              O modelo em uma frase: a ROI Labs constrói e opera a venda online de
-              <strong>um único fornecedor por nicho no Brasil</strong> — bancando
-              tecnologia e tráfego — e é remunerada pela
-              <strong>anuidade simbólica da cadeira (R$ 2.640/ano)</strong> mais
-              uma <strong>fração variável da venda concretizada</strong>. Sem
-              setup, sem piso, sem verba de mídia.
-            </p>
           </div>
-
-          <nav class="bi-indice" aria-labelledby="indice-rot">
-            <p class="bi-indice__rot" id="indice-rot">As quatro peças do modelo</p>
-            <ol class="bi-indice__lista" role="list">
-              {pecas.map((p, i) => (
-                <li>
-                  <a href={p.href}>
-                    <span class="bi-indice__num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
-                    <span class="bi-indice__nome">{p.nome}</span>
-                    <span class="bi-indice__frase">{p.frase}</span>
-                  </a>
-                </li>
-              ))}
-            </ol>
-          </nav>
+          <p class="bi-cartaz__sub">
+            A ROI Labs cria o site da cadeira e traz o cliente pelo Google. <strong>Quem chega pelo site fala com
+            a nossa equipe de vendas</strong>, que fecha a venda e entrega pronta para você.
+          </p>
         </div>
 
-        <!-- Mesma faixa de preço da home. Valores do FAQ e do JSON-LD; mudar lá muda aqui. -->
-        <div class="bi-preco bi-mod-topo__preco" role="group" aria-label="Quanto custa a cadeira">
+        <div class="bi-cena" aria-hidden="true">
+          <div class="bi-cena__quadro bi-cena__quadro--cliente">
+            <Fragment set:html={boneco(svgCliente)} />
+            <svg class="bi-cena__seta" viewBox="0 0 84 40" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M3 24c18-12 40-16 72-6" /><path d="M64 8l12 10-14 7" /></svg>
+          </div>
+          <div class="bi-cena__quadro bi-cena__quadro--equipe">
+            <Fragment set:html={boneco(svgEquipe1)} />
+            <Fragment set:html={boneco(svgEquipe2)} />
+            <svg class="bi-cena__seta" viewBox="0 0 84 40" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M3 24c18-12 40-16 72-6" /><path d="M64 8l12 10-14 7" /></svg>
+          </div>
+          <div class="bi-cena__quadro bi-cena__quadro--voce">
+            <Fragment set:html={boneco(svgVoce)} />
+          </div>
+        </div>
+        <ol class="bi-cena__legendas" role="list">
+          <li><small>Seu cliente</small>Chega pelo site e chama.</li>
+          <li><small>Nossa equipe de vendas</small>Atende, fecha a venda e traz o cliente de volta.</li>
+          <li><small>Você</small>Recebe a venda pronta.</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- O MODELO NUMA FRASE · o que era o texto do topo, e a mesma faixa de preço da home. Valores do FAQ e do
+         JSON-LD; mudar lá muda aqui. -->
+    <section class="bi-mod-preco" aria-label="O modelo numa frase e quanto custa">
+      <div class="wrap">
+        <p class="bi-sub bi-mod-preco__frase">
+          O modelo em uma frase: a ROI Labs constrói e opera a venda online de
+          <strong>um único fornecedor por nicho no Brasil</strong> — bancando
+          tecnologia, tráfego e a equipe de vendas — e é remunerada pela
+          <strong>anuidade simbólica da cadeira (R$ 2.640/ano)</strong> mais
+          uma <strong>fração variável da venda concretizada</strong>. Sem
+          setup, sem piso, sem verba de mídia.
+        </p>
+        <div class="bi-preco" role="group" aria-label="Quanto custa a cadeira">
           <div class="bi-preco__valor">
             <span class="bi-preco__rot">Anuidade da cadeira</span>
             <p><b>R$ 2.640</b><span>/ano</span></p>
@@ -340,7 +359,8 @@ const jsonLdNodes = [
             <ul role="list">
               <li>Tecnologia inteira: loja online, catálogo, calculadoras, comparador, feed.</li>
               <li>Tráfego orgânico: centenas de páginas de alta intenção, sem mídia paga.</li>
-              <li>Captação e qualificação do lead até o pedido.</li>
+              <li>Equipe de vendas: atende quem chega pelo site, fecha a venda e entrega pronta para você.</li>
+              <li>Carteira: quem comprou pode ficar com a ROI Labs, e a equipe trabalha a próxima compra.</li>
               <li>Transparência: relatório pedido a pedido na fatura do fee.</li>
             </ul>
           </div>

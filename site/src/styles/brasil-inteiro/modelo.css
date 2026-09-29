@@ -1,9 +1,8 @@
-/* art-direction · brasil-inteiro (propagação: /modelo) · eixos: campo/autônomo/escura · orçamento: 30kb · 2026-09-28 */
+/* art-direction · brasil-inteiro (propagação: /modelo) + cartaz do topo · eixos: pigmento/entrada/média · orçamento: 1kb · 2026-09-29 */
 /* O /modelo na direção Brasil Inteiro. Usa os tokens e a releitura do global.css de home.css e a conta aberta
-   de simulador.css; aqui fica só o que é desta página: o índice do topo, os gates, os dois lados e a trilha. */
+   de simulador.css; aqui fica só o que é desta página: o cartaz do topo, os gates, os dois lados e a trilha. */
 
-[data-art='brasil-inteiro'] :is(.bi-mod-topo, .section) h2 em,
-[data-art='brasil-inteiro'] .bi-mod-topo h1 em {
+[data-art='brasil-inteiro'] .section h2 em {
   font-style: normal;
   color: var(--bi-laranja);
 }
@@ -18,99 +17,191 @@
   color: var(--bi-texto);
 }
 
-/* ---------- topo: o modelo numa frase | as quatro peças ---------- */
-[data-art='brasil-inteiro'] .bi-mod-topo {
-  padding-block: clamp(2.5rem, 7vh, 5rem) clamp(2.5rem, 6vh, 4rem);
-  border-bottom: 1px solid var(--bi-fio);
+/* ---------- topo: o cartaz ---------- */
+/* o laranja da marca vira o papel inteiro; a venda é desenhada em três quadros: o seu cliente, a nossa equipe
+   de vendas (no quadro noite, a parte grande do cartaz) e você. O texto sobre o laranja é todo noite (6,9:1). */
+[data-art='brasil-inteiro'] .bi-cartaz {
+  padding-block: clamp(2rem, 5vh, 3rem) clamp(2.2rem, 5vh, 3rem);
+  /* a mesma trama de pontos das faixas creme: o laranja lê como papel impresso, não como cor chapada */
+  background:
+    radial-gradient(circle at 1px 1px, var(--bi-trama) 1px, transparent 1.6px) 0 0 / 22px 22px,
+    var(--bi-laranja);
+  color: var(--bi-noite);
 }
 
-/* 8/4: "Growth Partner:" mede 7,4em na Gloock e precisa caber inteiro na primeira linha do título */
-[data-art='brasil-inteiro'] .bi-mod-topo__grade {
-  display: grid;
-  grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
-  gap: clamp(2rem, 5vw, 4.5rem);
-  align-items: center;
+/* o título ocupa a largura toda, no mesmo teto da home e do /simulador (5,35rem, 5× o corpo): num cartaz a\n   manchete é grande. O texto de apoio fica embaixo dele */
+[data-art='brasil-inteiro'] .bi-cartaz__topo {
+  display: block;
 }
 
-/* o mesmo teto da home e do /simulador (5,35rem): 5× o texto corrido */
-[data-art='brasil-inteiro'] .bi-mod-topo h1 {
-  margin-top: 1rem;
-  max-width: 11em;
-  font-size: clamp(2.6rem, 5.95vw, 5.35rem);
+[data-art='brasil-inteiro'] .bi-cartaz .bi-olho {
+  color: var(--bi-noite);
+}
+
+[data-art='brasil-inteiro'] .bi-cartaz h1 {
+  margin-top: 0.7rem;
+  font-size: clamp(2.4rem, 5.95vw, 5.35rem);
   line-height: 1.02;
   text-wrap: balance;
+  color: var(--bi-noite);
 }
 
-[data-art='brasil-inteiro'] .bi-mod-topo .bi-sub {
-  max-width: 38rem;
+/* "não agência." ganha uma tarja creme, como um marca-texto no cartaz. Fica inteira numa linha: partida, ela
+   quebrava num lugar com a fonte de reserva e noutro com a Gloock, e a troca empurrava o texto (CLS 0,029) */
+[data-art='brasil-inteiro'] .bi-cartaz h1 em {
+  white-space: nowrap;
+  font-style: normal;
+  padding: 0 0.12em;
+  border-radius: 3px;
+  background: var(--bi-creme);
+  color: var(--bi-noite);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
 }
 
-/* o índice: quatro linhas numeradas; o ponteiro acende o número e o fio de baixo */
-[data-art='brasil-inteiro'] .bi-indice__rot {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--bi-laranja);
+[data-art='brasil-inteiro'] .bi-cartaz__sub {
+  margin: 1rem 0 0;
+  max-width: 48rem; /* com 40rem a fonte de reserva quebrava em 3 linhas e a Figtree em 2 (CLS) */
+  font-size: 1.0625rem;
+  font-weight: 500;
+  line-height: 1.6;
 }
 
-[data-art='brasil-inteiro'] .bi-indice__lista {
+/* line-height 1: o negrito não mexe na altura da linha quando a fonte de reserva troca pela Figtree */
+[data-art='brasil-inteiro'] .bi-cartaz__sub strong {
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* a cena: três quadros 3/5/3 sobre a mesma linha de chão. A altura da cena manda em tudo: bonecos, encostos e\n   setas se medem por ela, então a cena encolhe inteira no tablet sem um boneco invadir o quadro do outro */
+[data-art='brasil-inteiro'] .bi-cena {
+  --cena-h: clamp(250px, 23vw, 330px);
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 5fr) minmax(0, 3fr);
+  align-items: end;
+  margin-top: 1.6rem;
+  border-bottom: 2.5px solid var(--bi-noite);
+}
+
+[data-art='brasil-inteiro'] .bi-cena__quadro {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  min-width: 0;
+  height: var(--cena-h);
+}
+
+/* os desenhos têm folga lateral no próprio SVG, então encostam uns nos outros com margem negativa */
+[data-art='brasil-inteiro'] .bi-boneco {
+  position: relative;
+  display: block;
+  flex: none;
+  height: 100%;
+  width: auto;
+  margin-inline: calc(var(--cena-h) * -0.09);
+}
+
+[data-art='brasil-inteiro'] .bi-cena__quadro--equipe .bi-boneco {
+  margin-inline: calc(var(--cena-h) * -0.146);
+}
+
+[data-art='brasil-inteiro'] .bi-cena__quadro--equipe::before {
+  content: '';
+  position: absolute;
+  inset: 8% 5% 0;
+  border-radius: 6px 6px 0 0;
+  background: var(--bi-noite);
+  box-shadow: 0 30px 50px -30px var(--bi-sombra-laranja);
+}
+
+/* as setas desenhadas entre os quadros */
+[data-art='brasil-inteiro'] .bi-cena__seta {
+  position: absolute;
+  z-index: 1;
+  top: 34%;
+  width: calc(var(--cena-h) * 0.19);
+  height: calc(var(--cena-h) * 0.09);
+  color: var(--bi-noite);
+}
+
+[data-art='brasil-inteiro'] .bi-cena__quadro--cliente .bi-cena__seta {
+  right: calc(var(--cena-h) * -0.11);
+}
+
+[data-art='brasil-inteiro'] .bi-cena__quadro--equipe .bi-cena__seta {
+  right: calc(var(--cena-h) * -0.12);
+}
+
+[data-art='brasil-inteiro'] .bi-cena__legendas {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 5fr) minmax(0, 3fr);
   margin: 0.8rem 0 0;
   padding: 0;
   list-style: none;
-  border-top: 1px solid var(--bi-fio);
 }
 
-[data-art='brasil-inteiro'] .bi-indice__lista a {
-  display: grid;
-  grid-template-columns: 44px minmax(0, 1fr);
-  gap: 0.1rem 1rem;
-  align-items: center;
-  padding: 0.85rem 0;
-  border-bottom: 1px solid var(--bi-fio);
-  color: inherit;
-  text-decoration: none;
-  transition: border-color var(--bi-dur-rapida) var(--bi-ease-saida);
-}
-
-[data-art='brasil-inteiro'] .bi-indice__num {
-  grid-row: span 2;
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  border: 1.5px solid var(--bi-fio-forte);
-  border-radius: 50%;
+[data-art='brasil-inteiro'] .bi-cena__legendas li {
+  padding-inline: 0.6rem;
+  text-align: center;
   font-family: var(--bi-display);
-  font-size: 1.15rem;
-  color: var(--bi-texto);
-  transition:
-    background-color var(--bi-dur-rapida) var(--bi-ease-saida),
-    border-color var(--bi-dur-rapida) var(--bi-ease-saida),
-    color var(--bi-dur-rapida) var(--bi-ease-saida);
+  font-size: 1.35rem;
+  line-height: 1.15;
+  text-wrap: balance;
 }
 
-[data-art='brasil-inteiro'] .bi-indice__nome {
+[data-art='brasil-inteiro'] .bi-cena__legendas small {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-family: var(--bi-corpo);
+  font-size: 0.74rem;
   font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 
-[data-art='brasil-inteiro'] .bi-indice__frase {
-  font-size: 0.92rem;
-  color: var(--bi-texto-2);
+/* entrada, uma vez: o quadro da equipe sobe do chão e as setas se revelam da esquerda para a direita
+   (cliente → equipe → você). Fora desta media query tudo já está no lugar: sem JS e parado, a cena é a mesma. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-art='brasil-inteiro'] .bi-cena__quadro--equipe::before {
+    animation: bi-cartaz-quadro var(--bi-dur-cena) var(--bi-ease-cena) 120ms both;
+  }
+
+  [data-art='brasil-inteiro'] .bi-cena__seta {
+    animation: bi-cartaz-seta 420ms var(--bi-ease-saida) both;
+  }
+
+  [data-art='brasil-inteiro'] .bi-cena__quadro--cliente .bi-cena__seta {
+    animation-delay: 560ms;
+  }
+
+  [data-art='brasil-inteiro'] .bi-cena__quadro--equipe .bi-cena__seta {
+    animation-delay: 900ms;
+  }
 }
 
-[data-art='brasil-inteiro'] .bi-indice__lista a:is(:hover, :focus-visible) {
-  border-bottom-color: var(--bi-laranja);
+@keyframes bi-cartaz-quadro {
+  from { clip-path: inset(100% 0 0 0); }
+  to { clip-path: inset(0); }
 }
 
-[data-art='brasil-inteiro'] .bi-indice__lista a:is(:hover, :focus-visible) .bi-indice__num {
-  border-color: var(--bi-laranja);
-  background: var(--bi-laranja);
-  color: var(--bi-sobre-laranja);
+@keyframes bi-cartaz-seta {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0); }
 }
 
-[data-art='brasil-inteiro'] .bi-mod-topo__preco {
-  margin-top: clamp(2rem, 5vh, 3rem);
+/* ponteiro: nenhum no cartaz. A cena é ilustração, não controle; a resposta ao cursor da página fica na foto\n   da chegada, lá embaixo. Scroll e transição de página: nenhum, como na home. */
+
+/* ---------- o modelo numa frase + a faixa de preço da home, logo abaixo do cartaz ---------- */
+[data-art='brasil-inteiro'] .bi-mod-preco {
+  padding-block: clamp(2rem, 5vh, 3rem);
+  border-bottom: 1px solid var(--bi-fio);
 }
 
+[data-art='brasil-inteiro'] .bi-mod-preco__frase {
+  margin: 0 0 clamp(1.5rem, 3vh, 2rem);
+  max-width: 46rem;
+}
 /* ---------- o par texto | objeto, usado pelas seções de baixo ---------- */
 [data-art='brasil-inteiro'] .bi-mod-par {
   display: grid;
@@ -611,7 +702,7 @@
 
 /* ---------- tamanhos ---------- */
 @media (max-width: 899px) {
-  [data-art='brasil-inteiro'] :is(.bi-mod-topo__grade, .bi-mod-par, .bi-mod-par--conta, .bi-mod-par--trilha, .bi-mod-par--faq) {
+  [data-art='brasil-inteiro'] :is(.bi-cartaz__topo, .bi-mod-par, .bi-mod-par--conta, .bi-mod-par--trilha, .bi-mod-par--faq) {
     grid-template-columns: minmax(0, 1fr);
   }
 
@@ -621,6 +712,28 @@
 }
 
 @media (max-width: 699px) {
+  [data-art='brasil-inteiro'] .bi-cena,
+  [data-art='brasil-inteiro'] .bi-cena__legendas {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr) minmax(0, 1fr);
+  }
+
+  [data-art='brasil-inteiro'] .bi-cena {
+    --cena-h: 160px;
+  }
+
+  [data-art='brasil-inteiro'] .bi-cena__seta {
+    display: none;
+  }
+
+  [data-art='brasil-inteiro'] .bi-cena__legendas li {
+    padding-inline: 0.2rem;
+    font-size: 0.95rem;
+  }
+
+  [data-art='brasil-inteiro'] .bi-cena__legendas small {
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+  }
   [data-art='brasil-inteiro'] .bi-lados {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -676,7 +789,7 @@
 
 /* ---------- parado: tudo já aceso, nada transiciona ---------- */
 @media (prefers-reduced-motion: reduce) {
-  [data-art='brasil-inteiro'] :is(.bi-trilha__num, .bi-trilha__passo::before, .bi-indice__lista a, .bi-indice__num) {
+  [data-art='brasil-inteiro'] :is(.bi-trilha__num, .bi-trilha__passo::before) {
     transition: none;
   }
 
