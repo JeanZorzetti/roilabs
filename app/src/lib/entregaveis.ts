@@ -207,7 +207,7 @@ export const TIPOS_CADEIRA: TipoCadeira[] = [
           },
           { title: 'Fechamento do ciclo', items: [MES_6] },
         ],
-        excludes: ['Responder o WhatsApp — o atendimento e o fechamento da venda são do parceiro'],
+        excludes: ['Acompanhar a entrega do serviço depois da venda — é do parceiro'],
         rules: [
           'O relatório de comissões sai do painel, venda por venda, antes de cada cobrança',
           'Clínica (saúde, estética): cobra por consulta comparecida, R$ 150 a R$ 300 — nunca % do tratamento. Checar CFO/CFM antes de fechar o valor',
@@ -302,6 +302,8 @@ export const TIPOS_CADEIRA: TipoCadeira[] = [
 export const REGRAS_GERAIS = {
   roilabs: [
     ['Setup', 'Nenhum. Tecnologia e tráfego são bancados pela ROI Labs'],
+    ['Equipe de vendas', 'A equipe de vendas da ROI Labs atende todo cliente que chega pelo site, fecha a venda e entrega a venda pronta ao parceiro'],
+    ['Carteira', 'Quem comprou pode ficar na carteira da ROI Labs, e a equipe trabalha para esse cliente comprar de novo'],
     ['Anuidade', `R$ ${ANUIDADE.toLocaleString('pt-BR')}/ano (R$ 220/mês): Pix à vista, ou cartão em até 12x com acréscimo`],
     ['Domínio', 'Domínio próprio do cliente em toda cadeira, comprado na Hostinger: R$ 50/ano (valor inicial), cobrado junto com a anuidade'],
     ['Exclusividade', 'Uma cadeira por nicho no Brasil inteiro, enquanto o contrato vigorar'],
@@ -317,14 +319,14 @@ export const REGRAS_GERAIS = {
     'Catálogo próprio e amplo, com preço e foto atualizados',
     'Estoque consistente dos produtos anunciados',
     'Despacho no prazo — pronta-entrega de verdade',
-    'Responder o WhatsApp no prazo combinado',
+    'Faturar a venda que a equipe da ROI Labs entrega pronta',
     'Fotos, vídeos e depoimentos reais, com autorização',
   ],
   neverIncluded: [
     'Mídia paga (Google Ads, Meta Ads)',
     'Gestão de redes sociais',
     'Produção de foto e vídeo',
-    'Atendimento e fechamento da venda',
+    'Acompanhamento da entrega do pedido',
     'Embalagem, despacho, frete de devolução e nota fiscal',
     'Garantia e defeito do produto',
     'Suporte ao ERP ou sistema do parceiro',
