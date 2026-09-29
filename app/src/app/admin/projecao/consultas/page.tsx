@@ -100,9 +100,6 @@ function Lista({ linhas, total }: { linhas: Linha[]; total: Total }) {
     const termos = c.termos as unknown as TermoConsultado[];
     return { c, termos, resumo: resumirConsulta(termos, c.nichoId) };
   });
-  // A barra compara buscas entre linhas; a escala é a maior demanda da lista.
-  const maxDemanda = Math.max(0, ...itens.map((i) => i.resumo?.demanda ?? 0));
-
   return (
     <section aria-labelledby="consultas-titulo">
       <h2 id="consultas-titulo" className="sr-only">
@@ -121,14 +118,12 @@ function Lista({ linhas, total }: { linhas: Linha[]; total: Total }) {
       <div className="overflow-x-auto">
         <table className="pr-table pr-table--cards">
           <caption className="sr-only">
-            Consultas guardadas, da mais recente para a mais antiga, com local, nicho, termos, buscas, vendas projetadas e
-            custo
+            Consultas guardadas, da mais recente para a mais antiga, com data, local, termos, nicho, buscas, vendas
+            projetadas e custo
           </caption>
           <thead>
             <tr>
               <th scope="col">Consulta</th>
-              <th scope="col">Consultada em</th>
-              <th scope="col">Onde</th>
               <th scope="col">Nicho</th>
               <th scope="col" className="md:text-right">
                 Buscas/mês
@@ -155,31 +150,25 @@ function Lista({ linhas, total }: { linhas: Linha[]; total: Total }) {
                       className={`text-navy underline decoration-border underline-offset-4 hover:decoration-navy ${FOCO}`}
                     >
                       {c.paraQuem ?? <span className="italic">Sem nome</span>}
-                      <span className="sr-only">, consultada em {quando(c.criadaEm)}</span>
+                      <span className="sr-only">
+                        , {quando(c.criadaEm)}, {onde}
+                      </span>
                     </Link>
-                    <span className="mt-1 block text-xs font-normal text-muted-foreground">
+                    {/* Quando e onde são a identidade da consulta: duas do mesmo parceiro só se separam por aqui. */}
+                    <span aria-hidden="true" className="mt-1 block text-sm font-normal tabular-nums">
+                      {quando(c.criadaEm)} · {onde}
+                    </span>
+                    <span className="mt-0.5 block text-xs font-normal text-muted-foreground">
                       {termos.length} {termos.length === 1 ? "termo" : "termos"}: {primeiros.join(" · ")}
                       {resto > 0 ? ` e mais ${resto}` : ""}
                     </span>
                   </td>
-                  <td data-label="Consultada em" className="whitespace-nowrap tabular-nums">
-                    {quando(c.criadaEm)}
-                  </td>
-                  <td data-label="Onde">{onde}</td>
                   <td data-label="Nicho">
                     {nicho ? nicho.nicho : <span className="text-muted-foreground">«{c.nichoId}» saiu da tabela</span>}
                   </td>
-                  <td data-label="Buscas/mês" className="md:text-right">
+                  <td data-label="Buscas/mês" className="font-mono tabular-nums md:text-right">
                     {resumo ? (
-                      <span className="inline-block min-w-[5rem] align-top">
-                        <span className="font-mono tabular-nums">{inteiro.format(resumo.demanda)}</span>
-                        <span aria-hidden="true" className="mt-1 block h-1 overflow-hidden rounded-full bg-border/60">
-                          <span
-                            className="ml-auto block h-full rounded-full bg-navy"
-                            style={{ width: `${maxDemanda > 0 ? (resumo.demanda / maxDemanda) * 100 : 0}%` }}
-                          />
-                        </span>
-                      </span>
+                      inteiro.format(resumo.demanda)
                     ) : (
                       <span className="text-muted-foreground">—</span>
                     )}
