@@ -1,6 +1,9 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { AdminShell } from "@/components/vertice/AdminShell";
+import { requireAuth } from "@/lib/auth";
+import { log } from "@/lib/log";
+import { prisma } from "@/lib/prisma";
 import { NICHOS, type Confianca } from "@/lib/precificacao";
 import {
   CENARIOS,
@@ -17,8 +20,9 @@ import {
   PREMISSA_RAMPA,
   ROTULO_CENARIO,
   posicaoPara,
+  type TermoConsultado,
 } from "@/lib/projecao";
-import { Projecao } from "./projecao";
+import { Projecao, type Inicial } from "./projecao";
 
 export const metadata: Metadata = {
   title: "Projeção · Admin ROI Labs",
@@ -56,13 +60,55 @@ const NAO_COBRE = [
   "A página não julga a intenção dos termos. Termo informacional (\"como…\", \"o que é…\"), marca de terceiro ou atributo que o parceiro não vende infla a demanda: corte na conversa com o Claude.",
 ];
 
-export default function ProjecaoPage() {
+// 018: `?consulta=<id>` reabre uma consulta guardada, sem chamada paga.
+async function lerConsulta(id: string): Promise<Inicial> {
+  try {
+    const c = await prisma.consultaProjecao.findUnique({ where: { id } });
+    if (!c) return { tipo: "nao-encontrada" };
+    return {
+      tipo: "consulta",
+      id: c.id,
+      paraQuem: c.paraQuem,
+      nichoId: c.nichoId,
+      consulta: {
+        termos: c.termos as unknown as TermoConsultado[],
+        janela: c.janelaDe && c.janelaAte ? { de: c.janelaDe, ate: c.janelaAte } : null,
+        local: { codigo: c.localCodigo, nome: c.localNome },
+        custoUsd: c.custoUsd,
+        consultadoEm: c.criadaEm.toISOString(),
+        removidos: c.removidos,
+      },
+    };
+  } catch (err) {
+    log.error({ err: err instanceof Error ? err.message : String(err) }, "projecao: não leu a consulta guardada");
+    return { tipo: "banco-fora" };
+  }
+}
+
+export default async function ProjecaoPage({ searchParams }: { searchParams: Promise<{ consulta?: string | string[] }> }) {
+  await requireAuth(); // o layout também checa, mas roda em paralelo com a leitura do histórico
+  const { consulta } = await searchParams;
+  const id = typeof consulta === "string" ? consulta : null;
+  const [inicial, guardadas] = await Promise.all([
+    id ? lerConsulta(id) : undefined,
+    prisma.consultaProjecao.count().catch(() => null), // sem banco, o link segue, só sem o número
+  ]);
+
   return (
     <AdminShell
       title="Projeção de vendas"
       lead="Quantas vendas por mês a busca orgânica tende a trazer para uma cadeira no ano 1, a partir dos termos de compra do nicho. O número vai pronto para o simulador de Preços."
+      action={
+        <Link
+          href="/admin/projecao/consultas"
+          className="inline-flex min-h-11 items-center rounded-md border border-border bg-white px-4 py-2 text-sm font-semibold text-navy transition-colors hover:bg-card focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+        >
+          Consultas guardadas{guardadas !== null ? ` (${guardadas})` : ""}
+        </Link>
+      }
     >
-      <Projecao />
+      {/* key: abrir outra consulta guardada pela URL remonta a tela com o estado dela */}
+      <Projecao key={id ?? "nova"} inicial={inicial} />
 
       <section aria-labelledby="premissas" className="mt-14 space-y-8">
         <div>

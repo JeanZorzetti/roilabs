@@ -24,11 +24,12 @@ import { Cadeia, Cobertura, Curva, TabelaTermos } from "./resultado";
 
 /**
  * Projeção do ritmo de venda (spec 017). A consulta paga só acontece no clique (FR-003); trocar
- * nicho ou cenário recalcula em cima dos termos já consultados. Nada é gravado (FR-012).
+ * nicho ou cenário recalcula em cima dos termos já consultados. A consulta que dá certo é guardada pelo
+ * servidor (018), e `inicial` reabre uma consulta guardada sem pagar de novo.
  */
 
 type Local = { codigo: number; nome: string };
-type Consulta = {
+export type Consulta = {
   termos: TermoConsultado[];
   janela: { de: string; ate: string } | null;
   local: Local;
@@ -36,7 +37,18 @@ type Consulta = {
   consultadoEm: string;
   removidos: number;
 };
-type ErroConsulta = { erro: "sessao" | "chave" | "saldo" | "fonte"; mensagem: string };
+type ErroConsulta = { erro: "sessao" | "chave" | "saldo" | "fonte" | "abrir"; mensagem: string };
+
+/** O que `page.tsx` achou em `?consulta=<id>` (018). */
+export type Inicial =
+  | { tipo: "consulta"; id: string; paraQuem: string | null; nichoId: string; consulta: Consulta }
+  | { tipo: "nao-encontrada" }
+  | { tipo: "banco-fora" };
+
+const ERRO_ABRIR: Record<Exclude<Inicial["tipo"], "consulta">, string> = {
+  "nao-encontrada": "Nenhuma consulta guardada tem este endereço. Abra uma pela lista de consultas guardadas.",
+  "banco-fora": "O histórico não respondeu agora. Tente de novo em 1 minuto.",
+};
 
 const BRASIL: Local = { codigo: 2076, nome: "Brasil" };
 const ORDEM: Faixa[] = ["premium", "padrao", "intermediaria", "margem-fina", "especial"];
@@ -55,15 +67,23 @@ const quando = (iso: string) =>
   new Date(iso).toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" });
 const unidadeDe = (u: Unidade, n: number) => (arredondarVendas(n) === 1 ? u.singular : u.plural);
 
-export function Projecao() {
-  const [nichoId, setNichoId] = useState("moda");
-  const [texto, setTexto] = useState("");
-  const [textoCidade, setTextoCidade] = useState("");
-  const [sugestoes, setSugestoes] = useState<Local[]>([]);
+export function Projecao({ inicial }: { inicial?: Inicial }) {
+  const aberta = inicial?.tipo === "consulta" ? inicial : null;
+  const nichoGravado = aberta && !NICHOS.some((n) => n.id === aberta.nichoId) ? aberta.nichoId : null;
+  const localAberto = aberta && aberta.consulta.local.codigo !== BRASIL.codigo ? aberta.consulta.local : null;
+  const [nichoId, setNichoId] = useState(aberta && !nichoGravado ? aberta.nichoId : "moda");
+  const [paraQuem, setParaQuem] = useState(aberta?.paraQuem ?? "");
+  const [texto, setTexto] = useState(aberta ? aberta.consulta.termos.map((t) => t.termo).join("\n") : "");
+  const [textoCidade, setTextoCidade] = useState(localAberto?.nome ?? "");
+  const [sugestoes, setSugestoes] = useState<Local[]>(localAberto ? [localAberto] : []);
   const [cidadesFora, setCidadesFora] = useState(false);
   const [consultando, setConsultando] = useState(false);
-  const [consulta, setConsulta] = useState<Consulta | null>(null);
-  const [erro, setErro] = useState<ErroConsulta | null>(null);
+  const [consulta, setConsulta] = useState<Consulta | null>(aberta?.consulta ?? null);
+  // "aberta" = veio do histórico; "guardada" = acabou de entrar nele; "falhou" = pagou e não entrou.
+  const [origem, setOrigem] = useState<"aberta" | "guardada" | "falhou" | null>(aberta ? "aberta" : null);
+  const [erro, setErro] = useState<ErroConsulta | null>(
+    inicial && inicial.tipo !== "consulta" ? { erro: "abrir", mensagem: ERRO_ABRIR[inicial.tipo] } : null,
+  );
   const [erroTermos, setErroTermos] = useState<string | null>(null);
   const [erroCidade, setErroCidade] = useState<string | null>(null);
   const [cenario, setCenario] = useState<Cenario>(CENARIO_PADRAO);
@@ -129,12 +149,15 @@ export function Projecao() {
       const r = await fetch("/api/projecao/consultar", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ termos: linhas, local: cidade ?? BRASIL }),
+        body: JSON.stringify({ termos: linhas, local: cidade ?? BRASIL, nicho: nichoId, paraQuem }),
       });
       const j = await r.json().catch(() => null);
       if (r.ok && j) {
         setErro(null);
         setConsulta(j);
+        setOrigem(j.id ? "guardada" : "falhou");
+        // Recarregar ou copiar o link reabre esta consulta sem pagar de novo (018, D4).
+        if (j.id) window.history.replaceState(null, "", `?consulta=${j.id}`);
       } else if (j?.erro === "entrada") {
         setErroTermos(j.mensagem);
         campoTermos.current?.focus();
@@ -164,6 +187,23 @@ export function Projecao() {
       <form onSubmit={consultar} noValidate className="min-w-0 lg:col-start-1 lg:row-start-1">
         <fieldset className="min-w-0 space-y-4 rounded-xl border border-border bg-white p-4 shadow-soft">
           <legend className="px-1 text-sm font-bold text-navy">O que consultar</legend>
+
+          <label htmlFor="proj-para-quem" className={ROTULO}>
+            Para quem (opcional)
+            <input
+              id="proj-para-quem"
+              value={paraQuem}
+              onChange={(e) => setParaQuem(e.target.value)}
+              maxLength={80}
+              placeholder="ex.: Karla Daniele · cursos"
+              autoComplete="off"
+              aria-describedby="proj-para-quem-ajuda"
+              className={CAMPO}
+            />
+            <span id="proj-para-quem-ajuda" className="text-xs font-normal text-muted-foreground">
+              É o nome da consulta nas consultas guardadas.
+            </span>
+          </label>
 
           <div className="grid gap-4 sm:grid-cols-2">
             <label htmlFor="proj-nicho" className={ROTULO}>
@@ -287,9 +327,18 @@ export function Projecao() {
             {erro ? (
               <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-900">
                 <p className="flex items-center gap-2 font-semibold">
-                  <span aria-hidden="true">⚠</span> Não deu para consultar
+                  <span aria-hidden="true">⚠</span>{" "}
+                  {erro.erro === "abrir" ? "Não deu para abrir a consulta" : "Não deu para consultar"}
                 </p>
                 <p className="mt-1">{erro.mensagem}</p>
+                {erro.erro === "abrir" ? (
+                  <Link
+                    href="/admin/projecao/consultas"
+                    className={`mt-2 inline-block font-semibold underline underline-offset-2 ${FOCO}`}
+                  >
+                    Ver consultas guardadas
+                  </Link>
+                ) : null}
                 {erro.erro === "sessao" ? (
                   <a href="/login" className={`mt-2 inline-block font-semibold underline underline-offset-2 ${FOCO}`}>
                     Entrar de novo
@@ -393,9 +442,22 @@ export function Projecao() {
                   </Link>
                   <p className="text-xs text-muted-foreground">
                     Abre Preços com este nicho e {formatarVendas(r.mediaAno1)} {unidadeDe(funil.unidade, r.mediaAno1)}{" "}
-                    por mês. Nada é salvo.
+                    por mês.
                   </p>
                 </div>
+
+                {origem === "falhou" ? (
+                  <p role="status" className="rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm text-amber-950">
+                    Esta consulta não entrou nas consultas guardadas. A projeção vale; anote o número se for precisar
+                    dele depois.
+                  </p>
+                ) : null}
+                {nichoGravado && origem === "aberta" ? (
+                  <p role="status" className="rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm text-amber-950">
+                    O nicho guardado nesta consulta ({nichoGravado}) saiu da tabela de Preços. Escolha o nicho certo
+                    acima: a troca não custa nada.
+                  </p>
+                ) : null}
 
                 <Avisos
                   total={r.demanda.total}
@@ -422,6 +484,19 @@ export function Projecao() {
                   {consulta.janela ? `, média mensal de ${mesAno(consulta.janela.de)} a ${mesAno(consulta.janela.ate)}` : ""}{" "}
                   · {consulta.local.codigo === BRASIL.codigo ? "Brasil" : consulta.local.nome.split(",")[0]} · consultado
                   em {quando(consulta.consultadoEm)} · conversão: {fontesConversao} · custou US$ {usd(consulta.custoUsd)}
+                  {origem === "aberta" || origem === "guardada" ? (
+                    <>
+                      {" "}
+                      ·{" "}
+                      <Link
+                        href="/admin/projecao/consultas"
+                        className={`font-semibold text-navy underline underline-offset-2 ${FOCO}`}
+                      >
+                        {origem === "aberta" ? "consulta guardada" : "guardada"}
+                      </Link>
+                      {origem === "aberta" ? ", recalculada com as premissas de hoje" : ""}
+                    </>
+                  ) : null}
                 </p>
               </div>
             ) : null}

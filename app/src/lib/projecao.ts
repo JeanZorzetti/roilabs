@@ -450,6 +450,24 @@ export function projetar(
   };
 }
 
+// ── Histórico (spec 018) ───────────────────────────────────────────────────────────────
+
+/**
+ * Uma linha do histórico, recalculada com as premissas de hoje a partir da resposta guardada da fonte.
+ * `null` quando o nicho gravado saiu da tabela de Precificação: sem funil, não há conta a fazer.
+ */
+export function resumirConsulta(termos: TermoConsultado[], nichoId: string) {
+  const funil = FUNIS[nichoId];
+  if (!funil) return null;
+  const r = projetar(termos, nichoId);
+  return {
+    demanda: r.conservador.demanda.total,
+    conservador: r.conservador.mediaAno1,
+    otimista: r.otimista.mediaAno1,
+    unidade: funil.unidade,
+  };
+}
+
 // ── Números na tela (contracts/ui.md, Números) ─────────────────────────────────────────
 
 /** 1 decimal abaixo de 10, inteiro a partir de 10. A única regra: a tela e a ponte do simulador usam esta. */

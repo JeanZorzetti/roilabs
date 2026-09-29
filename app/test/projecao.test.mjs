@@ -14,6 +14,7 @@ import {
   erroDataForSEO,
   urlSimulador,
   lerPonteSimulador,
+  resumirConsulta,
 } from '../src/lib/projecao.ts';
 
 const perto = (a, b, msg) => assert.ok(Math.abs(a - b) < 1e-9, `${msg ?? ''} esperado ${b}, veio ${a}`);
@@ -228,6 +229,20 @@ const termo = (t, volume, dificuldade, mensal = volume == null ? null : serie(vo
     assert.equal(r.cadeia[2].origem, 'mercado');
   }
   console.log('ok cadeia (US3)');
+}
+
+// ── 018: a linha do histórico é a mesma conta da tela, e nicho que saiu da tabela não vira número ──
+{
+  const termos = [termo('curso de botox', 10, 0), termo('curso de limpeza de pele', 40, null), termo('curso de peim', null, null)];
+  const linha = resumirConsulta(termos, 'clinicas');
+  const tela = projetar(termos, 'clinicas');
+  assert.equal(linha.demanda, tela.base.demanda.total);
+  perto(linha.conservador, tela.conservador.mediaAno1, 'conservador da lista = da tela');
+  perto(linha.otimista, tela.otimista.mediaAno1, 'otimista da lista = da tela');
+  assert.ok(linha.conservador > 0 && linha.conservador <= linha.otimista, 'a faixa vai do menor ao maior');
+  assert.equal(linha.unidade, UNIDADES.consulta);
+  assert.equal(resumirConsulta(termos, 'nicho-que-saiu'), null);
+  console.log('ok histórico (018)');
 }
 
 process.stdout.write('projecao: ok\n');

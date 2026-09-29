@@ -16,3 +16,7 @@ decida e registre. Começou com a spec 017 (Projeção).
 | Taxa do mercado / Taxa do parceiro | "Usar a taxa do parceiro", "Voltar à taxa do mercado" | benchmark (na interface), taxa real, override | cadeia da Projeção |
 | Usar no simulador | "Usar no simulador" (leva nicho e ritmo para Preços) | exportar, enviar, aplicar | cartão da Projeção |
 | Ritmo esperado de venda | "Ritmo esperado de venda" | volume de vendas, meta | simulador em `/admin/precos` |
+| Consulta guardada | "consulta guardada", "Consultas guardadas" (toda consulta paga que deu certo) | consulta salva, histórico de buscas, log, registro | `/admin/projecao/consultas`, link no cabeçalho da Projeção, procedência |
+| Guardar | "guardada", "não entrou nas consultas guardadas" | salvar, gravar, registrar (na interface) | aviso e procedência da Projeção |
+| Para quem | "Para quem (opcional)" (nome da consulta) | cliente, parceiro, projeto, rótulo | campo da Projeção, 1ª coluna das consultas guardadas |
+| Nova consulta | "Nova consulta" (volta à Projeção vazia) | nova busca, novo cálculo | cabeçalho das consultas guardadas |

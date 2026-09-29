@@ -1,11 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { isAuthed } from '@/lib/auth';
 import { log } from '@/lib/log';
+import type { Prisma } from '@prisma/client';
+import { prisma } from '@/lib/prisma';
+import { NICHOS } from '@/lib/precificacao';
 import { chamar, type RespostaDataForSEO } from '@/lib/dataforseo';
 import { limparTermos, normalizar, validarTermos, type TermoConsultado } from '@/lib/projecao';
 
 // 017 — a consulta paga da Projeção (contracts/api.md). Dificuldade primeiro, volume depois: se a
-// chamada barata falhar, a cara não acontece (research D2). Nada é gravado (FR-012).
+// chamada barata falhar, a cara não acontece (research D2). A consulta que dá certo é guardada no
+// histórico (018, FR-001); se a gravação falhar, a resposta sai do mesmo jeito com `id: null`.
 export const dynamic = 'force-dynamic';
 
 const BRASIL = { codigo: 2076, nome: 'Brasil' };
@@ -55,6 +59,18 @@ export async function POST(req: NextRequest) {
       ? { codigo: l.codigo as number, nome: l.nome as string }
       : BRASIL;
 
+  // 018: o nicho e o nome vão para o histórico. Validados antes de pagar.
+  if (!NICHOS.some((n) => n.id === corpo.nicho)) {
+    return NextResponse.json({ erro: 'entrada', mensagem: 'Escolha um nicho da lista.' }, { status: 400 });
+  }
+  const paraQuem = typeof corpo.paraQuem === 'string' ? corpo.paraQuem.replace(/\s+/g, ' ').trim() : '';
+  if (paraQuem.length > 80) {
+    return NextResponse.json(
+      { erro: 'entrada', mensagem: `"Para quem" tem ${paraQuem.length} caracteres; o limite é 80.` },
+      { status: 400 },
+    );
+  }
+
   // 1. Dificuldade: sempre nacional (a base do Labs não corta por cidade).
   const kd = await chamar('dataforseo_labs/google/bulk_keyword_difficulty/live', [
     { keywords: termos, location_code: BRASIL.codigo, language_code: 'pt' },
@@ -93,12 +109,36 @@ export async function POST(req: NextRequest) {
     };
   });
 
-  return NextResponse.json({
+  const resposta = {
     termos: consultados,
-    janela: de && ate ? { de, ate } : null,
+    janela: de && ate ? ({ de, ate } as { de: string; ate: string }) : null,
     local,
     custoUsd: kd.custo + vol.custo,
     consultadoEm: new Date().toISOString(),
     removidos,
-  });
+  };
+
+  // 4. Guarda (018). A DataForSEO já cobrou: falhar aqui não pode esconder a resposta.
+  let id: string | null = null;
+  try {
+    ({ id } = await prisma.consultaProjecao.create({
+      data: {
+        criadaEm: new Date(resposta.consultadoEm),
+        paraQuem: paraQuem || null,
+        nichoId: corpo.nicho,
+        localCodigo: local.codigo,
+        localNome: local.nome,
+        termos: consultados as unknown as Prisma.InputJsonValue, // interface sem assinatura de índice
+        janelaDe: resposta.janela?.de ?? null,
+        janelaAte: resposta.janela?.ate ?? null,
+        removidos,
+        custoUsd: resposta.custoUsd,
+      },
+      select: { id: true },
+    }));
+  } catch (err) {
+    log.error({ err: err instanceof Error ? err.message : String(err), etapa: 'gravar' }, 'projecao/consultar: não guardou');
+  }
+
+  return NextResponse.json({ ...resposta, id });
 }
