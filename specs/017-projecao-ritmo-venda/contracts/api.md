@@ -51,9 +51,9 @@ soma dos `cost` das duas tarefas.
 | 401 | `sessao` | sem sessão válida | "Sua sessão expirou. Entre de novo para consultar." |
 | 503 | `chave` | `DATAFORSEO_API_KEY` ausente ou recusada (`40100`) | "A chave da DataForSEO não está configurada no servidor (DATAFORSEO_API_KEY)." |
 | 402 | `saldo` | `40200` / `40210` | "Acabou o saldo da DataForSEO. Recarregue a conta e consulte de novo. Nada foi cobrado nesta tentativa." |
-| 502 | `fonte` | timeout, rede, `50000`/`50401`, `40202`, tarefa sem resultado | "A DataForSEO não respondeu (<status_message>). Tente de novo em 1 minuto." |
+| 503 | `fonte` | timeout, rede, `50000`/`50401`, `40202`, tarefa sem resultado (era 502: a EasyPanel troca o 502 do app pela página dela, visto em produção em 29/09) | "A DataForSEO não respondeu (<status_message>). Tente de novo em 1 minuto." |
 
-`log.error({ err, etapa: 'dificuldade' | 'volume', statusCode }, 'projecao/consultar: …')` em todo 502/503/402.
+`log.error({ err, etapa: 'dificuldade' | 'volume', statusCode }, 'projecao/consultar: …')` em todo 503/402.
 Nunca vão para o log o valor da chave nem a lista de termos: os termos contam a estratégia do parceiro.
 
 ## `GET /api/projecao/cidades?q=<texto>` (grátis)
@@ -67,7 +67,7 @@ Nunca vão para o log o valor da chave nem a lista de termos: os termos contam a
 { "locais": [{ "codigo": 1001566, "nome": "Goiania,State of Goias,Brazil", "tipo": "City" }] }
 ```
 
-Erro da fonte: **502** com `{ "locais": [], "erro": "fonte" }`. O campo de cidade mostra "Lista de cidades
+Erro da fonte: **503** com `{ "locais": [], "erro": "fonte" }` (não 502, pelo mesmo motivo). O campo de cidade mostra "Lista de cidades
 indisponível agora; projete com Brasil ou tente de novo."
 
 ## Ponte para o simulador (sem rota nova)

@@ -21,11 +21,11 @@ interface Corpo {
 
 export type RespostaDataForSEO =
   | { ok: true; tarefa: Tarefa & { result: unknown[] }; custo: number }
-  | { ok: false; erro: ErroFonte; http: 503 | 402 | 502; statusCode: number | null; mensagem: string };
+  | { ok: false; erro: ErroFonte; http: 503 | 402; statusCode: number | null; mensagem: string };
 
 const falha = (statusCode: number | null, mensagem: string): RespostaDataForSEO => ({
   ok: false,
-  ...(statusCode ? erroDataForSEO(statusCode) : { erro: 'fonte' as const, http: 502 as const }),
+  ...(statusCode ? erroDataForSEO(statusCode) : { erro: 'fonte' as const, http: 503 as const }),
   statusCode,
   mensagem,
 });

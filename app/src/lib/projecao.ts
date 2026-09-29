@@ -494,8 +494,10 @@ export function lerPonteSimulador(params: Record<string, string | string[] | und
 
 export type ErroFonte = 'chave' | 'saldo' | 'fonte';
 
-export function erroDataForSEO(statusCode: number): { erro: ErroFonte; http: 503 | 402 | 502 } {
+// 503, nunca 502: a EasyPanel troca o 502 do app pela página "Service is not reachable" dela, e a tela
+// perderia a causa. O corpo (`erro`) é que separa chave de fonte.
+export function erroDataForSEO(statusCode: number): { erro: ErroFonte; http: 503 | 402 } {
   if (statusCode === 40100) return { erro: 'chave', http: 503 };
   if (statusCode === 40200 || statusCode === 40210) return { erro: 'saldo', http: 402 };
-  return { erro: 'fonte', http: 502 };
+  return { erro: 'fonte', http: 503 };
 }

@@ -159,7 +159,8 @@ const termo = (t, volume, dificuldade, mensal = volume == null ? null : serie(vo
   assert.deepEqual(erroDataForSEO(40100), { erro: 'chave', http: 503 });
   assert.deepEqual(erroDataForSEO(40200), { erro: 'saldo', http: 402 });
   assert.deepEqual(erroDataForSEO(40210), { erro: 'saldo', http: 402 });
-  for (const c of [50000, 50401, 40202, 12345]) assert.deepEqual(erroDataForSEO(c), { erro: 'fonte', http: 502 }, String(c));
+  // 503 e não 502: a EasyPanel troca o 502 do app pela página dela e a causa some
+  for (const c of [50000, 50401, 40202, 12345]) assert.deepEqual(erroDataForSEO(c), { erro: 'fonte', http: 503 }, String(c));
   console.log('ok erros da fonte');
 }
 

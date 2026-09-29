@@ -27,7 +27,8 @@ export async function GET(req: NextRequest) {
     const r = await chamar('keywords_data/google_ads/locations/br');
     if (!r.ok) {
       log.error({ err: r.mensagem, statusCode: r.statusCode }, 'projecao/cidades: lista de locais falhou');
-      return NextResponse.json({ locais: [], erro: 'fonte' }, { status: 502 });
+      // 503, não 502: a EasyPanel engole o 502 do app (ver erroDataForSEO).
+      return NextResponse.json({ locais: [], erro: 'fonte' }, { status: 503 });
     }
     cache = {
       em: Date.now(),
