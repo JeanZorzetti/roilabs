@@ -16,11 +16,11 @@ export const GET: APIRoute = async () => {
 
   const body = `# ROI Labs
 
-> ROI Labs é um Growth Partner para fornecedores regionais de alto padrão. Construímos a operação de vendas online (SEO programático de alta intenção + captação) com tecnologia e tráfego bancados pela ROI Labs: o fornecedor paga a anuidade simbólica da cadeira (R$ 2.640/ano) e uma fração variável só quando vende. Modelo de cadeira exclusiva — 1 empresa por nicho no Brasil inteiro; candidatura aberta para qualquer nicho ainda sem cadeira.
+> ROI Labs é um Growth Partner para fornecedores regionais de alto padrão. Construímos a operação de vendas online (SEO programático de alta intenção + captação) com tecnologia e tráfego bancados pela ROI Labs: o fornecedor paga a anuidade simbólica da cadeira (R$ 3.960/ano) e uma fração variável só quando vende. Modelo de cadeira exclusiva — 1 empresa por nicho no Brasil inteiro; candidatura aberta para qualquer nicho ainda sem cadeira.
 
 ## Como funciona
 - Sem risco de tecnologia: a ROI Labs banca a infraestrutura e o tráfego.
-- Remuneração: anuidade da cadeira de R$ 2.640/ano (R$ 220/mês) + success fee sobre a venda concretizada.
+- Remuneração: anuidade da cadeira de R$ 3.960/ano (R$ 330/mês) + success fee sobre a venda concretizada.
 - Exclusividade: uma cadeira por nicho no Brasil, renovável por desempenho (SLA de estoque e despacho).
 - Canal primário: páginas de alta intenção (produto × característica × ocasião × intenção local), validadas por volume real de busca, não mídia paga.
 

@@ -32,7 +32,7 @@ const COMPARATIVO: [string, string, string][] = [
   ['Assessoria de marketplace', '2% a 8% do faturamento, ou fixo de R$ 1.500 a R$ 15.000/mês', 'Opera a conta no marketplace; não paga tráfego'],
   ['Representante comercial', '3% a 10% sobre a nota, com impostos e frete', 'Vende pessoalmente; não investe em tecnologia'],
   ['Afiliados', '7% a 13% (Amazon); até 16% (Mercado Livre)', 'Só o clique, com janela de 24 horas a 7 dias'],
-  ['ROI Labs', 'Tabela desta página, sobre o produto sem frete, + R$ 220/mês', 'Loja, tecnologia, SEO e tráfego bancados, com exclusividade no nicho'],
+  ['ROI Labs', 'Tabela desta página, sobre o produto sem frete, + R$ 330/mês', 'Loja, tecnologia, SEO e tráfego bancados, com exclusividade no nicho'],
   ['Comissão de marketplace', 'Amazon 10% a 15%; Mercado Livre 10% a 14% (Clássico) e 15% a 19% (Premium)', 'Vitrine com movimento desde o 1º dia'],
   ['Varejistas e marketplaces especializados', '16% a 21% (Magalu, Casas Bahia, Leroy Merlin); 18% a 30% em moda', 'Vitrine especializada'],
   ['Custo total de vender em marketplace', '20% a 34%, somando tarifa fixa e frete grátis obrigatório', '—'],

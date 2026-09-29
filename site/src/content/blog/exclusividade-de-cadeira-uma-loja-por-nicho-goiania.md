@@ -3,7 +3,7 @@ title: "Exclusividade de cadeira: por que a ROI Labs trabalha com um só fornece
 description: A ROI Labs opera com uma única cadeira por nicho, por polo — um só fornecedor de cada setor em Goiânia. É um modelo de escassez programada, inspirado no BNI, que protege o fornecedor da concorrência direta e concentra todo o esforço de aquisição em um parceiro por vez. Veja como funciona, o que é o SLA de estoque e o que acontece com os concorrentes.
 eyebrow: Modelo · Exclusividade
 pubDate: 2026-07-01
-updatedDate: 2026-09-24
+updatedDate: 2026-09-29
 author: Equipe ROI Labs
 faq:
   - q: 'O que é a exclusividade de cadeira da ROI Labs?'
@@ -17,7 +17,7 @@ faq:
   - q: 'Como sei se a cadeira do meu nicho está livre?'
     a: 'O mapa de cadeiras na página inicial da ROI Labs mostra os nichos já ocupados. Nicho que não está no mapa tem cadeira livre: a candidatura é aberta, e a cadeira só abre de fato depois que a demanda de busca e a brecha na concorrência daquele nicho são medidas.'
   - q: 'A exclusividade tem custo extra para o fornecedor?'
-    a: 'Não há custo extra além da anuidade da cadeira, de R$ 2.640/ano (R$ 220/mês), que é justamente o que reserva o nicho no polo. A ROI Labs banca a tecnologia e o tráfego, e o grosso da remuneração é uma fração variável atrelada à venda. A exclusividade não é um upgrade pago à parte; é a estrutura padrão do modelo.'
+    a: 'Não há custo extra além da anuidade da cadeira, de R$ 3.960/ano (R$ 330/mês), que é justamente o que reserva o nicho no polo. A ROI Labs banca a tecnologia e o tráfego, e o grosso da remuneração é uma fração variável atrelada à venda. A exclusividade não é um upgrade pago à parte; é a estrutura padrão do modelo.'
 ---
 
 A ROI Labs trabalha com um único fornecedor por nicho, por polo — em Goiânia, uma cadeira para cada setor — porque é assim que a exclusividade protege o fornecedor e concentra todo o esforço de aquisição em um parceiro por vez. É um modelo de escassez programada, inspirado no BNI: quem senta na cadeira primeiro fica protegido da concorrência direta dentro do canal da ROI Labs, desde que cumpra o SLA de estoque e despacho.
@@ -48,12 +48,12 @@ Os concorrentes do mesmo nicho ficam de fora do canal de aquisição da ROI Labs
 | :-- | :-- | :-- |
 | Concorrência direta | Bloqueada no canal da ROI Labs | Sem acesso ao tráfego do nicho |
 | Tráfego de alta intenção | Todo convergido para um fornecedor | Precisa ser construído do zero |
-| Custo fixo | Anuidade simbólica de R$ 2.640/ano | — |
+| Custo fixo | Anuidade simbólica de R$ 3.960/ano | — |
 | Contrapartida | Cumprir SLA de estoque e despacho | — |
 
 ## A cadeira exclusiva custa mais para o fornecedor?
 
-Não: além da anuidade simbólica da cadeira, de R$ 2.640/ano, a exclusividade não tem custo extra. A ROI Labs banca a tecnologia e o tráfego com capital próprio, e o grosso da remuneração é uma fração variável atrelada à venda — se não vendeu, não há success fee. A cadeira exclusiva não é um plano premium; é a estrutura padrão que alinha o interesse das duas partes.
+Não: além da anuidade simbólica da cadeira, de R$ 3.960/ano, a exclusividade não tem custo extra. A ROI Labs banca a tecnologia e o tráfego com capital próprio, e o grosso da remuneração é uma fração variável atrelada à venda — se não vendeu, não há success fee. A cadeira exclusiva não é um plano premium; é a estrutura padrão que alinha o interesse das duas partes.
 
 O alinhamento é o que torna a exclusividade sustentável: a ROI Labs concentra o esforço em um parceiro por nicho porque só cresce se esse parceiro crescer. Para entender como esse modelo se compara a contratar agência ou montar e-commerce, veja [Growth Partner, agência ou e-commerce: o que traz venda para o fornecedor regional](/blog/growth-partner-vs-agencia-revestimentos/). E para ver como o tráfego de alta intenção é construído, leia [o que é SEO programático (pSEO)](/blog/o-que-e-seo-programatico-pseo-revestimentos/).
 

@@ -7,7 +7,7 @@
 // Fontes: /modelo do site, proposta padrão em slides, lib/precificacao.ts (spec 016),
 // specs 010/012/013 e Docs/Obsidian (oferta, operacao). Nada aqui é lido pela cobrança.
 
-export const ANUIDADE = 2640; // R$/ano — preço público do /modelo
+export const ANUIDADE = 3960; // R$/ano — preço público do /modelo
 
 export type Fase = 'implantacao' | 'operacao';
 
@@ -304,7 +304,7 @@ export const REGRAS_GERAIS = {
     ['Setup', 'Nenhum. Tecnologia e tráfego são bancados pela ROI Labs'],
     ['Equipe de vendas', 'A equipe de vendas da ROI Labs atende todo cliente que chega pelo site, fecha a venda e entrega a venda pronta ao parceiro'],
     ['Carteira', 'Quem comprou pode ficar na carteira da ROI Labs, e a equipe trabalha para esse cliente comprar de novo'],
-    ['Anuidade', `R$ ${ANUIDADE.toLocaleString('pt-BR')}/ano (R$ 220/mês): Pix à vista, ou cartão em até 12x com acréscimo`],
+    ['Anuidade', `R$ ${ANUIDADE.toLocaleString('pt-BR')}/ano (R$ 330/mês): Pix à vista, ou cartão em até 12x com acréscimo`],
     ['Domínio', 'Domínio próprio do cliente em toda cadeira, comprado na Hostinger: R$ 50/ano (valor inicial), cobrado junto com a anuidade'],
     ['Exclusividade', 'Uma cadeira por nicho no Brasil inteiro, enquanto o contrato vigorar'],
     ['Contrato', 'Anual, renovável por desempenho dos dois lados'],

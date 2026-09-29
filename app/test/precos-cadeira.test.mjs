@@ -22,12 +22,12 @@ const base = {
 
 // ── entrada: anuidade + domínio, sem setup ─────────────────────────────────────────────
 {
-  assert.equal(ANUIDADE, 2640);
+  assert.equal(ANUIDADE, 3960);
   assert.equal(DOMINIO_ANO, 50);
-  assert.equal(ENTRADA_ANO, 2690);
+  assert.equal(ENTRADA_ANO, 4010);
   const zero = simular({ ...base, nicho: nicho('moda') });
   assert.equal(zero.comissaoAno, 0, 'vendeu zero, comissão zero');
-  assert.equal(zero.totalAno, 2690, 'vendeu zero, fica só a entrada');
+  assert.equal(zero.totalAno, 4010, 'vendeu zero, fica só a entrada');
   assert.equal(zero.pctDaVenda, null);
 }
 
@@ -37,7 +37,7 @@ const base = {
   const r = simular({ ...base, nicho: nicho('moda'), pedidosMes: 30, ticket: 200, recompra: 0.2 });
   assert.equal(r.comissaoMes, 840);
   assert.equal(r.comissaoAno, 10080);
-  assert.equal(r.totalAno, 12770);
+  assert.equal(r.totalAno, 14090);
   assert.equal(r.vendasAno, 72000);
   assert.deepEqual(r.avisos, []);
 }
@@ -98,10 +98,10 @@ const base = {
   );
   assert.equal(doc.paraQuem, 'Loja Teste', 'para quem aparado');
   assert.equal(doc.validaAte, '2026-10-13T15:00:00.000Z');
-  assert.equal(doc.entradaTotal, 2690);
+  assert.equal(doc.entradaTotal, 4010);
   assert.deepEqual(doc.entrada.map((i) => i.item), ['Setup', 'Anuidade da cadeira', 'Domínio próprio (Hostinger)']);
   assert.equal(doc.estimativa.comissaoMes, 840);
-  assert.equal(doc.estimativa.totalAno, 12770);
+  assert.equal(doc.estimativa.totalAno, 14090);
   assert.equal(doc.comissao.resumo, '15% na 1ª compra · 10% na recompra');
   assert.deepEqual(doc.comissao.regras, [], 'sem faixa reduzida em pedido grande');
   assert.ok(doc.condicoes.includes(REGRA_COMISSAO_PEDIDO));

@@ -24,7 +24,7 @@ const CARDS = [
     href: '/admin/precos',
     title: 'Preços',
     lead: 'Anuidade, domínio próprio e comissão pela faixa do nicho — e o simulador que diz quanto o parceiro paga no primeiro ano.',
-    stat: () => 'Anuidade R$ 2.640 · domínio R$ 50/ano · sem setup',
+    stat: () => 'Anuidade R$ 3.960 · domínio R$ 50/ano · sem setup',
   },
   {
     href: '/admin/propostas',

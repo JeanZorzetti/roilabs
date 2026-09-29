@@ -113,7 +113,7 @@ export default function Calculadora() {
           <Resultado titulo="1ª compra (aquisição)" tipo="aquisicao" r={aq} valor={valor} distribuidor={distribuidor} />
           <Resultado titulo="Recompra (recorrência)" tipo="recorrencia" r={rec} valor={valor} distribuidor={distribuidor} />
         </div>
-        <p className="pr-hint">Além do percentual, a cadeira paga a anuidade de R$ 2.640 (R$ 220/mês), cobrada à parte.</p>
+        <p className="pr-hint">Além do percentual, a cadeira paga a anuidade de R$ 3.960 (R$ 330/mês), cobrada à parte.</p>
       </section>
 
       <section className="pr-panel" aria-labelledby="calc-margem">

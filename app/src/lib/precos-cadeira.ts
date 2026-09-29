@@ -10,7 +10,7 @@ import { ANUIDADE } from './entregaveis';
 import { calcularComissao, lerNumeroBR, type NichoPreco, type TipoCompra } from './precificacao';
 
 export { ANUIDADE };
-export const ANUIDADE_MES = ANUIDADE / 12; // R$ 220 — como aparece no /modelo
+export const ANUIDADE_MES = ANUIDADE / 12; // R$ 330 — como aparece no /modelo
 /** R$/ano — domínio próprio da cadeira, comprado pela ROI Labs na Hostinger e repassado. */
 export const DOMINIO_ANO = 50;
 export const ENTRADA_ANO = ANUIDADE + DOMINIO_ANO;

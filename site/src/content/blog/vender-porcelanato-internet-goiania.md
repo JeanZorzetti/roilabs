@@ -15,7 +15,7 @@ faq:
   - q: 'Minha empresa já tem site institucional. Preciso trocar?'
     a: 'Não. A camada de captação de alta intenção é construída por cima do que você já tem: dezenas a centenas de páginas de cauda longa que o site institucional não cobre. O site institucional fala da empresa; as páginas de alta intenção respondem à busca específica de quem já quer comprar.'
   - q: 'Quanto custa para o fornecedor?'
-    a: 'No modelo Growth Partner da ROI Labs, o custo fixo é a anuidade simbólica da cadeira: R$ 2.640/ano (R$ 220/mês). A ROI Labs banca a tecnologia, o tráfego e a equipe de vendas que atende o cliente, e é remunerada por uma fração variável atrelada à venda. Se não houve venda, não há success fee.'
+    a: 'No modelo Growth Partner da ROI Labs, o custo fixo é a anuidade simbólica da cadeira: R$ 3.960/ano (R$ 330/mês). A ROI Labs banca a tecnologia, o tráfego e a equipe de vendas que atende o cliente, e é remunerada por uma fração variável atrelada à venda. Se não houve venda, não há success fee.'
 ---
 
 Um fornecedor regional em Goiânia consegue vender pela internet sem montar um e-commerce: o caminho é capturar a busca local de alta intenção do seu nicho com páginas que respondem exatamente ao que o comprador procura. No modelo da ROI Labs, quem chega por essas páginas fala com a equipe de vendas da ROI Labs, que atende, fecha a venda e entrega a venda pronta para você.
@@ -54,6 +54,6 @@ Esse trabalho — tecnologia, estrutura, tráfego e o atendimento de quem chega 
 | :-- | :-- | :-- | :-- |
 | E-commerce próprio | Alto (plataforma, fotos, integrações, tráfego) | Baixa (frete, produto sob medida, dúvida técnica) | Você, depois de muito investimento |
 | Marketplace nacional | Médio (comissão por venda) | Média (concorre por preço, sem marca local) | A plataforma, levando o cliente embora |
-| Páginas de alta intenção (pSEO) | Anuidade de R$ 2.640/ano no modelo Growth Partner | Alta (cliente local pronto para comprar) | Busca orgânica → equipe de vendas da ROI Labs → venda pronta para você |
+| Páginas de alta intenção (pSEO) | Anuidade de R$ 3.960/ano no modelo Growth Partner | Alta (cliente local pronto para comprar) | Busca orgânica → equipe de vendas da ROI Labs → venda pronta para você |
 
 Para entender por que esse modelo difere de contratar uma agência, veja [Growth Partner, agência ou e-commerce: o que traz venda para o fornecedor regional](/blog/growth-partner-vs-agencia-revestimentos/). E para dimensionar o investimento, veja [quanto custa colocar uma empresa no Google em Goiânia](/blog/quanto-custa-loja-materiais-construcao-google-goiania/).

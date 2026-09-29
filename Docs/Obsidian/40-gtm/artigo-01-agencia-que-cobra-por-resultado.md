@@ -121,8 +121,8 @@ Logo abaixo: sumário com links para cada H2 (gerado automaticamente, seção 8)
   R$ 18.000; success fee de 10% = R$ 1.800; anuidade de R$ 3.960/ano em 12x de R$ 330; fica com você R$ 15.870
   (88%). No mês sem venda o custo é R$ 330.
 - Métrica que ninguém mostra: **custo por venda** = (330 + 1.800) ÷ 40 = **R$ 53,25**.
-- ⚠️ Em 29/09/2026 o site no ar (home, /modelo, /simulador, blog, llms.txt) e o painel ainda dizem R$ 2.640/ano
-  (R$ 220/mês). O artigo só vai ao ar depois de o site mostrar o valor novo; senão o site dá dois preços.
+- ✅ Em 29/09/2026 o site (home, /modelo, /simulador, blog, llms.txt) e o painel passaram de R$ 2.640/ano
+  (R$ 220/mês) para R$ 3.960/ano (R$ 330/mês). O site e o artigo dão o mesmo preço.
 - Comparação marcada como hipótese: se 1 em cada 50 cliques comprar (2%, troque pela sua taxa), a R$ 32,95 o clique
   cada venda custaria R$ 1.647,50 só em anúncio.
 - Aviso igual ao do /modelo: "Exemplo ilustrativo, não é proposta. O percentual é definido em contrato."

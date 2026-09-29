@@ -3,7 +3,7 @@ title: Google Shopping para fornecedor regional — o que o Google exige de verd
 description: Colocar produtos no Google Shopping (listagens gratuitas) exige conta no Merchant Center, domínio verificado, feed de produtos, imagem própria, política de devolução e paridade de preço entre feed e página. Este é o passo a passo que a ROI Labs segue ao montar o feed de um catálogo para o Merchant Center, com as reprovações mais comuns e como evitá-las.
 eyebrow: Google Shopping · Fornecedores
 pubDate: 2026-07-06
-updatedDate: 2026-09-24
+updatedDate: 2026-09-29
 author: Equipe ROI Labs
 faq:
   - q: 'Preciso pagar para aparecer no Google Shopping?'
@@ -64,4 +64,4 @@ Após o primeiro processamento, o acompanhamento vive em **Produtos → Diagnós
 
 Vale, com uma ressalva honesta: o Shopping gratuito é uma **vitrine adicional**, não uma estratégia completa. Ele funciona melhor quando já existe uma base — páginas de produto reais, com preço, foto própria e informação técnica — porque é para essas páginas que o clique vai. Montar o feed sem ter páginas que convertem é inverter a ordem.
 
-A sequência certa é essa: primeiro a malha de páginas de alta intenção, depois o feed por cima do mesmo catálogo. Para o fornecedor que ocupa uma cadeira, todo esse trabalho técnico — feed, validação, Merchant Center — está incluído no [modelo Growth Partner](/modelo/), pela anuidade simbólica da cadeira (R$ 2.640/ano) e uma fração do que vendeu; a conta pode ser dimensionada no [simulador](/simulador/). Se preferir entender o custo de fazer tudo por conta própria, a comparação está em [e-commerce próprio vs entrar num polo pronto](/blog/ecommerce-proprio-vs-polo-pronto/).
+A sequência certa é essa: primeiro a malha de páginas de alta intenção, depois o feed por cima do mesmo catálogo. Para o fornecedor que ocupa uma cadeira, todo esse trabalho técnico — feed, validação, Merchant Center — está incluído no [modelo Growth Partner](/modelo/), pela anuidade simbólica da cadeira (R$ 3.960/ano) e uma fração do que vendeu; a conta pode ser dimensionada no [simulador](/simulador/). Se preferir entender o custo de fazer tudo por conta própria, a comparação está em [e-commerce próprio vs entrar num polo pronto](/blog/ecommerce-proprio-vs-polo-pronto/).

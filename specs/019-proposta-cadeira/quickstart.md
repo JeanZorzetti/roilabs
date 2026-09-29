@@ -7,7 +7,7 @@
 2. **Regra pura**: `node --import tsx test/precos-cadeira.test.mjs`, e depois `npm test` inteiro.
 3. **Produção** (depois do push, com o deploy no ar):
    - Em `/admin/precos`, escolha Moda, 30 pedidos de R$ 200 e 20% de recompra, "Para quem" = `Teste 019 (apagar)`, e
-     guarde. Você deve cair em `/admin/propostas` com o cartão no topo: R$ 2.690 de entrada, R$ 840/mês e R$ 12.770 no
+     guarde. Você deve cair em `/admin/propostas` com o cartão no topo: R$ 4.010 de entrada, R$ 840/mês e R$ 14.090 no
      1º ano.
    - Abra o link numa janela anônima: mesmos números, marca ROI Labs, nenhum texto interno. Confira em 1440, 768 e
      390 px, o console limpo e o botão do WhatsApp com a mensagem.

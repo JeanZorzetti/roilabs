@@ -3,7 +3,7 @@ title: "O que é SEO programático (pSEO) e como ele vende para o fornecedor reg
 description: SEO programático (pSEO) gera de forma automatizada centenas de páginas de cauda longa cruzando produto, característica, ocasião e localização — cada combinação com busca real vira uma página que responde à pesquisa exata do comprador. Veja como o método transforma o catálogo de um fornecedor regional em captação, com um exemplo medido do porcelanato em Goiânia.
 eyebrow: Método · Busca local
 pubDate: 2026-07-01
-updatedDate: 2026-09-24
+updatedDate: 2026-09-29
 author: Equipe ROI Labs
 faq:
   - q: 'O que é SEO programático (pSEO)?'
@@ -62,4 +62,4 @@ O filtro de volume é o que separa método de spam. Antes de gerar qualquer pág
 
 Mede-se pelo volume de páginas indexadas pelo Google ao longo do tempo, não pela venda imediata. Depois de publicada a malha, o Google indexa as páginas aos poucos, e o tráfego cresce de forma composta ao longo de 3 a 6 meses — a "travessia do deserto". O indicador de saúde nessa fase é quantas páginas já entraram no índice e começaram a receber impressões.
 
-No modelo Growth Partner da ROI Labs, a tecnologia, a geração das páginas e o tráfego são bancados pela ROI Labs; o fornecedor paga a anuidade da cadeira (R$ 2.640/ano) e uma fração variável da venda — se não vendeu, não há success fee. Para comparar esse modelo com agência e e-commerce, veja [Growth Partner, agência ou e-commerce: o que traz venda para o fornecedor regional](/blog/growth-partner-vs-agencia-revestimentos/). E para dimensionar o investimento, veja [quanto custa colocar uma empresa no Google em Goiânia](/blog/quanto-custa-loja-materiais-construcao-google-goiania/).
+No modelo Growth Partner da ROI Labs, a tecnologia, a geração das páginas e o tráfego são bancados pela ROI Labs; o fornecedor paga a anuidade da cadeira (R$ 3.960/ano) e uma fração variável da venda — se não vendeu, não há success fee. Para comparar esse modelo com agência e e-commerce, veja [Growth Partner, agência ou e-commerce: o que traz venda para o fornecedor regional](/blog/growth-partner-vs-agencia-revestimentos/). E para dimensionar o investimento, veja [quanto custa colocar uma empresa no Google em Goiânia](/blog/quanto-custa-loja-materiais-construcao-google-goiania/).

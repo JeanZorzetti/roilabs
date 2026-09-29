@@ -21,19 +21,19 @@ const boneco = (svg: string) => svg.replace('<svg', '<svg class="bi-boneco" focu
 const whatsHref = whatsLink('Quero entender o modelo Growth Partner da ROI Labs');
 
 // Exemplo numérico = mesma fórmula do /simulador (fee = ticket × pedidos × pct, + anuidade/12).
-const ANUIDADE = 2640;
+const ANUIDADE = 3960;
 const exemplo = { ticket: 450, pedidos: 40, pct: 0.1 };
 const receita = exemplo.ticket * exemplo.pedidos; // 18.000
 const fee = receita * exemplo.pct; // 1.800
-const anuidadeMes = ANUIDADE / 12; // 220
-const liquido = receita - fee - anuidadeMes; // 15.980
+const anuidadeMes = ANUIDADE / 12; // 330
+const liquido = receita - fee - anuidadeMes; // 15.870
 const brl = (n: number) => 'R$ ' + n.toLocaleString('pt-BR');
 const fatia = (n: number) => `${((n / receita) * 100).toFixed(2)}%`;
 
 const faq = [
   {
     q: 'Quanto custa ocupar uma cadeira?',
-    a: 'A anuidade é de R$ 2.640 por ano (R$ 220/mês) e reserva o nicho só para você no Brasil enquanto o contrato vigorar. É simbólica de propósito: a tecnologia e o tráfego continuam bancados pela ROI Labs, e o grosso da remuneração segue sendo o success fee sobre a venda concretizada.',
+    a: 'A anuidade é de R$ 3.960 por ano (R$ 330/mês) e reserva o nicho só para você no Brasil enquanto o contrato vigorar. É simbólica de propósito: a tecnologia e o tráfego continuam bancados pela ROI Labs, e o grosso da remuneração segue sendo o success fee sobre a venda concretizada.',
   },
   {
     q: 'Quem atende o cliente que chega pelo site?',
@@ -61,7 +61,7 @@ const faq = [
   },
   {
     q: 'E se a ROI Labs não entregar resultado?',
-    a: 'O seu custo máximo é a anuidade de R$ 2.640 — o success fee só existe se houver venda — e você pode sair na renovação. O contrato de cadeira é anual, renovável por desempenho dos dois lados: nós entregamos demanda, você entrega estoque e despacho.',
+    a: 'O seu custo máximo é a anuidade de R$ 3.960 — o success fee só existe se houver venda — e você pode sair na renovação. O contrato de cadeira é anual, renovável por desempenho dos dois lados: nós entregamos demanda, você entrega estoque e despacho.',
   },
   {
     q: 'Quanto tempo leva da candidatura ao contrato?',
@@ -89,11 +89,11 @@ const howtoSteps = [
   },
   {
     name: 'Proposta: percentual e termos',
-    text: 'Definimos juntos o percentual do success fee e o SLA de estoque e despacho. A anuidade da cadeira é fixa: R$ 2.640/ano. Tudo em números claros — a mesma fórmula do simulador público: fee = receita × percentual.',
+    text: 'Definimos juntos o percentual do success fee e o SLA de estoque e despacho. A anuidade da cadeira é fixa: R$ 3.960/ano. Tudo em números claros — a mesma fórmula do simulador público: fee = receita × percentual.',
   },
   {
     name: 'Contrato e onboarding do catálogo',
-    text: 'Assinatura do contrato anual de exclusividade (anuidade de R$ 2.640) e integração do catálogo à loja da operação: produtos, preços, fotos, prazos de entrega.',
+    text: 'Assinatura do contrato anual de exclusividade (anuidade de R$ 3.960) e integração do catálogo à loja da operação: produtos, preços, fotos, prazos de entrega.',
   },
   {
     name: 'Go-live e travessia',
@@ -145,7 +145,7 @@ const jsonLdNodes = [
 
 <Base
   title="O modelo Growth Partner — como funciona a cadeira | ROI Labs"
-  description="Gates de validação, anuidade de R$ 2.640/ano + success fee, exclusividade de cadeira e o passo a passo da candidatura ao contrato. O modelo ROI Labs com números."
+  description="Gates de validação, anuidade de R$ 3.960/ano + success fee, exclusividade de cadeira e o passo a passo da candidatura ao contrato. O modelo ROI Labs com números."
   jsonLdNodes={jsonLdNodes}
   fontesPadrao={false}
 >
@@ -204,17 +204,17 @@ const jsonLdNodes = [
           O modelo em uma frase: a ROI Labs constrói e opera a venda online de
           <strong>um único fornecedor por nicho no Brasil</strong> — bancando
           tecnologia, tráfego e a equipe de vendas — e é remunerada pela
-          <strong>anuidade simbólica da cadeira (R$ 2.640/ano)</strong> mais
+          <strong>anuidade simbólica da cadeira (R$ 3.960/ano)</strong> mais
           uma <strong>fração variável da venda concretizada</strong>. Sem
           setup, sem piso, sem verba de mídia.
         </p>
         <div class="bi-preco" role="group" aria-label="Quanto custa a cadeira">
           <div class="bi-preco__valor">
             <span class="bi-preco__rot">Anuidade da cadeira</span>
-            <p><b>R$ 2.640</b><span>/ano</span></p>
+            <p><b>R$ 3.960</b><span>/ano</span></p>
           </div>
           <p class="bi-preco__nota">
-            Equivale a <b>R$ 220 por mês</b>. Sem setup, sem piso de venda e sem verba de mídia:
+            Equivale a <b>R$ 330 por mês</b>. Sem setup, sem piso de venda e sem verba de mídia:
             o resto só é cobrado depois da venda.
           </p>
           <ul class="bi-preco__fatos" role="list">
@@ -292,7 +292,7 @@ const jsonLdNodes = [
           <h2 id="fee-title">Anuidade + success fee: <em>a conta é pública.</em></h2>
           <p class="section__lead">
             Não há tabela escondida. São duas partes: a anuidade da cadeira,
-            <strong>R$ 2.640/ano (R$ 220/mês)</strong>, e o success fee, uma
+            <strong>R$ 3.960/ano (R$ 330/mês)</strong>, e o success fee, uma
             fração percentual da receita que a operação gerou para você no mês.
             O percentual é definido em contrato, conforme nicho, margem e SLA.
           </p>
@@ -300,7 +300,7 @@ const jsonLdNodes = [
             <span>fee</span> <i>=</i> ticket médio <i>×</i> pedidos <i>×</i> percentual
           </p>
           <p class="bi-mod-nota">
-            Vendeu zero? O success fee é zero; fica só a anuidade de R$ 220/mês.
+            Vendeu zero? O success fee é zero; fica só a anuidade de R$ 330/mês.
             O alinhamento é estrutural: o grosso do nosso lucro é uma parte do seu.
           </p>
         </div>
@@ -326,7 +326,7 @@ const jsonLdNodes = [
               <dd>− {brl(fee)}</dd>
             </div>
             <div>
-              <dt><i class="bi-conta__cor bi-conta__cor--anuidade" aria-hidden="true"></i>Anuidade da cadeira <small>R$ 2.640/ano ÷ 12</small></dt>
+              <dt><i class="bi-conta__cor bi-conta__cor--anuidade" aria-hidden="true"></i>Anuidade da cadeira <small>R$ 3.960/ano ÷ 12</small></dt>
               <dd>− {brl(anuidadeMes)}</dd>
             </div>
           </dl>

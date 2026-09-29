@@ -3,17 +3,17 @@ title: Quanto custa colocar uma empresa no Google em Goiânia
 description: Aparecer no Google em Goiânia custa de duas formas — pagando por clique (tráfego pago, custo recorrente) ou construindo páginas que ranqueiam de forma orgânica (custo de produção, tráfego sem custo por clique depois). Veja a diferença de custo, prazo e risco para um fornecedor regional, e por que o custo fixo pode ser só simbólico.
 eyebrow: Investimento · Busca local
 pubDate: 2026-06-29
-updatedDate: 2026-09-24
+updatedDate: 2026-09-29
 author: Equipe ROI Labs
 faq:
   - q: 'Quanto custa aparecer no Google em Goiânia?'
-    a: 'Há dois custos distintos. No tráfego pago (Google Ads), você paga por clique e o custo é recorrente — termos comerciais locais costumam ter CPC alto e o tráfego some quando a verba acaba. No tráfego orgânico (SEO), o custo está na produção das páginas e o tráfego depois não é cobrado por clique. No modelo Growth Partner, a produção é bancada pela ROI Labs: o fornecedor paga a anuidade simbólica da cadeira (R$ 2.640/ano) e uma fração da venda.'
+    a: 'Há dois custos distintos. No tráfego pago (Google Ads), você paga por clique e o custo é recorrente — termos comerciais locais costumam ter CPC alto e o tráfego some quando a verba acaba. No tráfego orgânico (SEO), o custo está na produção das páginas e o tráfego depois não é cobrado por clique. No modelo Growth Partner, a produção é bancada pela ROI Labs: o fornecedor paga a anuidade simbólica da cadeira (R$ 3.960/ano) e uma fração da venda.'
   - q: 'Tráfego pago ou orgânico: qual vale mais para um fornecedor regional?'
     a: 'Para produto de ticket alto e ciclo de decisão longo, o orgânico tende a valer mais no médio prazo, porque cada página é um ativo que continua trazendo cliente sem pagar por clique. O pago entrega resultado imediato, mas evapora quando a verba para. O ideal estratégico é construir o ativo orgânico de alta intenção e usar o pago, se usar, como complemento.'
   - q: 'Quanto tempo o SEO leva para trazer venda?'
     a: 'SEO orgânico maduro leva de 3 a 6 meses para indexar e ranquear de forma consistente — a "travessia do deserto". Nesse período, as páginas são publicadas, indexadas aos poucos e o tráfego cresce de forma composta. Por isso o trabalho exige transparência sobre a fase de cada página, sem prometer venda imediata.'
   - q: 'Por que o custo fixo pode ser só simbólico?'
-    a: 'Porque no modelo Growth Partner da ROI Labs a infraestrutura e o tráfego são bancados pela ROI Labs, não pelo fornecedor. O fornecedor paga a anuidade da cadeira, de R$ 2.640/ano (R$ 220/mês), sem setup nem verba de mídia; o grosso da remuneração é uma fração variável que só chega depois que a venda acontece.'
+    a: 'Porque no modelo Growth Partner da ROI Labs a infraestrutura e o tráfego são bancados pela ROI Labs, não pelo fornecedor. O fornecedor paga a anuidade da cadeira, de R$ 3.960/ano (R$ 330/mês), sem setup nem verba de mídia; o grosso da remuneração é uma fração variável que só chega depois que a venda acontece.'
   - q: 'O tráfego de IA (ChatGPT, Perplexity) muda esse cálculo?'
     a: 'Muda a favor de quem estrutura bem o conteúdo. A Semrush estimou em 2025 que o visitante vindo de busca por IA vale 4,4 vezes o orgânico tradicional, porque chega pré-qualificado pela resposta. Páginas estruturadas para serem citadas por ChatGPT, Perplexity e Google AI Overviews capturam esse canal sem custo por clique.'
 ---
@@ -40,13 +40,13 @@ O prazo é o motivo pelo qual transparência importa mais que promessa. Um opera
 
 ## Por que o custo fixo é só simbólico com um Growth Partner?
 
-O custo fixo se resume à anuidade da cadeira, R$ 2.640/ano (R$ 220/mês), porque no modelo Growth Partner quem banca a infraestrutura e o tráfego é a ROI Labs, não o fornecedor. A ROI Labs assume o risco de tecnologia e de captação e é remunerada principalmente por uma fração variável atrelada à venda. O fornecedor não paga setup nem verba de mídia; o success fee chega apenas depois da venda realizada.
+O custo fixo se resume à anuidade da cadeira, R$ 3.960/ano (R$ 330/mês), porque no modelo Growth Partner quem banca a infraestrutura e o tráfego é a ROI Labs, não o fornecedor. A ROI Labs assume o risco de tecnologia e de captação e é remunerada principalmente por uma fração variável atrelada à venda. O fornecedor não paga setup nem verba de mídia; o success fee chega apenas depois da venda realizada.
 
 | Modo | Custo para o fornecedor | Prazo | O que acontece se parar |
 | :-- | :-- | :-- | :-- |
 | Tráfego pago (Ads) | Recorrente, por clique | Imediato | Tráfego some no mesmo dia |
 | SEO contratado de agência | Mensalidade + produção | 3 a 6 meses | Páginas seguem, mas sem manutenção perdem terreno |
-| Growth Partner (ROI Labs) | Anuidade de R$ 2.640/ano + fração variável na venda | 3 a 6 meses | Perda máxima conhecida: a anuidade; o resto só incidiu sobre o que vendeu |
+| Growth Partner (ROI Labs) | Anuidade de R$ 3.960/ano + fração variável na venda | 3 a 6 meses | Perda máxima conhecida: a anuidade; o resto só incidiu sobre o que vendeu |
 
 ## O tráfego de IA muda o cálculo do investimento?
 

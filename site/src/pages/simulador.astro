@@ -14,8 +14,8 @@ import '../styles/brasil-inteiro/simulador.css';
 // Não importamos o arquivo (é código de /app, fora do escopo do /site) — só
 // a fórmula (base * pct) é replicada aqui, client-side, com dados hipotéticos
 // do fornecedor candidato (não há transação real nem parceiro cadastrado).
-// A anuidade da cadeira (R$ 2.640/ano ÷ 12) é preço de tabela do site: o /app não a fatura.
-const ANUIDADE_MES = 2640 / 12;
+// A anuidade da cadeira (R$ 3.960/ano ÷ 12) é preço de tabela do site: o /app não a fatura.
+const ANUIDADE_MES = 3960 / 12;
 
 // Valores iniciais: a conta sai pronta no HTML, então sem JS a página já mostra um resultado certo.
 const INICIAL = { ticket: 450, pedidos: 40, pct: 10 };
@@ -30,7 +30,7 @@ const whatsHref = whatsLink('Fiz a simulação no site e quero conversar sobre a
 
 <Base
   title="Simulador de receita — ROI Labs"
-  description="Simule sua receita projetada como fornecedor parceiro e veja o que sobra depois do success fee e da anuidade da cadeira (R$ 2.640/ano)."
+  description="Simule sua receita projetada como fornecedor parceiro e veja o que sobra depois do success fee e da anuidade da cadeira (R$ 3.960/ano)."
   fontesPadrao={false}
 >
   <Fragment slot="head">
@@ -105,7 +105,7 @@ const whatsHref = whatsLink('Fiz a simulação no site e quero conversar sobre a
               <dd id="out-fee">− {reais(fee)}</dd>
             </div>
             <div>
-              <dt><i class="bi-conta__cor bi-conta__cor--anuidade" aria-hidden="true"></i>Anuidade da cadeira <small>R$ 2.640/ano ÷ 12</small></dt>
+              <dt><i class="bi-conta__cor bi-conta__cor--anuidade" aria-hidden="true"></i>Anuidade da cadeira <small>R$ 3.960/ano ÷ 12</small></dt>
               <dd>− {reais(ANUIDADE_MES)}</dd>
             </div>
           </dl>
@@ -130,7 +130,7 @@ const whatsHref = whatsLink('Fiz a simulação no site e quero conversar sobre a
       import { continuous } from 'number-flow';
       import type NumberFlow from 'number-flow';
 
-      const ANUIDADE_MES = 2640 / 12;
+      const ANUIDADE_MES = 3960 / 12;
       const calmo = matchMedia('(prefers-reduced-motion: reduce)').matches;
       const reais = (n: number) => 'R$ ' + Math.round(Math.abs(n)).toLocaleString('pt-BR');
       const campo = (id: string) => document.getElementById(id) as HTMLInputElement;
@@ -208,10 +208,10 @@ const whatsHref = whatsLink('Fiz a simulação no site e quero conversar sobre a
         <div class="steps">
           <article class="step">
             <span class="step__num">01 — Anuidade</span>
-            <h3>R$ 2.640 por ano</h3>
+            <h3>R$ 3.960 por ano</h3>
             <p>
               Reserva o nicho só pra você no Brasil por um ano, renovável por
-              entrega. No simulador, entra como R$ 220 por mês.
+              entrega. No simulador, entra como R$ 330 por mês.
             </p>
             <span class="step__tag">Custo fixo, conhecido no dia 1</span>
           </article>
