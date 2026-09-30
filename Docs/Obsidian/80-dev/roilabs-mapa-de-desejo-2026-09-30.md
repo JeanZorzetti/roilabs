@@ -218,6 +218,17 @@ Autogestor e Autogestor Viagens 15%/10%. Os três estão `ativa` **sem CNPJ**, p
 | 5 | **Medição:** a página de origem na mensagem pronta do botão de WhatsApp da TapePro; e a tabela das 10 conversas de outbound (C2) | E10 (origem do visitante não medida) | é o que decide C2 e a próxima rodada | 1 linha por botão + 1 nota |
 | — | **Preço: congelado até C1 (14/10).** Não subir nem baixar o público. Mudança de anuidade, renovação ou garantia passa antes pela `saas-legal` | E3, E11 | risco | zero |
 
+**Estado em 30/09, noite** (pedido do Jean: 0 crie · 1 coloque, TapePro autorizou · 2 troque · 3 não entendi · 4 suba · 5 inclua):
+
+| # | Estado | Onde |
+|---|---|---|
+| 0 | ✅ Tela `/admin/vendas`: registra a venda fechada fora do site, lista as vendas por parceiro e gera a fatura com confirmação (a de 28/09 tinha apagado a tela de parceiros). ⏳ **A fatura de R$ 119,64 da TapePro não foi emitida**: é um clique do Jean (C0) | `198c7f0` |
+| 1 | ✅ Seção `#caso` logo depois de "como funciona": 3 contatos → 2 vendas → 47 dias, com fonte e link. Sem valor em R$ (a autorização foi do caso) | `a4b1cdb` |
+| 2 | ✅ FAQ "Quanto tempo até as vendas?" cita o caso, "é um caso, não uma promessa". O `/modelo` segue com "3 a 6 meses até o volume orgânico estabilizar", que é outra afirmação e continua verdadeira | `a4b1cdb` |
+| 3 | ⏳ Aguardando o Jean: a explicação está na conversa de 30/09 | — |
+| 4 | ✅ Hero e passo 02 abrem com o site e a equipe que fecha no WhatsApp; SEO programático virou frase de apoio; demanda e mapa de cadeiras desceram para depois dos gates | `a4b1cdb` |
+| 5 | ✅ A página de origem **já ia** na mensagem ("Vim pelo site da TapePro (Home)"). O que faltava era de onde a pessoa veio: agora a mensagem termina com "Achei vocês pelo Google." (utm_source ou referrer da 1ª página da visita; acesso direto não acrescenta nada) | TapePro `83653df` |
+
 **Promessa para a `conversion-copy`** (melhoria, mesmo quadro de hoje). Só com a autorização da TapePro, e o número é de um caso só:
 
 > "A ROI Labs constrói o seu site de vendas, e a nossa equipe atende o cliente no WhatsApp até fechar. O primeiro fornecedor vendeu em 47 dias."
