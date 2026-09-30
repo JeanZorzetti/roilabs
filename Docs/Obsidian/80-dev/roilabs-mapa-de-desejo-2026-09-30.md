@@ -33,8 +33,8 @@ que não tem evidência sai como hipótese com plano de medição. Relaciona-se 
 5. **O site lidera com o que o time faz melhor e o comprador não procura:** SEO programático, "centenas de páginas" e o
    mapa de cadeiras/exclusividade. Nenhum desses termos tem busca.
 6. **A prova existe, mas está fora da página e fora do sistema.** A home mostra o resultado da Use Aligner, que é cadeira
-   da casa (`daCasa: true`). As 2 vendas da TapePro, que são a prova de um fornecedor externo, não aparecem na home, e no
-   `/app` não viraram negócio originado (0 registros).
+   da casa (`daCasa: true`). As 2 vendas da TapePro, que são a prova de um fornecedor externo, não aparecem na home. Elas
+   vieram do botão de WhatsApp do site da cadeira e foram registradas no `/app` em 30/09 como negócios originados.
 7. **Modo indicado: reposicionar UMA peça, o quadro de referência** (contra quem compete: agência → marketplace ou
    representante). Hoje isso é hipótese, mas o lado (b), "equipe que vende por você", ganhou o primeiro apoio revelado:
    quem compra fita fechou falando com gente, e não no carrinho. O plano de medição (seção 8) decide até 31/10, com as
@@ -77,7 +77,7 @@ pelo WhatsApp, com ele fechando (E10). Do lado do fornecedor ainda é N=1, e a s
 | E7 | DataForSEO (Brasil), o empurrão do marketplace | "taxa do mercado livre" 1.600 (**1.000→2.400**) · "quanto o mercado livre cobra por venda" 1.000 (720→1.600) · "taxa shopee" 2.900 (1.600→3.600) | média mensal de 12m | 30/09/2026 | 2 revelada |
 | E8 | DataForSEO (Brasil), o empurrão da agência | **sem volume:** agência de marketing não dá resultado · gestor de tráfego não dá resultado · quanto custa uma agência de marketing | média mensal de 12m | 30/09/2026 | 2 revelada (ausência) |
 | E9 | GSC da cadeira TapePro (`tapepro.` + `goiania…/fita*`) | 228 impressões, 3 cliques, posição ~24 (tapepro.) e ~10 (goiania). 0 pedido real no carrinho (E2) | 29/06–27/09/2026 | 30/09/2026 | 2 revelada |
-| E10 | Sistema de orçamentos da TapePro (print do Jean) | **3 contatos no WhatsApp → 2 vendas** (vendedor: Jean): empresa de impressão 3D, R$ 387,80 (07/09); clínica de odontologia e cosméticos, R$ 409,80 (28/09). Total **R$ 797,60**, os dois B2B. Contrato em 22/07 e 1ª venda **47 dias** depois. **Origem dos 3 contatos: não medida** (site? Google? indicação?) | 22/07–28/09/2026 | 30/09/2026 | 1 revelada, do **comprador de fita**, não do fornecedor |
+| E10 | Sistema de orçamentos da TapePro (print do Jean) | **3 contatos no WhatsApp → 2 vendas** (vendedor: Jean): empresa de impressão 3D, R$ 387,80 (07/09); clínica de odontologia e cosméticos, R$ 409,80 (28/09). Total **R$ 797,60**, os dois B2B, **só produto** (sem frete). Contrato em 22/07 e 1ª venda **47 dias** depois. **Origem dos 3 contatos:** o botão "Pedir orçamento no WhatsApp" do hero de `tapepro.roilabs.com.br`, o site que a ROI Labs construiu (Jean, 30/09). **Como o visitante chegou ao site: não medido**, porque o site não tem GA, Clarity nem evento de clique, e o GSC do `tapepro.` registrou só 2 cliques em 90 dias | 22/07–28/09/2026 | 30/09/2026 | 1 revelada, do **comprador de fita**, não do fornecedor |
 | E11 | Jean, 30/09 | TapePro, Autogestor, Coopluz e Viagens: **4 clientes, todos fechados quando a anuidade era zero**. Nenhum cliente fechou pagando anuidade | até 30/09/2026 | 30/09/2026 | 1 revelada (registro do dono) |
 | — | Reclamação ou pergunta do fornecedor (WhatsApp, motivo de recusa, conversa de outbound) | **não medido**: nenhum registro no banco nem no vault | — | — | 3/4 ausente |
 
@@ -143,7 +143,7 @@ A célula "melhores, não desejado" concentra o que a home destaca hoje: o manif
    fechadas pela equipe no WhatsApp" é o número que falta na home, e ele é de cliente externo. Três cuidados:
    - só publicar com autorização da TapePro;
    - dar o número como ele é (pequeno), sem arredondar para cima;
-   - antes, anotar de onde vieram os 3 contatos. Se vieram do site ou do Google, a prova é da cadeira; se vieram de indicação, é da equipe de vendas.
+   - a origem já está respondida: os 3 contatos vieram do botão de WhatsApp do site que a ROI Labs construiu, então a prova é **da cadeira** (site + equipe que fecha). O que ainda não se sabe é como o visitante chegou ao site (Google, direto, Instagram), e isso decide se dá para dizer "veio do SEO".
    O FAQ que promete "3–6 meses" passa a ser a ansiedade mais barata de reduzir, porque o caso real foi mais rápido.
 
 **Modo recomendado: reposicionar uma peça por vez, começando pelo quadro de referência** (contra quem compete).
@@ -168,7 +168,7 @@ texto precisa continuar verdadeiro com a anuidade:
 |---|---|---|---|---|
 | C1 | Preço de entrada | contrato da proposta de 29/09 **aceito** (a R$ 1.320). Aceito: primeira evidência de nível 1. Recusado ou expirado: registrar o motivo (nível 3). R$ 3.960 segue sem evidência até um aceite a esse valor | `contratos_cadeira.aceito_em` | 14/10/2026 |
 | C2 | Quadro de referência: (a) × (b) | nas próximas **10 conversas de outbound**, perguntar e anotar a resposta literal de "onde você vende online hoje?" e "o que já tentou que não deu certo?". **(a) confirma** se ≥5/10 citarem marketplace ou taxa; **(b) confirma** se ≥5/10 citarem vendedor ou representante; nenhum dos dois: seguem hipóteses, e a peça não muda | tabela neste vault (`10-mercado/`) | 31/10/2026 |
-| C3 | Prova | ✅ **atingido fora do sistema:** 1ª venda da TapePro em 07/09 (E10). Falta: (1) anotar a **origem** de cada contato de WhatsApp daqui em diante (site, Google, indicação), porque sem isso a prova não diz qual peça vendeu; (2) decidir se as 2 vendas entram no `/app` como negócio originado (isso as põe na régua do success fee) | orçamentos da TapePro + anotação | origem: a partir de hoje · decisão: Jean |
+| C3 | Prova | ✅ **atingido:** 1ª venda da TapePro em 07/09 (E10), vinda do botão de WhatsApp do site da cadeira. ✅ **Registrado em 30/09:** as 2 vendas são negócios originados no `/app`, com origem `manual` (nova, commit `0093ed7`): aquisição a 15%, comissão de R$ 119,64, sem fatura emitida. Falta medir como o visitante chega ao site da TapePro | `negocios_originados` + medição no site | medição: a decidir |
 | C4 | Reposicionamento funcionou | se C2 confirmar um lado, reescrever **só** o quadro de referência da home e medir candidaturas reais e consultas fora da marca por 60 dias | `candidaturas`, GSC | 60 dias após a troca |
 
 **Hipóteses que já caíram**
@@ -180,5 +180,6 @@ texto precisa continuar verdadeiro com a anuidade:
 
 **Cadastro (feito em 30/09):** Autogestor, Coopluz e Viagens são clientes da época sem anuidade, como a TapePro (Jean,
 30/09). Foram criadas as 3 cadeiras (e a da Vértice Marketing, que também faltava) pelo seed, e depois os 3 `parceiros`,
-com contrato em 01/09/2026 e estágio `sondagem`, porque falta o CNPJ. A comissão foi negociada antes da tabela: Coopluz
-50% na 1ª compra e 2% na recompra; Autogestor e Autogestor Viagens 15%/10%. Para virar `ativa`: CNPJ no `/admin/parceiros`.
+com contrato em 01/09/2026. A comissão foi negociada antes da tabela: Coopluz 50% na 1ª compra e 2% na recompra;
+Autogestor e Autogestor Viagens 15%/10%. Os três estão `ativa` **sem CNPJ**, por exceção nomeada no PATCH de
+`api/parceiros/[id]` (commit `0093ed7`). A emissão de fatura (`api/faturas`) continua exigindo CNPJ: sem ele não sai cobrança.
