@@ -21,7 +21,7 @@ export const GET: APIRoute = async () => {
 ## Como funciona
 - Sem risco de tecnologia: a ROI Labs banca a infraestrutura e o tráfego.
 - Remuneração: anuidade da cadeira de R$ 3.960/ano (R$ 330/mês) + success fee sobre a venda concretizada.
-- Exclusividade: uma cadeira por nicho no Brasil, renovável por desempenho (SLA de estoque e despacho).
+- Exclusividade: uma cadeira por nicho no Brasil, renovável por desempenho (SLA de atendimento e entrega).
 - Canal primário: páginas de alta intenção (produto × característica × ocasião × intenção local), validadas por volume real de busca, não mídia paga.
 
 ## Páginas principais

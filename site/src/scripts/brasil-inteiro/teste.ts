@@ -2,10 +2,12 @@
 // As respostas ficam só na página (não entram no formulário). Sem JS, o cartão mantém a lista
 // estática dos quatro pontos; este script troca para o teste.
 // As perguntas são os quatro itens do "É pra você se" da versão anterior da seção.
+// 30/09/2026: servem a produto E serviço — 4 dos 5 negócios reais são serviço, e a versão com
+// "estoque e despacho" reprovava todos eles.
 const PERGUNTAS: [pergunta: string, emAberto: string][] = [
-  ['Você tem catálogo próprio e amplo no seu nicho?', 'catálogo próprio e amplo'],
-  ['Você aguenta estoque e despacho rápido, pronta-entrega de verdade?', 'estoque e despacho rápido'],
-  ['Seu produto é forte, a presença online é fraca, e você quer escalar?', 'vontade de escalar a venda online'],
+  ['Você tem produto ou serviço próprio, com preço definido?', 'produto ou serviço próprio'],
+  ['Você consegue atender mais pedidos ou clientes sem atrasar a entrega?', 'atender mais sem atrasar'],
+  ['O que você vende é forte, a presença online é fraca, e você quer escalar?', 'vontade de escalar a venda online'],
   ['Você topa exclusividade de cadeira atrelada a SLA?', 'exclusividade atrelada a SLA'],
 ];
 

@@ -333,9 +333,10 @@ export const REGRAS_GERAIS = {
     ['Saída', 'Na renovação, sem dívida e sem amarra técnica no site próprio do parceiro'],
   ] as [string, string][],
   parceiro: [
-    'Catálogo próprio e amplo, com preço e foto atualizados',
-    'Estoque consistente dos produtos anunciados',
-    'Despacho no prazo — pronta-entrega de verdade',
+    // Produto OU serviço (30/09/2026): 4 dos 5 negócios reais são serviço.
+    'Produto ou serviço próprio, com preço e foto atualizados',
+    'Capacidade de atender o que é anunciado',
+    'Entrega no prazo: pronta-entrega, se é produto; agenda cumprida, se é serviço',
     'Faturar a venda que a equipe da ROI Labs entrega pronta',
     'Fotos, vídeos e depoimentos reais, com autorização',
   ],

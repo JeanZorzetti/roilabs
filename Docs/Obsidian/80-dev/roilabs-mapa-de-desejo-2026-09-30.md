@@ -225,7 +225,7 @@ Autogestor e Autogestor Viagens 15%/10%. Os três estão `ativa` **sem CNPJ**, p
 | 0 | ✅ Tela `/admin/vendas`: registra a venda fechada fora do site, lista as vendas por parceiro e gera a fatura com confirmação (a de 28/09 tinha apagado a tela de parceiros). ⏳ **A fatura de R$ 119,64 da TapePro não foi emitida**: é um clique do Jean (C0) | `198c7f0` |
 | 1 | ✅ Seção `#caso` logo depois de "como funciona": 3 contatos → 2 vendas → 47 dias, com fonte e link. Sem valor em R$ (a autorização foi do caso) | `a4b1cdb` |
 | 2 | ✅ FAQ "Quanto tempo até as vendas?" cita o caso, "é um caso, não uma promessa". O `/modelo` segue com "3 a 6 meses até o volume orgânico estabilizar", que é outra afirmação e continua verdadeira | `a4b1cdb` |
-| 3 | ⏳ Aguardando o Jean: a explicação está na conversa de 30/09 | — |
+| 3 | ✅ Aprovado pelo Jean. "Estoque e despacho" saiu como condição: o teste agora pergunta "produto ou serviço próprio" e "atender mais pedidos ou clientes sem atrasar"; o SLA virou "de atendimento e entrega" na home, `/modelo`, `/simulador`, `llms.txt` e na lista "o parceiro sustenta" das propostas. O contrato não foi tocado (só pede "preço, estoque, prazo" como informação) | ver commit abaixo |
 | 4 | ✅ Hero e passo 02 abrem com o site e a equipe que fecha no WhatsApp; SEO programático virou frase de apoio; demanda e mapa de cadeiras desceram para depois dos gates | `a4b1cdb` |
 | 5 | ✅ A página de origem **já ia** na mensagem ("Vim pelo site da TapePro (Home)"). O que faltava era de onde a pessoa veio: agora a mensagem termina com "Achei vocês pelo Google." (utm_source ou referrer da 1ª página da visita; acesso direto não acrescenta nada) | TapePro `83653df` |
 

@@ -41,7 +41,7 @@ const faq = [
   },
   {
     q: 'Como o percentual do success fee é definido?',
-    a: 'Em contrato, caso a caso, conforme nicho, margem do produto e SLA de estoque e despacho que você consegue sustentar. É uma fração da venda concretizada, somada à anuidade da cadeira — sem setup, sem piso mínimo de venda. Se não vendeu, o success fee é zero.',
+    a: 'Em contrato, caso a caso, conforme nicho, margem e o SLA de atendimento e entrega que você consegue sustentar. É uma fração da venda concretizada, somada à anuidade da cadeira — sem setup, sem piso mínimo de venda. Se não vendeu, o success fee é zero.',
   },
   {
     q: 'Quem é dono do site e das páginas que a ROI Labs constrói?',
@@ -57,11 +57,11 @@ const faq = [
   },
   {
     q: 'O que a exclusividade exige de mim na prática?',
-    a: 'Manter o SLA acordado: estoque consistente dos produtos anunciados e despacho no prazo. É o que protege a reputação da operação — e a sua cadeira. Em troca, nenhum concorrente do seu nicho entra na ROI Labs, em nenhum lugar do Brasil, enquanto o contrato vigorar.',
+    a: 'Manter o SLA acordado: atender no prazo o que é anunciado, seja produto em estoque ou serviço com agenda. É o que protege a reputação da operação — e a sua cadeira. Em troca, nenhum concorrente do seu nicho entra na ROI Labs, em nenhum lugar do Brasil, enquanto o contrato vigorar.',
   },
   {
     q: 'E se a ROI Labs não entregar resultado?',
-    a: 'O seu custo máximo é a anuidade de R$ 3.960 — o success fee só existe se houver venda — e você pode sair na renovação. O contrato de cadeira é anual, renovável por desempenho dos dois lados: nós entregamos demanda, você entrega estoque e despacho.',
+    a: 'O seu custo máximo é a anuidade de R$ 3.960 — o success fee só existe se houver venda — e você pode sair na renovação. O contrato de cadeira é anual, renovável por desempenho dos dois lados: nós entregamos demanda, você atende e entrega no prazo.',
   },
   {
     q: 'Quanto tempo leva da candidatura ao contrato?',
@@ -81,15 +81,15 @@ const howtoSteps = [
   },
   {
     name: 'Triagem e conversa de curadoria',
-    text: 'Respondemos em até 48h úteis. Uma conversa direta para entender catálogo, capacidade de estoque, logística de despacho e o que você já vende online.',
+    text: 'Respondemos em até 48h úteis. Uma conversa direta para entender o que você vende, quanto consegue atender, como entrega e o que já vende online.',
   },
   {
     name: 'Validação do Gate 3',
-    text: 'Os dois primeiros gates (demanda medida e brecha na busca) já foram validados antes da cadeira abrir. O terceiro é você: catálogo próprio e amplo, pronta-entrega real e capacidade de acompanhar o salto de demanda.',
+    text: 'Os dois primeiros gates (demanda medida e brecha na busca) já foram validados antes da cadeira abrir. O terceiro é você: produto ou serviço próprio, entrega no prazo e capacidade de acompanhar o salto de demanda.',
   },
   {
     name: 'Proposta: percentual e termos',
-    text: 'Definimos juntos o percentual do success fee e o SLA de estoque e despacho. A anuidade da cadeira é fixa: R$ 3.960/ano. Tudo em números claros — a mesma fórmula do simulador público: fee = receita × percentual.',
+    text: 'Definimos juntos o percentual do success fee e o SLA de atendimento e entrega. A anuidade da cadeira é fixa: R$ 3.960/ano. Tudo em números claros — a mesma fórmula do simulador público: fee = receita × percentual.',
   },
   {
     name: 'Contrato e onboarding do catálogo',
@@ -271,8 +271,8 @@ const jsonLdNodes = [
               <p class="bi-portao__quem">Gate 03 · Você</p>
               <h3>Fornecedor A-Player</h3>
               <p>
-                A peça humana: catálogo próprio e amplo, pronta-entrega de
-                verdade e capacidade de acompanhar o salto de demanda. É o gate
+                A peça humana: produto ou serviço próprio, entrega no prazo e
+                capacidade de acompanhar o salto de demanda. É o gate
                 que a curadoria valida na candidatura — e o único que depende de
                 você.
               </p>
@@ -367,9 +367,9 @@ const jsonLdNodes = [
           <div class="bi-lado">
             <p class="bi-lado__quem">O parceiro sustenta</p>
             <ul role="list">
-              <li>Catálogo próprio e amplo, com preço e foto atualizados.</li>
-              <li>Estoque consistente dos produtos anunciados (SLA).</li>
-              <li>Despacho no prazo — pronta-entrega de verdade.</li>
+              <li>Produto ou serviço próprio, com preço e foto atualizados.</li>
+              <li>Capacidade de atender o que é anunciado (SLA).</li>
+              <li>Entrega no prazo: pronta-entrega, se é produto; agenda cumprida, se é serviço.</li>
               <li>A anuidade da cadeira e o success fee sobre o que vendeu.</li>
             </ul>
           </div>
