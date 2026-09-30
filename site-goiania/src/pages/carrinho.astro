@@ -615,7 +615,7 @@ const whatsapp = import.meta.env.PUBLIC_WHATSAPP ?? '5562993265713';
     e.preventDefault();
     if (!cbForm.checkValidity()) { cbForm.reportValidity(); return; }
     postOrcamentoLead('Orçamento WhatsApp (carrinho)', cbInput.value.trim());
-    cbMsg.textContent = 'Recebido! Nosso especialista te chama em horário comercial.';
+    cbMsg.textContent = 'Recebido! Nosso especialista te chama de segunda a sexta, das 8h às 19h, e aos sábados, das 8h às 12h.';
     (cbForm.querySelector('.cart-callback__row') as HTMLElement).hidden = true;
     (cbForm.querySelector('.cart-callback__consent') as HTMLElement).hidden = true;
   });

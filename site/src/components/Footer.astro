@@ -3,7 +3,7 @@
 // e embaixo dois blocos com as mesmas bordas dela — a marca à esquerda (sob a frase) e as colunas
 // de links à direita (sob o botão). As cadeiras não entram no rodapé: moram no mapa da home.
 // Estilo em global.css (.site-footer*); a home reveste com os tokens da direção Brasil Inteiro.
-import { EMAIL, INSTAGRAM, LINKEDIN, YOUTUBE, whatsLegivel, whatsLink } from '../data/contato';
+import { EMAIL, HORARIO_DIAS_UTEIS, HORARIO_SABADO, INSTAGRAM, LINKEDIN, YOUTUBE, whatsLegivel, whatsLink } from '../data/contato';
 
 // Redes só com o ícone (Lucide, ISC, traço de 24px); o nome vai no aria-label e no title.
 const redes = [
@@ -62,6 +62,11 @@ const ano = new Date().getFullYear();
           <li><a href={whatsLink()} target="_blank" rel="noopener">WhatsApp {whatsLegivel()}</a></li>
           <li><a href={`mailto:${EMAIL}`}>{EMAIL}</a></li>
         </ul>
+        <p class="site-footer__horario">
+          <strong>Horário de atendimento</strong>
+          <span>{HORARIO_DIAS_UTEIS}</span>
+          <span>{HORARIO_SABADO}</span>
+        </p>
         <ul class="site-footer__redes" role="list" aria-label="Redes sociais">
           {redes.map((r) => (
             <li>

@@ -1,6 +1,6 @@
 ---
 import '../styles/global.css';
-import { INSTAGRAM, LINKEDIN, YOUTUBE } from '../data/contato';
+import { EMAIL, INSTAGRAM, LINKEDIN, WHATSAPP, YOUTUBE } from '../data/contato';
 
 interface Props {
   title?: string;
@@ -43,6 +43,24 @@ const graph = {
       areaServed: { '@type': 'Country', name: 'Brasil' },
       slogan: 'Construímos sua venda online. Nosso lucro vem da sua venda.',
       sameAs: [LINKEDIN, INSTAGRAM, YOUTUBE],
+      // Mesmo horário do rodapé (data/contato.ts).
+      contactPoint: {
+        '@type': 'ContactPoint',
+        contactType: 'customer service',
+        email: EMAIL,
+        telephone: `+${WHATSAPP}`,
+        areaServed: 'BR',
+        availableLanguage: 'pt-BR',
+        hoursAvailable: [
+          {
+            '@type': 'OpeningHoursSpecification',
+            dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+            opens: '08:00',
+            closes: '19:00',
+          },
+          { '@type': 'OpeningHoursSpecification', dayOfWeek: 'Saturday', opens: '08:00', closes: '12:00' },
+        ],
+      },
     },
     {
       '@type': 'WebSite',

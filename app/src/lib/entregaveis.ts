@@ -327,7 +327,7 @@ export const REGRAS_GERAIS = {
     ['Contrato', 'Anual, renovável por desempenho dos dois lados'],
     ['Comissões', 'Cobradas todo dia 05, somando o mês anterior. Relatório venda por venda antes da cobrança'],
     ['Vendeu zero', 'Comissão zero; fica só a anuidade'],
-    ['Candidatura', 'Triagem feita pelo nosso atendimento, em horário comercial'],
+    ['Candidatura', 'Triagem feita pelo nosso atendimento: segunda a sexta, das 8h às 19h, e sábado, das 8h às 12h'],
     ['Maturação', 'De 3 a 6 meses depois do site no ar até o volume orgânico estabilizar'],
     ['Propriedade', 'Domínio da operação, páginas, calculadoras e feed são da ROI Labs. Catálogo, marca e clientes são do parceiro'],
     ['Saída', 'Na renovação, sem dívida e sem amarra técnica no site próprio do parceiro'],

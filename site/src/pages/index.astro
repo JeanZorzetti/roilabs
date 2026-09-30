@@ -13,7 +13,7 @@ import '../styles/brasil-inteiro/home.css';
 
 // Cadeiras de fornecedor e contatos moram em src/data/ porque o rodapé usa os mesmos dados.
 import { fornecedores as seats } from '../data/fornecedores';
-import { EMAIL, whatsLink } from '../data/contato';
+import { EMAIL, HORARIO_FRASE, whatsLink } from '../data/contato';
 
 const apply = `mailto:${EMAIL}?subject=Candidatura%20%C3%A0%20cadeira`;
 const whatsHref = whatsLink();
@@ -759,7 +759,7 @@ const jsonLdNodes = [
             <a class="btn btn--whats" href={whatsHref} target="_blank" rel="noopener">Chamar no WhatsApp agora</a>
           </p>
           <p class="close__fine">
-            Prefere formulário? Nosso atendimento é em horário comercial. Ou e-mail:
+            Prefere formulário? Atendemos {HORARIO_FRASE}. Ou e-mail:
             <a href={apply}>roilabs.ia@gmail.com</a>
           </p>
         </div>

@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
+import { HORARIO_DIAS_UTEIS, HORARIO_SABADO } from '../data/contato';
 
 const SITE = 'https://roilabs.com.br';
 
@@ -37,6 +38,7 @@ ${artigos}
 ## Contato
 - E-mail: roilabs.ia@gmail.com
 - Sede: Goiânia, GO · Atendimento: Brasil inteiro
+- Horário de atendimento: ${HORARIO_DIAS_UTEIS} · ${HORARIO_SABADO}
 `;
 
   return new Response(body, {

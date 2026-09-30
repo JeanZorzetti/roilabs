@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import { whatsLink } from '../data/contato';
+import { HORARIO_FRASE, whatsLink } from '../data/contato';
 // Direção de arte Brasil Inteiro, propagada da home (28/09/2026): mesmos tokens, a mesma
 // releitura do global.css e a "conta aberta" do /simulador; o que é só desta página mora em modelo.css.
 import '../styles/brasil-inteiro/tokens.css';
@@ -65,7 +65,7 @@ const faq = [
   },
   {
     q: 'Quanto tempo leva da candidatura ao contrato?',
-    a: 'A triagem é feita pelo nosso atendimento, em horário comercial. Com os documentos e a validação do catálogo em mãos, a proposta e o contrato saem em poucas semanas. O que leva mais tempo é a maturação do SEO depois do go-live: de 3 a 6 meses até o volume orgânico estabilizar.',
+    a: `A triagem é feita pelo nosso atendimento, ${HORARIO_FRASE}. Com os documentos e a validação do catálogo em mãos, a proposta e o contrato saem em poucas semanas. O que leva mais tempo é a maturação do SEO depois do go-live: de 3 a 6 meses até o volume orgânico estabilizar.`,
   },
 ];
 
@@ -81,7 +81,7 @@ const howtoSteps = [
   },
   {
     name: 'Triagem e conversa de curadoria',
-    text: 'Nosso atendimento é em horário comercial. Uma conversa direta para entender o que você vende, quanto consegue atender, como entrega e o que já vende online.',
+    text: `Atendemos ${HORARIO_FRASE}. Uma conversa direta para entender o que você vende, quanto consegue atender, como entrega e o que já vende online.`,
   },
   {
     name: 'Validação do Gate 3',

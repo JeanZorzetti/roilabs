@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import { HORARIO_FRASE } from '../data/contato';
 ---
 
 <Base
@@ -13,8 +14,7 @@ import Base from '../layouts/Base.astro';
       <h1>Sua empresa entrou na curadoria.</h1>
       <p class="thanks__lead">
         Vamos conferir se a cadeira do seu nicho está livre, avaliar o fit e
-        falar com você no WhatsApp que você deixou. Nosso atendimento é em
-        horário comercial.
+        falar com você no WhatsApp que você deixou. Atendemos {HORARIO_FRASE}.
       </p>
       <a class="btn btn--ghost" href="/">Voltar ao início</a>
     </div>

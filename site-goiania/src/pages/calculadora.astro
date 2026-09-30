@@ -384,7 +384,7 @@ const jsonLdNodes = [
       keepalive: true,
     }).catch(() => {});
     (window as any).himetrica?.track('calculadora_lead', { caixas: r?.caixas ?? 0 });
-    leadMsg.textContent = 'Recebido! Nosso especialista te chama com o orçamento, em horário comercial.';
+    leadMsg.textContent = 'Recebido! Nosso especialista te chama com o orçamento, de segunda a sexta, das 8h às 19h, e aos sábados, das 8h às 12h.';
     (leadForm.querySelector('.calc-lead__row') as HTMLElement).hidden = true;
     (leadForm.querySelector('.calc-lead__consent') as HTMLElement).hidden = true;
   });

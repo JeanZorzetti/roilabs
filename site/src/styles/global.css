@@ -1004,6 +1004,20 @@ a.seat__niche::after {
   text-decoration: underline;
 }
 
+/* horário de atendimento: texto, não link — um rótulo e uma linha por faixa de dias */
+.site-footer__horario {
+  display: grid;
+  gap: 0.15rem;
+  margin: 0.6rem 0 0;
+  font-size: 0.88rem;
+  color: var(--d-muted);
+}
+
+.site-footer__horario strong {
+  font-weight: 600;
+  color: var(--d-text);
+}
+
 /* redes: só o ícone, 22px numa área de toque de 40px; a fileira recua o que sobra da área
    para o desenho do 1º ícone alinhar com o texto de cima */
 .site-footer__contato .site-footer__redes {
