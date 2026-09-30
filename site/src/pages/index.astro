@@ -158,9 +158,9 @@ const jsonLdNodes = [
         <span class="bi-olho">Growth Partner · Tecnologia e tráfego por nossa conta</span>
         <h1 id="hero-title">Construímos sua venda&nbsp;online. Nosso lucro vem <em>da sua venda.</em></h1>
         <p class="bi-sub">
-          A ROI Labs banca a tecnologia e o tráfego. Você entra com o produto
-          e uma anuidade simbólica pela cadeira. O resto só é cobrado depois da
-          venda, porque o nosso lucro é uma fração do seu.
+          Fazemos o site que traz o comprador e atendemos cada contato no
+          WhatsApp até a venda fechar. Você entra com o produto e uma anuidade
+          simbólica pela cadeira; o resto só é cobrado depois da venda.
         </p>
         <div class="bi-acoes">
           <a class="btn btn--primary" href="#candidatar">Aplicar para a cadeira</a>
@@ -253,9 +253,9 @@ const jsonLdNodes = [
         </p>
         <p class="manifesto__note">
           A ROI Labs é uma fábrica de infraestrutura de vendas. Construímos o
-          ecossistema — site, SEO de alta intenção e uma equipe de vendas que
-          atende e fecha a venda — que coloca fornecedores regionais de alto
-          padrão na frente de quem já está pronto pra comprar. Sem fee de agência, sem projeto fechado: uma anuidade
+          site, colocamos uma equipe de vendas para atender no WhatsApp e fechar
+          a venda, e fazemos o SEO de alta intenção que põe fornecedores regionais
+          de alto padrão na frente de quem já está pronto pra comprar. Sem fee de agência, sem projeto fechado: uma anuidade
           simbólica pela cadeira e o resto atrelado à venda.
         </p>
       </div>
@@ -283,11 +283,12 @@ const jsonLdNodes = [
 
           <article class="step">
             <span class="step__num">02 — Construção</span>
-            <h3>Máquina de tráfego orgânico</h3>
+            <h3>Site e equipe de vendas</h3>
             <p>
-              Montamos centenas de páginas de alta intenção — uma para cada
-              combinação de produto, característica e cidade com busca real.
-              Custo de tecnologia e tráfego é nosso.
+              Construímos o seu site de vendas, e a nossa equipe atende cada
+              contato no WhatsApp até fechar. Por trás, as páginas que trazem o
+              comprador da busca, uma para cada produto e cidade com procura real.
+              Tecnologia e tráfego são custo nosso.
             </p>
             <span class="step__tag">Custo da ROI Labs</span>
           </article>
@@ -306,106 +307,136 @@ const jsonLdNodes = [
       </div>
     </section>
 
-    <!-- MAPA DE CADEIRAS (signature) -->
-    <section class="section section--light" id="cadeiras" aria-labelledby="cadeiras-title">
+    <!-- CASO · prova com cliente nomeado (TapePro autorizou em 30/09/2026). Números do sistema de
+         orçamentos da TapePro; os contatos vieram do botão de WhatsApp do site da cadeira. Sem valor
+         em R$ de propósito: a autorização foi do caso, não do faturamento dela. Sem data-flow: o script
+         do NumberFlow anima o PRIMEIRO .readout com [data-flow], que tem de continuar sendo o da Use Aligner. -->
+    <section class="section section--dark" id="caso" aria-labelledby="caso-title">
       <div class="wrap">
         <div class="section__head">
-          <span class="eyebrow">Escassez programada</span>
-          <h2 id="cadeiras-title">Mapa de cadeiras</h2>
+          <span class="eyebrow">Caso real · cadeira de fitas adesivas</span>
+          <h2 id="caso-title">O cliente chamou no WhatsApp. A equipe fechou a venda.</h2>
           <p class="section__lead">
-            Uma cadeira por nicho no Brasil inteiro, renovável por desempenho.
-            Quando uma fecha, ela sai do mapa — e o seu concorrente não senta nela.
-            Cada cadeira do mapa é um produto de verdade, não um case.
+            A TapePro ocupa a cadeira de fitas adesivas personalizadas. A ROI Labs
+            construiu o site dela, e cada pedido de orçamento cai no WhatsApp, onde a
+            nossa equipe atende até fechar.
           </p>
         </div>
 
-        <!-- Duas divisões (28/09/2026): clientes e ROI Labs. O script ao vivo abaixo casa cada card
-             com a linha do banco por `data-site` (siteUrl) e, sem site no banco, por `data-nicho` —
-             NÃO por posição: a ordem das divisões não é a ordem (`ordem`) do banco. -->
-        {divisoesDoMapa.map((d) => (
-          <Fragment>
-            <h3 class="map__subtitle">{d.titulo}</h3>
-            <p class="map__sublead">{d.lead}</p>
-            <ul class="map__grid map__grid--software" role="list">
-              {d.cards.map((c) => (
-                <li
-                  class={`seat ${aceitaCandidatura(c) ? 'seat--open' : ''} ${ocupada(c) ? 'seat--taken' : ''}`}
-                  data-site={c.siteUrl}
-                  data-nicho={c.niche}
-                >
-                  {c.siteUrl ? (
-                    <a class="seat__niche" href={c.siteUrl} target="_blank" rel="noopener">{c.niche} ↗</a>
-                  ) : (
-                    <span class="seat__niche">{c.niche}</span>
-                  )}
-                  <span class="seat__status">
-                    <span class="seat__ring" aria-hidden="true"></span>
-                    {' '}{ESTADO[c.estado] ?? c.estado}{c.nome ? ` · ${c.nome}` : ''}{c.rotulo === 'casa' ? ' · Da casa' : ''}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </Fragment>
-        ))}
-        <p class="map__caption">
-          Seu nicho não está no mapa? Então a cadeira dele está livre.
-          <a href="#candidatar">Candidate-se →</a>
+        <div class="readout" role="group" aria-label="Resultado da cadeira TapePro">
+          <div class="readout__bar">
+            <span class="readout__dotrow" aria-hidden="true"><span></span><span></span><span></span></span>
+            Orçamentos da TapePro · jul a set/2026
+          </div>
+          <div class="readout__body">
+            <div class="metric">
+              <div class="metric__val">3<span class="unit">contatos</span></div>
+              <div class="metric__key">pelo botão de WhatsApp do site</div>
+            </div>
+            <div class="metric">
+              <div class="metric__val">2<span class="unit">vendas</span></div>
+              <div class="metric__key">fechadas pela equipe da ROI Labs</div>
+            </div>
+            <div class="metric">
+              <div class="metric__val">47<span class="unit">dias</span></div>
+              <div class="metric__key">do contrato até a primeira venda</div>
+            </div>
+          </div>
+        </div>
+        <p class="prova__foot">
+          Fonte: sistema de orçamentos da TapePro. Contrato em 22/07/2026, vendas em 07/09 e
+          28/09/2026. É um caso, não uma promessa de prazo. O site:
+          <a href="https://tapepro.roilabs.com.br/" target="_blank" rel="noopener">tapepro.roilabs.com.br</a>.
         </p>
       </div>
     </section>
 
-    <script is:inline>
-      // Mapa de cadeiras AO VIVO: busca o DB no navegador e sobrescreve o skeleton estático.
-      // Casa card com linha por `siteUrl` (data-site) e, para a linha sem site no banco (a de
-      // fitas adesivas, que nasceu no SEED de nicho), por `niche` (data-nicho). Até 28/09 casava
-      // por ÍNDICE; com as divisões clientes/ROI Labs a ordem do documento deixou de ser a do
-      // banco. Card sem par no banco (cadeira nova antes do seed, rótulo editado no /admin)
-      // mantém o texto do skeleton: degrada limpo em vez de receber o dado do vizinho.
-      // Falhou o fetch? mantém o skeleton inteiro.
-      //
-      // 012/T057b: o laço ATUALIZA, nunca cria <li>. Criar aqui duplicaria os cards que o
-      // skeleton já desenhou.
-      var ESTADO = { 'ocupada-vendavel': 'No ar', 'em-preparacao': 'Em preparação' };
-      var chave = function (u) { return String(u || '').toLowerCase().replace(/\/+$/, ''); };
-      fetch('https://app.roilabs.com.br/api/cadeiras')
-        .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
-        .then((cadeiras) => {
-          var porSite = {};
-          var porNicho = {};
-          cadeiras.forEach((s) => {
-            if (s.siteUrl) porSite[chave(s.siteUrl)] = s;
-            if (s.niche) porNicho[s.niche] = s;
-          });
-          document.querySelectorAll('#cadeiras .map__grid .seat').forEach((li) => {
-            const s = porSite[chave(li.dataset.site)] || porNicho[li.dataset.nicho];
-            if (!s) return;
-            // 012 FR-020: cadeira OCUPADA não é oferecida para candidatura. `s.open` sozinho
-            // não basta — a API resolve as duas condições em `aceitaCandidatura`.
-            li.classList.toggle('seat--open', !!s.aceitaCandidatura);
-            li.classList.toggle('seat--taken', String(s.estado || '').indexOf('ocupada') === 0);
-            const st = li.querySelector('.seat__status');
-            if (!st) return;
-            st.textContent = '';
-            const ring = document.createElement('span');
-            ring.className = 'seat__ring';
-            ring.setAttribute('aria-hidden', 'true');
-            st.appendChild(ring);
-            // Legenda `estado · nome`, e o selo "Da casa" SÓ quando `rotulo === 'casa'`.
-            // O nome sai do `status` do /admin ("Ocupada · Polaris IA"), o mesmo lugar de onde o
-            // skeleton o extrai; mudar um sem o outro faz a legenda piscar.
-            // ⚠️ FR-010a: `rotulo`, NUNCA `daCasa`.
-            const nome = String(s.status || '').split('·').pop().trim();
-            const texto = (ESTADO[s.estado] || s.estado) + (nome ? ' · ' + nome : '') + (s.rotulo === 'casa' ? ' · Da casa' : '');
-            st.appendChild(document.createTextNode(' ' + texto));
+    <!-- ICP: OS 3 GATES · opção B (escolhida em 28/09/2026): 01 e 02 são afirmação ("nós medimos"), estáticos;
+         o 03 é um teste de 4 perguntas (scripts/brasil-inteiro/teste.ts). Sem JS, o cartão mostra os quatro
+         pontos e o "não é pra você" como lista, com o botão de aplicar. -->
+    <section class="section section--light bi-gates" id="cadeira-pra-voce" aria-labelledby="icp-title">
+      <div class="wrap bi-gates__grade">
+        <div>
+          <span class="eyebrow">A cadeira é sua se…</span>
+          <h2 id="icp-title">Três gates. Dois medimos nós. <em>O terceiro é você.</em></h2>
+          <p class="section__lead">
+            Não abrimos uma cadeira no escuro. Antes de o seu nicho ganhar
+            cadeira, medimos a demanda e a brecha na busca. A peça que falta é o
+            fornecedor certo.
+          </p>
+          <ul class="bi-medidos" role="list" aria-label="Os dois gates que a ROI Labs mede">
+            <li class="bi-medido">
+              <span class="bi-medido__num" aria-hidden="true">01</span>
+              <b>Demanda comprovada <small>Nós medimos</small></b>
+              <span>Busca real pelo seu nicho, medida no Keyword Planner do Google.</span>
+            </li>
+            <li class="bi-medido">
+              <span class="bi-medido__num" aria-hidden="true">02</span>
+              <b>Brecha na busca <small>Nós medimos</small></b>
+              <span>No Google, só aparecem marketplaces genéricos. Espaço pra dominar.</span>
+            </li>
+          </ul>
+          <a class="bi-simular" href="/simulador/">Quanto sobra pra você? Simule sua receita →</a>
+        </div>
 
-            // O rótulo do nicho MUDA, e quem manda é o banco: sem isto, um rótulo editado no
-            // /admin ficaria invisível até o próximo deploy.
-            const alvo = li.querySelector('.seat__niche');
-            if (alvo && s.niche) alvo.textContent = alvo.tagName === 'A' ? s.niche + ' ↗' : s.niche;
-          });
-        })
-        .catch(() => {});
-    </script>
+        <div class="bi-teste" data-teste>
+          <div class="bi-teste__topo">
+            <span class="bi-teste__rot">Gate 03 · Você</span>
+            <span class="bi-teste__passo" data-passo>Fornecedor de ponta</span>
+          </div>
+          <div class="bi-teste__barras" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+
+          <div data-estatico>
+            <p class="bi-teste__titulo">O produto e a logística que a demanda exige. A cadeira pede quatro pontos:</p>
+            <ul class="bi-teste__lista" role="list">
+              <li>Tem catálogo próprio e amplo no seu nicho.</li>
+              <li>Aguenta estoque e despacho rápido, pronta-entrega de verdade.</li>
+              <li>Produto forte, presença online fraca, e quer escalar.</li>
+              <li>Topa exclusividade de cadeira atrelada a SLA.</li>
+            </ul>
+            <p class="bi-teste__nao">
+              <b>Não é pra você se:</b> revende sem catálogo ou marca próprios · não consegue acompanhar um
+              salto de demanda · procura agência de mídia paga com fee mensal · não quer compromisso de exclusividade.
+            </p>
+            <div class="bi-teste__respostas"><a class="btn btn--primary" href="#candidatar">Aplicar para a cadeira</a></div>
+          </div>
+
+          <div data-vivo hidden>
+            <div data-fluxo>
+              <p class="bi-teste__pergunta" data-pergunta aria-live="polite"></p>
+              <div class="bi-teste__respostas">
+                <button class="btn btn--primary" type="button" data-r="sim">Sim</button>
+                <button class="btn bi-btn-escuro" type="button" data-r="nao">Ainda não</button>
+              </div>
+            </div>
+
+            <div data-ok hidden>
+              <p class="bi-teste__titulo" tabindex="-1">Gate 03 aceso. <em>A cadeira do seu nicho pode ser sua.</em></p>
+              <p class="bi-teste__texto">Você marcou os quatro pontos que a cadeira pede. O próximo passo é a curadoria olhar o seu nicho.</p>
+              <div class="bi-teste__respostas">
+                <a class="btn btn--primary" href="#candidatar">Aplicar para a cadeira</a>
+                <button class="bi-teste__refazer" type="button" data-refazer>Refazer o teste</button>
+              </div>
+            </div>
+
+            <div data-talvez hidden>
+              <p class="bi-teste__titulo" tabindex="-1">Pode não ser a hora ainda.</p>
+              <p class="bi-teste__texto">A cadeira pede os quatro pontos, e ficou em aberto: <b data-aberto></b></p>
+              <div class="bi-teste__respostas">
+                <a class="btn btn--whats" href={whatsTeste} target="_blank" rel="noopener">Conversar mesmo assim</a>
+                <button class="bi-teste__refazer" type="button" data-refazer>Refazer o teste</button>
+              </div>
+            </div>
+
+            <p class="bi-teste__nota">
+              Quatro perguntas, 30 segundos. As respostas não vão para nenhum formulário: servem só para você saber
+              se a cadeira combina com o seu negócio.
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </section>
 
     <!-- PROVA / MERCADO -->
     <section class="section section--dark" id="mercado" aria-labelledby="mercado-title">
@@ -536,92 +567,106 @@ const jsonLdNodes = [
       </div>
     </section>
 
-    <!-- ICP: OS 3 GATES · opção B (escolhida em 28/09/2026): 01 e 02 são afirmação ("nós medimos"), estáticos;
-         o 03 é um teste de 4 perguntas (scripts/brasil-inteiro/teste.ts). Sem JS, o cartão mostra os quatro
-         pontos e o "não é pra você" como lista, com o botão de aplicar. -->
-    <section class="section section--light bi-gates" id="cadeira-pra-voce" aria-labelledby="icp-title">
-      <div class="wrap bi-gates__grade">
-        <div>
-          <span class="eyebrow">A cadeira é sua se…</span>
-          <h2 id="icp-title">Três gates. Dois medimos nós. <em>O terceiro é você.</em></h2>
+    <!-- MAPA DE CADEIRAS (signature) -->
+    <section class="section section--light" id="cadeiras" aria-labelledby="cadeiras-title">
+      <div class="wrap">
+        <div class="section__head">
+          <span class="eyebrow">Escassez programada</span>
+          <h2 id="cadeiras-title">Mapa de cadeiras</h2>
           <p class="section__lead">
-            Não abrimos uma cadeira no escuro. Antes de o seu nicho ganhar
-            cadeira, medimos a demanda e a brecha na busca. A peça que falta é o
-            fornecedor certo.
+            Uma cadeira por nicho no Brasil inteiro, renovável por desempenho.
+            Quando uma fecha, ela sai do mapa — e o seu concorrente não senta nela.
+            Cada cadeira do mapa é um produto de verdade, não um case.
           </p>
-          <ul class="bi-medidos" role="list" aria-label="Os dois gates que a ROI Labs mede">
-            <li class="bi-medido">
-              <span class="bi-medido__num" aria-hidden="true">01</span>
-              <b>Demanda comprovada <small>Nós medimos</small></b>
-              <span>Busca real pelo seu nicho, medida no Keyword Planner do Google.</span>
-            </li>
-            <li class="bi-medido">
-              <span class="bi-medido__num" aria-hidden="true">02</span>
-              <b>Brecha na busca <small>Nós medimos</small></b>
-              <span>No Google, só aparecem marketplaces genéricos. Espaço pra dominar.</span>
-            </li>
-          </ul>
-          <a class="bi-simular" href="/simulador/">Quanto sobra pra você? Simule sua receita →</a>
         </div>
 
-        <div class="bi-teste" data-teste>
-          <div class="bi-teste__topo">
-            <span class="bi-teste__rot">Gate 03 · Você</span>
-            <span class="bi-teste__passo" data-passo>Fornecedor de ponta</span>
-          </div>
-          <div class="bi-teste__barras" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
-
-          <div data-estatico>
-            <p class="bi-teste__titulo">O produto e a logística que a demanda exige. A cadeira pede quatro pontos:</p>
-            <ul class="bi-teste__lista" role="list">
-              <li>Tem catálogo próprio e amplo no seu nicho.</li>
-              <li>Aguenta estoque e despacho rápido, pronta-entrega de verdade.</li>
-              <li>Produto forte, presença online fraca, e quer escalar.</li>
-              <li>Topa exclusividade de cadeira atrelada a SLA.</li>
+        <!-- Duas divisões (28/09/2026): clientes e ROI Labs. O script ao vivo abaixo casa cada card
+             com a linha do banco por `data-site` (siteUrl) e, sem site no banco, por `data-nicho` —
+             NÃO por posição: a ordem das divisões não é a ordem (`ordem`) do banco. -->
+        {divisoesDoMapa.map((d) => (
+          <Fragment>
+            <h3 class="map__subtitle">{d.titulo}</h3>
+            <p class="map__sublead">{d.lead}</p>
+            <ul class="map__grid map__grid--software" role="list">
+              {d.cards.map((c) => (
+                <li
+                  class={`seat ${aceitaCandidatura(c) ? 'seat--open' : ''} ${ocupada(c) ? 'seat--taken' : ''}`}
+                  data-site={c.siteUrl}
+                  data-nicho={c.niche}
+                >
+                  {c.siteUrl ? (
+                    <a class="seat__niche" href={c.siteUrl} target="_blank" rel="noopener">{c.niche} ↗</a>
+                  ) : (
+                    <span class="seat__niche">{c.niche}</span>
+                  )}
+                  <span class="seat__status">
+                    <span class="seat__ring" aria-hidden="true"></span>
+                    {' '}{ESTADO[c.estado] ?? c.estado}{c.nome ? ` · ${c.nome}` : ''}{c.rotulo === 'casa' ? ' · Da casa' : ''}
+                  </span>
+                </li>
+              ))}
             </ul>
-            <p class="bi-teste__nao">
-              <b>Não é pra você se:</b> revende sem catálogo ou marca próprios · não consegue acompanhar um
-              salto de demanda · procura agência de mídia paga com fee mensal · não quer compromisso de exclusividade.
-            </p>
-            <div class="bi-teste__respostas"><a class="btn btn--primary" href="#candidatar">Aplicar para a cadeira</a></div>
-          </div>
-
-          <div data-vivo hidden>
-            <div data-fluxo>
-              <p class="bi-teste__pergunta" data-pergunta aria-live="polite"></p>
-              <div class="bi-teste__respostas">
-                <button class="btn btn--primary" type="button" data-r="sim">Sim</button>
-                <button class="btn bi-btn-escuro" type="button" data-r="nao">Ainda não</button>
-              </div>
-            </div>
-
-            <div data-ok hidden>
-              <p class="bi-teste__titulo" tabindex="-1">Gate 03 aceso. <em>A cadeira do seu nicho pode ser sua.</em></p>
-              <p class="bi-teste__texto">Você marcou os quatro pontos que a cadeira pede. O próximo passo é a curadoria olhar o seu nicho.</p>
-              <div class="bi-teste__respostas">
-                <a class="btn btn--primary" href="#candidatar">Aplicar para a cadeira</a>
-                <button class="bi-teste__refazer" type="button" data-refazer>Refazer o teste</button>
-              </div>
-            </div>
-
-            <div data-talvez hidden>
-              <p class="bi-teste__titulo" tabindex="-1">Pode não ser a hora ainda.</p>
-              <p class="bi-teste__texto">A cadeira pede os quatro pontos, e ficou em aberto: <b data-aberto></b></p>
-              <div class="bi-teste__respostas">
-                <a class="btn btn--whats" href={whatsTeste} target="_blank" rel="noopener">Conversar mesmo assim</a>
-                <button class="bi-teste__refazer" type="button" data-refazer>Refazer o teste</button>
-              </div>
-            </div>
-
-            <p class="bi-teste__nota">
-              Quatro perguntas, 30 segundos. As respostas não vão para nenhum formulário: servem só para você saber
-              se a cadeira combina com o seu negócio.
-            </p>
-          </div>
-
-        </div>
+          </Fragment>
+        ))}
+        <p class="map__caption">
+          Seu nicho não está no mapa? Então a cadeira dele está livre.
+          <a href="#candidatar">Candidate-se →</a>
+        </p>
       </div>
     </section>
+
+    <script is:inline>
+      // Mapa de cadeiras AO VIVO: busca o DB no navegador e sobrescreve o skeleton estático.
+      // Casa card com linha por `siteUrl` (data-site) e, para a linha sem site no banco (a de
+      // fitas adesivas, que nasceu no SEED de nicho), por `niche` (data-nicho). Até 28/09 casava
+      // por ÍNDICE; com as divisões clientes/ROI Labs a ordem do documento deixou de ser a do
+      // banco. Card sem par no banco (cadeira nova antes do seed, rótulo editado no /admin)
+      // mantém o texto do skeleton: degrada limpo em vez de receber o dado do vizinho.
+      // Falhou o fetch? mantém o skeleton inteiro.
+      //
+      // 012/T057b: o laço ATUALIZA, nunca cria <li>. Criar aqui duplicaria os cards que o
+      // skeleton já desenhou.
+      var ESTADO = { 'ocupada-vendavel': 'No ar', 'em-preparacao': 'Em preparação' };
+      var chave = function (u) { return String(u || '').toLowerCase().replace(/\/+$/, ''); };
+      fetch('https://app.roilabs.com.br/api/cadeiras')
+        .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
+        .then((cadeiras) => {
+          var porSite = {};
+          var porNicho = {};
+          cadeiras.forEach((s) => {
+            if (s.siteUrl) porSite[chave(s.siteUrl)] = s;
+            if (s.niche) porNicho[s.niche] = s;
+          });
+          document.querySelectorAll('#cadeiras .map__grid .seat').forEach((li) => {
+            const s = porSite[chave(li.dataset.site)] || porNicho[li.dataset.nicho];
+            if (!s) return;
+            // 012 FR-020: cadeira OCUPADA não é oferecida para candidatura. `s.open` sozinho
+            // não basta — a API resolve as duas condições em `aceitaCandidatura`.
+            li.classList.toggle('seat--open', !!s.aceitaCandidatura);
+            li.classList.toggle('seat--taken', String(s.estado || '').indexOf('ocupada') === 0);
+            const st = li.querySelector('.seat__status');
+            if (!st) return;
+            st.textContent = '';
+            const ring = document.createElement('span');
+            ring.className = 'seat__ring';
+            ring.setAttribute('aria-hidden', 'true');
+            st.appendChild(ring);
+            // Legenda `estado · nome`, e o selo "Da casa" SÓ quando `rotulo === 'casa'`.
+            // O nome sai do `status` do /admin ("Ocupada · Polaris IA"), o mesmo lugar de onde o
+            // skeleton o extrai; mudar um sem o outro faz a legenda piscar.
+            // ⚠️ FR-010a: `rotulo`, NUNCA `daCasa`.
+            const nome = String(s.status || '').split('·').pop().trim();
+            const texto = (ESTADO[s.estado] || s.estado) + (nome ? ' · ' + nome : '') + (s.rotulo === 'casa' ? ' · Da casa' : '');
+            st.appendChild(document.createTextNode(' ' + texto));
+
+            // O rótulo do nicho MUDA, e quem manda é o banco: sem isto, um rótulo editado no
+            // /admin ficaria invisível até o próximo deploy.
+            const alvo = li.querySelector('.seat__niche');
+            if (alvo && s.niche) alvo.textContent = alvo.tagName === 'A' ? s.niche + ' ↗' : s.niche;
+          });
+        })
+        .catch(() => {});
+    </script>
 
     <!-- FAQ -->
     <section class="section section--dark" id="faq" aria-labelledby="faq-title">
@@ -687,9 +732,11 @@ const jsonLdNodes = [
           <details class="faq__item">
             <summary>Quanto tempo até as vendas?</summary>
             <p class="faq__a">
-              SEO orgânico maduro leva de 3 a 6 meses — a travessia do deserto.
-              Por isso a exclusividade e a transparência: você sabe exatamente em
-              que fase está, sem promessa de resultado da noite pro dia.
+              Na TapePro, a primeira venda saiu 47 dias depois do contrato: um
+              pedido de orçamento pelo WhatsApp do site, atendido pela nossa equipe
+              até fechar. É um caso, não uma promessa. O prazo depende da demanda do
+              nicho, medida antes de a cadeira abrir, e o tráfego orgânico segue
+              crescendo por meses depois do go-live. Você acompanha cada fase.
             </p>
           </details>
         </div>
