@@ -24,7 +24,9 @@ export async function GET(req: NextRequest) {
       origem: r.origem,
       // 012: negócio de webhook não tem pedido — `pedido` é null. Rótulo da origem em vez
       // de string vazia: linha sem identificação nenhuma na tela é pior que sem pedido.
-      pedidoNome: r.pedido?.nome ?? (r.origem === 'webhook' ? 'Venda no gateway do parceiro' : '—'),
+      pedidoNome:
+        r.pedido?.nome ??
+        (r.origem === 'webhook' ? 'Venda no gateway do parceiro' : r.origem === 'manual' ? 'Venda registrada à mão' : '—'),
       pedidoWhatsapp: r.pedido?.whatsapp ?? '',
       parceiroId: r.parceiroId,
       valor: Number(r.valor),

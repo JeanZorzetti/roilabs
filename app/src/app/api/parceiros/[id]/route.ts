@@ -7,7 +7,17 @@ export const dynamic = 'force-dynamic';
 
 const ESTAGIOS = ['sondagem', 'ativa', 'riscada', 'pausada'];
 
-// PATCH — edita dados/estágio/taxas de um parceiro. `ativa` exige as duas taxas + cpfCnpj (010).
+// Clientes negociados antes da tabela da cadeira (Jean, 30/09/2026) podem ficar `ativa` sem CNPJ.
+// Só este PATCH relaxa: api/faturas continua exigindo cpfCnpj, então sem CNPJ não sai cobrança.
+// Chave = siteUrl da cadeira, nunca o nome do parceiro (rótulo muda, URL identifica).
+const ATIVA_SEM_CNPJ = new Set([
+  'https://autogestor.roilabs.com.br/',
+  'https://coopluz.roilabs.com.br/',
+  'https://viagens.roilabs.com.br/',
+]);
+
+// PATCH — edita dados/estágio/taxas de um parceiro. `ativa` exige as duas taxas + cpfCnpj (010),
+// salvo as cadeiras de ATIVA_SEM_CNPJ.
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   if (!(await isAuthed())) return NextResponse.json({ ok: false }, { status: 401 });
   const { id } = await params;
@@ -41,7 +51,18 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   const proximaAquisicao = data.comissaoAquisicao !== undefined ? data.comissaoAquisicao : existing.comissaoAquisicao;
   const proximaRecorrencia = data.comissaoRecorrencia !== undefined ? data.comissaoRecorrencia : existing.comissaoRecorrencia;
   const proximoCpfCnpj = body.cpfCnpj !== undefined ? body.cpfCnpj || null : existing.cpfCnpj;
-  if (proximoEstagio === 'ativa' && (proximaAquisicao === null || proximaRecorrencia === null || !proximoCpfCnpj)) {
+  let dispensaCnpj = false;
+  if (proximoEstagio === 'ativa' && !proximoCpfCnpj) {
+    const cadeiraId = typeof body.cadeiraId === 'string' && body.cadeiraId ? body.cadeiraId : existing.cadeiraId;
+    const cadeira = cadeiraId
+      ? await prisma.cadeira.findUnique({ where: { id: cadeiraId }, select: { siteUrl: true } })
+      : null;
+    dispensaCnpj = ATIVA_SEM_CNPJ.has(cadeira?.siteUrl ?? '');
+  }
+  if (
+    proximoEstagio === 'ativa' &&
+    (proximaAquisicao === null || proximaRecorrencia === null || (!proximoCpfCnpj && !dispensaCnpj))
+  ) {
     return NextResponse.json(
       { ok: false, motivo: 'estágio ativa exige comissaoAquisicao, comissaoRecorrencia e cpfCnpj' },
       { status: 400 },

@@ -23,6 +23,13 @@ assert.equal(ok({ origem: 'webhook', pedidoId: null, vendaId: null }), false);
 assert.equal(ok({ origem: 'pedido', pedidoId: null, vendaId: 'vnd_1' }), false);
 assert.equal(ok({ origem: 'webhook', pedidoId: 'ped_1', vendaId: null }), false);
 
+// ── 'manual': venda fechada fora do carrinho e do gateway (orçamento no WhatsApp) ──
+// Carrega a prova numa VendaParceiro (gateway='manual'), então segue a regra do webhook.
+assert.equal(ok({ origem: 'manual', pedidoId: null, vendaId: 'vnd_1' }), true);
+assert.equal(ok({ origem: 'manual', pedidoId: null, vendaId: null }), false);
+assert.equal(ok({ origem: 'manual', pedidoId: 'ped_1', vendaId: null }), false);
+assert.equal(ok({ origem: 'manual', pedidoId: 'ped_1', vendaId: 'vnd_1' }), false);
+
 // ── origem fora do domínio ────────────────────────────────────────────────────
 assert.equal(ok({ origem: '', pedidoId: 'ped_1', vendaId: null }), false);
 assert.equal(ok({ origem: 'legado', pedidoId: 'ped_1', vendaId: null }), false);
