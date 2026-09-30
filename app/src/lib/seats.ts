@@ -105,6 +105,12 @@ export const PROJETOS_CADEIRA = [
   { slug: 'autogestor', grupo: 'cliente', niche: 'Seguros, crédito e veículos', status: 'Ocupada · Autogestor', estado: 'ocupada-vendavel', gateway: null, daCasa: false, exibirDaCasa: false, siteUrl: 'https://autogestor.roilabs.com.br/', repoUrl: 'https://github.com/JeanZorzetti/autogestor' },
   { slug: 'coopluz', grupo: 'cliente', niche: 'Desconto na conta de luz', status: 'Ocupada · Coopluz', estado: 'ocupada-vendavel', gateway: null, daCasa: false, exibirDaCasa: false, siteUrl: 'https://coopluz.roilabs.com.br/', repoUrl: 'https://github.com/JeanZorzetti/coopluz' },
   { slug: 'viagens', grupo: 'cliente', niche: 'Passagens e pacotes de viagem', status: 'Ocupada · Autogestor Viagens', estado: 'ocupada-vendavel', gateway: null, daCasa: false, exibirDaCasa: false, siteUrl: 'https://viagens.roilabs.com.br/', repoUrl: 'https://github.com/JeanZorzetti/autogestor_viagens' },
+  // ── Nova em 30/09/2026 (Maria) ──────────────────────────────────────────────
+  // nimblabs: laboratório de software da casa (ReviewShield, Context Keeper, AI Aftercare
+  // Generator), rótulo tirado do que o site diz de si ("Independent Software Lab"). Divisão
+  // 'roilabs'. daCasa fail-closed (repo da própria conta); exibirDaCasa fica false porque a lista
+  // de exibidas como da casa é decisão de negócio (FR-010a), e ela não pediu o selo.
+  { slug: 'nimblabs', niche: 'Laboratório de software', status: 'Ocupada · nimblabs', estado: 'ocupada-vendavel', gateway: null, daCasa: true, exibirDaCasa: false, siteUrl: 'https://nimblabs.com/', repoUrl: 'https://github.com/JeanZorzetti/nimblabs' },
 ] as const;
 
 /** Divisão do mapa da home em que a cadeira de projeto aparece. Sem `grupo` no seed = 'roilabs'. */

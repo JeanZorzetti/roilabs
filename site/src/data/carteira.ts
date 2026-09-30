@@ -90,5 +90,13 @@ export const carteira: {
     "nome": "Autogestor Viagens",
     "siteUrl": "https://viagens.roilabs.com.br/",
     "grupo": "cliente"
+  },
+  {
+    "niche": "Laboratório de software",
+    "estado": "ocupada-vendavel",
+    "rotulo": "parceiro",
+    "nome": "nimblabs",
+    "siteUrl": "https://nimblabs.com/",
+    "grupo": "roilabs"
   }
 ];
