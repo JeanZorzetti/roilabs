@@ -1,6 +1,6 @@
 ---
 tipo: análise
-status: diagnóstico (modo a decidir pelo Jean)
+status: recomendação (melhorar agora; reposicionar só se C2 confirmar em 31/10)
 data: 2026-09-30
 dono: Jean
 ---
@@ -183,3 +183,55 @@ texto precisa continuar verdadeiro com a anuidade:
 com contrato em 01/09/2026. A comissão foi negociada antes da tabela: Coopluz 50% na 1ª compra e 2% na recompra;
 Autogestor e Autogestor Viagens 15%/10%. Os três estão `ativa` **sem CNPJ**, por exceção nomeada no PATCH de
 `api/parceiros/[id]` (commit `0093ed7`). A emissão de fatura (`api/faturas`) continua exigindo CNPJ: sem ele não sai cobrança.
+
+## 9. Diagnóstico final e recomendação (30/09/2026)
+
+### Diagnóstico em 5 frases
+1. **A cadeira entrega.** O site da TapePro gerou 3 contatos pelo botão de WhatsApp, e a equipe fechou 2 vendas em 47 dias (E10).
+2. **A ROI Labs não recebe.** Receita = R$ 0. As vendas acontecem no WhatsApp, e até hoje o `/app` só registrava venda de
+   carrinho ou de gateway. Os 3 parceiros novos não têm CNPJ, então não dá para faturar deles. A parte variável do modelo não tinha por onde entrar.
+3. **Ninguém pagou pela cadeira.** Os 4 clientes entraram com anuidade zero (E11). O preço público de R$ 3.960 não tem
+   aceite, e a única proposta a preço pago saiu a R$ 1.320 (E3).
+4. **O site não é canal de aquisição; é a página que o prospect abordado lê.** São 0 candidatura real e 85 de 91 impressões
+   buscando a marca (E1, E4). Esse leitor já sabe que a ROI Labs existe e precisa de **prova e diferença**.
+5. **O site descreve um comprador que quase não assina.** O teste dos 3 gates pede estoque, despacho e pronta-entrega. De 5
+   negócios reais, 4 são **serviço**: Autogestor (seguros e crédito), Coopluz (conta de luz), Autogestor Viagens e a
+   proposta de cursos. Só a TapePro tem estoque. O filtro escrito reprova quem de fato fecha.
+
+### Recomendação: MELHORAR agora. Reposicionar não, ainda
+
+- **Por que não reposicionar agora:** as duas posições candidatas, (a) contra o marketplace e (b) contra o representante,
+  não têm nenhuma evidência declarada do **fornecedor** (seção 3). E10 é evidência do comprador de fita. A regra da skill é
+  que a posição nova também precisa de demanda comprovada. Além disso, o site não recebe o comprador (E1, E4), então uma
+  posição nova publicada nele não seria testada por ninguém.
+- **Por que melhorar:** cada item abaixo tem evidência revelada e mexe na equação de valor (probabilidade, tempo e risco)
+  para o leitor que o site realmente tem. Nenhum deles troca o quadro de referência, então quando C2 decidir a
+  reposição, ela será **a única peça** que muda.
+
+| Ordem | Melhoria | Evidência | Alavanca | Custo |
+|---|---|---|---|---|
+| 0 | **Piso do dinheiro: registrar venda manual pelo `/admin`** (hoje só por script) **e emitir a 1ª fatura da TapePro** (R$ 119,64). A fatura paga é a primeira evidência de nível 1 de que o fornecedor paga o success fee, e é o desejo do modelo inteiro | E10, E2 · os 2 negócios `manual` de 30/09 | dinheiro (piso) | form no `/admin`; fatura = 1 clique |
+| 1 | **Prova na home:** o caso TapePro (3 contatos → 2 vendas, 1ª em 47 dias), **com autorização da TapePro**, ao lado ou no lugar do readout da Use Aligner, que é da casa | E10 · Use Aligner `daCasa: true` | probabilidade | copy + 1 bloco |
+| 2 | **FAQ do prazo:** trocar a espera genérica de "3–6 meses" pelo caso real, dito como caso e não como promessa | E10 | tempo | 1 parágrafo |
+| 3 | **Gates do comprador:** tirar estoque, despacho e pronta-entrega como condição. Pedir capacidade de **atender** o volume, seja produto ou serviço | 4 de 5 negócios são serviço | remove o filtro que reprova o comprador real | teste de 4 perguntas + FAQ "Preciso de quanto estoque?" |
+| 4 | **Ordem da home:** subir "site + equipe que atende e fecha no WhatsApp"; descer SEO programático, "centenas de páginas" e mapa/exclusividade, sem apagar | E5 (mecanismo sem busca) · E10 (fechamento humano: 2 de 3; carrinho: 0) | probabilidade, e para de liderar com "melhores × não desejado" | reordenar seções |
+| 5 | **Medição:** a página de origem na mensagem pronta do botão de WhatsApp da TapePro; e a tabela das 10 conversas de outbound (C2) | E10 (origem do visitante não medida) | é o que decide C2 e a próxima rodada | 1 linha por botão + 1 nota |
+| — | **Preço: congelado até C1 (14/10).** Não subir nem baixar o público. Mudança de anuidade, renovação ou garantia passa antes pela `saas-legal` | E3, E11 | risco | zero |
+
+**Promessa para a `conversion-copy`** (melhoria, mesmo quadro de hoje). Só com a autorização da TapePro, e o número é de um caso só:
+
+> "A ROI Labs constrói o seu site de vendas, e a nossa equipe atende o cliente no WhatsApp até fechar. O primeiro fornecedor vendeu em 47 dias."
+
+### Quando reposicionar
+Em **31/10**, com C2. Se 5 ou mais de 10 fornecedores abordados citarem **marketplace ou taxa**, o quadro vira (a); se
+citarem **vendedor ou representante**, vira (b). Com a melhoria 4 já no ar, (b) exige pouca reescrita. Sem maioria, o
+quadro fica como está e a próxima leitura é com 10 conversas a mais.
+
+### Critérios desta recomendação
+
+| # | Número | Fonte | Até |
+|---|---|---|---|
+| C0 | 1ª fatura da TapePro **emitida e paga** (R$ 119,64). Paga: o fornecedor aceita o success fee (nível 1). Recusada ou atrasada: registrar o motivo (nível 3) | `faturas_success_fee.status` + Asaas | emitida até 05/10; paga até 15/10 |
+| C1 | contrato da proposta de 29/09 aceito | `contratos_cadeira.aceito_em` | 14/10 |
+| C2 | 10 conversas de outbound anotadas; maioria define (a) × (b) | tabela em `10-mercado/` | 31/10 |
+| C5 | com as melhorias 1–4 no ar, nas próximas propostas: o prospect leu o site antes? citou o caso? A proposta foi aceita? | anotação por proposta | contínuo |
