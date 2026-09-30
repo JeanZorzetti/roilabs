@@ -383,7 +383,7 @@ const jsonLdNodes = [
       keepalive: true,
     }).catch(() => {});
     (window as any).himetrica?.track('comparador_lead', { produtos: atuais.map((p) => p.slug).join(',') });
-    leadMsg.textContent = 'Recebido! Nosso especialista te chama em até 24h úteis.';
+    leadMsg.textContent = 'Recebido! Nosso especialista te chama em horário comercial.';
     (leadForm.querySelector('.calc-lead__row') as HTMLElement).hidden = true;
     (leadForm.querySelector('.calc-lead__consent') as HTMLElement).hidden = true;
   });
