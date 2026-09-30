@@ -28,3 +28,7 @@ decida e registre. Começou com a spec 017 (Projeção).
 | Contrato de cadeira | "Contrato de parceria — cadeira de {nicho}", selo "Cadeira" na lista | termo, acordo, contrato de serviço | `/admin/contratos`, página pública `/c/<slug>` |
 | Aceitar o contrato | CTA único do aceite; estado "Aceito em dd/mm/aaaa às hh:mm por {nome}" | assinar, confirmar, concordar | `/c/<slug>`, cartões da proposta e do contrato |
 | Não envie ainda | "Não envie ainda: N pendências travam o aceite" (contrato com "[a preencher]") | incompleto, rascunho, erro | cartões da proposta e do contrato |
+| Venda | "Vendas" (menu), "Registrar venda", "Nenhuma venda registrada ainda." | negócio, negócio originado, deal (na interface; no banco é `NegocioOriginado`) | `/admin/vendas` |
+| Comissão | "Comissão", "Faturas de comissão", "a faturar" | success fee, fee (no admin) | `/admin/vendas` |
+| Gerar fatura | "Gerar fatura de R$ X" (o valor no botão, confirmação antes de cobrar no Asaas) | emitir cobrança, faturar (como botão) | `/admin/vendas` |
+| Nº do orçamento | "Nº do orçamento" = o número **no sistema do parceiro** (ex.: 0446 da TapePro) | pedido, ID; não confundir com a Proposta de cadeira, que nunca se chama orçamento | formulário de venda fechada fora do site |

@@ -155,6 +155,8 @@ a { color: inherit; }
   padding: 0.4rem 0.55rem; border-radius: 7px; border: 1px solid var(--l-line); background: #fff; color: var(--l-text);
 }
 .cc-field input:focus, .cc-field select:focus { border-color: var(--hivis); }
+/* Teclado: anel visível além da borda (a troca de cor sozinha não chega a 3:1 contra o fundo). */
+.cc-field input:focus-visible, .cc-field select:focus-visible { outline: 2px solid var(--hivis); outline-offset: 1px; }
 .cc-field input[type="date"] { width: 130px; }
 .cc-field--check { flex-direction: row; align-items: center; gap: 0.4rem; }
 .cc-field--check input { width: auto; }
