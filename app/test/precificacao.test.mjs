@@ -100,6 +100,8 @@ const nicho = (id) => NICHOS_PERCENTUAIS.find((n) => n.id === id);
   assert.equal(id('Ortodontia / Alinhadores'), 'saude');
   assert.equal(id('Moda social masculina'), 'moda');
   assert.equal(id('Cursos e formação profissional'), 'cursos');
+  assert.equal(id('Escritório de advocacia'), 'advocacia', 'advocacia vem antes de papelaria, que casa com "escritório"');
+  assert.equal(id('Direito empresarial'), 'advocacia');
   assert.equal(id('Revestimentos / Porcelanato'), 'construcao');
   assert.equal(id('ERP / Gestão empresarial'), 'saas');
   assert.equal(id('Orquestração de agentes IA'), null);

@@ -104,6 +104,13 @@ export const NICHOS: NichoPreco[] = [
     confianca: 'baixa', radicais: ['suplement', 'nutricao', 'whey', 'vitamina'],
   },
   {
+    id: 'advocacia', faixa: 'padrao', nicho: 'Advocacia (escritórios)', ...pct(0.15, 0.1),
+    regra: 'Percentual sobre os honorários do cliente trazido. Risco: o Estatuto da OAB (art. 34, III) proíbe o advogado de dividir honorários com quem capta cliente. Checar com um advogado antes de fechar.',
+    porque: 'Sem pesquisa de mercado: 15% / 10% decididos pela Maria em 02/10/2026. No Brasil ninguém cobra abertamente percentual de advogado, justamente por causa da OAB.',
+    confianca: 'baixa', radicais: ['advoga', 'advocac', 'juridic', 'direito'],
+    cadeira: 'servico', // quem fecha o contrato de honorários é o advogado
+  },
+  {
     id: 'casa', faixa: 'intermediaria', nicho: 'Casa, móveis, decoração e cama-mesa-banho', ...pct(0.12, 0.08),
     regra: 'Decoração leve com margem de 45% ou mais: 15% / 10%.',
     porque: 'O varejo do setor tem margem de 41% a 44%, mas o frete de móveis consome cerca de 8% do valor. Pouca gente recompra. A Amazon cobra 15% até R$ 200 e 10% no que passar.',

@@ -227,7 +227,30 @@ const CURSOS: Degrau[] = [
   },
 ];
 
-const DEGRAUS_ESPECIAIS: Record<string, Degrau[]> = { saas: SAAS, clinicas: CLINICA, cursos: CURSOS };
+// Advocacia (02/10/2026): a Prax não tem linha de serviço, e o contrato de honorários fecha na conversa com o
+// advogado. Só o 1º degrau tem fonte; o 2º é premissa declarada, como em cursos.
+const ADVOCACIA: Degrau[] = [
+  {
+    de: 'visita',
+    para: 'contato (formulário ou WhatsApp)',
+    taxa: cenarios(0.0445),
+    fonte: 'Leadster, Panorama de Geração de Leads no Brasil 2025 · Jurídico',
+    data: '2025',
+    confianca: 'media',
+    premissa: 'Conservador e otimista = base × 0,7 e × 1,3.',
+  },
+  {
+    de: 'contato',
+    para: 'contrato de honorários',
+    taxa: { conservador: 0.18, base: 0.25, otimista: 0.35 },
+    fonte: 'Sem estudo de fechamento em advocacia: usa a faixa de contato → agendamento da clínica (18% a 35%, relato de fornecedores de software para clínica)',
+    data: '2026',
+    confianca: 'baixa',
+    premissa: 'Fechar contrato pede mais do que marcar consulta: o número real tende a ficar abaixo. Troque pela taxa do escritório assim que ele tiver a dele.',
+  },
+];
+
+const DEGRAUS_ESPECIAIS: Record<string, Degrau[]> = { saas: SAAS, clinicas: CLINICA, cursos: CURSOS, advocacia: ADVOCACIA };
 
 export const FUNIS: Record<string, FunilNicho> = Object.fromEntries(
   NICHOS.map((n) => [
