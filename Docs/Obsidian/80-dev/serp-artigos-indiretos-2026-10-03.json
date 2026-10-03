@@ -1,0 +1,2870 @@
+{
+ "data": "2026-10-03",
+ "motivo": "SERP dos 3 artigos indiretos do roilabs.com.br",
+ "termos": [
+  "taxa do mercado livre",
+  "quanto o mercado livre cobra por venda",
+  "taxa shopee",
+  "terceirização de vendas"
+ ],
+ "respostas": [
+  {
+   "version": "0.1.20260917",
+   "status_code": 20000,
+   "status_message": "Ok.",
+   "time": "6.0647 sec.",
+   "cost": 0.002,
+   "tasks_count": 4,
+   "tasks_error": 3,
+   "tasks": [
+    {
+     "id": "10031441-1993-0139-0000-3eb7c790be68",
+     "status_code": 20000,
+     "status_message": "Ok.",
+     "time": "5.9092 sec.",
+     "cost": 0.002,
+     "result_count": 1,
+     "path": [
+      "v3",
+      "serp",
+      "google",
+      "organic",
+      "live",
+      "advanced"
+     ],
+     "data": {
+      "api": "serp",
+      "function": "live",
+      "se": "google",
+      "se_type": "organic",
+      "keyword": "taxa do mercado livre",
+      "location_name": "Brazil",
+      "language_code": "pt",
+      "device": "desktop",
+      "depth": 10,
+      "os": "windows"
+     },
+     "result": [
+      {
+       "keyword": "taxa do mercado livre",
+       "type": "organic",
+       "se_domain": "google.com",
+       "location_code": 2076,
+       "language_code": "pt",
+       "check_url": "https://www.google.com/search?q=taxa%20do%20mercado%20livre&hl=pt&gl=BR&ie=UTF-8&uule=w+CAIQIFISCc8ozOvHWZwAEWM-KfIGFVop",
+       "datetime": "2026-10-03 14:41:38 +00:00",
+       "spell": null,
+       "refinement_chips": null,
+       "item_types": [
+        "ai_overview",
+        "video",
+        "people_also_ask",
+        "organic",
+        "images",
+        "related_searches"
+       ],
+       "se_results_count": 164,
+       "pages_count": 1,
+       "items_count": 12,
+       "items": [
+        {
+         "type": "ai_overview",
+         "rank_group": 1,
+         "rank_absolute": 1,
+         "page": 1,
+         "position": "left",
+         "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]",
+         "asynchronous_ai_overview": false,
+         "markdown": "As taxas para vender no Mercado Livre `variam conforme o tipo de anúncio (Clássico ou Premium) e o preço do produto`.[[1]](https://www.youtube.com/watch?v=Rj4rAuce0M0&t=25)\n\nVocê pode conferir todos os detalhes e regras na página oficial sobre [como funcionam as taxas do Mercado Livre](https://vendedores.mercadolivre.com.br/nota/como-funcionam-as-taxas-do-mercado-livre).[[1]](https://vendedores.mercadolivre.com.br/nota/como-funcionam-as-taxas-do-mercado-livre)\n\n### Tipos de Anúncio e Comissões\n\n- **Anúncio Clássico:** A comissão varia de **10% a 14%** sobre o valor da venda. Não oferece parcelamento sem juros para o comprador.[[1]](https://vendedores.mercadolivre.com.br/nota/como-funcionam-as-taxas-do-mercado-livre)\n- **Anúncio Premium:** A comissão varia de **15% a 19%** sobre o valor da venda. Oferece maior visibilidade e parcelamento em até 12 vezes sem juros.[[1]](https://www.youtube.com/watch?v=Rj4rAuce0M0&t=25)\n\n### Custos Fixos por Faixa de Preço\n\nPara produtos com preço **abaixo de R$ 79,00** , há incidência de custo por unidade vendida:[[1]](https://blog.ecommercepuro.com.br/quanto-custa-vender-no-mercado-livre-3/)\n\n- **Abaixo de R$ 12,50:** Custo fixo de R$ 0,50 mais a porcentagem da categoria.[[1]](https://www.youtube.com/watch?v=Rj4rAuce0M0&t=25)\n- **De R$ 12,50 a R$ 29,00:** Custo fixo de R$ 6,25.[[1]](https://www.qualic.com.br/quanto-custa-vender-no-mercado-livre-entenda-todas-as-taxas/)\n- **De R$ 29,00 a R$ 50,00:** Custo fixo de R$ 6,50.[[1]](https://www.qualic.com.br/quanto-custa-vender-no-mercado-livre-entenda-todas-as-taxas/)\n- **De R$ 50,00 a R$ 79,00:** Custo fixo de R$ 6,75.[[1]](https://www.instagram.com/reel/DGEQzcpJfoP/)\n- **Acima de R$ 79,00:** Não há custo fixo por unidade, incidindo apenas a comissão da categoria.[[1]](https://blog.ecommercepuro.com.br/quanto-custa-vender-no-mercado-livre-3/)\n\nPara simular os custos exatos do seu item antes de anunciar, utilize o simulador de custos do Mercado Livre.[[1]](https://vendedores.mercadolivre.com.br/nota/como-usar-o-simulador-de-custos-do-mercado-livre)Se você quiser, me informe:\n\n- O **preço de venda** pretendido\n- A **categoria** do produto\n- Se prefere o anúncio **Clássico ou Premium** \n\nEu posso te ajudar a calcular uma estimativa de quanto você vai receber por venda.",
+         "items": [
+          {
+           "type": "ai_overview_element",
+           "position": "left",
+           "title": null,
+           "text": "As taxas para vender no Mercado Livre variam conforme o tipo de anúncio (Clássico ou Premium) e o preço do produto.",
+           "markdown": "As taxas para vender no Mercado Livre `variam conforme o tipo de anúncio (Clássico ou Premium) e o preço do produto`.[[1]](https://www.youtube.com/watch?v=Rj4rAuce0M0&t=25)",
+           "links": null,
+           "images": null,
+           "references": [
+            {
+             "type": "ai_overview_reference",
+             "position": "left",
+             "source": "YouTube",
+             "domain": "www.youtube.com",
+             "url": "https://www.youtube.com/watch?v=Rj4rAuce0M0&t=25",
+             "title": "Como funcionam as taxas do Mercado Livre?",
+             "text": "Como funcionam as taxas do Mercado Livre? entenda sobre as diferenças de tarifas entre os tipos de anúncio e categoria de produto ..."
+            }
+           ]
+          },
+          {
+           "type": "ai_overview_element",
+           "position": "left",
+           "title": null,
+           "text": "Você pode conferir todos os detalhes e regras na página oficial sobre como funcionam as taxas do Mercado Livre.",
+           "markdown": "Você pode conferir todos os detalhes e regras na página oficial sobre [como funcionam as taxas do Mercado Livre](https://vendedores.mercadolivre.com.br/nota/como-funcionam-as-taxas-do-mercado-livre).[[1]](https://vendedores.mercadolivre.com.br/nota/como-funcionam-as-taxas-do-mercado-livre)",
+           "links": [
+            {
+             "type": "link_element",
+             "title": "como funcionam as taxas do Mercado Livre",
+             "description": null,
+             "url": "https://vendedores.mercadolivre.com.br/nota/como-funcionam-as-taxas-do-mercado-livre",
+             "domain": "vendedores.mercadolivre.com.br"
+            }
+           ],
+           "images": null,
+           "references": [
+            {
+             "type": "ai_overview_reference",
+             "position": "left",
+             "source": "Mercado Livre",
+             "domain": "vendedores.mercadolivre.com.br",
+             "url": "https://vendedores.mercadolivre.com.br/nota/como-funcionam-as-taxas-do-mercado-livre",
+             "title": "Central de aprendizagem",
+             "text": "Mercado Livre sales fees: - Clássico listing: 10%-14% fee, no 12x interest-free installments. - Premium listing: 15%-19% fee, high..."
+            }
+           ]
+          },
+          {
+           "type": "ai_overview_element",
+           "position": "left",
+           "title": "Tipos de Anúncio e Comissões",
+           "text": "Anúncio Clássico: A comissão varia de 10% a 14% sobre o valor da venda. Não oferece parcelamento sem juros para o comprador. Anúncio Premium: A comissão varia de 15% a 19% sobre o valor da venda. Oferece maior visibilidade e parcelamento em até 12 vezes sem juros.",
+           "markdown": "- **Anúncio Clássico:** A comissão varia de **10% a 14%** sobre o valor da venda. Não oferece parcelamento sem juros para o comprador.[[1]](https://vendedores.mercadolivre.com.br/nota/como-funcionam-as-taxas-do-mercado-livre)\n- **Anúncio Premium:** A comissão varia de **15% a 19%** sobre o valor da venda. Oferece maior visibilidade e parcelamento em até 12 vezes sem juros.[[1]](https://www.youtube.com/watch?v=Rj4rAuce0M0&t=25)",
+           "links": null,
+           "images": null,
+           "references": [
+            {
+             "type": "ai_overview_reference",
+             "position": "left",
+             "source": "Mercado Livre",
+             "domain": "vendedores.mercadolivre.com.br",
+             "url": "https://vendedores.mercadolivre.com.br/nota/como-funcionam-as-taxas-do-mercado-livre",
+             "title": "Central de aprendizagem",
+             "text": "Mercado Livre sales fees: - Clássico listing: 10%-14% fee, no 12x interest-free installments. - Premium listing: 15%-19% fee, high..."
+            },
+            {
+             "type": "ai_overview_reference",
+             "position": "left",
+             "source": "YouTube",
+             "domain": "www.youtube.com",
+             "url": "https://www.youtube.com/watch?v=Rj4rAuce0M0&t=25",
+             "title": "Como funcionam as taxas do Mercado Livre?",
+             "text": "Como funcionam as taxas do Mercado Livre? entenda sobre as diferenças de tarifas entre os tipos de anúncio e categoria de produto ..."
+            }
+           ]
+          },
+          {
+           "type": "ai_overview_element",
+           "position": "left",
+           "title": "Custos Fixos por Faixa de Preço",
+           "text": "Para produtos com preço abaixo de R$ 79,00, há incidência de custo por unidade vendida :",
+           "markdown": "Para produtos com preço **abaixo de R$ 79,00** , há incidência de custo por unidade vendida:[[1]](https://blog.ecommercepuro.com.br/quanto-custa-vender-no-mercado-livre-3/)",
+           "links": null,
+           "images": null,
+           "references": [
+            {
+             "type": "ai_overview_reference",
+             "position": "left",
+             "source": "Ecommerce Puro",
+             "domain": "blog.ecommercepuro.com.br",
+             "url": "https://blog.ecommercepuro.com.br/quanto-custa-vender-no-mercado-livre-3/",
+             "title": "Taxas do Mercado Livre em 2026: Quanto custa vender?",
+             "text": "... o Mercado Livre cobrava uma taxa fixa tabelada por faixa de valor — algo em torno de R$ 6,00 a R$ 6,75 para produtos abaixo de..."
+            }
+           ]
+          },
+          {
+           "type": "ai_overview_element",
+           "position": "left",
+           "title": null,
+           "text": "Abaixo de R$ 12,50: Custo fixo de R$ 0,50 mais a porcentagem da categoria. De R$ 12,50 a R$ 29,00: Custo fixo de R$ 6,25. De R$ 29,00 a R$ 50,00: Custo fixo de R$ 6,50. De R$ 50,00 a R$ 79,00: Custo fixo de R$ 6,75. Acima de R$ 79,00: Não há custo fixo por unidade, incidindo apenas a comissão da categoria.",
+           "markdown": "- **Abaixo de R$ 12,50:** Custo fixo de R$ 0,50 mais a porcentagem da categoria.[[1]](https://www.youtube.com/watch?v=Rj4rAuce0M0&t=25)\n- **De R$ 12,50 a R$ 29,00:** Custo fixo de R$ 6,25.[[1]](https://www.qualic.com.br/quanto-custa-vender-no-mercado-livre-entenda-todas-as-taxas/)\n- **De R$ 29,00 a R$ 50,00:** Custo fixo de R$ 6,50.[[1]](https://www.qualic.com.br/quanto-custa-vender-no-mercado-livre-entenda-todas-as-taxas/)\n- **De R$ 50,00 a R$ 79,00:** Custo fixo de R$ 6,75.[[1]](https://www.instagram.com/reel/DGEQzcpJfoP/)\n- **Acima de R$ 79,00:** Não há custo fixo por unidade, incidindo apenas a comissão da categoria.[[1]](https://blog.ecommercepuro.com.br/quanto-custa-vender-no-mercado-livre-3/)",
+           "links": null,
+           "images": null,
+           "references": [
+            {
+             "type": "ai_overview_reference",
+             "position": "left",
+             "source": "YouTube",
+             "domain": "www.youtube.com",
+             "url": "https://www.youtube.com/watch?v=Rj4rAuce0M0&t=25",
+             "title": "Como funcionam as taxas do Mercado Livre?",
+             "text": "Como funcionam as taxas do Mercado Livre? entenda sobre as diferenças de tarifas entre os tipos de anúncio e categoria de produto ..."
+            },
+            {
+             "type": "ai_overview_reference",
+             "position": "left",
+             "source": "Qualic",
+             "domain": "www.qualic.com.br",
+             "url": "https://www.qualic.com.br/quanto-custa-vender-no-mercado-livre-entenda-todas-as-taxas/",
+             "title": "Quanto custa vender no Mercado Livre? Entenda todas as taxas",
+             "text": "Anúncio Premium. Os anúncios Premium são voltados para vendedores que buscam maior visibilidade e desejam oferecer parcelamento se..."
+            },
+            {
+             "type": "ai_overview_reference",
+             "position": "left",
+             "source": "Instagram",
+             "domain": "www.instagram.com",
+             "url": "https://www.instagram.com/reel/DGEQzcpJfoP/",
+             "title": "Essa pergunta eu recebo bastante: Quais são as taxas do Mercado Livre ...",
+             "text": "Essa pergunta eu recebo bastante: Quais são as taxas do Mercado Livre? 🧐 Vem cá que eu te explico na prática mesmo: ✅Clássico: En..."
+            },
+            {
+             "type": "ai_overview_reference",
+             "position": "left",
+             "source": "Ecommerce Puro",
+             "domain": "blog.ecommercepuro.com.br",
+             "url": "https://blog.ecommercepuro.com.br/quanto-custa-vender-no-mercado-livre-3/",
+             "title": "Taxas do Mercado Livre em 2026: Quanto custa vender?",
+             "text": "... o Mercado Livre cobrava uma taxa fixa tabelada por faixa de valor — algo em torno de R$ 6,00 a R$ 6,75 para produtos abaixo de..."
+            }
+           ]
+          },
+          {
+           "type": "ai_overview_element",
+           "position": "left",
+           "title": null,
+           "text": "Para simular os custos exatos do seu item antes de anunciar, utilize o simulador de custos do Mercado Livre.",
+           "markdown": "Para simular os custos exatos do seu item antes de anunciar, utilize o simulador de custos do Mercado Livre.[[1]](https://vendedores.mercadolivre.com.br/nota/como-usar-o-simulador-de-custos-do-mercado-livre)",
+           "links": null,
+           "images": null,
+           "references": [
+            {
+             "type": "ai_overview_reference",
+             "position": "left",
+             "source": "Mercado Livre",
+             "domain": "vendedores.mercadolivre.com.br",
+             "url": "https://vendedores.mercadolivre.com.br/nota/como-usar-o-simulador-de-custos-do-mercado-livre",
+             "title": "Como usar o simulador de custos do Mercado Livre",
+             "text": "Com o simulador de custos, é mais fácil calcular quanto você receberá por unidade vendida no Mercado Livre e/ou Mercado Shops, de ..."
+            }
+           ]
+          },
+          {
+           "type": "ai_overview_element",
+           "position": "left",
+           "title": null,
+           "text": "Se você quiser, me informe:O preço de venda pretendido\nA categoria do produto\nSe prefere o anúncio Clássico ou Premium\nEu posso te ajudar a calcular uma estimativa de quanto você vai receber por venda.",
+           "markdown": "Se você quiser, me informe:\n\n- O **preço de venda** pretendido\n- A **categoria** do produto\n- Se prefere o anúncio **Clássico ou Premium** \n\nEu posso te ajudar a calcular uma estimativa de quanto você vai receber por venda.",
+           "links": null,
+           "images": null,
+           "references": null
+          }
+         ],
+         "references": [
+          {
+           "type": "ai_overview_reference",
+           "position": "right",
+           "source": "Mercado Livre",
+           "domain": "vendedores.mercadolivre.com.br",
+           "url": "https://vendedores.mercadolivre.com.br/nota/como-funcionam-as-taxas-do-mercado-livre",
+           "title": "Central de aprendizagem",
+           "text": "Mercado Livre sales fees: - Clássico listing: 10%-14% fee, no 12x interest-free installments. - Premium listing: 15%-19% fee, high..."
+          },
+          {
+           "type": "ai_overview_reference",
+           "position": "right",
+           "source": "Mercado Livre",
+           "domain": "vendedores.mercadolivre.com.br",
+           "url": "https://vendedores.mercadolivre.com.br/nota/como-usar-o-simulador-de-custos-do-mercado-livre",
+           "title": "Como usar o simulador de custos do Mercado Livre",
+           "text": "Com o simulador de custos, é mais fácil calcular quanto você receberá por unidade vendida no Mercado Livre e/ou Mercado Shops, de ..."
+          },
+          {
+           "type": "ai_overview_reference",
+           "position": "right",
+           "source": "YouTube",
+           "domain": "www.youtube.com",
+           "url": "https://www.youtube.com/watch?v=Rj4rAuce0M0&t=25",
+           "title": "Como funcionam as taxas do Mercado Livre?",
+           "text": "Como funcionam as taxas do Mercado Livre? entenda sobre as diferenças de tarifas entre os tipos de anúncio e categoria de produto ..."
+          },
+          {
+           "type": "ai_overview_reference",
+           "position": "right",
+           "source": "Ecommerce Puro",
+           "domain": "blog.ecommercepuro.com.br",
+           "url": "https://blog.ecommercepuro.com.br/quanto-custa-vender-no-mercado-livre-3/",
+           "title": "Taxas do Mercado Livre em 2026: Quanto custa vender?",
+           "text": "... o Mercado Livre cobrava uma taxa fixa tabelada por faixa de valor — algo em torno de R$ 6,00 a R$ 6,75 para produtos abaixo de..."
+          },
+          {
+           "type": "ai_overview_reference",
+           "position": "right",
+           "source": "Instagram",
+           "domain": "www.instagram.com",
+           "url": "https://www.instagram.com/reel/DGEQzcpJfoP/",
+           "title": "Essa pergunta eu recebo bastante: Quais são as taxas do Mercado Livre ...",
+           "text": "Essa pergunta eu recebo bastante: Quais são as taxas do Mercado Livre? 🧐 Vem cá que eu te explico na prática mesmo: ✅Clássico: En..."
+          },
+          {
+           "type": "ai_overview_reference",
+           "position": "right",
+           "source": "Qualic",
+           "domain": "www.qualic.com.br",
+           "url": "https://www.qualic.com.br/quanto-custa-vender-no-mercado-livre-entenda-todas-as-taxas/",
+           "title": "Quanto custa vender no Mercado Livre? Entenda todas as taxas",
+           "text": "Anúncio Premium. Os anúncios Premium são voltados para vendedores que buscam maior visibilidade e desejam oferecer parcelamento se..."
+          }
+         ],
+         "rectangle": null
+        },
+        {
+         "type": "video",
+         "rank_group": 1,
+         "rank_absolute": 2,
+         "page": 1,
+         "position": "left",
+         "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[2]/div[1]/div[1]",
+         "items": [
+          {
+           "type": "video_element",
+           "source": "YouTube · Bruno Gontijo - Ecommerce / Onicanal",
+           "title": "Mercado Livre: New Selling Fees for August 2026",
+           "timestamp": null,
+           "url": "https://www.youtube.com/watch?v=KvVyJlYt6w0"
+          },
+          {
+           "type": "video_element",
+           "source": "YouTube · Universidade Ecommerce",
+           "title": "(NOVAS TAXAS 2026) Quanto Custa Vender no Mercado Livre",
+           "timestamp": "2026-02-23 00:00:00 +00:00",
+           "url": "https://www.youtube.com/watch?v=FudQ38uakn4"
+          },
+          {
+           "type": "video_element",
+           "source": "YouTube · Natan Aquino - Geração Ecommerce",
+           "title": "Quanto Custa Vender no Mercado Livre? Atualizado 2026",
+           "timestamp": "2026-05-28 00:00:00 +00:00",
+           "url": "https://www.youtube.com/watch?v=8dZiKLuJWXg"
+          },
+          {
+           "type": "video_element",
+           "source": "YouTube · Universidade Ecommerce",
+           "title": "Qual a EXATA Comissão para Vender no Mercado Livre POR ...",
+           "timestamp": "2026-02-25 00:00:00 +00:00",
+           "url": "https://www.youtube.com/watch?v=oq7r1bN_UTI"
+          }
+         ],
+         "rectangle": null
+        },
+        {
+         "type": "people_also_ask",
+         "rank_group": 1,
+         "rank_absolute": 3,
+         "page": 1,
+         "position": "left",
+         "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[2]/div[3]/div[1]/div[1]/div[1]",
+         "items": [
+          {
+           "type": "people_also_ask_element",
+           "title": "Quais são as mudanças no Mercado Livre em 2026?",
+           "seed_question": null,
+           "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[2]/div[3]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]",
+           "expanded_element": [
+            {
+             "type": "people_also_ask_ai_overview_expanded_element",
+             "items": null,
+             "references": null,
+             "asynchronous_ai_overview": true
+            }
+           ]
+          },
+          {
+           "type": "people_also_ask_element",
+           "title": "Qual a taxa que o Mercado Pago cobra do vendedor?",
+           "seed_question": null,
+           "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[2]/div[3]/div[1]/div[1]/div[1]/div[1]/div[2]/div[2]",
+           "expanded_element": [
+            {
+             "type": "people_also_ask_ai_overview_expanded_element",
+             "items": null,
+             "references": null,
+             "asynchronous_ai_overview": true
+            }
+           ]
+          },
+          {
+           "type": "people_also_ask_element",
+           "title": "Porque o prazo de entrega do Mercado Livre aumentou?",
+           "seed_question": null,
+           "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[2]/div[3]/div[1]/div[1]/div[1]/div[1]/div[2]/div[3]",
+           "expanded_element": [
+            {
+             "type": "people_also_ask_ai_overview_expanded_element",
+             "items": null,
+             "references": null,
+             "asynchronous_ai_overview": true
+            }
+           ]
+          },
+          {
+           "type": "people_also_ask_element",
+           "title": "Quais são as regras para vender no Mercado Livre?",
+           "seed_question": null,
+           "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[2]/div[3]/div[1]/div[1]/div[1]/div[1]/div[2]/div[4]",
+           "expanded_element": [
+            {
+             "type": "people_also_ask_ai_overview_expanded_element",
+             "items": null,
+             "references": null,
+             "asynchronous_ai_overview": true
+            }
+           ]
+          }
+         ],
+         "rectangle": null
+        },
+        {
+         "type": "organic",
+         "rank_group": 1,
+         "rank_absolute": 4,
+         "page": 1,
+         "position": "left",
+         "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[2]/div[4]/div[1]/div[1]/div[1]",
+         "domain": "www.youtube.com",
+         "title": "How Much Does it Cost to Sell on Mercado Libre in 2026 ...",
+         "url": "https://www.youtube.com/watch?v=EHxw8iegM18",
+         "cache_url": null,
+         "related_search_url": null,
+         "breadcrumb": "Mais de 5,8 mil visualizações  ·  há 7 meses",
+         "website_name": "YouTube · Ecommerce na Prática",
+         "is_image": false,
+         "is_video": true,
+         "is_featured_snippet": false,
+         "is_malicious": false,
+         "is_web_story": false,
+         "checks": [
+          "is_video"
+         ],
+         "description": null,
+         "pre_snippet": null,
+         "extended_snippet": null,
+         "images": null,
+         "amp_version": false,
+         "rating": null,
+         "price": null,
+         "highlighted": null,
+         "links": null,
+         "faq": null,
+         "extended_people_also_search": null,
+         "about_this_result": null,
+         "related_result": null,
+         "timestamp": "2026-03-02 00:00:00 +00:00",
+         "rectangle": null
+        },
+        {
+         "type": "organic",
+         "rank_group": 2,
+         "rank_absolute": 5,
+         "page": 1,
+         "position": "left",
+         "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[2]/div[6]/div[1]/div[1]",
+         "domain": "jaguarsheet.com",
+         "title": "Taxas e comissões do Mercado Livre Brasil 2026 por categoria",
+         "url": "https://jaguarsheet.com/pt/blog/comisiones-mercado-livre",
+         "cache_url": null,
+         "related_search_url": null,
+         "breadcrumb": "https://jaguarsheet.com › Jaguar Sheet › Blog",
+         "website_name": "jaguarsheet.com",
+         "is_image": false,
+         "is_video": false,
+         "is_featured_snippet": false,
+         "is_malicious": false,
+         "is_web_story": false,
+         "checks": null,
+         "description": "19 de mai. de 2026 — Em 2026, as comissões para anúncios Premium variam de 11% a 19%, mais um custo fixo que penaliza especialmente produtos abaixo de R$50. Para ...",
+         "pre_snippet": "05/19/2026 00:00:00",
+         "extended_snippet": null,
+         "images": null,
+         "amp_version": false,
+         "rating": null,
+         "price": null,
+         "highlighted": [
+          "comissões para anúncios Premium variam de 11% a 19"
+         ],
+         "links": null,
+         "faq": null,
+         "extended_people_also_search": null,
+         "about_this_result": null,
+         "related_result": null,
+         "timestamp": "2026-05-19 00:00:00 +00:00",
+         "rectangle": null
+        },
+        {
+         "type": "organic",
+         "rank_group": 3,
+         "rank_absolute": 6,
+         "page": 1,
+         "position": "left",
+         "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[2]/div[8]/div[1]/div[1]",
+         "domain": "mambadigital.com.br",
+         "title": "Mudanças nas taxas de venda do Mercado Livre!",
+         "url": "https://mambadigital.com.br/blog/novas-taxas-de-venda-mercado-livre/",
+         "cache_url": null,
+         "related_search_url": null,
+         "breadcrumb": "https://mambadigital.com.br › blog › novas-taxas-de-ve...",
+         "website_name": "Mamba Digital",
+         "is_image": false,
+         "is_video": false,
+         "is_featured_snippet": false,
+         "is_malicious": false,
+         "is_web_story": false,
+         "checks": null,
+         "description": "29 de ago. de 2024 — Para os Anúncios Clássicos as taxas de venda do Mercado Livre giram entre 10% e 14%. Já para os Anúncios Clássicos, as tarifas ficam entre 15% e ...",
+         "pre_snippet": "08/29/2024 00:00:00",
+         "extended_snippet": null,
+         "images": null,
+         "amp_version": false,
+         "rating": null,
+         "price": null,
+         "highlighted": [
+          "Para os Anúncios Clássicos as taxas de venda do Mercado Livre giram entre 10% e 14"
+         ],
+         "links": null,
+         "faq": null,
+         "extended_people_also_search": null,
+         "about_this_result": null,
+         "related_result": null,
+         "timestamp": "2024-08-29 00:00:00 +00:00",
+         "rectangle": null
+        },
+        {
+         "type": "organic",
+         "rank_group": 4,
+         "rank_absolute": 7,
+         "page": 1,
+         "position": "left",
+         "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[2]/div[10]/div[1]/div[1]",
+         "domain": "tributei.net",
+         "title": "Como precificar no Mercado Livre?",
+         "url": "https://tributei.net/blog/como-precificar-no-mercado-livre/",
+         "cache_url": null,
+         "related_search_url": null,
+         "breadcrumb": "https://tributei.net › blog › como-precificar-no-mercado...",
+         "website_name": "Tributei",
+         "is_image": false,
+         "is_video": false,
+         "is_featured_snippet": false,
+         "is_malicious": false,
+         "is_web_story": false,
+         "checks": null,
+         "description": "6 de out. de 2025 — Clássico: entre 10% e 14%; Premium: entre 15% e 19% (maior visibilidade nos anúncios). Por exemplo, para a categoria de notebooks a comissão ...",
+         "pre_snippet": "10/06/2025 00:00:00",
+         "extended_snippet": null,
+         "images": null,
+         "amp_version": false,
+         "rating": null,
+         "price": null,
+         "highlighted": null,
+         "links": null,
+         "faq": null,
+         "extended_people_also_search": null,
+         "about_this_result": null,
+         "related_result": null,
+         "timestamp": "2025-10-06 00:00:00 +00:00",
+         "rectangle": null
+        },
+        {
+         "type": "images",
+         "rank_group": 1,
+         "rank_absolute": 8,
+         "page": 1,
+         "position": "left",
+         "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[2]/div[12]/div[1]",
+         "title": "Imagens",
+         "url": "https://www.google.com/search?sca_esv=4be001bcccb8dfeb&hl=pt&gl=BR&sxsrf=APpeQntofeuetPN4Z4ViqPat-qat4Pzbxw:1791038496928&q=taxa+do+mercado+livre&udm=2&source=univ&fir=P-1NuQpPzVa0TM%252CTyzgjG_NRuWHiM%252C_%253BbvVSk_ToKhjjlM%252CpPp1ZK0JXFchwM%252C_%253BaZziXannFME35M%252C_cTG3BbYjT2h_M%252C_%253BtIQXLKZYEmMWkM%252CDL5EnFyTbbF4AM%252C_%253ByyHjTMULr3tDHM%252CRTgKjN1WBneVlM%252C_%253BGeDq5o8ttDzJFM%252CHWlCVHLd80nfqM%252C_%253B1tujOMd_XMTvWM%252CTyzgjG_NRuWHiM%252C_%253BnSH2g_oyU-7DfM%252CpPp1ZK0JXFchwM%252C_%253B1GYQvCcvPr3cSM%252CK030v-zykTijOM%252C_&usg=AI4_-kQd7Fyd5Oc4xgP8uaqbiqh7ecXN4w&sa=X&ved=2ahUKEwiM-Yurip6XAxUQlIkEHRVJOPMQ7Al6BAg_EAU",
+         "items": [
+          {
+           "type": "images_element",
+           "alt": "Quanto custa vender no Mercado livre?",
+           "url": "https://www.lexos.com.br/blog/quanto-custa-vender-no-mercado-livre/",
+           "image_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRiz1Eyhh7ZdRaK-6hFetD9ogWn1GCRNmMFMk722MeWP_RMY8NwCulHdi4&s"
+          },
+          {
+           "type": "images_element",
+           "alt": "Central de aprendizagem",
+           "url": "https://vendedores.mercadolivre.com.br/nota/saiba-tudo-sobre-as-tarifas-para-operar-no-mercado-livre-e-ou-mercado-pago",
+           "image_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFhIoOIdWxmvP7nxInfA6hJjcH-Qruzl1XGItxcF0SFyZ7VHSzLvTuwsQ&s"
+          },
+          {
+           "type": "images_element",
+           "alt": "Olist Blog - Anúncios Mercado Livre: Grátis, Clássico e Premium",
+           "url": "https://olist.com/blog/como-vender-mais/em-marketplaces/anuncios-mercado-livre/",
+           "image_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdKpZKQBQJMntiQYxR4Z9GNY-uVfNYZ1UPOeiw-aTDPAXD6xBGLzStr-E&s"
+          },
+          {
+           "type": "images_element",
+           "alt": "Estudo de rentabilidade em marketplaces: comparando ...",
+           "url": "https://www.ecommercebrasil.com.br/artigos/estudo-de-rentabilidade-em-marketplaces-comparando-vendas-entre-mercado-livre-amazon-shopee-e-magalu",
+           "image_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAZuF7ourVzWLeGFZU14gPRTaOfH4W-lSxTUhn4xP_2TMBA6OyzBm-goc&s"
+          },
+          {
+           "type": "images_element",
+           "alt": "O Mercado Livre confirmou uma atualização nas tarifas de ...",
+           "url": "https://www.instagram.com/p/DT0iTG0jLS8/",
+           "image_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWXRiAbgNwXNjzeGjeUrf23Bzk9ICG38W5xhRjoXLmnR4OHTMQcTVWBL0&s"
+          },
+          {
+           "type": "images_element",
+           "alt": "Quanto custa vender em cada categoria do Mercado Livre? [2026]",
+           "url": "https://www.koncili.com/blog/categorias-do-mercado-livre/",
+           "image_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQoQTwrJgGf6XQhSdcQVpoRsjx8w3Fg3VkKbxjs6UlW-mD4gkcwz9kYZ9c&s"
+          },
+          {
+           "type": "images_element",
+           "alt": "Quanto custa vender no Mercado livre?",
+           "url": "https://www.lexos.com.br/blog/quanto-custa-vender-no-mercado-livre/",
+           "image_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVwsofsSrUNdQlT9bgn9V_LHQdL9b7Hy3Qy1hLH8_wd3YIDhuzOaQfktI&s"
+          },
+          {
+           "type": "images_element",
+           "alt": "Central de aprendizagem",
+           "url": "https://vendedores.mercadolivre.com.br/nota/saiba-tudo-sobre-as-tarifas-para-operar-no-mercado-livre-e-ou-mercado-pago",
+           "image_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTho7_hnKdfgbXta_rJPkMi5s0H_QEKhU10Q9NxiXAtWb62TdJ0vaoK1V0&s"
+          },
+          {
+           "type": "images_element",
+           "alt": "Mercado Livre cria anúncios com duração infinita e faz ...",
+           "url": "https://www.techtudo.com.br/noticias/2015/07/mercado-livre-cria-anuncios-com-duracao-infinita-e-faz-mudancas-em-taxas.ghtml",
+           "image_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTscA-592OMmGw59Zy2vupzHr0M5htPoCcINpnO5uZ-z_k5gJT_6_exwMU&s"
+          }
+         ],
+         "related_image_searches": null,
+         "rectangle": null
+        },
+        {
+         "type": "organic",
+         "rank_group": 5,
+         "rank_absolute": 9,
+         "page": 1,
+         "position": "left",
+         "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[2]/div[14]/div[1]/div[1]",
+         "domain": "vendedores.mercadolivre.com.br",
+         "title": "Taxas do Mercado Pago: quais são e como configurá-las",
+         "url": "https://vendedores.mercadolivre.com.br/nota/taxas-do-mercado-pago-quais-sao-e-como-configura-las",
+         "cache_url": null,
+         "related_search_url": null,
+         "breadcrumb": "https://vendedores.mercadolivre.com.br › nota › taxas-...",
+         "website_name": "Mercado Livre",
+         "is_image": false,
+         "is_video": false,
+         "is_featured_snippet": false,
+         "is_malicious": false,
+         "is_web_story": false,
+         "checks": null,
+         "description": "Tarifa de processamento: é o valor cobrado pelo processamento de cada venda que você faz com Código QR, Point, Link de pagamento, Checkout ou WhatsApp Pay.",
+         "pre_snippet": null,
+         "extended_snippet": null,
+         "images": null,
+         "amp_version": false,
+         "rating": null,
+         "price": null,
+         "highlighted": null,
+         "links": null,
+         "faq": null,
+         "extended_people_also_search": null,
+         "about_this_result": null,
+         "related_result": null,
+         "timestamp": null,
+         "rectangle": null
+        },
+        {
+         "type": "organic",
+         "rank_group": 6,
+         "rank_absolute": 10,
+         "page": 1,
+         "position": "left",
+         "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[2]/div[16]/div[1]/div[1]",
+         "domain": "www.mercadolivre.com.br",
+         "title": "Como calcular o custo de envio",
+         "url": "https://www.mercadolivre.com.br/ajuda/Como-calcular-o-custo-dos-seus_4413",
+         "cache_url": null,
+         "related_search_url": null,
+         "breadcrumb": "https://www.mercadolivre.com.br › ajuda › Como-calcu...",
+         "website_name": "Mercado Livre",
+         "is_image": false,
+         "is_video": false,
+         "is_featured_snippet": false,
+         "is_malicious": false,
+         "is_web_story": false,
+         "checks": null,
+         "description": "Descubra como calcular o custo de envio considerando peso físico e volumétrico para otimizar seus envios de maneira eficiente.",
+         "pre_snippet": null,
+         "extended_snippet": null,
+         "images": null,
+         "amp_version": false,
+         "rating": null,
+         "price": null,
+         "highlighted": null,
+         "links": null,
+         "faq": null,
+         "extended_people_also_search": null,
+         "about_this_result": null,
+         "related_result": null,
+         "timestamp": null,
+         "rectangle": null
+        },
+        {
+         "type": "organic",
+         "rank_group": 7,
+         "rank_absolute": 11,
+         "page": 1,
+         "position": "left",
+         "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[2]/div[18]/div[1]/div[1]",
+         "domain": "mambadigital.com.br",
+         "title": "Quais são as taxas do Mercado Livre?",
+         "url": "https://mambadigital.com.br/blog/quais-sao-as-taxas-do-mercado-livre/",
+         "cache_url": null,
+         "related_search_url": null,
+         "breadcrumb": "https://mambadigital.com.br › blog › quais-sao-as-taxas...",
+         "website_name": "Mamba Digital",
+         "is_image": false,
+         "is_video": false,
+         "is_featured_snippet": false,
+         "is_malicious": false,
+         "is_web_story": false,
+         "checks": null,
+         "description": "19 de ago. de 2024 — Anúncios Premium · Tarifa de venda por categoria gira entre 15% e 19% · Opção de parcelamento pode chegar a 18x sem juros. · Cobrança fixa de R ...",
+         "pre_snippet": "08/19/2024 00:00:00",
+         "extended_snippet": null,
+         "images": null,
+         "amp_version": false,
+         "rating": null,
+         "price": null,
+         "highlighted": [
+          "Tarifa de venda por categoria gira entre 15% e 19"
+         ],
+         "links": null,
+         "faq": null,
+         "extended_people_also_search": null,
+         "about_this_result": null,
+         "related_result": null,
+         "timestamp": "2024-08-19 00:00:00 +00:00",
+         "rectangle": null
+        },
+        {
+         "type": "related_searches",
+         "rank_group": 1,
+         "rank_absolute": 12,
+         "page": 1,
+         "position": "left",
+         "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[2]/div[1]/div[3]/div[1]/div[1]/div[1]/div[1]/div[2]",
+         "items": [
+          "Mercado livre taxas simulador",
+          "Tabela de comissão mercado livre",
+          "Taxas full super mercado livre",
+          "Taxas do mercado livre para vendedor 2026",
+          "Full super mercado livre frete grátis",
+          "Comissão mercado livre afiliados",
+          "Tarifa supermercado mercado livre",
+          "Taxas venda mercado livre"
+         ],
+         "rectangle": null
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "10031441-1993-0139-0000-db6cc4a01239",
+     "status_code": 40000,
+     "status_message": "You can set only one task at a time.",
+     "time": "0 sec.",
+     "cost": 0,
+     "result_count": 0,
+     "path": [
+      "v3",
+      "serp",
+      "google",
+      "organic",
+      "live",
+      "advanced"
+     ],
+     "data": {
+      "api": "serp",
+      "function": "live",
+      "se": "google",
+      "se_type": "organic",
+      "keyword": "quanto o mercado livre cobra por venda",
+      "location_name": "Brazil",
+      "language_code": "pt",
+      "device": "desktop",
+      "depth": 10
+     },
+     "result": null
+    },
+    {
+     "id": "10031441-1993-0139-0000-f139d34412e2",
+     "status_code": 40000,
+     "status_message": "You can set only one task at a time.",
+     "time": "0 sec.",
+     "cost": 0,
+     "result_count": 0,
+     "path": [
+      "v3",
+      "serp",
+      "google",
+      "organic",
+      "live",
+      "advanced"
+     ],
+     "data": {
+      "api": "serp",
+      "function": "live",
+      "se": "google",
+      "se_type": "organic",
+      "keyword": "taxa shopee",
+      "location_name": "Brazil",
+      "language_code": "pt",
+      "device": "desktop",
+      "depth": 10
+     },
+     "result": null
+    },
+    {
+     "id": "10031441-1993-0139-0000-cd36853e603c",
+     "status_code": 40000,
+     "status_message": "You can set only one task at a time.",
+     "time": "0 sec.",
+     "cost": 0,
+     "result_count": 0,
+     "path": [
+      "v3",
+      "serp",
+      "google",
+      "organic",
+      "live",
+      "advanced"
+     ],
+     "data": {
+      "api": "serp",
+      "function": "live",
+      "se": "google",
+      "se_type": "organic",
+      "keyword": "terceirização de vendas",
+      "location_name": "Brazil",
+      "language_code": "pt",
+      "device": "desktop",
+      "depth": 10
+     },
+     "result": null
+    }
+   ]
+  },
+  {
+   "version": "0.1.20260917",
+   "status_code": 20000,
+   "status_message": "Ok.",
+   "time": "13.1814 sec.",
+   "cost": 0.002,
+   "tasks_count": 1,
+   "tasks_error": 0,
+   "tasks": [
+    {
+     "id": "10031441-1993-0139-0000-4838c601d56d",
+     "status_code": 20000,
+     "status_message": "Ok.",
+     "time": "13.0516 sec.",
+     "cost": 0.002,
+     "result_count": 1,
+     "path": [
+      "v3",
+      "serp",
+      "google",
+      "organic",
+      "live",
+      "advanced"
+     ],
+     "data": {
+      "api": "serp",
+      "function": "live",
+      "se": "google",
+      "se_type": "organic",
+      "keyword": "quanto o mercado livre cobra por venda",
+      "location_name": "Brazil",
+      "language_code": "pt",
+      "device": "desktop",
+      "depth": 10,
+      "os": "windows"
+     },
+     "result": [
+      {
+       "keyword": "quanto o mercado livre cobra por venda",
+       "type": "organic",
+       "se_domain": "google.com",
+       "location_code": 2076,
+       "language_code": "pt",
+       "check_url": "https://www.google.com/search?q=quanto%20o%20mercado%20livre%20cobra%20por%20venda&hl=pt&gl=BR&ie=UTF-8&uule=w+CAIQIFISCc8ozOvHWZwAEWM-KfIGFVop",
+       "datetime": "2026-10-03 14:41:59 +00:00",
+       "spell": null,
+       "refinement_chips": null,
+       "item_types": [
+        "ai_overview",
+        "organic",
+        "people_also_ask"
+       ],
+       "se_results_count": 107000,
+       "pages_count": 1,
+       "items_count": 11,
+       "items": [
+        {
+         "type": "ai_overview",
+         "rank_group": 1,
+         "rank_absolute": 1,
+         "page": 1,
+         "position": "left",
+         "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]",
+         "asynchronous_ai_overview": true,
+         "markdown": null,
+         "items": null,
+         "references": null,
+         "rectangle": null
+        },
+        {
+         "type": "organic",
+         "rank_group": 1,
+         "rank_absolute": 2,
+         "page": 1,
+         "position": "left",
+         "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]",
+         "domain": "www.reclameaqui.com.br",
+         "title": "MERCADO LIVRE COBRA DUAS VEZES PELO ENVIO",
+         "url": "https://www.reclameaqui.com.br/mercado-livre/mercado-livre-cobra-duas-vezes-pelo-envio_x8B64H_ry0sMRnQK/",
+         "cache_url": null,
+         "related_search_url": null,
+         "breadcrumb": "https://www.reclameaqui.com.br › mercado-livre › merc...",
+         "website_name": "Reclame AQUI",
+         "is_image": false,
+         "is_video": false,
+         "is_featured_snippet": false,
+         "is_malicious": false,
+         "is_web_story": false,
+         "checks": null,
+         "description": "27 de jan. de 2021 — b)Ocorre que entra o mistério! ... c)Se o meu cliente aceitar pagar esses R$ 6,90, na verdade vocês estão cobrando duas vezes pelo envio, e o ...",
+         "pre_snippet": "01/27/2021 00:00:00",
+         "extended_snippet": null,
+         "images": null,
+         "amp_version": false,
+         "rating": null,
+         "price": null,
+         "highlighted": null,
+         "links": null,
+         "faq": null,
+         "extended_people_also_search": null,
+         "about_this_result": null,
+         "related_result": null,
+         "timestamp": "2021-01-27 00:00:00 +00:00",
+         "rectangle": null
+        },
+        {
+         "type": "people_also_ask",
+         "rank_group": 1,
+         "rank_absolute": 3,
+         "page": 1,
+         "position": "left",
+         "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[4]/div[1]/div[1]/div[1]",
+         "items": [
+          {
+           "type": "people_also_ask_element",
+           "title": "Qual a porcentagem de comissão do Mercado Livre?",
+           "seed_question": null,
+           "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[4]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]",
+           "expanded_element": [
+            {
+             "type": "people_also_ask_ai_overview_expanded_element",
+             "items": null,
+             "references": null,
+             "asynchronous_ai_overview": true
+            }
+           ]
+          },
+          {
+           "type": "people_also_ask_element",
+           "title": "Tem como vender no Mercado Livre sem pagar taxa?",
+           "seed_question": null,
+           "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[4]/div[1]/div[1]/div[1]/div[1]/div[2]/div[2]",
+           "expanded_element": [
+            {
+             "type": "people_also_ask_ai_overview_expanded_element",
+             "items": null,
+             "references": null,
+             "asynchronous_ai_overview": true
+            }
+           ]
+          },
+          {
+           "type": "people_also_ask_element",
+           "title": "Fiz uma venda no Mercado Livre. O que devo fazer agora?",
+           "seed_question": null,
+           "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[4]/div[1]/div[1]/div[1]/div[1]/div[2]/div[3]",
+           "expanded_element": [
+            {
+             "type": "people_also_ask_ai_overview_expanded_element",
+             "items": null,
+             "references": null,
+             "asynchronous_ai_overview": true
+            }
+           ]
+          },
+          {
+           "type": "people_also_ask_element",
+           "title": "Quais são os novos custos do Mercado Livre?",
+           "seed_question": null,
+           "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[4]/div[1]/div[1]/div[1]/div[1]/div[2]/div[4]",
+           "expanded_element": [
+            {
+             "type": "people_also_ask_ai_overview_expanded_element",
+             "items": null,
+             "references": null,
+             "asynchronous_ai_overview": true
+            }
+           ]
+          }
+         ],
+         "rectangle": null
+        },
+        {
+         "type": "organic",
+         "rank_group": 2,
+         "rank_absolute": 4,
+         "page": 1,
+         "position": "left",
+         "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[1]/div[1]",
+         "domain": "lista.mercadolivre.com.br",
+         "title": "Arpão Mini Cobra",
+         "url": "https://lista.mercadolivre.com.br/arp%C3%A3o-mini-cobra",
+         "cache_url": null,
+         "related_search_url": null,
+         "breadcrumb": "https://lista.mercadolivre.com.br › arpão-mini-cobra",
+         "website_name": "Mercado Livre",
+         "is_image": false,
+         "is_video": false,
+         "is_featured_snippet": false,
+         "is_malicious": false,
+         "is_web_story": false,
+         "checks": null,
+         "description": "Frete grátis no dia ✓ Compre já Arpão Mini Cobra parcelado sem juros! Saiba mais sobre nossas incríveis ofertas e promoções em milhões de produtos.",
+         "pre_snippet": null,
+         "extended_snippet": null,
+         "images": null,
+         "amp_version": false,
+         "rating": null,
+         "price": null,
+         "highlighted": [
+          "Cobra"
+         ],
+         "links": null,
+         "faq": null,
+         "extended_people_also_search": null,
+         "about_this_result": null,
+         "related_result": null,
+         "timestamp": null,
+         "rectangle": null
+        },
+        {
+         "type": "organic",
+         "rank_group": 3,
+         "rank_absolute": 5,
+         "page": 1,
+         "position": "left",
+         "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[8]/div[1]/div[1]/div[1]",
+         "domain": "lista.mercadolivre.com.br",
+         "title": "Mascara Para Mergulho Cobra Sub Temperado",
+         "url": "https://lista.mercadolivre.com.br/mascara-para-mergulho-cobra-sub-temperado",
+         "cache_url": null,
+         "related_search_url": null,
+         "breadcrumb": "https://lista.mercadolivre.com.br › mascara-para-mergul...",
+         "website_name": "Mercado Livre",
+         "is_image": false,
+         "is_video": false,
+         "is_featured_snippet": false,
+         "is_malicious": false,
+         "is_web_story": false,
+         "checks": null,
+         "description": "Frete grátis no dia ✓ Compre já Mascara Para Mergulho Cobra Sub Temperado parcelado sem juros! Saiba mais sobre nossas incríveis ofertas e promoções em ...",
+         "pre_snippet": null,
+         "extended_snippet": null,
+         "images": null,
+         "amp_version": false,
+         "rating": null,
+         "price": null,
+         "highlighted": [
+          "Cobra"
+         ],
+         "links": null,
+         "faq": null,
+         "extended_people_also_search": null,
+         "about_this_result": null,
+         "related_result": null,
+         "timestamp": null,
+         "rectangle": null
+        },
+        {
+         "type": "organic",
+         "rank_group": 4,
+         "rank_absolute": 6,
+         "page": 1,
+         "position": "left",
+         "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[10]/div[1]/div[1]/div[1]",
+         "domain": "lista.mercadolivre.com.br",
+         "title": "Radio Px Cobra 2000 Gtl De Mesa",
+         "url": "https://lista.mercadolivre.com.br/radio-px-cobra-2000-gtl-de-mesa",
+         "cache_url": null,
+         "related_search_url": null,
+         "breadcrumb": "https://lista.mercadolivre.com.br › radio-px-cobra-2000...",
+         "website_name": "Mercado Livre",
+         "is_image": false,
+         "is_video": false,
+         "is_featured_snippet": false,
+         "is_malicious": false,
+         "is_web_story": false,
+         "checks": null,
+         "description": "Radio px cobra 2000 gtl de mesa. Suporte/mesa Para Px/148gtl Placa De Indicativo/suporte Ptt. R$90. 3x R$30 sem juros. Frete grátisFrete grátis ...",
+         "pre_snippet": null,
+         "extended_snippet": null,
+         "images": null,
+         "amp_version": false,
+         "rating": null,
+         "price": null,
+         "highlighted": [
+          "cobra"
+         ],
+         "links": null,
+         "faq": null,
+         "extended_people_also_search": null,
+         "about_this_result": null,
+         "related_result": null,
+         "timestamp": null,
+         "rectangle": null
+        },
+        {
+         "type": "organic",
+         "rank_group": 5,
+         "rank_absolute": 7,
+         "page": 1,
+         "position": "left",
+         "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[12]/div[1]/div[1]/div[1]",
+         "domain": "lista.mercadolivre.com.br",
+         "title": "Lanchas Cobra Usadas",
+         "url": "https://lista.mercadolivre.com.br/lanchas-cobra-usadas",
+         "cache_url": null,
+         "related_search_url": null,
+         "breadcrumb": "https://lista.mercadolivre.com.br › ... › Náutica › Lanchas",
+         "website_name": "Mercado Livre",
+         "is_image": false,
+         "is_video": false,
+         "is_featured_snippet": false,
+         "is_malicious": false,
+         "is_web_story": false,
+         "checks": null,
+         "description": "Encontre o seu Lanchas Cobra Usadas. Compare milhares de ofertas em carros usados, seminovos e novos. Compre e venda com confiança no MercadoLivre.",
+         "pre_snippet": null,
+         "extended_snippet": null,
+         "images": null,
+         "amp_version": false,
+         "rating": null,
+         "price": null,
+         "highlighted": [
+          "Cobra",
+          "venda"
+         ],
+         "links": null,
+         "faq": null,
+         "extended_people_also_search": null,
+         "about_this_result": null,
+         "related_result": null,
+         "timestamp": null,
+         "rectangle": null
+        },
+        {
+         "type": "organic",
+         "rank_group": 6,
+         "rank_absolute": 8,
+         "page": 1,
+         "position": "left",
+         "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[14]/div[1]/div[1]/div[1]",
+         "domain": "lista.mercadolivre.com.br",
+         "title": "Radio Px Cobra 147",
+         "url": "https://lista.mercadolivre.com.br/radio-px-cobra-147",
+         "cache_url": null,
+         "related_search_url": null,
+         "breadcrumb": "https://lista.mercadolivre.com.br › radio-px-cobra-147",
+         "website_name": "Mercado Livre",
+         "is_image": false,
+         "is_video": false,
+         "is_featured_snippet": false,
+         "is_malicious": false,
+         "is_web_story": false,
+         "checks": null,
+         "description": "Frete grátis no dia ✓ Compre já Radio Px Cobra 147 parcelado sem juros! Saiba mais sobre nossas incríveis ofertas e promoções em milhões de produtos.",
+         "pre_snippet": null,
+         "extended_snippet": null,
+         "images": null,
+         "amp_version": false,
+         "rating": null,
+         "price": null,
+         "highlighted": [
+          "Cobra"
+         ],
+         "links": null,
+         "faq": null,
+         "extended_people_also_search": null,
+         "about_this_result": null,
+         "related_result": null,
+         "timestamp": null,
+         "rectangle": null
+        },
+        {
+         "type": "organic",
+         "rank_group": 7,
+         "rank_absolute": 9,
+         "page": 1,
+         "position": "left",
+         "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[16]/div[1]/div[1]/div[1]",
+         "domain": "lista.mercadolivre.com.br",
+         "title": "Cobra Jiboia Legalizada",
+         "url": "https://lista.mercadolivre.com.br/cobra-jiboia-legalizada",
+         "cache_url": null,
+         "related_search_url": null,
+         "breadcrumb": "https://lista.mercadolivre.com.br › cobra-jiboia-legalizada",
+         "website_name": "Mercado Livre",
+         "is_image": false,
+         "is_video": false,
+         "is_featured_snippet": false,
+         "is_malicious": false,
+         "is_web_story": false,
+         "checks": null,
+         "description": "Frete grátis no dia ✓ Compre já Cobra Jiboia Legalizada parcelado sem juros! Saiba mais sobre nossas incríveis ofertas e promoções em milhões de produtos.",
+         "pre_snippet": null,
+         "extended_snippet": null,
+         "images": null,
+         "amp_version": false,
+         "rating": null,
+         "price": null,
+         "highlighted": [
+          "Cobra"
+         ],
+         "links": null,
+         "faq": null,
+         "extended_people_also_search": null,
+         "about_this_result": null,
+         "related_result": null,
+         "timestamp": null,
+         "rectangle": null
+        },
+        {
+         "type": "organic",
+         "rank_group": 8,
+         "rank_absolute": 10,
+         "page": 1,
+         "position": "left",
+         "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[18]/div[1]/div[1]/div[1]",
+         "domain": "lista.mercadolivre.com.br",
+         "title": "Shelby Cobra Réplica Em Curitiba",
+         "url": "https://lista.mercadolivre.com.br/shelby-cobra-r%C3%A9plica-em-curitiba",
+         "cache_url": null,
+         "related_search_url": null,
+         "breadcrumb": "https://lista.mercadolivre.com.br › shelby-cobra-réplica-...",
+         "website_name": "Mercado Livre",
+         "is_image": false,
+         "is_video": false,
+         "is_featured_snippet": false,
+         "is_malicious": false,
+         "is_web_story": false,
+         "checks": null,
+         "description": "ou R$199,80 em 6x R$33,30 sem juros. Frete grátisFrete grátis. 1/22 Modelo De Carro Shelby Cobra Em Liga Metálica. Disponível em 3 cores3 ...",
+         "pre_snippet": null,
+         "extended_snippet": null,
+         "images": null,
+         "amp_version": false,
+         "rating": null,
+         "price": null,
+         "highlighted": [
+          "Cobra"
+         ],
+         "links": null,
+         "faq": null,
+         "extended_people_also_search": null,
+         "about_this_result": null,
+         "related_result": null,
+         "timestamp": null,
+         "rectangle": null
+        },
+        {
+         "type": "organic",
+         "rank_group": 9,
+         "rank_absolute": 11,
+         "page": 1,
+         "position": "left",
+         "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[20]/div[1]/div[1]/div[1]",
+         "domain": "lista.mercadolivre.com.br",
+         "title": "Cobra Gigante",
+         "url": "https://lista.mercadolivre.com.br/cobra-gigante",
+         "cache_url": null,
+         "related_search_url": null,
+         "breadcrumb": "https://lista.mercadolivre.com.br › ... › Dado",
+         "website_name": "Mercado Livre",
+         "is_image": false,
+         "is_video": false,
+         "is_featured_snippet": false,
+         "is_malicious": false,
+         "is_web_story": false,
+         "checks": null,
+         "description": "Cobra Pelúcia Grande Realista 200cm Píton Anaconda Gigante · 125,02 · 4x R$31,26 sem juros ; Cobra Serpente De Borracha Full Gigante Brinquedo Pegadinha Cor Branca.",
+         "pre_snippet": null,
+         "extended_snippet": null,
+         "images": null,
+         "amp_version": false,
+         "rating": null,
+         "price": null,
+         "highlighted": [
+          "Cobra"
+         ],
+         "links": null,
+         "faq": null,
+         "extended_people_also_search": null,
+         "about_this_result": null,
+         "related_result": null,
+         "timestamp": null,
+         "rectangle": null
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "version": "0.1.20260917",
+   "status_code": 20000,
+   "status_message": "Ok.",
+   "time": "11.0193 sec.",
+   "cost": 0.002,
+   "tasks_count": 1,
+   "tasks_error": 0,
+   "tasks": [
+    {
+     "id": "10031442-1993-0139-0000-e8e89732f203",
+     "status_code": 20000,
+     "status_message": "Ok.",
+     "time": "10.8383 sec.",
+     "cost": 0.002,
+     "result_count": 1,
+     "path": [
+      "v3",
+      "serp",
+      "google",
+      "organic",
+      "live",
+      "advanced"
+     ],
+     "data": {
+      "api": "serp",
+      "function": "live",
+      "se": "google",
+      "se_type": "organic",
+      "keyword": "taxa shopee",
+      "location_name": "Brazil",
+      "language_code": "pt",
+      "device": "desktop",
+      "depth": 10,
+      "os": "windows"
+     },
+     "result": [
+      {
+       "keyword": "taxa shopee",
+       "type": "organic",
+       "se_domain": "google.com",
+       "location_code": 2076,
+       "language_code": "pt",
+       "check_url": "https://www.google.com/search?q=taxa%20shopee&hl=pt&gl=BR&ie=UTF-8&uule=w+CAIQIFISCc8ozOvHWZwAEWM-KfIGFVop",
+       "datetime": "2026-10-03 14:42:10 +00:00",
+       "spell": null,
+       "refinement_chips": null,
+       "item_types": [
+        "ai_overview",
+        "images",
+        "people_also_ask",
+        "video",
+        "organic",
+        "short_videos"
+       ],
+       "se_results_count": 419000,
+       "pages_count": 1,
+       "items_count": 11,
+       "items": [
+        {
+         "type": "ai_overview",
+         "rank_group": 1,
+         "rank_absolute": 1,
+         "page": 1,
+         "position": "left",
+         "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]",
+         "asynchronous_ai_overview": false,
+         "markdown": "As taxas da Shopee para vendedores `variam conforme o valor do produto e a faixa de preço, combinando uma porcentagem de comissão com uma tarifa fixa por item`.[[1]](https://tributei.net/blog/como-precificar-na-shopee/)[[2]](https://www.youtube.com/watch?v=Zx8826q-qLk&t=23)\n\n### Tabela de Taxas Vigentes (CNPJ)\n\n- **Até R$ 79,99:** 20% de comissão + R$ 4,50 de taxa fixa por item[[1]](https://seller.br.shopee.cn/edu/article/26839/Comissao-para-vendedores-CNPJ-e-CPF-em-2026)[[2]](https://www.youtube.com/watch?v=2pLWfaU8EaI)\n- **De R$ 80,00 a R$ 99,99:** 14% de comissão + R$ 16,00 de taxa fixa por item[[1]](https://www.youtube.com/watch?v=2pLWfaU8EaI)\n- **De R$ 100,00 a R$ 199,99:** 14% de comissão + R$ 20,00 de taxa fixa por item[[1]](https://www.youtube.com/watch?v=2pLWfaU8EaI)\n- **Acima de R$ 200,00:** 14% de comissão + R$ 26,00 de taxa fixa por item[[1]](https://www.youtube.com/watch?v=2pLWfaU8EaI)\n- **Produtos abaixo de R$ 9,00:** A taxa fixa por item é equivalente à metade do preço do produto.[[1]](https://seller.br.shopee.cn/edu/article/26839/Comissao-para-vendedores-CNPJ-e-CPF-em-2026)\n\n*Nota: O Programa de Frete Grátis Extra é padrão para os vendedores, e os valores de comissão acima já contemplam a taxa de transação da plataforma.* [[1]](https://seller.br.shopee.cn/edu/article/26839/Comissao-para-vendedores-CNPJ-e-CPF-em-2026)[[2]](https://tributei.net/blog/como-precificar-na-shopee/)\n\n### Regras para Vendedores CPF\n\n- Vendedores CPF com **mais de 450 pedidos nos últimos 90 dias** pagam uma taxa adicional de **R$ 3,00** por item vendido.[[1]](https://seller.br.shopee.cn/edu/article/26839/Comissao-para-vendedores-CNPJ-e-CPF-em-2026)\n- Lojas com faturamento anual igual ou superior a R$ 81 mil devem migrar para CNPJ conforme a legislação fiscal.[[1]](https://seller.br.shopee.cn/edu/article/26839/Comissao-para-vendedores-CNPJ-e-CPF-em-2026)\n\nPara simular os custos exatos da sua operação, você pode acessar a Calculadora Shopee da Precify ou conferir os detalhes na página oficial do Centro de Educação do Vendedor Shopee.[[1]](https://seller.br.shopee.cn/edu/article/26839/Comissao-para-vendedores-CNPJ-e-CPF-em-2026)[[2]](https://myprecify.com/)Se quiser, me diga:\n\n- Você vende como **CPF ou CNPJ**?\n- Qual é o **preço médio** dos seus produtos?\n\nEu posso ajudar a calcular quanto vai sobra por venda na sua operação.",
+         "items": [
+          {
+           "type": "ai_overview_element",
+           "position": "left",
+           "title": null,
+           "text": "As taxas da Shopee para vendedores variam conforme o valor do produto e a faixa de preço, combinando uma porcentagem de comissão com uma tarifa fixa por item.",
+           "markdown": "As taxas da Shopee para vendedores `variam conforme o valor do produto e a faixa de preço, combinando uma porcentagem de comissão com uma tarifa fixa por item`.[[1]](https://tributei.net/blog/como-precificar-na-shopee/)[[2]](https://www.youtube.com/watch?v=Zx8826q-qLk&t=23)",
+           "links": null,
+           "images": null,
+           "references": [
+            {
+             "type": "ai_overview_reference",
+             "position": "left",
+             "source": "Tributei",
+             "domain": "tributei.net",
+             "url": "https://tributei.net/blog/como-precificar-na-shopee/",
+             "title": "Como Precificar na Shopee em 2026: taxas, impostos e lucro",
+             "text": "Compartilhe este artigo * E-commerce. * Como precificar na Shopee ? ... O que você precisa saber antes de vender na Shopee? Antes ..."
+            },
+            {
+             "type": "ai_overview_reference",
+             "position": "left",
+             "source": "YouTube",
+             "domain": "www.youtube.com",
+             "url": "https://www.youtube.com/watch?v=Zx8826q-qLk&t=23",
+             "title": "As novas taxas e comissões da Shopee pode QUEBRAR sua loja ...",
+             "text": "CUIDADO: As novas taxas e comissões da Shopee pode QUEBRAR sua loja em 2026 então bora pra tela aqui comigo pra gente saber se rea..."
+            }
+           ]
+          },
+          {
+           "type": "ai_overview_element",
+           "position": "left",
+           "title": "Tabela de Taxas Vigentes (CNPJ)",
+           "text": "Até R$ 79,99: 20% de comissão + R$ 4,50 de taxa fixa por item De R$ 80,00 a R$ 99,99: 14% de comissão + R$ 16,00 de taxa fixa por item De R$ 100,00 a R$ 199,99: 14% de comissão + R$ 20,00 de taxa fixa por item Acima de R$ 200,00: 14% de comissão + R$ 26,00 de taxa fixa por item Produtos abaixo de R$ 9,00: A taxa fixa por item é equivalente à metade do preço do produto.",
+           "markdown": "- **Até R$ 79,99:** 20% de comissão + R$ 4,50 de taxa fixa por item[[1]](https://seller.br.shopee.cn/edu/article/26839/Comissao-para-vendedores-CNPJ-e-CPF-em-2026)[[2]](https://www.youtube.com/watch?v=2pLWfaU8EaI)\n- **De R$ 80,00 a R$ 99,99:** 14% de comissão + R$ 16,00 de taxa fixa por item[[1]](https://www.youtube.com/watch?v=2pLWfaU8EaI)\n- **De R$ 100,00 a R$ 199,99:** 14% de comissão + R$ 20,00 de taxa fixa por item[[1]](https://www.youtube.com/watch?v=2pLWfaU8EaI)\n- **Acima de R$ 200,00:** 14% de comissão + R$ 26,00 de taxa fixa por item[[1]](https://www.youtube.com/watch?v=2pLWfaU8EaI)\n- **Produtos abaixo de R$ 9,00:** A taxa fixa por item é equivalente à metade do preço do produto.[[1]](https://seller.br.shopee.cn/edu/article/26839/Comissao-para-vendedores-CNPJ-e-CPF-em-2026)",
+           "links": null,
+           "images": null,
+           "references": [
+            {
+             "type": "ai_overview_reference",
+             "position": "left",
+             "source": "Shopee Brasil",
+             "domain": "seller.br.shopee.cn",
+             "url": "https://seller.br.shopee.cn/edu/article/26839/Comissao-para-vendedores-CNPJ-e-CPF-em-2026",
+             "title": "Confira a Política de Comissão para vendedores CNPJ e CPF para 2026 | Centro de Educação do Vendedor Shopee BR",
+             "text": "* Comissão e Frete. * Políticas da Shopee. ... Confira a seguir: * Para vendedores CNPJ. * Entenda como funciona o subsídio Pix. *"
+            },
+            {
+             "type": "ai_overview_reference",
+             "position": "left",
+             "source": "YouTube",
+             "domain": "www.youtube.com",
+             "url": "https://www.youtube.com/watch?v=2pLWfaU8EaI",
+             "title": "ATENÇÃO Vendedores Shopee: Nova Comissão 2026 (CPF/CNPJ)",
+             "text": "ATENÇÃO Vendedores Shopee: Nova Comissão 2026 (CPF/CNPJ) — O que Fazer Agora atenção vendedores da Shopee a partir do dia 1o de ma..."
+            }
+           ]
+          },
+          {
+           "type": "ai_overview_element",
+           "position": "left",
+           "title": null,
+           "text": "Nota: O Programa de Frete Grátis Extra é padrão para os vendedores, e os valores de comissão acima já contemplam a taxa de transação da plataforma.",
+           "markdown": "*Nota: O Programa de Frete Grátis Extra é padrão para os vendedores, e os valores de comissão acima já contemplam a taxa de transação da plataforma.* [[1]](https://seller.br.shopee.cn/edu/article/26839/Comissao-para-vendedores-CNPJ-e-CPF-em-2026)[[2]](https://tributei.net/blog/como-precificar-na-shopee/)",
+           "links": null,
+           "images": null,
+           "references": [
+            {
+             "type": "ai_overview_reference",
+             "position": "left",
+             "source": "Shopee Brasil",
+             "domain": "seller.br.shopee.cn",
+             "url": "https://seller.br.shopee.cn/edu/article/26839/Comissao-para-vendedores-CNPJ-e-CPF-em-2026",
+             "title": "Confira a Política de Comissão para vendedores CNPJ e CPF para 2026 | Centro de Educação do Vendedor Shopee BR",
+             "text": "* Comissão e Frete. * Políticas da Shopee. ... Confira a seguir: * Para vendedores CNPJ. * Entenda como funciona o subsídio Pix. *"
+            },
+            {
+             "type": "ai_overview_reference",
+             "position": "left",
+             "source": "Tributei",
+             "domain": "tributei.net",
+             "url": "https://tributei.net/blog/como-precificar-na-shopee/",
+             "title": "Como Precificar na Shopee em 2026: taxas, impostos e lucro",
+             "text": "Compartilhe este artigo * E-commerce. * Como precificar na Shopee ? ... O que você precisa saber antes de vender na Shopee? Antes ..."
+            }
+           ]
+          },
+          {
+           "type": "ai_overview_element",
+           "position": "left",
+           "title": "Regras para Vendedores CPF",
+           "text": "Vendedores CPF com mais de 450 pedidos nos últimos 90 dias pagam uma taxa adicional de R$ 3,00 por item vendido. Lojas com faturamento anual igual ou superior a R$ 81 mil devem migrar para CNPJ conforme a legislação fiscal.",
+           "markdown": "- Vendedores CPF com **mais de 450 pedidos nos últimos 90 dias** pagam uma taxa adicional de **R$ 3,00** por item vendido.[[1]](https://seller.br.shopee.cn/edu/article/26839/Comissao-para-vendedores-CNPJ-e-CPF-em-2026)\n- Lojas com faturamento anual igual ou superior a R$ 81 mil devem migrar para CNPJ conforme a legislação fiscal.[[1]](https://seller.br.shopee.cn/edu/article/26839/Comissao-para-vendedores-CNPJ-e-CPF-em-2026)",
+           "links": null,
+           "images": null,
+           "references": [
+            {
+             "type": "ai_overview_reference",
+             "position": "left",
+             "source": "Shopee Brasil",
+             "domain": "seller.br.shopee.cn",
+             "url": "https://seller.br.shopee.cn/edu/article/26839/Comissao-para-vendedores-CNPJ-e-CPF-em-2026",
+             "title": "Confira a Política de Comissão para vendedores CNPJ e CPF para 2026 | Centro de Educação do Vendedor Shopee BR",
+             "text": "* Comissão e Frete. * Políticas da Shopee. ... Confira a seguir: * Para vendedores CNPJ. * Entenda como funciona o subsídio Pix. *"
+            }
+           ]
+          },
+          {
+           "type": "ai_overview_element",
+           "position": "left",
+           "title": null,
+           "text": "Para simular os custos exatos da sua operação, você pode acessar a Calculadora Shopee da Precify ou conferir os detalhes na página oficial do Centro de Educação do Vendedor Shopee.",
+           "markdown": "Para simular os custos exatos da sua operação, você pode acessar a Calculadora Shopee da Precify ou conferir os detalhes na página oficial do Centro de Educação do Vendedor Shopee.[[1]](https://seller.br.shopee.cn/edu/article/26839/Comissao-para-vendedores-CNPJ-e-CPF-em-2026)[[2]](https://myprecify.com/)",
+           "links": null,
+           "images": null,
+           "references": [
+            {
+             "type": "ai_overview_reference",
+             "position": "left",
+             "source": "Shopee Brasil",
+             "domain": "seller.br.shopee.cn",
+             "url": "https://seller.br.shopee.cn/edu/article/26839/Comissao-para-vendedores-CNPJ-e-CPF-em-2026",
+             "title": "Confira a Política de Comissão para vendedores CNPJ e CPF para 2026 | Centro de Educação do Vendedor Shopee BR",
+             "text": "* Comissão e Frete. * Políticas da Shopee. ... Confira a seguir: * Para vendedores CNPJ. * Entenda como funciona o subsídio Pix. *"
+            },
+            {
+             "type": "ai_overview_reference",
+             "position": "left",
+             "source": "myprecify.com",
+             "domain": "myprecify.com",
+             "url": "https://myprecify.com/",
+             "title": "Calculadora Shopee 2026: Taxas, Lucro e Preço | Precify",
+             "text": "Calculadora Shopee com as novas regras de 1º de outubro. Entenda a taxa fixa de R$ 4,50, a regra abaixo de R$ 9 e todas as faixas ..."
+            }
+           ]
+          },
+          {
+           "type": "ai_overview_element",
+           "position": "left",
+           "title": null,
+           "text": "Se quiser, me diga:Você vende como CPF ou CNPJ ?\nQual é o preço médio dos seus produtos?\nEu posso ajudar a calcular quanto vai sobra por venda na sua operação.",
+           "markdown": "Se quiser, me diga:\n\n- Você vende como **CPF ou CNPJ**?\n- Qual é o **preço médio** dos seus produtos?\n\nEu posso ajudar a calcular quanto vai sobra por venda na sua operação.",
+           "links": null,
+           "images": null,
+           "references": null
+          }
+         ],
+         "references": [
+          {
+           "type": "ai_overview_reference",
+           "position": "right",
+           "source": "Shopee Brasil",
+           "domain": "seller.br.shopee.cn",
+           "url": "https://seller.br.shopee.cn/edu/article/26839/Comissao-para-vendedores-CNPJ-e-CPF-em-2026",
+           "title": "Confira a Política de Comissão para vendedores CNPJ e CPF para 2026 | Centro de Educação do Vendedor Shopee BR",
+           "text": "* Comissão e Frete. * Políticas da Shopee. ... Confira a seguir: * Para vendedores CNPJ. * Entenda como funciona o subsídio Pix. *"
+          },
+          {
+           "type": "ai_overview_reference",
+           "position": "right",
+           "source": "Tributei",
+           "domain": "tributei.net",
+           "url": "https://tributei.net/blog/como-precificar-na-shopee/",
+           "title": "Como Precificar na Shopee em 2026: taxas, impostos e lucro",
+           "text": "Compartilhe este artigo * E-commerce. * Como precificar na Shopee ? ... O que você precisa saber antes de vender na Shopee? Antes ..."
+          },
+          {
+           "type": "ai_overview_reference",
+           "position": "right",
+           "source": "YouTube",
+           "domain": "www.youtube.com",
+           "url": "https://www.youtube.com/watch?v=2pLWfaU8EaI",
+           "title": "ATENÇÃO Vendedores Shopee: Nova Comissão 2026 (CPF/CNPJ)",
+           "text": "ATENÇÃO Vendedores Shopee: Nova Comissão 2026 (CPF/CNPJ) — O que Fazer Agora atenção vendedores da Shopee a partir do dia 1o de ma..."
+          },
+          {
+           "type": "ai_overview_reference",
+           "position": "right",
+           "source": "myprecify.com",
+           "domain": "myprecify.com",
+           "url": "https://myprecify.com/",
+           "title": "Calculadora Shopee 2026: Taxas, Lucro e Preço | Precify",
+           "text": "Calculadora Shopee com as novas regras de 1º de outubro. Entenda a taxa fixa de R$ 4,50, a regra abaixo de R$ 9 e todas as faixas ..."
+          },
+          {
+           "type": "ai_overview_reference",
+           "position": "right",
+           "source": "YouTube",
+           "domain": "www.youtube.com",
+           "url": "https://www.youtube.com/watch?v=Zx8826q-qLk&t=23",
+           "title": "As novas taxas e comissões da Shopee pode QUEBRAR sua loja ...",
+           "text": "CUIDADO: As novas taxas e comissões da Shopee pode QUEBRAR sua loja em 2026 então bora pra tela aqui comigo pra gente saber se rea..."
+          }
+         ],
+         "rectangle": null
+        },
+        {
+         "type": "images",
+         "rank_group": 1,
+         "rank_absolute": 2,
+         "page": 1,
+         "position": "left",
+         "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[2]/div[1]/div[1]",
+         "title": "Imagens",
+         "url": "https://www.google.com/search?sca_esv=4be001bcccb8dfeb&hl=pt&gl=BR&sxsrf=APpeQnsamE0vYvUpB-mKVDc8UXIKxbfnlQ:1791038527922&q=taxa+shopee&udm=2&source=univ&fir=NvzVE65O61-n_M%252CTA82cdk3p9sFkM%252C_%253BtTE_toGNaZ9jlM%252Ca9NEw9-sxSA0nM%252C_%253B69s4tdud-FzxrM%252CueNcrmwSVUHdHM%252C_%253BKYusQPASmSHt-M%252CCmob9TMrjHWvwM%252C_%253BL1lLW9Wzep7KLM%252C_-NIuAsD5ttbgM%252C_%253BFo6nXFlZbxKGmM%252CprPSr2rxQxxc8M%252C_%253Bf8DU-sVdrDDDVM%252CXppFIK5Ch6QzXM%252C_%253BoyqGX7G9GriPcM%252CoStgsBNGbwO83M%252C_%253B1ZyZpEPQVsVYLM%252C72jEbb6mvJYoNM%252C_%253BCvTbPib9Wt6s6M%252Cq99T71Vch68rwM%252C_%253BslAF57WW7O7vzM%252CNWnsdY2ISJcdAM%252C_%253B48VcBXrfP_X76M%252CyO8O_Te90n0i0M%252C_&usg=AI4_-kTS-yHTgDkJL5a4k3lU5nQ3itPtAg&sa=X&ved=2ahUKEwiXgfG5ip6XAxW4WEEAHco0IaYQ7Al6BAgcEAU",
+         "items": [
+          {
+           "type": "images_element",
+           "alt": "UpSeller Brasil | 📢 Shopee vai ajustar as comissões a ...",
+           "url": "https://www.instagram.com/p/DUa3xLbAX-N/",
+           "image_url": "https://api.dataforseo.com/cdn/i/10031442-1993-0139-0000-e8e89732f203:0"
+          },
+          {
+           "type": "images_element",
+           "alt": "📈 Atenção, vendedores Shopee! 🚀 A partir de março de 2026 ...",
+           "url": "https://www.instagram.com/p/DUYrxtDkeud/",
+           "image_url": "https://api.dataforseo.com/cdn/i/10031442-1993-0139-0000-e8e89732f203:1"
+          },
+          {
+           "type": "images_element",
+           "alt": "Quanto a Shopee cobra por venda?",
+           "url": "https://logoscontabilidadedigital.com.br/quanto-a-shopee-cobra-por-venda/",
+           "image_url": "https://api.dataforseo.com/cdn/i/10031442-1993-0139-0000-e8e89732f203:2"
+          },
+          {
+           "type": "images_element",
+           "alt": "A Shopee anunciou novas políticas de comissões que entram em ...",
+           "url": "https://www.instagram.com/p/DUYAVVvkjNp/",
+           "image_url": "https://api.dataforseo.com/cdn/i/10031442-1993-0139-0000-e8e89732f203:3"
+          },
+          {
+           "type": "images_element",
+           "alt": "O que é a taxa de resposta do chat e como ela é medida ...",
+           "url": "https://seller.br.shopee.cn/edu/article/2713",
+           "image_url": "https://api.dataforseo.com/cdn/i/10031442-1993-0139-0000-e8e89732f203:4"
+          },
+          {
+           "type": "images_element",
+           "alt": "Shopee acaba com o teto de comissão de R$ 100 e aumenta a ...",
+           "url": "https://www.ecommercebrasil.com.br/artigos/shopee-acaba-com-o-teto-de-comissao-de-r-100-e-aumenta-a-taxa-fixa-cobrada-por-cada-item-vendido-em-ate-550",
+           "image_url": "https://api.dataforseo.com/cdn/i/10031442-1993-0139-0000-e8e89732f203:5"
+          },
+          {
+           "type": "images_element",
+           "alt": "Shopee - Quanto custa vender um produto? - Uoou Shop ...",
+           "url": "https://ajuda.uoou.com.br/solutions/article/26000056689-shopee-quanto-custa-vender-um-produto",
+           "image_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTODeuSdYKYzLqSYLrP4we9V3A4_nyMsYcp7pmE8jg83UIL8o5_hFPpmPw&s"
+          },
+          {
+           "type": "images_element",
+           "alt": "Nova Taxa para Vender na Shopee Julho 2024 . Comparativo de comissão Shopee  vs Mercado livre.",
+           "url": "https://www.youtube.com/watch?v=XsUvg5cSo90",
+           "image_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2RA0Wi-oUmoHPbIJfj40CG9VxSyCP4p-lL0zLEUji&s"
+          },
+          {
+           "type": "images_element",
+           "alt": "Confira a Política de Comissão para vendedores CNPJ e CPF ...",
+           "url": "https://seller.br.shopee.cn/edu/article/26839/Comissao-para-vendedores-CNPJ-e-CPF-em-2026",
+           "image_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTnBNSrhjlpEtUZtjJeJT6kdaQgOTVgXCS4fT-wmzEgnQjNxTdUZD16a1U&s"
+          },
+          {
+           "type": "images_element",
+           "alt": "TAXA SHOPEE NOVA TAXA DE COMISSÃO DA SHOPEE ENTENDA O QUE MUDAR 3 REAIS POR  ITEM VENDIDO VEJA ISSO !",
+           "url": "https://www.youtube.com/watch?v=-M6ibcEzJzc",
+           "image_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcfnJqwq4NjdFxqzbZhnSoBrCNNq3AqlcO_nh2p9QZ&s"
+          },
+          {
+           "type": "images_element",
+           "alt": "Qual a taxa Shopee para vendedores? Calculadora 2026",
+           "url": "https://ecommercenapratica.com/blog/taxa-shopee/",
+           "image_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRygEiC3ALmvqn3fH3bnq0fXZYEuRmM-c7N1iIFUeeAV3YcTo6yCCCFnX0&s"
+          },
+          {
+           "type": "images_element",
+           "alt": "As taxas da Shopee 2026 mudaram em março e a maioria das ...",
+           "url": "https://www.instagram.com/p/DWFBTOukXXr/",
+           "image_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSP9kFJA7dYmXY3Ww8_M5SIx1t444T1LREyB4-EEJoLWlGHaPcHJgYjprU&s"
+          }
+         ],
+         "related_image_searches": null,
+         "rectangle": null
+        },
+        {
+         "type": "people_also_ask",
+         "rank_group": 1,
+         "rank_absolute": 3,
+         "page": 1,
+         "position": "left",
+         "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[2]/div[3]/div[1]/div[1]/div[1]",
+         "items": [
+          {
+           "type": "people_also_ask_element",
+           "title": "Qual valor está sendo taxado na Shopee?",
+           "seed_question": null,
+           "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[2]/div[3]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]",
+           "expanded_element": [
+            {
+             "type": "people_also_ask_ai_overview_expanded_element",
+             "items": null,
+             "references": null,
+             "asynchronous_ai_overview": true
+            }
+           ]
+          },
+          {
+           "type": "people_also_ask_element",
+           "title": "Quais são as novas taxas do Shopee em 2026?",
+           "seed_question": null,
+           "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[2]/div[3]/div[1]/div[1]/div[1]/div[1]/div[2]/div[2]",
+           "expanded_element": [
+            {
+             "type": "people_also_ask_ai_overview_expanded_element",
+             "items": null,
+             "references": null,
+             "asynchronous_ai_overview": true
+            }
+           ]
+          },
+          {
+           "type": "people_also_ask_element",
+           "title": "Como fazer para não pagar a taxa da Shopee?",
+           "seed_question": null,
+           "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[2]/div[3]/div[1]/div[1]/div[1]/div[1]/div[2]/div[3]",
+           "expanded_element": [
+            {
+             "type": "people_also_ask_ai_overview_expanded_element",
+             "items": null,
+             "references": null,
+             "asynchronous_ai_overview": true
+            }
+           ]
+          },
+          {
+           "type": "people_also_ask_element",
+           "title": "Quanto a Shopee cobra por um produto de 10 reais?",
+           "seed_question": null,
+           "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[2]/div[3]/div[1]/div[1]/div[1]/div[1]/div[2]/div[4]",
+           "expanded_element": [
+            {
+             "type": "people_also_ask_ai_overview_expanded_element",
+             "items": null,
+             "references": null,
+             "asynchronous_ai_overview": true
+            }
+           ]
+          }
+         ],
+         "rectangle": null
+        },
+        {
+         "type": "video",
+         "rank_group": 1,
+         "rank_absolute": 4,
+         "page": 1,
+         "position": "left",
+         "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[2]/div[5]/div[1]",
+         "items": [
+          {
+           "type": "video_element",
+           "source": "Instagram · Gustavo Saballos | Contador do Marketplace",
+           "title": "SHOPEE VAI AUMENTAR A TAXA FIXA EM 12,5%! A partir ...",
+           "timestamp": "2026-09-26 14:42:09 +00:00",
+           "url": "https://www.instagram.com/reel/Ddqns0VBjvI/"
+          },
+          {
+           "type": "video_element",
+           "source": "Instagram · Jonas Monteiro - Shopee",
+           "title": "Mudança no Comissionamento para Produtos Até R$79,99 na ...",
+           "timestamp": "2026-09-19 14:42:09 +00:00",
+           "url": "https://www.instagram.com/reel/DdbxxKspRv-/"
+          },
+          {
+           "type": "video_element",
+           "source": "Instagram · Rafa Maceno | Shopee & TikTok",
+           "title": "A SHOPEE ATUALIZOU A COMISSÃO. A partir de 01/10 ...",
+           "timestamp": "2026-09-19 14:42:09 +00:00",
+           "url": "https://www.instagram.com/reel/Ddb26VSNtCv/"
+          },
+          {
+           "type": "video_element",
+           "source": "Instagram · Andreza Viana",
+           "title": "ATENÇÃO, VENDEDORES SHOPEE! A partir de 1º de outubro ...",
+           "timestamp": "2026-09-26 14:42:09 +00:00",
+           "url": "https://www.instagram.com/reel/DdrqM0gBHm4/"
+          }
+         ],
+         "rectangle": null
+        },
+        {
+         "type": "organic",
+         "rank_group": 1,
+         "rank_absolute": 5,
+         "page": 1,
+         "position": "left",
+         "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[2]/div[7]/div[1]/div[1]",
+         "domain": "www.instagram.com",
+         "title": "A Shopee muda a taxa fixa da faixa entre R$8 e R$79,99 ...",
+         "url": "https://www.instagram.com/p/DdmoDbgvZ6S/",
+         "cache_url": null,
+         "related_search_url": null,
+         "breadcrumb": "Mais de 130 marcações \"Gostei\"  ·  há 1 semana",
+         "website_name": "Instagram · aurenconsultoria_",
+         "is_image": true,
+         "is_video": false,
+         "is_featured_snippet": false,
+         "is_malicious": false,
+         "is_web_story": false,
+         "checks": [
+          "is_image"
+         ],
+         "description": "A comissão permanece em 20 %. O que sobe é a taxa por item: de R$4 para R$4,50. Não é uma mudança para todas as faixas — e exatamente por isso ...",
+         "pre_snippet": null,
+         "extended_snippet": null,
+         "images": [
+          {
+           "type": "images_element",
+           "alt": "taxa shopee de www.instagram.com",
+           "url": "https://www.instagram.com/p/DdmoDbgvZ6S/",
+           "image_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLrRWD-oG0HUl5jARH1mwN4ZOa3xI59UAHmoNQGa-ujhkbigIetQOG&usqp=CAE&s"
+          }
+         ],
+         "amp_version": false,
+         "rating": null,
+         "price": null,
+         "highlighted": [
+          "A comissão permanece em 20"
+         ],
+         "links": null,
+         "faq": null,
+         "extended_people_also_search": null,
+         "about_this_result": null,
+         "related_result": null,
+         "timestamp": null,
+         "rectangle": null
+        },
+        {
+         "type": "organic",
+         "rank_group": 2,
+         "rank_absolute": 6,
+         "page": 1,
+         "position": "left",
+         "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[2]/div[9]/div[1]/div[1]",
+         "domain": "blog.joompulse.com",
+         "title": "Taxas Shopee: quais custos calcular antes de vender",
+         "url": "https://blog.joompulse.com/2026/09/19/taxas-shopee-custos-vender/",
+         "cache_url": null,
+         "related_search_url": null,
+         "breadcrumb": "https://blog.joompulse.com › 2026/09/19 › taxas-shope...",
+         "website_name": "JoomPulse",
+         "is_image": false,
+         "is_video": false,
+         "is_featured_snippet": false,
+         "is_malicious": false,
+         "is_web_story": false,
+         "checks": null,
+         "description": "19 de set. de 2026 — As taxas Shopee dependem das condições comerciais vigentes e aplicáveis ao seller. Comissão e outras cobranças podem participar da conta. Antes ...",
+         "pre_snippet": "09/19/2026 00:00:00",
+         "extended_snippet": null,
+         "images": null,
+         "amp_version": false,
+         "rating": null,
+         "price": null,
+         "highlighted": [
+          "dependem das condições comerciais vigentes e aplicáveis ao seller"
+         ],
+         "links": null,
+         "faq": null,
+         "extended_people_also_search": null,
+         "about_this_result": null,
+         "related_result": null,
+         "timestamp": "2026-09-19 00:00:00 +00:00",
+         "rectangle": null
+        },
+        {
+         "type": "organic",
+         "rank_group": 3,
+         "rank_absolute": 7,
+         "page": 1,
+         "position": "left",
+         "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[2]/div[11]/div[1]/div[1]",
+         "domain": "agenciax3.com.br",
+         "title": "Aumento Da Comissão Da Shopee Em 2026 E Os ...",
+         "url": "https://agenciax3.com.br/aumento-da-comissao-da-shopee-em-2026-e-os-impactos-para-os-vendedores/",
+         "cache_url": null,
+         "related_search_url": null,
+         "breadcrumb": "https://agenciax3.com.br › aumento-da-comissao-da-sh...",
+         "website_name": "Agência X3",
+         "is_image": false,
+         "is_video": false,
+         "is_featured_snippet": false,
+         "is_malicious": false,
+         "is_web_story": false,
+         "checks": null,
+         "description": "A nova estrutura passa a trabalhar com faixas de preço e taxas fixas por item, ficando assim, até R$ 79,99 a comissão será de 20% + R$ 4, de R$ 80 a R$ 99 passa ...",
+         "pre_snippet": null,
+         "extended_snippet": null,
+         "images": null,
+         "amp_version": false,
+         "rating": null,
+         "price": null,
+         "highlighted": [
+          "taxas"
+         ],
+         "links": null,
+         "faq": null,
+         "extended_people_also_search": null,
+         "about_this_result": null,
+         "related_result": null,
+         "timestamp": null,
+         "rectangle": null
+        },
+        {
+         "type": "short_videos",
+         "rank_group": 1,
+         "rank_absolute": 8,
+         "page": 1,
+         "position": "left",
+         "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[2]/div[13]/div[1]",
+         "title": "Vídeos curtos",
+         "items": [
+          {
+           "type": "short_videos_element",
+           "title": "SHOPEE VAI AUMENTAR A TAXA FIXA EM 12,5%! A partir ...",
+           "url": "https://www.instagram.com/reel/Ddqns0VBjvI/",
+           "domain": "google.com",
+           "source": "Gustavo Saballos | Contador do Marketplace"
+          },
+          {
+           "type": "short_videos_element",
+           "title": "Mudança no Comissionamento para Produtos Até R$79,99 na ...",
+           "url": "https://www.instagram.com/reel/DdbxxKspRv-/",
+           "domain": "google.com",
+           "source": "Jonas Monteiro - Shopee"
+          },
+          {
+           "type": "short_videos_element",
+           "title": "A SHOPEE ATUALIZOU A COMISSÃO. A partir de 01/10 ...",
+           "url": "https://www.instagram.com/reel/Ddb26VSNtCv/",
+           "domain": "google.com",
+           "source": "Rafa Maceno | Shopee & TikTok"
+          },
+          {
+           "type": "short_videos_element",
+           "title": "ATENÇÃO, VENDEDORES SHOPEE! A partir de 1º de outubro ...",
+           "url": "https://www.instagram.com/reel/DdrqM0gBHm4/",
+           "domain": "google.com",
+           "source": "Andreza Viana"
+          },
+          {
+           "type": "short_videos_element",
+           "title": "Atualização nas tarifas de comissão da Shopee",
+           "url": "https://www.youtube.com/shorts/-Zmr0wfFEMI",
+           "domain": "google.com",
+           "source": "EconsultoriadeVendas"
+          },
+          {
+           "type": "short_videos_element",
+           "title": "Shopee anuncia taxa de penalização para vendedores ...",
+           "url": "https://www.instagram.com/reel/DZxAZ1xxUXu/",
+           "domain": "google.com",
+           "source": "Assessoria para Ecommerces | Mercado Livre"
+          },
+          {
+           "type": "short_videos_element",
+           "title": "Quanto eu pago de taxa para vender na Shopee # ...",
+           "url": "https://www.instagram.com/reel/DX-YGINx4ed/",
+           "domain": "google.com",
+           "source": "João Paulo"
+          },
+          {
+           "type": "short_videos_element",
+           "title": "Calcularte | Precificação e Gestão para Artesãs e Confeiteiras",
+           "url": "https://www.instagram.com/reel/DVbSx5mkVTP/",
+           "domain": "google.com",
+           "source": "Calcularte | Precificação e Gestão para Artesãs e Confeiteiras"
+          },
+          {
+           "type": "short_videos_element",
+           "title": "As novas taxas e comissões da shopee estão em vigor. O que ...",
+           "url": "https://www.instagram.com/reel/DVcB4khAPqN/",
+           "domain": "google.com",
+           "source": "Vitor Miranda | Ecommerce"
+          },
+          {
+           "type": "short_videos_element",
+           "title": "Atualização para vendedores da Shopee. . . #marketplace ...",
+           "url": "https://www.instagram.com/reel/DSxWYbigDzh/",
+           "domain": "google.com",
+           "source": "Mathias | Shopee | TikTok Shop"
+          }
+         ],
+         "rectangle": null
+        },
+        {
+         "type": "organic",
+         "rank_group": 4,
+         "rank_absolute": 9,
+         "page": 1,
+         "position": "left",
+         "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[2]/div[15]/div[1]/div[1]",
+         "domain": "techlabs.net.br",
+         "title": "Calculadora Custos - Shopee 2026 - TechLabs Technology",
+         "url": "https://techlabs.net.br/tools/calc-shopee",
+         "cache_url": null,
+         "related_search_url": null,
+         "breadcrumb": "https://techlabs.net.br › tools › calc-shopee",
+         "website_name": "techlabs.net.br",
+         "is_image": false,
+         "is_video": false,
+         "is_featured_snippet": false,
+         "is_malicious": false,
+         "is_web_story": false,
+         "checks": null,
+         "description": "1. Informe o custo do produto e os custos extras do pedido; 2. Defina a quantidade do kit e o lucro desejado por unidade; 3. Escolha a taxa automática ou manual ...",
+         "pre_snippet": null,
+         "extended_snippet": null,
+         "images": null,
+         "amp_version": false,
+         "rating": null,
+         "price": null,
+         "highlighted": [
+          "taxa"
+         ],
+         "links": null,
+         "faq": null,
+         "extended_people_also_search": null,
+         "about_this_result": null,
+         "related_result": null,
+         "timestamp": null,
+         "rectangle": null
+        },
+        {
+         "type": "organic",
+         "rank_group": 5,
+         "rank_absolute": 10,
+         "page": 1,
+         "position": "left",
+         "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[2]/div[17]/div[1]/div[1]",
+         "domain": "www.instagram.com",
+         "title": "ATENÇÃO, VENDEDORES DA SHOPEE! A ...",
+         "url": "https://www.instagram.com/p/DVbnragkdoC/",
+         "cache_url": null,
+         "related_search_url": null,
+         "breadcrumb": "Mais de 20 marcações \"Gostei\"  ·  há 7 meses",
+         "website_name": "Instagram · rjcsolucoesdigitais",
+         "is_image": false,
+         "is_video": false,
+         "is_featured_snippet": false,
+         "is_malicious": false,
+         "is_web_story": false,
+         "checks": null,
+         "description": "A taxa extra vale pra loja inteira. Está escrito na Central do Vendedor: depois do aceite, a loja paga 3,5% sobre TODAS as vendas do período, ...",
+         "pre_snippet": null,
+         "extended_snippet": null,
+         "images": null,
+         "amp_version": false,
+         "rating": null,
+         "price": null,
+         "highlighted": [
+          "taxa"
+         ],
+         "links": null,
+         "faq": null,
+         "extended_people_also_search": null,
+         "about_this_result": null,
+         "related_result": null,
+         "timestamp": null,
+         "rectangle": null
+        },
+        {
+         "type": "organic",
+         "rank_group": 6,
+         "rank_absolute": 11,
+         "page": 1,
+         "position": "left",
+         "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[2]/div[19]/div[1]/div[1]",
+         "domain": "www.reclameaqui.com.br",
+         "title": "quase todo o faturamento vira custo - Shopee",
+         "url": "https://www.reclameaqui.com.br/shopee/taxas-da-shopee-inviabilizam-pequenos-vendedores-quase-todo-o-faturamento-vira-custo_jERf6gplMHbt9XuN/",
+         "cache_url": null,
+         "related_search_url": null,
+         "breadcrumb": "https://www.reclameaqui.com.br › Shopee",
+         "website_name": "Reclame Aqui",
+         "is_image": false,
+         "is_video": false,
+         "is_featured_snippet": false,
+         "is_malicious": false,
+         "is_web_story": false,
+         "checks": null,
+         "description": "Taxas da Shopee inviabilizam pequenos vendedores : quase todo o faturamento vira custo · Marketplace · Taxas e custos da plataforma.",
+         "pre_snippet": null,
+         "extended_snippet": null,
+         "images": null,
+         "amp_version": false,
+         "rating": null,
+         "price": null,
+         "highlighted": [
+          "Taxas da Shopee inviabilizam pequenos vendedores"
+         ],
+         "links": null,
+         "faq": null,
+         "extended_people_also_search": null,
+         "about_this_result": null,
+         "related_result": null,
+         "timestamp": null,
+         "rectangle": null
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "version": "0.1.20260917",
+   "status_code": 20000,
+   "status_message": "Ok.",
+   "time": "4.4588 sec.",
+   "cost": 0.002,
+   "tasks_count": 1,
+   "tasks_error": 0,
+   "tasks": [
+    {
+     "id": "10031442-1993-0139-0000-80b691f51165",
+     "status_code": 20000,
+     "status_message": "Ok.",
+     "time": "4.3635 sec.",
+     "cost": 0.002,
+     "result_count": 1,
+     "path": [
+      "v3",
+      "serp",
+      "google",
+      "organic",
+      "live",
+      "advanced"
+     ],
+     "data": {
+      "api": "serp",
+      "function": "live",
+      "se": "google",
+      "se_type": "organic",
+      "keyword": "terceirização de vendas",
+      "location_name": "Brazil",
+      "language_code": "pt",
+      "device": "desktop",
+      "depth": 10,
+      "os": "windows"
+     },
+     "result": [
+      {
+       "keyword": "terceirização de vendas",
+       "type": "organic",
+       "se_domain": "google.com",
+       "location_code": 2076,
+       "language_code": "pt",
+       "check_url": "https://www.google.com/search?q=terceiriza%C3%A7%C3%A3o%20de%20vendas&hl=pt&gl=BR&ie=UTF-8&uule=w+CAIQIFISCc8ozOvHWZwAEWM-KfIGFVop",
+       "datetime": "2026-10-03 14:42:15 +00:00",
+       "spell": null,
+       "refinement_chips": null,
+       "item_types": [
+        "ai_overview",
+        "organic",
+        "people_also_ask",
+        "related_searches"
+       ],
+       "se_results_count": 127,
+       "pages_count": 1,
+       "items_count": 12,
+       "items": [
+        {
+         "type": "ai_overview",
+         "rank_group": 1,
+         "rank_absolute": 1,
+         "page": 1,
+         "position": "left",
+         "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]",
+         "asynchronous_ai_overview": false,
+         "markdown": "A **terceirização de vendas** (ou *sales outsourcing*) `é a contratação de uma empresa especializada para gerenciar parte ou todo o processo comercial de um negócio`.[[1]](https://v4company.com/marketing-digital/sales-outsourcing)[[2]](https://midhaus.com.br/por-que-terceirizar-meu-time-comercial/)\n\n### Como Funciona\n\n- **Pré-vendas (SDR):** Foco em prospecção ativa, qualificação de leads e agendamento de reuniões.\n- **Vendas (Closers):** Condução de negociações e fechamento de contratos.\n- **Operação Total ou Parcial:** A contratada pode assumir desde o primeiro contato até o pós-venda ou atuar apenas em etapas específicas.[[1]](https://salestime.com.br/blog/vendas/equipe-de-vendas-terceirizada/)[[2]](https://torreinterna.com.br/terceirizacao-de-equipe-de-vendas-internas-inside-sales)[[3]](https://midhaus.com.br/por-que-terceirizar-meu-time-comercial/)[[4]](https://www.youtube.com/watch?v=sbexWX5fDnQ&t=41)[[5]](https://v4company.com/marketing-digital/sales-outsourcing)\n\n### Principais Vantagens\n\n- **Redução de custos:** Elimina gastos com encargos trabalhistas de contratações CLT, treinamentos e infraestrutura.\n- **Foco no core business:** Permite que a equipe interna foque na estratégia principal da empresa e na gestão do negócio.\n- **Agilidade e escala:** Facilita a entrada rápida em novos mercados ou testes de novos produtos com profissionais já capacitados.\n- **Acesso à tecnologia:** Uso de ferramentas avançadas de CRM e inteligência comercial disponibilizadas pelo parceiro.[[1]](https://www.orflie.com.br/)[[2]](https://www.youtube.com/watch?v=x7g9BqU_5qs)[[3]](https://salestime.com.br/blog/vendas/equipe-de-vendas-terceirizada/)[[4]](https://www.youtube.com/watch?v=qL89KDcuvlQ&t=59)[[5]](https://www.instagram.com/reel/DHcJ6pvu9JU/)\n\n### Cuidados Essenciais\n\n- **Alinhamento cultural:** O time terceirizado precisa entender profundamente o seu produto e os valores da sua marca.\n- **Gestão ativa:** Terceirizar não elimina a necessidade de monitorar métricas, alinhar expectativas e acompanhar os resultados de perto.\n- **Contrato claro:** Defina metas de conversão, prazos e responsabilidades bem estabelecidas desde o início.[[1]](https://scooto.co/sac-quando-e-hora-de-terceirizar-o-setor-de-vendas/)[[2]](https://salestime.com.br/blog/vendas/equipe-de-vendas-terceirizada/)[[3]](https://www.youtube.com/shorts/5zwk6qaHG9g)",
+         "items": [
+          {
+           "type": "ai_overview_element",
+           "position": "left",
+           "title": null,
+           "text": "A terceirização de vendas (ou sales outsourcing) é a contratação de uma empresa especializada para gerenciar parte ou todo o processo comercial de um negócio.",
+           "markdown": "A **terceirização de vendas** (ou *sales outsourcing*) `é a contratação de uma empresa especializada para gerenciar parte ou todo o processo comercial de um negócio`.[[1]](https://v4company.com/marketing-digital/sales-outsourcing)[[2]](https://midhaus.com.br/por-que-terceirizar-meu-time-comercial/)",
+           "links": null,
+           "images": null,
+           "references": [
+            {
+             "type": "ai_overview_reference",
+             "position": "left",
+             "source": "V4 Company",
+             "domain": "v4company.com",
+             "url": "https://v4company.com/marketing-digital/sales-outsourcing",
+             "title": "O que é sales outsourcing? Entenda como terceirizar suas vendas",
+             "text": "Sales Outsourcing é a prática de contratar uma empresa externa ou um agente independente para gerenciar parte ou toda a função de ..."
+            },
+            {
+             "type": "ai_overview_reference",
+             "position": "left",
+             "source": "Midhaus",
+             "domain": "midhaus.com.br",
+             "url": "https://midhaus.com.br/por-que-terceirizar-meu-time-comercial/",
+             "title": "Por que terceirizar meu time comercial? - Midhaus",
+             "text": "Terceirização comercial é quando uma empresa delega as atividades de vendas e relacionamento com clientes a uma empresa externa es..."
+            }
+           ]
+          },
+          {
+           "type": "ai_overview_element",
+           "position": "left",
+           "title": "Como Funciona",
+           "text": "Pré-vendas (SDR): Foco em prospecção ativa, qualificação de leads e agendamento de reuniões. Vendas (Closers): Condução de negociações e fechamento de contratos. Operação Total ou Parcial: A contratada pode assumir desde o primeiro contato até o pós-venda ou atuar apenas em etapas específicas.",
+           "markdown": "- **Pré-vendas (SDR):** Foco em prospecção ativa, qualificação de leads e agendamento de reuniões.\n- **Vendas (Closers):** Condução de negociações e fechamento de contratos.\n- **Operação Total ou Parcial:** A contratada pode assumir desde o primeiro contato até o pós-venda ou atuar apenas em etapas específicas.[[1]](https://salestime.com.br/blog/vendas/equipe-de-vendas-terceirizada/)[[2]](https://torreinterna.com.br/terceirizacao-de-equipe-de-vendas-internas-inside-sales)[[3]](https://midhaus.com.br/por-que-terceirizar-meu-time-comercial/)[[4]](https://www.youtube.com/watch?v=sbexWX5fDnQ&t=41)[[5]](https://v4company.com/marketing-digital/sales-outsourcing)",
+           "links": null,
+           "images": null,
+           "references": [
+            {
+             "type": "ai_overview_reference",
+             "position": "left",
+             "source": "Salestime",
+             "domain": "salestime.com.br",
+             "url": "https://salestime.com.br/blog/vendas/equipe-de-vendas-terceirizada/",
+             "title": "Equipe de vendas terceirizada: como funciona, cuidados e mais",
+             "text": "* Terceirização. Gestão de pré-vendas. ... Redução de custos. Terceirizar pode ter um custo mais baixo do que manter uma equipe in..."
+            },
+            {
+             "type": "ai_overview_reference",
+             "position": "left",
+             "source": "Torre Interna",
+             "domain": "torreinterna.com.br",
+             "url": "https://torreinterna.com.br/terceirizacao-de-equipe-de-vendas-internas-inside-sales",
+             "title": "Terceirização de Equipe de Vendas Internas (Inside Sales) em São Paulo",
+             "text": "Terceirização de Equipe de Vendas Internas (Inside Sales). A terceirização de serviços de vendas internas, inside sales e pré-vend..."
+            },
+            {
+             "type": "ai_overview_reference",
+             "position": "left",
+             "source": "YouTube",
+             "domain": "www.youtube.com",
+             "url": "https://www.youtube.com/watch?v=sbexWX5fDnQ&t=41",
+             "title": "Como Startups e Pequenas Empresas Podem Escalar Negócios",
+             "text": "Terceirização de Vendas com Tecnologia: Como Startups e Pequenas Empresas Podem Escalar Negócios bate-papo. queria que você. apres..."
+            }
+           ]
+          },
+          {
+           "type": "ai_overview_element",
+           "position": "left",
+           "title": "Principais Vantagens",
+           "text": "Redução de custos: Elimina gastos com encargos trabalhistas de contratações CLT, treinamentos e infraestrutura. Foco no core business: Permite que a equipe interna foque na estratégia principal da empresa e na gestão do negócio. Agilidade e escala: Facilita a entrada rápida em novos mercados ou testes de novos produtos com profissionais já capacitados. Acesso à tecnologia: Uso de ferramentas avançadas de CRM e inteligência comercial disponibilizadas pelo parceiro.",
+           "markdown": "- **Redução de custos:** Elimina gastos com encargos trabalhistas de contratações CLT, treinamentos e infraestrutura.\n- **Foco no core business:** Permite que a equipe interna foque na estratégia principal da empresa e na gestão do negócio.\n- **Agilidade e escala:** Facilita a entrada rápida em novos mercados ou testes de novos produtos com profissionais já capacitados.\n- **Acesso à tecnologia:** Uso de ferramentas avançadas de CRM e inteligência comercial disponibilizadas pelo parceiro.[[1]](https://www.orflie.com.br/)[[2]](https://www.youtube.com/watch?v=x7g9BqU_5qs)[[3]](https://salestime.com.br/blog/vendas/equipe-de-vendas-terceirizada/)[[4]](https://www.youtube.com/watch?v=qL89KDcuvlQ&t=59)[[5]](https://www.instagram.com/reel/DHcJ6pvu9JU/)",
+           "links": null,
+           "images": null,
+           "references": [
+            {
+             "type": "ai_overview_reference",
+             "position": "left",
+             "source": "Orflie",
+             "domain": "www.orflie.com.br",
+             "url": "https://www.orflie.com.br/",
+             "title": "Orflie - Terceirização Comercial: Terceirização de Vendas",
+             "text": "Terceirizamos o seu Departamento Comercial. Entregamos uma equipe de vendas competitiva, munida de tecnologia e know how para expa..."
+            },
+            {
+             "type": "ai_overview_reference",
+             "position": "left",
+             "source": "YouTube",
+             "domain": "www.youtube.com",
+             "url": "https://www.youtube.com/watch?v=x7g9BqU_5qs",
+             "title": "Quando eu Devo Terceirizar a Prospecção de Vendas da minha ...",
+             "text": "Quando eu Devo Terceirizar a Prospecção de Vendas da minha empresa? terceirizo ou não terceirizo o processo de vendas o processo d..."
+            },
+            {
+             "type": "ai_overview_reference",
+             "position": "left",
+             "source": "YouTube",
+             "domain": "www.youtube.com",
+             "url": "https://www.youtube.com/watch?v=qL89KDcuvlQ&t=59",
+             "title": "10 Vantagens da Terceirização da Equipe de Vendas",
+             "text": "10 Vantagens da Terceirização da Equipe de Vendas 10 vantagens para você pensar e refletir sobre a terceirização da equipe de vend..."
+            },
+            {
+             "type": "ai_overview_reference",
+             "position": "left",
+             "source": "Instagram",
+             "domain": "www.instagram.com",
+             "url": "https://www.instagram.com/reel/DHcJ6pvu9JU/",
+             "title": "Será que devo terceirizar o comercial da minha empresa? 👀 Hoje falo ...",
+             "text": "Será que devo terceirizar o comercial da minha empresa? 👀 Hoje falo sobre este tema que sempre gera muitas dúvidas entre empresár..."
+            }
+           ]
+          },
+          {
+           "type": "ai_overview_element",
+           "position": "left",
+           "title": "Cuidados Essenciais",
+           "text": "Alinhamento cultural: O time terceirizado precisa entender profundamente o seu produto e os valores da sua marca. Gestão ativa: Terceirizar não elimina a necessidade de monitorar métricas, alinhar expectativas e acompanhar os resultados de perto. Contrato claro: Defina metas de conversão, prazos e responsabilidades bem estabelecidas desde o início.",
+           "markdown": "- **Alinhamento cultural:** O time terceirizado precisa entender profundamente o seu produto e os valores da sua marca.\n- **Gestão ativa:** Terceirizar não elimina a necessidade de monitorar métricas, alinhar expectativas e acompanhar os resultados de perto.\n- **Contrato claro:** Defina metas de conversão, prazos e responsabilidades bem estabelecidas desde o início.[[1]](https://scooto.co/sac-quando-e-hora-de-terceirizar-o-setor-de-vendas/)[[2]](https://salestime.com.br/blog/vendas/equipe-de-vendas-terceirizada/)[[3]](https://www.youtube.com/shorts/5zwk6qaHG9g)",
+           "links": null,
+           "images": null,
+           "references": [
+            {
+             "type": "ai_overview_reference",
+             "position": "left",
+             "source": "Scooto",
+             "domain": "scooto.co",
+             "url": "https://scooto.co/sac-quando-e-hora-de-terceirizar-o-setor-de-vendas/",
+             "title": "5 cuidados ao terceirizar seu setor de vendas - Scooto",
+             "text": "A terceirização de qualquer setor de uma empresa pode ser a solução para os atuais problemas ou, se não administrada de maneira ad..."
+            },
+            {
+             "type": "ai_overview_reference",
+             "position": "left",
+             "source": "YouTube",
+             "domain": "www.youtube.com",
+             "url": "https://www.youtube.com/shorts/5zwk6qaHG9g",
+             "title": "How to know if your company should outsource marketing",
+             "text": "Como saber se minha empresa deve terceirizar o marketing contratação seja de uma agência de um estúdio como anexos de um prestador..."
+            }
+           ]
+          }
+         ],
+         "references": [
+          {
+           "type": "ai_overview_reference",
+           "position": "right",
+           "source": "Salestime",
+           "domain": "salestime.com.br",
+           "url": "https://salestime.com.br/blog/vendas/equipe-de-vendas-terceirizada/",
+           "title": "Equipe de vendas terceirizada: como funciona, cuidados e mais",
+           "text": "* Terceirização. Gestão de pré-vendas. ... Redução de custos. Terceirizar pode ter um custo mais baixo do que manter uma equipe in..."
+          },
+          {
+           "type": "ai_overview_reference",
+           "position": "right",
+           "source": "Orflie",
+           "domain": "www.orflie.com.br",
+           "url": "https://www.orflie.com.br/",
+           "title": "Orflie - Terceirização Comercial: Terceirização de Vendas",
+           "text": "Terceirizamos o seu Departamento Comercial. Entregamos uma equipe de vendas competitiva, munida de tecnologia e know how para expa..."
+          },
+          {
+           "type": "ai_overview_reference",
+           "position": "right",
+           "source": "V4 Company",
+           "domain": "v4company.com",
+           "url": "https://v4company.com/marketing-digital/sales-outsourcing",
+           "title": "O que é sales outsourcing? Entenda como terceirizar suas vendas",
+           "text": "Sales Outsourcing é a prática de contratar uma empresa externa ou um agente independente para gerenciar parte ou toda a função de ..."
+          },
+          {
+           "type": "ai_overview_reference",
+           "position": "right",
+           "source": "YouTube",
+           "domain": "www.youtube.com",
+           "url": "https://www.youtube.com/watch?v=qL89KDcuvlQ&t=59",
+           "title": "10 Vantagens da Terceirização da Equipe de Vendas",
+           "text": "10 Vantagens da Terceirização da Equipe de Vendas 10 vantagens para você pensar e refletir sobre a terceirização da equipe de vend..."
+          },
+          {
+           "type": "ai_overview_reference",
+           "position": "right",
+           "source": "YouTube",
+           "domain": "www.youtube.com",
+           "url": "https://www.youtube.com/watch?v=x7g9BqU_5qs",
+           "title": "Quando eu Devo Terceirizar a Prospecção de Vendas da minha ...",
+           "text": "Quando eu Devo Terceirizar a Prospecção de Vendas da minha empresa? terceirizo ou não terceirizo o processo de vendas o processo d..."
+          },
+          {
+           "type": "ai_overview_reference",
+           "position": "right",
+           "source": "Midhaus",
+           "domain": "midhaus.com.br",
+           "url": "https://midhaus.com.br/por-que-terceirizar-meu-time-comercial/",
+           "title": "Por que terceirizar meu time comercial? - Midhaus",
+           "text": "Terceirização comercial é quando uma empresa delega as atividades de vendas e relacionamento com clientes a uma empresa externa es..."
+          },
+          {
+           "type": "ai_overview_reference",
+           "position": "right",
+           "source": "YouTube",
+           "domain": "www.youtube.com",
+           "url": "https://www.youtube.com/watch?v=sbexWX5fDnQ&t=41",
+           "title": "Como Startups e Pequenas Empresas Podem Escalar Negócios",
+           "text": "Terceirização de Vendas com Tecnologia: Como Startups e Pequenas Empresas Podem Escalar Negócios bate-papo. queria que você. apres..."
+          },
+          {
+           "type": "ai_overview_reference",
+           "position": "right",
+           "source": "Instagram",
+           "domain": "www.instagram.com",
+           "url": "https://www.instagram.com/reel/DHcJ6pvu9JU/",
+           "title": "Será que devo terceirizar o comercial da minha empresa? 👀 Hoje falo ...",
+           "text": "Será que devo terceirizar o comercial da minha empresa? 👀 Hoje falo sobre este tema que sempre gera muitas dúvidas entre empresár..."
+          },
+          {
+           "type": "ai_overview_reference",
+           "position": "right",
+           "source": "Scooto",
+           "domain": "scooto.co",
+           "url": "https://scooto.co/sac-quando-e-hora-de-terceirizar-o-setor-de-vendas/",
+           "title": "5 cuidados ao terceirizar seu setor de vendas - Scooto",
+           "text": "A terceirização de qualquer setor de uma empresa pode ser a solução para os atuais problemas ou, se não administrada de maneira ad..."
+          },
+          {
+           "type": "ai_overview_reference",
+           "position": "right",
+           "source": "Torre Interna",
+           "domain": "torreinterna.com.br",
+           "url": "https://torreinterna.com.br/terceirizacao-de-equipe-de-vendas-internas-inside-sales",
+           "title": "Terceirização de Equipe de Vendas Internas (Inside Sales) em São Paulo",
+           "text": "Terceirização de Equipe de Vendas Internas (Inside Sales). A terceirização de serviços de vendas internas, inside sales e pré-vend..."
+          },
+          {
+           "type": "ai_overview_reference",
+           "position": "right",
+           "source": "YouTube",
+           "domain": "www.youtube.com",
+           "url": "https://www.youtube.com/shorts/5zwk6qaHG9g",
+           "title": "How to know if your company should outsource marketing",
+           "text": "Como saber se minha empresa deve terceirizar o marketing contratação seja de uma agência de um estúdio como anexos de um prestador..."
+          }
+         ],
+         "rectangle": null
+        },
+        {
+         "type": "organic",
+         "rank_group": 1,
+         "rank_absolute": 2,
+         "page": 1,
+         "position": "left",
+         "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[2]/div[1]/div[1]",
+         "domain": "exactsales.com.br",
+         "title": "Setor comercial: terceirizar a operação vale a pena?",
+         "url": "https://exactsales.com.br/terceirizar-setor-comercial/",
+         "cache_url": null,
+         "related_search_url": null,
+         "breadcrumb": "https://exactsales.com.br › terceirizar-setor-comercial",
+         "website_name": "Exact Sales",
+         "is_image": false,
+         "is_video": false,
+         "is_featured_snippet": false,
+         "is_malicious": false,
+         "is_web_story": false,
+         "checks": null,
+         "description": "22 de abr. de 2021 — Quando falamos em terceirização do setor comercial, é quase um senso comum a justificativa da redução de custos. No entanto, vejo também outras ...",
+         "pre_snippet": "04/22/2021 00:00:00",
+         "extended_snippet": null,
+         "images": null,
+         "amp_version": false,
+         "rating": null,
+         "price": null,
+         "highlighted": [
+          "terceirização"
+         ],
+         "links": null,
+         "faq": null,
+         "extended_people_also_search": null,
+         "about_this_result": null,
+         "related_result": null,
+         "timestamp": "2021-04-22 00:00:00 +00:00",
+         "rectangle": null
+        },
+        {
+         "type": "organic",
+         "rank_group": 2,
+         "rank_absolute": 3,
+         "page": 1,
+         "position": "left",
+         "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[4]/div[1]/div[1]",
+         "domain": "wesow.com.br",
+         "title": "Como Funciona e Custos - Terceirização de Prospecção B2B",
+         "url": "https://wesow.com.br/terceirizacao-da-prospeccao/",
+         "cache_url": null,
+         "related_search_url": null,
+         "breadcrumb": "https://wesow.com.br › terceirizacao-da-prospeccao",
+         "website_name": "WESOW",
+         "is_image": false,
+         "is_video": false,
+         "is_featured_snippet": false,
+         "is_malicious": false,
+         "is_web_story": false,
+         "checks": null,
+         "description": "Como funciona a terceirização da prospecção B2B: etapas, o que está incluso, prazo para as primeiras reuniões e custo mensal.",
+         "pre_snippet": null,
+         "extended_snippet": null,
+         "images": null,
+         "amp_version": false,
+         "rating": null,
+         "price": null,
+         "highlighted": [
+          "terceirização"
+         ],
+         "links": null,
+         "faq": null,
+         "extended_people_also_search": null,
+         "about_this_result": null,
+         "related_result": null,
+         "timestamp": null,
+         "rectangle": null
+        },
+        {
+         "type": "organic",
+         "rank_group": 3,
+         "rank_absolute": 4,
+         "page": 1,
+         "position": "left",
+         "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[1]",
+         "domain": "www.digitallsales.com.br",
+         "title": "Terceirização de processos comerciais em São Paulo",
+         "url": "https://www.digitallsales.com.br/terceirizacao-de-processos-comerciais-em-sao-paulo.php",
+         "cache_url": null,
+         "related_search_url": null,
+         "breadcrumb": "https://www.digitallsales.com.br › terceirizacao-de-proces...",
+         "website_name": "digitallsales.com.br",
+         "is_image": false,
+         "is_video": false,
+         "is_featured_snippet": false,
+         "is_malicious": false,
+         "is_web_story": false,
+         "checks": null,
+         "description": "Atendimento ao Cliente Terceirizado em SP · Planos · Força de Venda Terceirizada em SP · Soluções em Terceirização Comercial em São Paulo · FALE CONOSCO.",
+         "pre_snippet": null,
+         "extended_snippet": null,
+         "images": null,
+         "amp_version": false,
+         "rating": null,
+         "price": null,
+         "highlighted": [
+          "Atendimento ao Cliente Terceirizado em SP"
+         ],
+         "links": null,
+         "faq": null,
+         "extended_people_also_search": null,
+         "about_this_result": null,
+         "related_result": null,
+         "timestamp": null,
+         "rectangle": null
+        },
+        {
+         "type": "organic",
+         "rank_group": 4,
+         "rank_absolute": 5,
+         "page": 1,
+         "position": "left",
+         "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[7]/div[1]/div[1]/div[1]",
+         "domain": "www.instagram.com",
+         "title": "Terceirizar vendas não é abrir mão do controle. É decidir se ...",
+         "url": "https://www.instagram.com/reel/DTljpQyktJw/",
+         "cache_url": null,
+         "related_search_url": null,
+         "breadcrumb": "Mais de 40 marcações \"Gostei\"  ·  há 8 meses",
+         "website_name": "Instagram · midhaus.group",
+         "is_image": false,
+         "is_video": true,
+         "is_featured_snippet": false,
+         "is_malicious": false,
+         "is_web_story": false,
+         "checks": [
+          "is_video"
+         ],
+         "description": "Tem um refém e um risco. Se a sua empresa fatura presa a um ou dois vendedores, isso tem conserto, e começa antes de você perder o próximo.",
+         "pre_snippet": null,
+         "extended_snippet": null,
+         "images": null,
+         "amp_version": false,
+         "rating": null,
+         "price": null,
+         "highlighted": null,
+         "links": null,
+         "faq": null,
+         "extended_people_also_search": null,
+         "about_this_result": null,
+         "related_result": null,
+         "timestamp": "2026-02-03 14:42:14 +00:00",
+         "rectangle": null
+        },
+        {
+         "type": "organic",
+         "rank_group": 5,
+         "rank_absolute": 6,
+         "page": 1,
+         "position": "left",
+         "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[9]/div[1]/div[1]",
+         "domain": "ciaderesultados.com.br",
+         "title": "Terceirização de vendas - vale a pena?",
+         "url": "https://ciaderesultados.com.br/terceirizacao-de-vendas-vale-a-pena/",
+         "cache_url": null,
+         "related_search_url": null,
+         "breadcrumb": "https://ciaderesultados.com.br › Notícias",
+         "website_name": "Cia de Resultados",
+         "is_image": false,
+         "is_video": false,
+         "is_featured_snippet": false,
+         "is_malicious": false,
+         "is_web_story": false,
+         "checks": null,
+         "description": "Terceirização de vendas é uma prática muito usada por empresas B2B. O uso de representantes comerciais, algo tão comum no mercado, não deixe de ser uma ...",
+         "pre_snippet": null,
+         "extended_snippet": null,
+         "images": null,
+         "amp_version": false,
+         "rating": null,
+         "price": null,
+         "highlighted": [
+          "é uma prática muito usada por empresas B2B"
+         ],
+         "links": null,
+         "faq": null,
+         "extended_people_also_search": null,
+         "about_this_result": null,
+         "related_result": null,
+         "timestamp": null,
+         "rectangle": null
+        },
+        {
+         "type": "people_also_ask",
+         "rank_group": 1,
+         "rank_absolute": 7,
+         "page": 1,
+         "position": "left",
+         "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[11]/div[1]/div[1]/div[1]",
+         "items": [
+          {
+           "type": "people_also_ask_element",
+           "title": "Vale a pena ser terceirizado?",
+           "seed_question": null,
+           "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[11]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]",
+           "expanded_element": [
+            {
+             "type": "people_also_ask_ai_overview_expanded_element",
+             "items": null,
+             "references": null,
+             "asynchronous_ai_overview": true
+            }
+           ]
+          },
+          {
+           "type": "people_also_ask_element",
+           "title": "Quais são os 4 pilares da venda?",
+           "seed_question": null,
+           "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[11]/div[1]/div[1]/div[1]/div[1]/div[2]/div[2]",
+           "expanded_element": [
+            {
+             "type": "people_also_ask_ai_overview_expanded_element",
+             "items": null,
+             "references": null,
+             "asynchronous_ai_overview": true
+            }
+           ]
+          },
+          {
+           "type": "people_also_ask_element",
+           "title": "Quais são as 7 técnicas de vendas?",
+           "seed_question": null,
+           "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[11]/div[1]/div[1]/div[1]/div[1]/div[2]/div[3]",
+           "expanded_element": [
+            {
+             "type": "people_also_ask_ai_overview_expanded_element",
+             "items": null,
+             "references": null,
+             "asynchronous_ai_overview": true
+            }
+           ]
+          },
+          {
+           "type": "people_also_ask_element",
+           "title": "Qual é a diferença entre terceirização e prestação de serviços?",
+           "seed_question": null,
+           "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[11]/div[1]/div[1]/div[1]/div[1]/div[2]/div[4]",
+           "expanded_element": [
+            {
+             "type": "people_also_ask_ai_overview_expanded_element",
+             "items": null,
+             "references": null,
+             "asynchronous_ai_overview": true
+            }
+           ]
+          }
+         ],
+         "rectangle": null
+        },
+        {
+         "type": "organic",
+         "rank_group": 6,
+         "rank_absolute": 8,
+         "page": 1,
+         "position": "left",
+         "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[13]/div[1]/div[1]",
+         "domain": "burian.com.br",
+         "title": "Terceirização de Prospecção B2B: Vale a pena?",
+         "url": "https://burian.com.br/vendas/terceirizacao-de-prospeccao-b2b/",
+         "cache_url": null,
+         "related_search_url": null,
+         "breadcrumb": "https://burian.com.br › Burian Consultoria | Blog",
+         "website_name": "Burian Consultoria",
+         "is_image": false,
+         "is_video": false,
+         "is_featured_snippet": false,
+         "is_malicious": false,
+         "is_web_story": false,
+         "checks": null,
+         "description": "A terceirização de vendas pode ser uma saída inteligente para empresas que querem cortar gastos sem sacrificar a eficiência. Ao contratar uma empresa ...",
+         "pre_snippet": null,
+         "extended_snippet": null,
+         "images": null,
+         "amp_version": false,
+         "rating": null,
+         "price": null,
+         "highlighted": [
+          "terceirização de vendas"
+         ],
+         "links": null,
+         "faq": null,
+         "extended_people_also_search": null,
+         "about_this_result": null,
+         "related_result": null,
+         "timestamp": null,
+         "rectangle": null
+        },
+        {
+         "type": "organic",
+         "rank_group": 7,
+         "rank_absolute": 9,
+         "page": 1,
+         "position": "left",
+         "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[15]/div[1]/div[1]",
+         "domain": "www.rptrader.com.br",
+         "title": "Terceirização de Vendas por Telefone: RP Trader",
+         "url": "https://www.rptrader.com.br/terceirizacao-de-vendas-por-telefone-rp-trader/",
+         "cache_url": null,
+         "related_search_url": null,
+         "breadcrumb": "https://www.rptrader.com.br › terceirizacao-de-vendas-...",
+         "website_name": "RPTrader",
+         "is_image": false,
+         "is_video": false,
+         "is_featured_snippet": false,
+         "is_malicious": false,
+         "is_web_story": false,
+         "checks": null,
+         "description": "9 de fev. de 2022 — Conheça algumas técnicas de vendas por telefone: · 1. Fale com a pessoa certa · 2. Faça um script · 3. Foco no cliente · 4. Rapport · 5. Crie um ...",
+         "pre_snippet": "02/09/2022 00:00:00",
+         "extended_snippet": null,
+         "images": null,
+         "amp_version": false,
+         "rating": null,
+         "price": null,
+         "highlighted": [
+          "vendas"
+         ],
+         "links": null,
+         "faq": null,
+         "extended_people_also_search": null,
+         "about_this_result": null,
+         "related_result": null,
+         "timestamp": "2022-02-09 00:00:00 +00:00",
+         "rectangle": null
+        },
+        {
+         "type": "organic",
+         "rank_group": 8,
+         "rank_absolute": 10,
+         "page": 1,
+         "position": "left",
+         "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[17]/div[1]/div[1]",
+         "domain": "agencialegions.com.br",
+         "title": "Terceirização Comercial é atrativa para várias empresas",
+         "url": "https://agencialegions.com.br/blog/terceirizacao-comercial-atrativa/",
+         "cache_url": null,
+         "related_search_url": null,
+         "breadcrumb": "https://agencialegions.com.br › blog › terceirizacao-co...",
+         "website_name": "Agência Legions",
+         "is_image": false,
+         "is_video": false,
+         "is_featured_snippet": false,
+         "is_malicious": false,
+         "is_web_story": false,
+         "checks": null,
+         "description": "24 de jun. de 2016 — É tornar-se uma referência de serviço para empresas que desejam crescer rápido as suas vendas, prestando os mais diversificados serviços, ...",
+         "pre_snippet": "06/24/2016 00:00:00",
+         "extended_snippet": null,
+         "images": null,
+         "amp_version": false,
+         "rating": null,
+         "price": null,
+         "highlighted": [
+          "vendas"
+         ],
+         "links": null,
+         "faq": null,
+         "extended_people_also_search": null,
+         "about_this_result": null,
+         "related_result": null,
+         "timestamp": "2016-06-24 00:00:00 +00:00",
+         "rectangle": null
+        },
+        {
+         "type": "organic",
+         "rank_group": 9,
+         "rank_absolute": 11,
+         "page": 1,
+         "position": "left",
+         "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[1]/div[2]/div[1]/div[1]/div[19]/div[1]/div[1]",
+         "domain": "www.concentrix.com",
+         "title": "Terceirização de Vendas B2B",
+         "url": "https://www.concentrix.com/pt-br/services-solutions/b2b-sales/?nocache=1790600648&jet_blog_ajax=1",
+         "cache_url": null,
+         "related_search_url": null,
+         "breadcrumb": "https://www.concentrix.com › pt-br › services-solutions",
+         "website_name": "Concentrix",
+         "is_image": false,
+         "is_video": false,
+         "is_featured_snippet": false,
+         "is_malicious": false,
+         "is_web_story": false,
+         "checks": null,
+         "description": "Nossos especialistas em vendas, com uma profunda experiência, oferecem à sua empresa a vantagem competitiva necessária para acelerar o fechamento de negócios.",
+         "pre_snippet": null,
+         "extended_snippet": null,
+         "images": null,
+         "amp_version": false,
+         "rating": null,
+         "price": null,
+         "highlighted": [
+          "Nossos especialistas em vendas, com uma profunda experiência"
+         ],
+         "links": null,
+         "faq": null,
+         "extended_people_also_search": null,
+         "about_this_result": null,
+         "related_result": null,
+         "timestamp": null,
+         "rectangle": null
+        },
+        {
+         "type": "related_searches",
+         "rank_group": 1,
+         "rank_absolute": 12,
+         "page": 1,
+         "position": "left",
+         "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[2]/div[2]/div[1]/div[3]/div[1]/div[1]/div[1]/div[1]/div[2]",
+         "items": [
+          "Terceirização de vendas por telefone",
+          "Terceirização de equipe de vendas",
+          "Terceirização de prospecção de clientes",
+          "Empresa de terceirização comercial",
+          "Serviço de prospecção",
+          "Empresa que faz prospecção de clientes",
+          "Consultoria prospecção de clientes",
+          "Empresa de prospecção de clientes b2b"
+         ],
+         "rectangle": null
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

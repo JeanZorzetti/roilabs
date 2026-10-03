@@ -7,6 +7,7 @@ import Base from './Base.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { autorPorNome, personId, personNode } from '../data/autores';
+import { whatsLink } from '../data/contato';
 import '../styles/article.css';
 
 interface Props {
@@ -201,7 +202,9 @@ const fmtDate = (d: Date) =>
           Uma empresa por nicho senta nela e domina a busca local do setor — com anuidade simbólica
           de R$ 3.960/ano e sem risco de tecnologia: o resto você paga só quando vende.
         </p>
-        <a class="btn btn--primary" href="/#candidatar">Candidatar minha empresa</a>
+        {/* O título na mensagem diz qual artigo trouxe o contato (o formulário já leva a origem). */}
+        <a class="btn btn--whats" href={whatsLink(`Li o artigo "${title}" e quero saber se a cadeira do meu nicho está livre`)} target="_blank" rel="noopener">Chamar no WhatsApp</a>
+        <p class="article__cta-alt">Prefere formulário? <a href="/#candidatar">Candidatar minha empresa</a></p>
       </div>
 
       {

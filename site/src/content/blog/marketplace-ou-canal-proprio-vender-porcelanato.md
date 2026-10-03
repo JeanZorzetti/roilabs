@@ -30,7 +30,7 @@ Marketplace é um canal excelente — para produto **leve, padronizado, de alto 
 
 O marketplace desconta quatro coisas do seu ticket antes de você ver o dinheiro:
 
-1. **Comissão** — na faixa de 10% a 20% conforme categoria e tipo de anúncio (confira sempre a tabela vigente do canal). Numa margem de revenda apertada, esse é o primeiro golpe e já costuma ser o fatal.
+1. **Comissão** — na faixa de 10% a 20% conforme categoria e tipo de anúncio, mais taxa fixa por item em várias faixas (as tabelas de 2026 estão em [taxa do Mercado Livre](/blog/taxa-do-mercado-livre-quanto-cobra-por-venda/) e [taxa da Shopee](/blog/taxa-shopee-tabela-comissao/)). Numa margem de revenda apertada, esse é o primeiro golpe e já costuma ser o fatal.
 2. **Frete** — a logística do marketplace foi desenhada para pacote pequeno. No caso do porcelanato, uma caixa passa de 20 kg e o piso de uma sala inteira vai de pallet; com o programa de frete grátis subsidiado pelo vendedor acima de certo valor, a conta inverte de sinal. Qualquer produto volumoso ou frágil sofre a mesma lógica.
 3. **Quebra e devolução** — a política de devolução é do canal, não sua: produto perdido, frete de volta e reputação arranhada ficam com você. No balcão, o mesmo problema é uma troca.
 4. **Guerra de preço** — no marketplace o seu anúncio aparece ao lado do concorrente, ordenado por preço e reputação. Não existe atendimento consultivo, cálculo de quantidade ou orientação técnica. Existe centavo.

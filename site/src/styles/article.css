@@ -215,6 +215,8 @@
 }
 .article__cta h2 { color: var(--d-text); font-size: 1.4rem; margin-bottom: 0.6rem; }
 .article__cta p { color: var(--d-muted); margin-bottom: 1.25rem; }
+.article__cta .article__cta-alt { margin: 1rem 0 0; font-size: 0.95rem; }
+.article__cta-alt a { color: var(--d-text); }
 
 /* ---- índice do blog ---- */
 .blog-index { background: var(--porcelain); color: var(--l-text); min-height: 100vh; }
