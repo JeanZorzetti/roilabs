@@ -182,7 +182,7 @@ export default async function ContratoCadeiraPage({ searchParams }: Props) {
                 name="exclusividade"
                 maxLength={300}
                 defaultValue={initial.exclusividade ?? ""}
-                placeholder="ex.: estética e ginecologia, exceto obstetrícia"
+                placeholder="ex.: estética e ginecologia"
                 aria-describedby="contrato-exclusividade-hint"
                 className={`mt-1 ${FIELD}`}
               />

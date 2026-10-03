@@ -41,7 +41,7 @@ export type ContratoCadeiraInput = {
   /** Domínio já escolhido, uma linha por regra: troca, nas condições, a linha genérica do valor inicial para .com.br.
    *  Ausente em contratos anteriores a este campo. */
   dominio?: string;
-  /** Área do nicho que a exclusividade cobre (ex.: "estética e ginecologia, exceto obstetrícia"). Vazio = o nicho
+  /** Área do nicho que a exclusividade cobre (ex.: "estética e ginecologia"). Vazio = o nicho
    *  inteiro. Ausente em contratos anteriores a este campo. */
   exclusividade?: string;
 };
