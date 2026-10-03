@@ -1,6 +1,6 @@
 ---
-title: 'Taxa da Shopee em 2026: a tabela de comissão que vale desde 1º de outubro'
-seoTitle: 'Taxa Shopee 2026: tabela de comissão por faixa de preço'
+title: 'Taxas da Shopee para vendedor em 2026: a nova taxa de venda e a tabela de comissão'
+seoTitle: 'Taxa para vender na Shopee 2026: tabela de comissão'
 description: 'A Shopee cobra 20% + R$ 4,50 por item até R$ 79,99 e 14% + uma taxa fixa de R$ 16 a R$ 26 acima disso. Aqui está a tabela oficial, quanto sobra em cada faixa de preço, as três faixas em que subir o preço faz você receber menos e quando a comissão deixa de compensar.'
 eyebrow: Taxas de marketplace · Shopee
 pubDate: 2026-10-03

@@ -1,6 +1,6 @@
 ---
-title: 'Taxa do Mercado Livre em 2026: quanto o Mercado Livre cobra por venda'
-seoTitle: 'Taxa do Mercado Livre 2026: quanto cobra por venda'
+title: 'Taxa do Mercado Livre para vendedor em 2026: quanto o Mercado Livre cobra por venda'
+seoTitle: 'Taxa de venda do Mercado Livre 2026: quanto cobra'
 description: 'O Mercado Livre cobra de 10% a 14% por venda no anúncio Clássico e de 15% a 19% no Premium, mais um custo fixo nos produtos abaixo de R$ 79 e o frete grátis por conta do vendedor a partir de R$ 79. Aqui está a conta de cada parte, com a fonte oficial, e quando a taxa deixa de compensar.'
 eyebrow: Taxas de marketplace · Mercado Livre
 pubDate: 2026-10-03
