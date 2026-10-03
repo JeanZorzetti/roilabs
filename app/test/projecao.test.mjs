@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import { NICHOS } from '../src/lib/precificacao.ts';
 import {
   CENARIOS,
+  DEGRAU_CTR,
   FUNIS,
   UNIDADES,
   limparTermos,
@@ -229,6 +230,23 @@ const termo = (t, volume, dificuldade, mensal = volume == null ? null : serie(vo
     const r = projetar([termo('fita gomada', 10000, 5)], 'moda', { 0: t }).base;
     perto(r.vendasEstaveis, 2.192, `taxa ${t}`);
     assert.equal(r.cadeia[2].origem, 'mercado');
+  }
+  // CTR do parceiro: troca o elo dos cliques e os cliques de cada termo alcançável; fora do alcance segue zero
+  const comCtr = projetar([termo('fita gomada', 10000, 5), termo('fita difícil', 5000, 60)], 'moda', { [DEGRAU_CTR]: 0.03 });
+  for (const c of CENARIOS) {
+    const r = comCtr[c];
+    assert.equal(r.cadeia[1].origem, 'parceiro', `${c}: elo dos cliques`);
+    assert.equal(r.cadeia[1].degrau, DEGRAU_CTR);
+    assert.equal(r.cadeia[1].taxa, 0.03);
+    perto(r.cliquesEstaveis, r.demanda.alcancavel * 0.03, `${c}: cliques com o CTR do parceiro`);
+    perto(r.termos.reduce((s, t) => s + t.cliquesEstaveis, 0), r.cliquesEstaveis, `${c}: a tabela soma o mesmo`);
+    assert.equal(r.cadeia[2].origem, 'mercado', `${c}: o funil continua no benchmark`);
+  }
+  assert.equal(comCtr.base.termos[1].cliquesEstaveis, 0, 'fora do alcance não ganha clique');
+  perto(comCtr.base.vendasEstaveis, 10000 * 0.03 * 0.01, 'base: CTR do parceiro × visita → pedido');
+  assert.equal(projetar([termo('fita gomada', 10000, 5)], 'moda').base.cadeia[1].degrau, DEGRAU_CTR, 'o elo dos cliques sempre tem o botão');
+  for (const t of [NaN, -0.1, 1.5]) {
+    perto(projetar([termo('fita gomada', 10000, 5)], 'moda', { [DEGRAU_CTR]: t }).base.vendasEstaveis, 2.192, `CTR ${t}`);
   }
   console.log('ok cadeia (US3)');
 }

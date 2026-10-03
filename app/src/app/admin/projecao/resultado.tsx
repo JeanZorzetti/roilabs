@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { lerNumeroBR, type Confianca } from "@/lib/precificacao";
 import {
+  DEGRAU_CTR,
   ROTULO_CENARIO,
   formatarVendas,
   type Cenario,
@@ -242,7 +243,9 @@ export function Cadeia({
                 abertos[i] ? (
                   <div className="flex flex-wrap items-end gap-x-3 gap-y-1">
                     <label htmlFor={id} className="flex flex-col gap-1 text-xs font-semibold text-navy">
-                      Taxa do parceiro de {degraus[i].de} para {degraus[i].para} (%)
+                      {i === DEGRAU_CTR
+                        ? "Taxa do parceiro de busca para clique (%)"
+                        : `Taxa do parceiro de ${degraus[i].de} para ${degraus[i].para} (%)`}
                       <input
                         id={id}
                         inputMode="decimal"
@@ -269,7 +272,9 @@ export function Cadeia({
                         ? "Use um percentual entre 0 e 100, como 1,5."
                         : taxas[i] !== undefined
                           ? "Vale para os 3 cenários, que passam a diferir só na posição e na rampa. Nada é salvo."
-                          : "Vazio = taxa do mercado."}
+                          : i === DEGRAU_CTR
+                            ? "Vazio = taxa do mercado. O CTR do site está no Search Console."
+                            : "Vazio = taxa do mercado."}
                     </p>
                   </div>
                 ) : (

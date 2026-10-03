@@ -379,6 +379,9 @@ export interface ResultadoCenario {
 /** Taxa real do parceiro por índice de degrau (fração). Vale para os 3 cenários (FR-009). */
 export type TaxasDoParceiro = Record<number, number | undefined>;
 
+/** Chave do CTR (busca → clique) nas taxas do parceiro: o elo dos cliques vem antes do funil, que começa em 0. */
+export const DEGRAU_CTR = -1;
+
 const taxaValida = (t: number | undefined): t is number => typeof t === 'number' && Number.isFinite(t) && t >= 0 && t <= 1;
 
 /**
@@ -425,6 +428,10 @@ function projetarCenario(
 ): ResultadoCenario {
   const demanda: Demanda = { total: 0, alcancavel: 0, foraDoAlcance: 0, semVolume: 0, semDificuldade: 0, agrupados: 0 };
   let cliquesEstaveis = 0;
+  // O CTR do parceiro (Search Console) troca o da tabela em todo termo alcançável; a posição continua
+  // decidindo o que fica fora do alcance.
+  const ctrDoParceiro = taxasDoParceiro[DEGRAU_CTR];
+  const parceiroCtr = taxaValida(ctrDoParceiro);
   const projetados = termos.map((t, i): TermoProjetado => {
     const grupo = grupos[i];
     if (grupo !== null) {
@@ -433,7 +440,7 @@ function projetarCenario(
       return { ...t, posicao: null, ctr: 0, cliquesEstaveis: 0, grupo };
     }
     const posicao = posicaoPara(t.dificuldade, c);
-    const ctr = ctrPara(posicao, c);
+    const ctr = parceiroCtr && posicao !== null ? ctrDoParceiro : ctrPara(posicao, c);
     if (t.volume === null) {
       demanda.semVolume++;
       return { ...t, posicao, ctr, cliquesEstaveis: 0, grupo };
@@ -453,9 +460,10 @@ function projetarCenario(
       rotulo: 'cliques (visitas)',
       n: cliquesEstaveis,
       taxa: demanda.alcancavel > 0 ? cliquesEstaveis / demanda.alcancavel : 0,
-      fonte: `CTR ponderado pela posição de cada termo · ${FONTE_CTR}`,
-      origem: 'premissa', // a posição sai da tabela de dificuldade (D7), que é premissa
-      premissa: PREMISSA_POSICAO,
+      fonte: parceiroCtr ? 'taxa do parceiro' : `CTR ponderado pela posição de cada termo · ${FONTE_CTR}`,
+      origem: parceiroCtr ? 'parceiro' : 'premissa', // a posição sai da tabela de dificuldade (D7), que é premissa
+      degrau: DEGRAU_CTR,
+      premissa: parceiroCtr ? undefined : PREMISSA_POSICAO,
     },
   ];
   let vendasEstaveis = cliquesEstaveis;

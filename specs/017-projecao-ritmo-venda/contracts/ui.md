@@ -48,7 +48,9 @@ Linhas por modelo:
 - consulta: … → cliques → contatos → agendamentos → consultas comparecidas.
 
 Cada degrau do funil tem "Usar a taxa do parceiro" (FR-009): um `<input inputMode="decimal">` que aparece
-ao clicar. Quando preenchido, a fonte vira o selo "taxa do parceiro".
+ao clicar. Quando preenchido, a fonte vira o selo "taxa do parceiro". O elo dos cliques também tem (03/10/2026):
+o CTR do site do parceiro (Search Console) troca o da tabela em todo termo alcançável, e a tabela de termos
+acompanha; o que está fora do alcance continua zero.
 
 ### ④ Cobertura da demanda: 1 barra empilhada 100%
 Mostra `alcançável no ano 1` × `fora do alcance`, somadas por volume, com o número e o % escritos nos dois
