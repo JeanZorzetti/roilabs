@@ -42,6 +42,7 @@ function lerInput(formData: FormData): ContratoCadeiraInput {
     extra: texto(formData, "extra", 2000),
     subdominios: texto(formData, "subdominios", 2000),
     dominio: texto(formData, "dominio", 2000),
+    exclusividade: texto(formData, "exclusividade", 300),
   };
 }
 

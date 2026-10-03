@@ -83,6 +83,7 @@ export default async function ContratoCadeiraPage({ searchParams }: Props) {
     extra: "",
     subdominios: "",
     dominio: "",
+    exclusividade: "",
   };
   const vencida = doc ? Date.now() > new Date(doc.validaAte).getTime() : false;
 
@@ -165,6 +166,25 @@ export default async function ContratoCadeiraPage({ searchParams }: Props) {
                 placeholder="ex.: Subdomínio da Dra. Ana, com os procedimentos dela: botox e preenchimento"
                 aria-describedby="contrato-subdominios-hint"
                 className={`mt-1 font-mono ${FIELD}`}
+              />
+            </div>
+
+            <div className="flex flex-col gap-1 rounded-xl border border-border bg-white p-4 shadow-soft">
+              <label htmlFor="contrato-exclusividade" className="text-sm font-bold text-navy">
+                Área da exclusividade
+              </label>
+              <p id="contrato-exclusividade-hint" className={HINT}>
+                Opcional. A parte do nicho que a exclusividade cobre: entra depois de “cadeira do nicho {doc.nicho.nome}
+                na área de”. Em branco, a exclusividade vale para o nicho inteiro.
+              </p>
+              <input
+                id="contrato-exclusividade"
+                name="exclusividade"
+                maxLength={300}
+                defaultValue={initial.exclusividade ?? ""}
+                placeholder="ex.: estética e ginecologia, exceto obstetrícia"
+                aria-describedby="contrato-exclusividade-hint"
+                className={`mt-1 ${FIELD}`}
               />
             </div>
 

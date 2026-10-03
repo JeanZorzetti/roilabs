@@ -41,6 +41,9 @@ export type ContratoCadeiraInput = {
   /** Domínio já escolhido, uma linha por regra: troca, nas condições, a linha genérica do valor inicial para .com.br.
    *  Ausente em contratos anteriores a este campo. */
   dominio?: string;
+  /** Área do nicho que a exclusividade cobre (ex.: "estética e ginecologia, exceto obstetrícia"). Vazio = o nicho
+   *  inteiro. Ausente em contratos anteriores a este campo. */
+  exclusividade?: string;
 };
 
 export type ContratoCadeiraDoc = {
@@ -96,7 +99,7 @@ export function pendenciasDoContrato(input: ContratoCadeiraInput, temAnexo: bool
   if (!temAnexo) falta.push('Entregáveis da cadeira (proposta antiga, sem escopo: guarde uma proposta nova)');
 
   // Marcador digitado à mão ("[percentual]") também trava, como no contrato da Vértice.
-  const livres = [input.titulo, input.pagamento, input.extra, input.subdominios ?? '', input.dominio ?? '', input.foro, ...papeis.flatMap(([, p]) => Object.values(p))];
+  const livres = [input.titulo, input.pagamento, input.extra, input.subdominios ?? '', input.dominio ?? '', input.exclusividade ?? '', input.foro, ...papeis.flatMap(([, p]) => Object.values(p))];
   for (const texto of livres) {
     for (const m of String(texto).match(/\[[^\]]+\]/g) ?? []) falta.push(`Texto com ${m}`);
   }
@@ -131,6 +134,7 @@ export function montarContratoCadeira(
   const extra = splitLines(input.extra);
   const subdominios = splitLines(input.subdominios ?? '');
   const dominio = splitLines(input.dominio ?? '').map(semPontoFinal);
+  const areaExclusiva = semPontoFinal((input.exclusividade ?? '').trim());
   const entrada = dominio.length > 0
     ? p.entrada.map((l) => ({ ...l, nota: l.nota.replace('Valor inicial, para .com.br. ', 'Valor do 1º ano. ') }))
     : p.entrada;
@@ -158,7 +162,10 @@ export function montarContratoCadeira(
       id: 'exclusividade',
       heading: 'Exclusividade da cadeira',
       body: [
-        `Enquanto este contrato vigorar, a CONTRATADA não opera cadeira do nicho ${p.nicho.nome} para outra empresa, em todo o Brasil.`,
+        areaExclusiva
+          ? `Enquanto este contrato vigorar, a CONTRATADA não opera cadeira do nicho ${p.nicho.nome} na área de ${areaExclusiva} para outra empresa, em todo o Brasil.`
+          : `Enquanto este contrato vigorar, a CONTRATADA não opera cadeira do nicho ${p.nicho.nome} para outra empresa, em todo o Brasil.`,
+        ...(areaExclusiva ? ['Fora dessa área, não há exclusividade.'] : []),
       ],
     },
     {
